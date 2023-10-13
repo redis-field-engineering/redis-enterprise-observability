@@ -1,0 +1,46 @@
+:linkattrs:
+:project-owner:      redis-field-engineering
+:project-name:       redis-enterprise-observability
+
+= Observe Redis Enterprise with Dynatrace
+
+To collect metrics in Dynatrace from Redis Enterprise Software or Redis Cloud, we recommend the https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/extensions-concepts[Dynatrace Extensions 2.0 Framework].
+
+== Table of Contents
+
+* link:#Requirements[Requirements]
+* link:#Installation[Installation]
+* link:#Dashboards[Dashboards]
+* link:#Dashboards[Alternative Redis Plugins]
+* link:#Support[Support]
+* link:#License[License]
+
+== Requirements
+
+To collect Redis Enterprise metrics from Splunk, you will need:
+
+* A Redis Enterprise deployment or a Redis Cloud account with a https://docs.redis.com/latest/rc/subscriptions/create-flexible-subscription/[Flexible or Annual subscription]
+* A Dynatrace account
+
+If you're using Redis Enterprise Software, you will need the fully-qualified domain name for your cluster.
+
+If you're using Redis Cloud, you will need:
+
+* The https://docs.redis.com/latest/rc/databases/view-edit-database/[private endpoint] for one of the databases associated with your Redis Cloud subscription. This private endpoint will look something like this: `redis-12345.internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:121212`.
+* A https://docs.redis.com/latest/rc/security/vpc-peering/[VPC-peering] between the infrastructure running your Dynatrace Collector and Redis Cloud.
+
+== Installation
+
+== Dashboards
+
+This respository includes sample Dynatrace dashboards for monitoring your Redis deplyoment. See the link:/dashboards[dashboards] folder for the available set of dashboards.
+
+== Alternatives
+
+== Support
+
+Support for metrics collection for Redis Enterprise with Dynatrace is provided on a good faith effort basis by Redis. Inc. To report bugs, request features, or receive assistance, please https://github.com/{project-owner}/{project-name}/issues[file an issue].
+
+== License
+
+This code in this repository is licensed under the MIT License. Copyright (C) 2023 Redis, Inc.

@@ -1,0 +1,3753 @@
+name: custom:com.redis.enterprise.experimental
+version: 1.0.1
+minDynatraceVersion: "1.245"
+author:
+  name: Redis
+
+dashboards:
+- path: "dashboards/metrics.json"
+- path: "dashboards/overview.json"
+
+metrics:
+# memory and connections at the top for dashboard generation
+- key: redis.redis_used_memory
+  metadata:
+    displayName: Redis Used Memory
+    description: Memory used by shard (in bigredis this includes flash) (bytes)
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_total_connections_received
+  metadata:
+    displayName: Redis Total Commands Received
+    description: Number of connections received by the shard; Calculate the number of connections for a time period by comparing the value at different times
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+# REDIS DATABASE
+- key: redis.bdb_avg_read_latency
+  metadata:
+    displayName: DB Average Read Latency
+    description: Average latency of read operations (seconds); returned only when there is traffic
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_avg_read_latency_max
+  metadata:
+    displayName: DB Read Latency Max
+    description: Highest value of average latency of read operations (seconds); returned only when there is traffic
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_avg_write_latency
+  metadata:
+    displayName: DB Average Write Latency
+    description: Average latency of write operations (seconds); returned only when there is traffic
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_avg_write_latency_max
+  metadata:
+    displayName: DB Write Latency Max
+    description: Highest value of average latency of write operations (seconds); returned only when there is traffic
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_conns
+  metadata:
+    displayName: DB Client Connections
+    description: Number of client connections to DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_egress_bytes
+  metadata:
+    displayName: DB Outgoing Traffic
+    description: Rate of outgoing network traffic from the DB (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_egress_bytes_max
+  metadata:
+    displayName: DB Maximum Outgoing Traffic
+    description: Maximum rate of outgoing network traffic from the DB (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_evicted_objects
+  metadata:
+    displayName: Database Evicted Objects
+    description: Rate of key evictions from DB (evictions/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_evicted_objects_max
+  metadata:
+    displayName: Database Maximum Evicted Objects
+    description: Highest value of rate of key evictions from DB (evictions/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_expired_objects
+  metadata:
+    displayName: Database Expired Objects
+    description: Rate keys expired in DB (expirations/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_expired_objects_max
+  metadata:
+    displayName: Database Maximum Expired Objects
+    description: Highest value of rate keys expired in DB (expirations/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_fork_cpu_system
+  metadata:
+    displayName: Database Fork System CPU
+    description: Percent cores utilization in system mode for all redis shard fork child processes of this database
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_fork_cpu_system_max
+  metadata:
+    displayName: Database Maximum Fork System CPU
+    description: Highest percent of cores utilization in system mode for all redis shard fork child processes of this database
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_fork_cpu_user
+  metadata:
+    displayName: Database Fork User CPU
+    description: Percent cores utilization in user mode for all redis shard fork child processes of this database
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_fork_cpu_user_max
+  metadata:
+    displayName: Database Maximum Fork User CPU
+    description: Highest percent of cores utilization in user mode for all redis shard fork child processes of this database
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_ingress_bytes
+  metadata:
+    displayName: DB Incoming Traffic
+    description: Rate of incoming network traffic to the DB (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_ingress_bytes_max
+  metadata:
+    displayName: Database Maximum Incoming Traffic (bytes)
+    description: Highest value of rate of incoming network traffic to DB (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_instantaneous_ops_per_sec
+  metadata:
+    displayName: Database Instaneous Operations (per second)
+    description: Request rate handled by all shards of DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_main_thread_cpu_system
+  metadata:
+    displayName: Database System Mode CPU
+    description: Percent cores utilization in system mode for all redis shard main threads of this database
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_main_thread_cpu_system_max
+  metadata:
+    displayName: Database Maximum System Mode CPU
+    description: Highest percent of cores utilization in system mode for all redis shard main threads of this database
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_main_thread_cpu_user
+  metadata:
+    displayName: Database User Mode CPU
+    description: Percent cores utilization in user mode for all redis shard main threads of this database
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_main_thread_cpu_user_max
+  metadata:
+    displayName: Database Maximum User Mode CPU
+    description: Highest percent of cores utilization in user mode for all redis shard main threads of this database
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_mem_frag_ratio
+  metadata:
+    displayName: Database Memory Fragmentation
+    description: RAM fragmentation ratio (RSS / allocated RAM)
+    unit: Ratio
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_mem_size_lua
+  metadata:
+    displayName: Database Lua Memory
+    description: Redis lua scripting heap size (bytes)
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_monitor_sessions_count
+  metadata:
+    displayName: Database Monitor Sessions
+    description: Number of client connected in monitor mode to the DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_memory_limit
+  metadata:
+    displayName: DB Memory Limit
+    description: Configured RAM limit for the database
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_other_req
+  metadata:
+    displayName: Database Other Requests
+    description: Rate of other (non read/write) requests on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_other_req_max
+  metadata:
+    displayName: Database Maximum Other Requests
+    description: Highest value of rate of other (non read/write) requests on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_other_res
+  metadata:
+    displayName: Database Other Responses
+    description: Rate of other (non read/write) responses on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_other_res_max
+  metadata:
+    displayName: Database Maximum Other Responses
+    description: Highest value of rate of other (non read/write) responses on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_pubsub_channels
+  metadata:
+    displayName: Database Pub/Sub Channels
+    description: Count the pub/sub channels with subscribed clients
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_pubsub_channels_max
+  metadata:
+    displayName: Database Maximum Pub/Sub Channels
+    description: Highest value of count the pub/sub channels with subscribed clients
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_pubsub_patterns
+  metadata:
+    displayName: Database Pub/Sub Patterns
+    description: Count the pub/sub patterns with subscribed clients
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_pubsub_patterns_max
+  metadata:
+    displayName: Database Maximum Pub/Sub Patterns
+    description: Highest value of count the pub/sub patterns with subscribed clients
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_read_misses
+  metadata:
+    displayName: Database Read Misses
+    description: Rate of read operations accessing a non-existing key (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_read_misses_max
+  metadata:
+    displayName: Database Maximum Read Misses
+    description: Highest value of rate of read operations accessing a non-existing key (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_read_hits
+  metadata:
+    displayName: Database Read Hits
+    description: Highest value of rate of read operations accessing an existing key (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_read_hits_max
+  metadata:
+    displayName: Database Maximum Read Hits
+    description: Highest value of rate of read operations accessing an existing key (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_read_req
+  metadata:
+    displayName: Database Read Requests
+    description: Rate of read requests on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_read_req_max
+  metadata:
+    displayName: Database Maximum Read Requests
+    description: Highest value of rate of read requests on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_read_res
+  metadata:
+    displayName: Database Read Responses
+    description: Rate of read responses on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_read_res_max
+  metadata:
+    displayName: Database Maximum Read Responses
+    description: Highest value of rate of read responses on DB (ops/sec)
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_shard_cpu_system
+  metadata:
+    displayName: Database Shard System Mode CPU
+    description: Percent cores utilization in system mode for all redis shard processes of this database
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_shard_cpu_system_max
+  metadata:
+    displayName: Database Maximum Shard System Mode CPU
+    description: Highest percent of cores utilization in system mode for all redis shard processes of this database
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_shard_cpu_user
+  metadata:
+    displayName: Database Shard User Mode CPU
+    description: Percent cores utilization in user mode for the redis shard process
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_shard_cpu_user_max
+  metadata:
+    displayName: Database Maximum Shard User Mode CPU
+    description: Highest percent of cores utilization in user mode for the redis shard process
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_total_connections_received
+  metadata:
+    displayName: Database Connections Received
+    description: Rate of new client connections to DB (connections/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_total_connections_received_max
+  metadata:
+    displayName: Database Maximum Connections Received
+    description: Highest value of rate of new client connections to DB (connections/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_total_req
+  metadata:
+    displayName: Database Total Request Rate
+    description: Highest value of rate of all requests on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_total_req_max
+  metadata:
+    displayName: Database Maximum Total Request Rate
+    description: Highest value of rate of all requests on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_total_res
+  metadata:
+    displayName: Database Total Response Rate
+    description: Highest value of rate of all responses on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_total_res_max
+  metadata:
+    displayName: Database Maximum Total Response Rate
+    description: Highest value of rate of all responses on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_up
+  metadata:
+    displayName: Database Status
+    description: Database is up and running
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_used_memory
+  metadata:
+    displayName: DB Used Memory
+    description: Memory used by db (in bigredis this includes flash) (bytes)
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_write_hits
+  metadata:
+    displayName: Database Write Hit Rate
+    description: Average Rate of write operations accessing an existing key (ops/sec)
+    unit: Gauge
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_write_hits_max
+  metadata:
+    displayName: Database Maximum Write Hit Rate
+    description: Highest value of rate of write operations accessing an existing key (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_write_misses
+  metadata:
+    displayName: Database Write Miss Rate
+    description: Average value of rate of write operations accessing a non-existing key (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_write_misses_max
+  metadata:
+    displayName: Database Maximum Write Miss Rate
+    description: Highest value of rate of write operations accessing a non-existing key (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_write_req
+  metadata:
+    displayName: Database Write Requests
+    description: Rate of write requests on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_write_req_max
+  metadata:
+    displayName: Database Maximum Write Request Rate
+    description: Highest value of rate of write requests on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_write_res
+  metadata:
+    displayName: Database Write Response Rate
+    description: Rate of write responses on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_write_res_max
+  metadata:
+    displayName: Database Maximum Write Response Rate
+    description: Highest value of rate of write responses on DB (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_avg_latency
+  metadata:
+    displayName: DB Average Latency
+    description: Average latency of operations on the DB (seconds); returned only when there is traffic
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_avg_latency_max
+  metadata:
+    displayName: DB Maximum Latency
+    description: Maximum latency of operations on the DB (seconds); returned only when there is traffic
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+- key: redis.bdb_no_of_keys
+  metadata:
+    displayName: DB Number of Keys
+    description: Number of Keys in DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-database"
+# REDIS NODE
+- key: redis.node_available_flash
+  metadata:
+    displayName: Node Available Flash
+    description: Available flash in node (bytes)
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_available_flash_no_overbooking
+  metadata:
+    displayName: Node Available Flash (no overbooking)
+    description: Available flash in node (bytes), without taking into account overbooking
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_available_memory
+  metadata:
+    displayName: Node Available Memory
+    description: Amount of free memory in node (bytes) that is available for database provisioning
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_available_memory_no_overbooking
+  metadata:
+    displayName: Node Available Memory (no overbooking)
+    description: Available ram in node (bytes) without taking into account overbooking
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_avg_latency
+  metadata:
+    displayName: Node Average Latency
+    description: Average latency of requests handled by endpoints on node (seconds); returned only when there is traffic
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_conns
+  metadata:
+    displayName: Node Connection Count
+    description: Number of clients connected to endpoints on node
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_idle
+  metadata:
+    displayName: Node Idle CPU
+    description: CPU idle time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_idle_max
+  metadata:
+    displayName: Node Maximum Idle CPU
+    description: Highest value of CPU idle time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_idle_min
+  metadata:
+    displayName: Node Minimum Idle CPU
+    description: Average value of CPU idle time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_idle_median
+  metadata:
+    displayName: Node Median Idle CPU
+    description: Lowest value of CPU idle time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_iowait
+  metadata:
+    displayName: Node IO Wait CPU
+    description: CPU IO wait time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_iowait_max
+  metadata:
+    displayName: Node Maximum IO Wait CPU
+    description: Highest value of CPU IO wait time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_iowait_min
+  metadata:
+    displayName: Node Minimum IO Wait CPU
+    description: Average value of CPU IO wait time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_iowait_median
+  metadata:
+    displayName: Node Median IO Wait CPU
+    description: Lowest value of CPU IO wait time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_irqs
+  metadata:
+    displayName: Node IRQs CPU
+    description: CPU IRQ time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_irqs_max
+  metadata:
+    displayName: Node Maximum IRQs CPU
+    description: Highest value of CPU IRQ time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_irqs_min
+  metadata:
+    displayName: Node Minimum IRQs CPU
+    description: Average value of CPU IRQ time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_irqs_median
+  metadata:
+    displayName: Node Median IRQs CPU
+    description: Lowest value of CPU IRQ time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_nice
+  metadata:
+    displayName: Node Nice CPU
+    description: CPU nice time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_nice_max
+  metadata:
+    displayName: Node Maximum Nice CPU
+    description: Highest value of CPU nice time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_nice_min
+  metadata:
+    displayName: Node Minimum Nice CPU
+    description: Average value of CPU nice time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_nice_median
+  metadata:
+    displayName: Node Median Nice CPU
+    description: Lowest value of CPU nice time portion (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_steal
+  metadata:
+    displayName: Node Kernel CPU
+    description: CPU time portion spent in kernel (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_steal_max
+  metadata:
+    displayName: Node Maximum Kernel CPU
+    description: Highest value of CPU time portion spent in kernel (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_steal_min
+  metadata:
+    displayName: Node Minimum Kernel CPU
+    description: Average value of CPU time portion spent in kernel (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_steal_median
+  metadata:
+    displayName: Node Median Kernel CPU
+    description: Lowest value of CPU time portion spent in kernel (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_system
+  metadata:
+    displayName: Node System CPU
+    description: CPU time portion spent by kernel-space processes (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_system_max
+  metadata:
+    displayName: Node Maximum System CPU
+    description: Highest value of CPU time portion spent by kernel-space processes (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_system_min
+  metadata:
+    displayName: Node Minimum System CPU
+    description: Average value of CPU time portion spent by kernel-space processes (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_system_median
+  metadata:
+    displayName: Node Median System CPU
+    description: Lowest value of CPU time portion spent by kernel-space processes (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_user
+  metadata:
+    displayName: Node User CPU
+    description: CPU time portion spent by user-space processes (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_user_max
+  metadata:
+    displayName: Node Maximum User CPU
+    description: Highest value of CPU time portion spent by user-space processes (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_user_min
+  metadata:
+    displayName: Node Minimum User CPU
+    description: Average value of CPU time portion spent by user-space processes (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cpu_user_median
+  metadata:
+    displayName: Node Median User CPU
+    description: Lowest value of CPU time portion spent by user-space processes (0-1, multiply by 100 to get percent)
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_cur_aof_rewrites
+  metadata:
+    displayName: Node Current AOF Rewrites
+    description: Number of aof rewrites that are currently performed by shards on this node
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_egress_bytes
+  metadata:
+    displayName: Node Egress (bytes)
+    description: Rate of outgoing network traffic to node (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_egress_bytes_max
+  metadata:
+    displayName: Node Maximum Egress (bytes)
+    description: Highest value of rate of outgoing network traffic to node (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_egress_bytes_min
+  metadata:
+    displayName: Node Minimum Egress (bytes)
+    description: Average value of rate of outgoing network traffic to node (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_egress_bytes_median
+  metadata:
+    displayName: Node Median Egress (bytes)
+    description: Lowest value of rate of outgoing network traffic to node (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_ephemeral_storage_avail
+  metadata:
+    displayName: Node Free Space Available (ephemeral)
+    description: Disk space available to RLEC processes on configured ephemeral disk (bytes)
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_ephemeral_storage_free
+  metadata:
+    displayName: Node Free Space Configured (ephemeral)
+    description: Free disk space on configured ephemeral disk (bytes)
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_free_memory
+  metadata:
+    displayName: Node Free Memory
+    description: Free memory in node (bytes)
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_ingress_bytes
+  metadata:
+    displayName: Node Ingress (bytes)
+    description: Rate of incoming network traffic to node (bytes/sec)
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_ingress_bytes_max
+  metadata:
+    displayName: Node Maximum Ingress (bytes)
+    description: Highest value of rate of incoming network traffic to node (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_ingress_bytes_min
+  metadata:
+    displayName: Node Minimum Ingress (bytes)
+    description: Average value of rate of incoming network traffic to node (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_ingress_bytes_median
+  metadata:
+    displayName: Node Median Ingress (bytes)
+    description: Lowest value of rate of incoming network traffic to node (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_persistent_storage_avail
+  metadata:
+    displayName: Node Free Space Available (persistent)
+    description: Disk space available to RLEC processes on configured persistent disk (bytes)
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_persistent_storage_free
+  metadata:
+    displayName: Node Free Space Configured (persistent)
+    description: Free disk space on configured persistent disk (bytes)
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_provisional_memory
+  metadata:
+    displayName: Node Provisional Memory
+    description: Amount of RAM that is available for provisioning to databases out of the total RAM allocated for databases
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_provisional_memory_no_overbooking
+  metadata:
+    displayName: Node Provisional Memory (no overbooking)
+    description: Amount of RAM that is available for provisioning to databases out of the total RAM allocated for databases, without taking into account overbooking
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_total_req
+  metadata:
+    displayName: Node Total Requests
+    description: Request rate handled by endpoints on node (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+- key: redis.node_up
+  metadata:
+    displayName: Node Running
+    description: Node is part of the cluster and is connected
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-node"
+# REDIS PROXY
+- key: redis.listener_acc_latency
+  metadata:
+    displayName: Listener Accumulated Latency
+    description: Accumulative latency (sum of the latencies) of all types of commands on DB. For the average latency, divide this value by listener_total_res
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_acc_latency_max
+  metadata:
+    displayName: Listener Maximum Accumulated Latency
+    description: Highest value of accumulative latency of all types of commands on DB
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_acc_other_latency
+  metadata:
+    displayName: Listener Other Latency
+    description: Accumulative latency (sum of the latencies) of commands that are type “other” on DB. For the average latency, divide this value by listener_other_res
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_acc_other_latency_max
+  metadata:
+    displayName: Listener Maximum Other Latency
+    description: Highest value of accumulative latency of commands that are type “other” on DB
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_acc_read_latency
+  metadata:
+    displayName: Listener Accumulated Read Latency
+    description: Accumulative latency (sum of the latencies) of commands that are type “read” on DB. For the average latency, divide this value by listener_read_res
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_acc_read_latency_max
+  metadata:
+    displayName: Listener Maximum Accumulated Read Latency
+    description: Highest value of accumulative latency of commands that are type “read” on DB
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_acc_write_latency
+  metadata:
+    displayName: Listener Accumulated Write Latency
+    description: Accumulative latency (sum of the latencies) of commands that are type “write” on DB. For the average latency, divide this value by listener_write_res
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_acc_write_latency_max
+  metadata:
+    displayName: Listener Maximum Accumulated Write Latency
+    description: Highest value of accumulative latency of commands that are type “write” on DB
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_auth_cmds
+  metadata:
+    displayName: Listener AUTH Commands
+    description: Number of memcached AUTH commands sent to the DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_auth_cmds_max
+  metadata:
+    displayName: Listener Maximum AUTH Commands
+    description: Highest value of number of memcached AUTH commands sent to the DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_auth_errors
+  metadata:
+    displayName: Listener AUTH Errors
+    description: Number of error responses to memcached AUTH commands
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_auth_errors_max
+  metadata:
+    displayName: Listener Maximum AUTH Errors
+    description: Highest value of number of error responses to memcached AUTH commands
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_cmd_flush
+  metadata:
+    displayName: Listener FLUSH_ALL Commands
+    description: Number of memcached FLUSH_ALL commands sent to the DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_cmd_flush_max
+  metadata:
+    displayName: Listener Maximum FLUSH_ALL Commands
+    description: Highest value of number of memcached FLUSH_ALL commands sent to the DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_cmd_get
+  metadata:
+    displayName: Listener GET Commands
+    description: Number of memcached GET commands sent to the DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_cmd_get_max
+  metadata:
+    displayName: Listener Maximum GET Commands
+    description: Highest value of number of memcached GET commands sent to the DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_cmd_set
+  metadata:
+    displayName: Listener SET Commands
+    description: Number of memcached SET commands sent to the DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_cmd_set_max
+  metadata:
+    displayName: Listener Maximum SET Commands
+    description: Highest value of number of memcached SET commands sent to the DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_cmd_touch
+  metadata:
+    displayName: Listener TOUCH Commands
+    description: Number of memcached TOUCH commands sent to the DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_cmd_touch_max
+  metadata:
+    displayName: Listener Maximum TOUCH Commands
+    description: Highest value of number of memcached TOUCH commands sent to the DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_conns
+  metadata:
+    displayName: Listener Connection Count
+    description: Number of clients connected to the endpoint
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_egress_bytes
+  metadata:
+    displayName: Listener Outgoing Traffic (bytes/sec)
+    description: Rate of outgoing network traffic to the endpoint (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_egress_bytes_max
+  metadata:
+    displayName: Listener Maximum Outgoing Traffic (bytes/sec)
+    description: Highest value of rate of outgoing network traffic to the endpoint (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_ingress_bytes
+  metadata:
+    displayName: Listener Incoming Traffic (bytes/sec)
+    description: Rate of incoming network traffic to the endpoint (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_ingress_bytes_max
+  metadata:
+    displayName: Listener Maximum Incoming Traffic (bytes/sec)
+    description: Highest value of rate of incoming network traffic to the endpoint (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_last_req_time
+  metadata:
+    displayName: Listener Last Request
+    description: Time of last command sent to the DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_last_res_time
+  metadata:
+    displayName: Listener Last Response
+    description: Time of last response sent from the DB
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_max_connections_exceeded
+  metadata:
+    displayName: Listener Connections Exceed
+    description: Number of times the Number of clients connected to the db at the same time has exeeded the max limit
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_max_connections_exceeded_max
+  metadata:
+    displayName: Listener Maximum Connections Exceed
+    description: Highest value of number of times the Number of clients connected to the db at the same time has exeeded the max limit
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_monitor_sessions_count
+  metadata:
+    displayName: Listener Monitor Session Count
+    description: Number of client connected in monitor mode to the endpoint
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_other_req
+  metadata:
+    displayName: Listener Other Requests
+    description: Rate of other (non read/write) requests on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_other_req_max
+  metadata:
+    displayName: Listener Maximum Other Requests
+    description: Highest value of rate of other (non read/write) requests on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_other_res
+  metadata:
+    displayName: Listener Other Responses
+    description: Rate of other (non read/write) responses on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_other_res_max
+  metadata:
+    displayName: Listener Maximum Other Responses
+    description: Highest value of rate of other (non read/write) responses on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_other_started_res
+  metadata:
+    displayName: Listener Other Type Responses
+    description: Number of responses sent from the DB of type “other”
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_other_started_res_max
+  metadata:
+    displayName: Listener Maximum Other Type Responses
+    description: Highest value of number of responses sent from the DB of type “other”
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_read_req
+  metadata:
+    displayName: Listener Read Requests
+    description: Rate of read requests on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_read_req_max
+  metadata:
+    displayName: Listener Maximum Read Requests
+    description: Highest value of rate of read requests on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_read_res
+  metadata:
+    displayName: Listener Read Responses
+    description: Rate of read responses on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_read_res_max
+  metadata:
+    displayName: Listener Maximum Read Responses
+    description: Highest value of rate of read responses on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_read_started_res
+  metadata:
+    displayName: Listener Read Type Responses
+    description: Number of responses sent from the DB of type “read”
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_read_started_res_max
+  metadata:
+    displayName: Listener Maximum Read Type Responses
+    description: Highest value of number of responses sent from the DB of type “read”
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_total_connections_received
+  metadata:
+    displayName: Listener Connections Received
+    description: Rate of new client connections to the endpoint (connections/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_total_connections_received_max
+  metadata:
+    displayName: Listener Maximum Connections Received
+    description: Highest value of rate of new client connections to the endpoint (connections/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_total_req
+  metadata:
+    displayName: Listener Requests Received
+    description: Request rate handled by the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_total_req_max
+  metadata:
+    displayName: Listener Maximum Requests Received
+    description: Highest value of rate of all requests on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_total_res
+  metadata:
+    displayName: Listener Responses Sent
+    description: Rate of all responses on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_total_res_max
+  metadata:
+    displayName: Listener Maximum Responses Sent
+    description: Highest value of rate of all responses on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_total_started_res
+  metadata:
+    displayName: Listener Responses All Types
+    description: Number of responses sent from the DB of all types
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_total_started_res_max
+  metadata:
+    displayName: Listener Maximum Responses All Types
+    description: Highest value of number of responses sent from the DB of all types
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_write_req
+  metadata:
+    displayName: Listener Write Requests
+    description: Rate of write requests on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_write_req_max
+  metadata:
+    displayName: Listener Maximum Write Requests
+    description: Highest value of rate of write requests on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_write_res
+  metadata:
+    displayName: Listener Write Responses
+    description: Rate of write responses on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_write_res_max
+  metadata:
+    displayName: Listener Maximum Write Responses
+    description: Highest value of rate of write responses on the endpoint (ops/sec)
+    unit: PerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_write_started_res
+  metadata:
+    displayName: Listener Write Type Responses
+    description: Number of responses sent from the DB of type “write”
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+- key: redis.listener_write_started_res_max
+  metadata:
+    displayName: Listener Maximum Write Type Responses
+    description: Highest value of number of responses sent from the DB of type “write
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+# REDIS REPLICATION
+- key: redis.bdb_replicaof_syncer_ingress_bytes
+  metadata:
+    displayName: Replication Incoming Traffic (bytes)
+    description: Rate of compressed incoming network traffic to Replica Of DB (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.bdb_replicaof_syncer_ingress_bytes_decompressed
+  metadata:
+    displayName: Replication De-compressed Incoming Traffic (bytes)
+    description: Rate of decompressed incoming network traffic to Replica Of DB (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.bdb_replicaof_syncer_local_ingress_lag_time
+  metadata:
+    displayName: Replication Ingestion Lag Time
+    description: Lag time between the source and the destination for Replica Of traffic (ms)
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.bdb_replicaof_syncer_status
+  metadata:
+    displayName: Replication Status
+    description: Syncer status for Replica Of traffic; 0 = in-sync, 1 = syncing, 2 = out of sync
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.bdb_crdt_syncer_egress_bytes
+  metadata:
+    displayName: Synchronization Outgoing Traffic (bytes)
+    description: Rate of compressed incoming network traffic from CRDB (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.bdb_crdt_syncer_egress_bytes_decompressed
+  metadata:
+    displayName: Synchronization De-compressed Outgoing Traffic (bytes)
+    description: Rate of decompressed incoming network traffic from CRDB (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.bdb_crdt_syncer_egress_bytes_decompressed_max
+  metadata:
+    displayName: Maximum Synchronization Outgoing Traffic (bytes)
+    description: Maximum rate of decompressed incoming network traffic from CRDB (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.bdb_crdt_syncer_egress_bytes_max
+  metadata:
+    displayName: Maximum Synchronization De-compressed Outgoing Traffic (bytes)
+    description: Maximum rate of compressed incoming network traffic from CRDB (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.bdb_crdt_syncer_ingress_bytes
+  metadata:
+    displayName: Synchronization Incoming Traffic (bytes)
+    description: Rate of compressed incoming network traffic to CRDB (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.bdb_crdt_syncer_ingress_bytes_decompressed
+  metadata:
+    displayName: Synchronization De-compressed Incoming Traffic (bytes)
+    description: Rate of decompressed incoming network traffic to CRDB (bytes/sec)
+    unit: BytePerSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.bdb_crdt_syncer_local_ingress_lag_time
+  metadata:
+    displayName: Synchronization Ingestion Lag Time
+    description: Lag time between the source and the destination (ms) for CRDB traffic
+    unit: MilliSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.bdb_crdt_syncer_status
+  metadata:
+    displayName: Synchronization Status
+    description: Syncer status for CRDB traffic; 0 = in-sync, 1 = syncing, 2 = out of sync
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_stale_replica
+  metadata:
+    displayName: CRDT Stale Replica
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_oom_latch
+  metadata:
+    displayName: CRDT OoM Latch
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_clock
+  metadata:
+    displayName: CRDT Clock
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_peer_id
+  metadata:
+    displayName: CRDT Peer Id
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_peer_peer_state
+  metadata:
+    displayName: CRDT Peer-to-Peer State
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_peer_offset
+  metadata:
+    displayName: CRDT Peer-to-Peer Offset
+    description: Not Available
+    unit: MilliSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_peer_lag
+  metadata:
+    displayName: CRDT Peer Lag
+    description: Not Available
+    unit: MilliSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_peer_dst_id
+  metadata:
+    displayName: CRDT Peer Dest Id
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_backlog_size
+  metadata:
+    displayName: CRDT Backlog Size
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_backlog_idx
+  metadata:
+    displayName: CRDT Backlog Index
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_backlog_histlen
+  metadata:
+    displayName: CRDT Backlog History Length
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_backlog_offset
+  metadata:
+    displayName: CRDT Backlog Offset
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_backlog_master_offset
+  metadata:
+    displayName: CRDT Backlog Master Offset
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_backlog_refs
+  metadata:
+    displayName: CRDT Backlog Refs
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_merge_reqs
+  metadata:
+    displayName: CRDT Merge Requests
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_effect_reqs
+  metadata:
+    displayName: CRDT Effect Requests
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_ovc_filtered_effect_reqs
+  metadata:
+    displayName: CRDT OVC Filtered Effect Requests
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_gc_pending
+  metadata:
+    displayName: CRDT Pending Garbage Collection
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_gc_attempted
+  metadata:
+    displayName: CRDT Attempted Garbage Collection
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_gc_collected
+  metadata:
+    displayName: CRDT Collected Garbage
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_gc_skipped
+  metadata:
+    displayName: CRDT Skipped Garbage
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_gc_elements_attempted
+  metadata:
+    displayName: CRDT Garbage Attempted Elements
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_gc_elements_collected
+  metadata:
+    displayName: CRDT Garbage Collected Elements
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_list_trimmed_vertices
+  metadata:
+    displayName: CRDT Trimmed Vertices
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_pending_list_trimmed_vertices
+  metadata:
+    displayName: CRDT Vertices Pending Trimming
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_replica_config_version
+  metadata:
+    displayName: CRDT Replica Config Version
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_replica_shards
+  metadata:
+    displayName: CRDT Replica Shards
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_replica_slots
+  metadata:
+    displayName: CRDT Replica Slots
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_replica_slot_coverage_by_any_ovc
+  metadata:
+    displayName: CRDT Replica Slot Coverage By Any OVC
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_replica_slot_coverage_by_only_ovc
+  metadata:
+    displayName: CRDT Replica Slot Coverage By Only OVC
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_replica_max_ops_lag
+  metadata:
+    displayName: CRDT Replica Max Operations Lag
+    description: Not Available
+    unit: MilliSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_replica_min_ops_lag
+  metadata:
+    displayName: CRDT Replica Min Operations Lag
+    description: Not Available
+    unit: MilliSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_raw_dbsize
+  metadata:
+    displayName: CRDT Raw DB Size
+    description: Not Available
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_key_headers
+  metadata:
+    displayName: CRDT Key Headers
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+- key: redis.redis_crdt_ts_key_headers
+  metadata:
+    displayName: CRDT Key Headers Timestamp
+    description: Not Available
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-replication"
+# REDIS SHARD
+#- key: redis.redis_used_memory
+#  metadata:
+#    displayName: Redis Used Memory
+#    description: Memory used by shard (in bigredis this includes flash) (bytes)
+#    unit: Byte
+#    tags:
+#    - "Redis"
+#    - "EF2"
+#    - "redis-shard"
+#- key: redis.redis_total_connections_received
+#  metadata:
+#    displayName: Redis Total Commands Received
+#    description: Number of connections received by the shard; Calculate the number of connections for a time period by comparing the value at different times
+#    unit: Count
+#    tags:
+#    - "Redis"
+#    - "EF2"
+#    - "redis-shard"
+- key: redis.redis_aof_delayed_fsync
+  metadata:
+    displayName: Redis AOF Delayed Fsync
+    description: Number of times an AOF fsync caused delays in the redis main thread (inducing latency); This can indicate that the disk is slow or overloaded
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_blocked_clients
+  metadata:
+    displayName: Redis Blocked Clients
+    description: Count the clients waiting on a blocking call
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_connected_clients
+  metadata:
+    displayName: Redis Connected Clients
+    description: Number of client connections to the specific shard
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_up
+  metadata:
+    displayName: Redis Up Status
+    description: Shard is up and running
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_total_commands_processed
+  metadata:
+    displayName: Redis Total Commands Processed
+    description: Number of commands processed by the shard; Calculate the number of commands for a time period by comparing the value at different times
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_allocator_active
+  metadata:
+    displayName: Redis Allocator Active
+    description: Total used memory including external fragmentation
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_allocator_allocated
+  metadata:
+    displayName: Redis Allocator Allocated
+    description: Total allocated memory
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_allocator_resident
+  metadata:
+    displayName: Redis Allocator Resident
+    description: Total resident memory (RSS)
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_aof_last_cow_size
+  metadata:
+    displayName: Redis AOF Last Cow Size
+    description: Last AOFR, CopyOnWrite memory
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_aof_rewrite_in_progress
+  metadata:
+    displayName: Redis AOF Rewrite-in-progress
+    description: The number of simultaneous AOF rewrites that are in progress
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_aof_rewrites
+  metadata:
+    displayName: Redis AOF Rewrites
+    description: Number of AOF rewrites this process executed
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_connected_slaves
+  metadata:
+    displayName: Redis Connected Slaves
+    description: Number of connected slaves
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_db0_avg_ttl
+  metadata:
+    displayName: Redis DB0 Average TTL
+    description: Size of replication backlog
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_db0_expires
+  metadata:
+    displayName: Redis DB0 Expires
+    description: A binary value that indicates if there is an active fork spawned by a module (1) or not (0)
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_db0_keys
+  metadata:
+    displayName: Redis DB0 Keys
+    description: Shard Process system CPU time spent in seconds
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_evicted_keys
+  metadata:
+    displayName: Redis Evicted Keys
+    description: Shard Resident memory size in bytes
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_expire_cycle_cpu_milliseconds
+  metadata:
+    displayName: Redis Expire Cycle CPU
+    description: Shard Start time of the process since unix epoch in seconds
+    unit: MilliSecond
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_expired_keys
+  metadata:
+    displayName: Redis Expired Keys
+    description: Shard virtual memory in bytes
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_forwarding_state
+  metadata:
+    displayName: Redis Forwarding State
+    description: Indication if bgsave is currently in progress
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_keys_trimmed
+  metadata:
+    displayName: Redis Keys Trimmed
+    description: The number of keys that were trimmed in the current or last resharding process
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_keyspace_read_hits
+  metadata:
+    displayName: Redis Keyspace Read Hits
+    description: Number of read operations accessing an existing keyspace
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_keyspace_read_misses
+  metadata:
+    displayName: Redis Keyspace Read Misses
+    description: Number of read operations accessing an non-existing keyspace
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_keyspace_write_hits
+  metadata:
+    displayName: Redis Keyspace Write Hits
+    description: Number of write operations accessing an existing keyspace
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_keyspace_write_misses
+  metadata:
+    displayName: Redis Keyspace Write Misses
+    description: Number of write operations accessing an non-existing keyspace
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_master_link_status
+  metadata:
+    displayName: Redis Master Link Status
+    description: Indicates if the replica is connected to its master
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_master_repl_offset
+  metadata:
+    displayName: Redis Master Replication Offset
+    description: Number of bytes sent to replicas by the shard; Calculate the throughput for a time period by comparing the value at different times
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_master_sync_in_progress
+  metadata:
+    displayName: Redis Master Synchronization-in-progress
+    description: The master shard is synchronizing (1 true)
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_max_process_mem
+  metadata:
+    displayName: Redis Max Process Memory
+    description: Current memory limit configured by redis_mgr according to node free memory
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_maxmemory
+  metadata:
+    displayName: Redis Max Memory
+    description: Current memory limit configured by redis_mgr according to db memory limits
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_mem_aof_buffer
+  metadata:
+    displayName: Redis Memory AOF Buffer
+    description: Current size of AOF buffer
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_mem_clients_normal
+  metadata:
+    displayName: Redis Memory Clients (Normal)
+    description: Current memory used for input and output buffers of non-replica clients
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_mem_clients_slaves
+  metadata:
+    displayName: Redis Memory Clients (Slaves)
+    description: Current memory used for input and output buffers of replica clients
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_mem_fragmentation_ratio
+  metadata:
+    displayName: Redis Memory Fragmentation Ratio
+    description: Memory fragmentation ratio (1.3 means 30percent overhead)
+    unit: Ratio
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_mem_not_counted_for_evict
+  metadata:
+    displayName: Redis Memory not counted for Eviction
+    description: Portion of used_memory (in bytes) that’s not counted for eviction and OOM error
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_mem_replication_backlog
+  metadata:
+    displayName: Redis Memory Replication Backlog
+    description: Size of replication backlog
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_module_fork_in_progress
+  metadata:
+    displayName: Redis Module Fork-in-progress
+    description: A binary value that indicates if there is an active fork spawned by a module (1) or not (0)
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_process_cpu_system_seconds_total
+  metadata:
+    displayName: Redis Process CPU System Seconds (total)
+    description: Shard Process system CPU time spent in seconds
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_process_cpu_usage_percent
+  metadata:
+    displayName: Redis Process CPU Usage (percent)
+    description: Shard Process cpu usage precentage
+    unit: Percent
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_process_cpu_user_seconds_total
+  metadata:
+    displayName: Redis Process CPU User Seconds (total)
+    description: Shard user CPU time spent in seconds
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_process_main_thread_cpu_system_seconds_total
+  metadata:
+    displayName: Redis Process Main System Seconds (total)
+    description: Shard main thread system CPU time spent in seconds
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_process_main_thread_cpu_user_seconds_total
+  metadata:
+    displayName: Redis Process Main User Seconds (total)
+    description: Shard main thread user CPU time spent in seconds
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_process_max_fds
+  metadata:
+    displayName: Redis Process Maximum FDs
+    description: Shard Maximum number of open file descriptors
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_process_open_fds
+  metadata:
+    displayName: Redis Process Open FDs
+    description: Shard Number of open file descriptors
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_process_resident_memory_bytes
+  metadata:
+    displayName: Redis Process Resident Memory (bytes)
+    description: Shard Resident memory size in bytes
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_process_start_time_seconds
+  metadata:
+    displayName: Redis Process Start Time (seconds)
+    description: Shard Start time of the process since unix epoch in seconds
+    unit: Second
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_process_virtual_memory_bytes
+  metadata:
+    displayName: Redis Process Virtual Memory (bytes)
+    description: Shard virtual memory in bytes
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_rdb_bgsave_in_progress
+  metadata:
+    displayName: Redis BG Save-in-progress
+    description: Indication if bgsave is currently in progress
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_rdb_last_cow_size
+  metadata:
+    displayName: Redis RDB Last COW Size
+    description: Last bgsave (or SYNC fork) used CopyOnWrite memory
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_rdb_saves
+  metadata:
+    displayName: Redis RDB Saves
+    description: Total count of bgsaves since process was restarted (including replica fullsync and persistence)
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_repl_touch_bytes
+  metadata:
+    displayName: Redis Replication Touch (bytes)
+    description: Number of bytes sent to replicas as TOUCH commands by the shard as a result of a READ command that was processed
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_total_net_input_bytes
+  metadata:
+    displayName: Redis Total Net Input (bytes)
+    description: Number of bytes received by the shard - Calculate the throughput for a time period by comparing the value at different times
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+- key: redis.redis_total_net_output_bytes
+  metadata:
+    displayName: Redis Total Net Output (bytes)
+    description: Number of bytes sent by the shard - Calculate the throughput for a time period by comparing the value at different times
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
+prometheus:
+  - group: redis_database
+    featureSet: Database Metrics
+    interval: 1m
+    metrics:
+    - key: redis.bdb_avg_read_latency_max
+      value: metric:bdb_avg_read_latency_max
+      type: gauge
+    - key: redis.bdb_avg_write_latency_max
+      value: metric:bdb_avg_write_latency_max
+      type: gauge
+    - key: redis.bdb_conns
+      value: metric:bdb_conns
+      type: gauge
+    - key: redis.bdb_egress_bytes
+      value: metric:bdb_egress_bytes
+      type: gauge
+    - key: redis.bdb_ingress_bytes
+      value: metric:bdb_ingress_bytes
+      type: gauge
+    - key: redis.bdb_memory_limit
+      value: metric:bdb_memory_limit
+      type: gauge
+    - key: redis.bdb_total_req
+      value: metric:bdb_total_req
+      type: gauge
+    - key: redis.bdb_up
+      value: metric:bdb_up
+      type: gauge
+    - key: redis.bdb_used_memory
+      value: metric:bdb_used_memory
+      type: gauge
+    - key: redis.bdb_avg_latency
+      value: metric:bdb_avg_latency
+      type: gauge
+    - key: redis.bdb_no_of_keys
+      value: metric:bdb_no_of_keys
+      type: gauge
+    - key: redis.bdb_avg_latency_max
+      value: metric:bdb_avg_latency_max
+      type: gauge
+    - key: redis.bdb_avg_read_latency
+      value: metric:bdb_avg_read_latency
+      type: gauge
+    - key: redis.bdb_avg_write_latency
+      value: metric:bdb_avg_write_latency
+      type: gauge
+    - key: redis.bdb_egress_bytes_max
+      value: metric:bdb_egress_bytes_max
+      type: gauge
+    - key: redis.bdb_evicted_objects
+      value: metric:bdb_evicted_objects
+      type: gauge
+    - key: redis.bdb_evicted_objects_max
+      value: metric:bdb_evicted_objects_max
+      type: gauge
+    - key: redis.bdb_expired_objects
+      value: metric:bdb_expired_objects
+      type: gauge
+    - key: redis.bdb_expired_objects_max
+      value: metric:bdb_expired_objects_max
+      type: gauge
+    - key: redis.bdb_fork_cpu_system
+      value: metric:bdb_fork_cpu_system
+      type: gauge
+    - key: redis.bdb_fork_cpu_system_max
+      value: metric:bdb_fork_cpu_system_max
+      type: count
+    - key: redis.bdb_fork_cpu_user
+      value: metric:bdb_fork_cpu_user
+      type: gauge
+    - key: redis.bdb_fork_cpu_user_max
+      value: metric:bdb_fork_cpu_user_max
+      type: count
+    - key: redis.bdb_ingress_bytes_max
+      value: metric:bdb_ingress_bytes_max
+      type: count
+    - key: redis.bdb_instantaneous_ops_per_sec
+      value: metric:bdb_instantaneous_ops_per_sec
+      type: gauge
+    - key: redis.bdb_main_thread_cpu_system
+      value: metric:bdb_main_thread_cpu_system
+      type: gauge
+    - key: redis.bdb_main_thread_cpu_system_max
+      value: metric:bdb_main_thread_cpu_system_max
+      type: count
+    - key: redis.bdb_main_thread_cpu_user
+      value: metric:bdb_main_thread_cpu_user
+      type: gauge
+    - key: redis.bdb_main_thread_cpu_user_max
+      value: metric:bdb_main_thread_cpu_user_max
+      type: count
+    - key: redis.bdb_mem_frag_ratio
+      value: metric:bdb_mem_frag_ratio
+      type: gauge
+    - key: redis.bdb_mem_size_lua
+      value: metric:bdb_mem_size_lua
+      type: gauge
+    - key: redis.bdb_monitor_sessions_count
+      value: metric:bdb_monitor_sessions_count
+      type: gauge
+    - key: redis.bdb_other_req
+      value: metric:bdb_other_req
+      type: gauge
+    - key: redis.bdb_other_req_max
+      value: metric:bdb_other_req_max
+      type: count
+    - key: redis.bdb_other_res
+      value: metric:bdb_other_res
+      type: gauge
+    - key: redis.bdb_other_res_max
+      value: metric:bdb_other_res_max
+      type: count
+    - key: redis.bdb_pubsub_channels
+      value: metric:bdb_pubsub_channels
+      type: gauge
+    - key: redis.bdb_pubsub_channels_max
+      value: metric:bdb_pubsub_channels_max
+      type: count
+    - key: redis.bdb_pubsub_patterns
+      value: metric:bdb_pubsub_patterns
+      type: gauge
+    - key: redis.bdb_pubsub_patterns_max
+      value: metric:bdb_pubsub_patterns_max
+      type: count
+    - key: redis.bdb_read_hits
+      value: metric:bdb_read_hits
+      type: gauge
+    - key: redis.bdb_read_hits_max
+      value: metric:bdb_read_hits_max
+      type: count
+    - key: redis.bdb_read_misses
+      value: metric:bdb_read_misses
+      type: gauge
+    - key: redis.bdb_read_misses_max
+      value: metric:bdb_read_misses_max
+      type: count
+    - key: redis.bdb_read_req
+      value: metric:bdb_read_req
+      type: gauge
+    - key: redis.bdb_read_req_max
+      value: metric:bdb_read_req_max
+      type: count
+    - key: redis.bdb_read_res
+      value: metric:bdb_read_res
+      type: gauge
+    - key: redis.bdb_read_res_max
+      value: metric:bdb_read_res_max
+      type: count
+    - key: redis.bdb_shard_cpu_system
+      value: metric:bdb_shard_cpu_system
+      type: gauge
+    - key: redis.bdb_shard_cpu_system_max
+      value: metric:bdb_shard_cpu_system_max
+      type: count
+    - key: redis.bdb_shard_cpu_user
+      value: metric:bdb_shard_cpu_user
+      type: gauge
+    - key: redis.bdb_shard_cpu_user_max
+      value: metric:bdb_shard_cpu_user_max
+      type: count
+    - key: redis.bdb_total_connections_received
+      value: metric:bdb_total_connections_received
+      type: gauge
+    - key: redis.bdb_total_connections_received_max
+      value: metric:bdb_total_connections_received_max
+      type: count
+    - key: redis.bdb_total_req_max
+      value: metric:bdb_total_req_max
+      type: count
+    - key: redis.bdb_total_res
+      value: metric:bdb_total_res
+      type: gauge
+    - key: redis.bdb_total_res_max
+      value: metric:bdb_total_res_max
+      type: count
+    - key: redis.bdb_write_hits
+      value: metric:bdb_write_hits
+      type: gauge
+    - key: redis.bdb_write_hits_max
+      value: metric:bdb_write_hits_max
+      type: count
+    - key: redis.bdb_write_misses
+      value: metric:bdb_write_misses
+      type: gauge
+    - key: redis.bdb_write_misses_max
+      value: metric:bdb_write_misses_max
+      type: count
+    - key: redis.bdb_write_req
+      value: metric:bdb_write_req
+      type: gauge
+    - key: redis.bdb_write_req_max
+      value: metric:bdb_write_req_max
+      type: count
+    - key: redis.bdb_write_res
+      value: metric:bdb_write_res
+      type: gauge
+    - key: redis.bdb_write_res_max
+      value: metric:bdb_write_res_max
+      type: count
+    - key: redis.no_of_expires
+      value: metric:no_of_expires
+      type: gauge
+  - group: redis_node
+    featureSet: Node Metrics
+    interval: 1m
+    metrics:
+    - key: redis.node_available_memory
+      value: metric:node_available_memory
+      type: gauge
+    - key: redis.node_avg_latency
+      value: metric:node_avg_latency
+      type: gauge
+    - key: redis.node_conns
+      value: metric:node_conns
+      type: gauge
+    - key: redis.node_egress_bytes
+      value: metric:node_egress_bytes
+      type: gauge
+    - key: redis.node_ingress_bytes
+      value: metric:node_ingress_bytes
+      type: gauge
+    - key: redis.node_persistent_storage_avail
+      value: metric:node_persistent_storage_avail
+      type: gauge
+    - key: redis.node_persistent_storage_free
+      value: metric:node_persistent_storage_free
+      type: gauge
+    - key: redis.node_provisional_memory
+      value: metric:node_provisional_memory
+      type: gauge
+    - key: redis.node_total_req
+      value: metric:node_total_req
+      type: gauge
+    - key: redis.node_up
+      value: metric:node_up
+      type: gauge
+    - key: redis.node_available_memory_no_overbooking
+      value: metric:node_available_memory_no_overbooking
+      type: gauge
+    - key: redis.node_cpu_idle
+      value: metric:node_cpu_idle
+      type: gauge
+    - key: redis.node_cpu_idle_max
+      value: metric:node_cpu_idle_max
+      type: gauge
+    - key: redis.node_cpu_idle_median
+      value: metric:node_cpu_idle_median
+      type: gauge
+    - key: redis.node_cpu_idle_min
+      value: metric:node_cpu_idle_min
+      type: gauge
+    - key: redis.node_cpu_iowait
+      value: metric:node_cpu_iowait
+      type: gauge
+    - key: redis.node_cpu_iowait_max
+      value: metric:node_cpu_iowait_max
+      type: gauge
+    - key: redis.node_cpu_iowait_median
+      value: metric:node_cpu_iowait_median
+      type: gauge
+    - key: redis.node_cpu_iowait_min
+      value: metric:node_cpu_iowait_min
+      type: gauge
+    - key: redis.node_cpu_irqs
+      value: metric:node_cpu_irqs
+      type: gauge
+    - key: redis.node_cpu_irqs_max
+      value: metric:node_cpu_irqs_max
+      type: gauge
+    - key: redis.node_cpu_irqs_median
+      value: metric:node_cpu_irqs_median
+      type: gauge
+    - key: redis.node_cpu_irqs_min
+      value: metric:node_cpu_irqs_min
+      type: gauge
+    - key: redis.node_cpu_nice
+      value: metric:node_cpu_nice
+      type: gauge
+    - key: redis.node_cpu_nice_max
+      value: metric:node_cpu_nice_max
+      type: gauge
+    - key: redis.node_cpu_nice_median
+      value: metric:node_cpu_nice_median
+      type: gauge
+    - key: redis.node_cpu_nice_min
+      value: metric:node_cpu_nice_min
+      type: gauge
+    - key: redis.node_cpu_steal
+      value: metric:node_cpu_steal
+      type: gauge
+    - key: redis.node_cpu_steal_max
+      value: metric:node_cpu_steal_max
+      type: gauge
+    - key: redis.node_cpu_steal_median
+      value: metric:node_cpu_steal_median
+      type: gauge
+    - key: redis.node_cpu_steal_min
+      value: metric:node_cpu_steal_min
+      type: gauge
+    - key: redis.node_cpu_system
+      value: metric:node_cpu_system
+      type: gauge
+    - key: redis.node_cpu_system_max
+      value: metric:node_cpu_system_max
+      type: gauge
+    - key: redis.node_cpu_system_median
+      value: metric:node_cpu_system_median
+      type: gauge
+    - key: redis.node_cpu_system_min
+      value: metric:node_cpu_system_min
+      type: gauge
+    - key: redis.node_cpu_user
+      value: metric:node_cpu_user
+      type: gauge
+    - key: redis.node_cpu_user_max
+      value: metric:node_cpu_user_max
+      type: gauge
+    - key: redis.node_cpu_user_median
+      value: metric:node_cpu_user_median
+      type: gauge
+    - key: redis.node_cpu_user_min
+      value: metric:node_cpu_user_min
+      type: gauge
+    - key: redis.node_cur_aof_rewrites
+      value: metric:node_cur_aof_rewrites
+      type: gauge
+    - key: redis.node_egress_bytes_max
+      value: metric:node_egress_bytes_max
+      type: gauge
+    - key: redis.node_egress_bytes_median
+      value: metric:node_egress_bytes_median
+      type: gauge
+    - key: redis.node_egress_bytes_min
+      value: metric:node_egress_bytes_min
+      type: gauge
+    - key: redis.node_ephemeral_storage_avail
+      value: metric:node_ephemeral_storage_avail
+      type: gauge
+    - key: redis.node_ephemeral_storage_free
+      value: metric:node_ephemeral_storage_free
+      type: gauge
+    - key: redis.node_free_memory
+      value: metric:node_free_memory
+      type: gauge
+    - key: redis.node_ingress_bytes_max
+      value: metric:node_ingress_bytes_max
+      type: gauge
+    - key: redis.node_ingress_bytes_median
+      value: metric:node_ingress_bytes_median
+      type: gauge
+    - key: redis.node_ingress_bytes_min
+      value: metric:node_ingress_bytes_min
+      type: gauge
+    - key: redis.node_provisional_memory
+      value: metric:node_provisional_memory
+      type: gauge
+    - key: redis.node_provisional_memory_no_overbooking
+      value: metric:node_provisional_memory_no_overbooking
+      type: gauge
+  - group: redis_proxy
+    featureSet: Proxy Metrics
+    interval: 1m
+    metrics:
+    - key: redis.listener_auth_cmds
+      value: metric:listener_auth_cmds
+      type: gauge
+    - key: redis.listener_auth_errors
+      value: metric:listener_auth_errors
+      type: gauge
+    - key: redis.listener_conns
+      value: metric:listener_conns
+      type: gauge
+    - key: redis.listener_last_req_time
+      value: metric:listener_last_req_time
+      type: gauge
+    - key: redis.listener_last_res_time
+      value: metric:listener_last_res_time
+      type: gauge
+    - key: redis.listener_total_connections_received
+      value: metric:listener_total_connections_received
+      type: gauge
+    - key: redis.listener_total_req
+      value: metric:listener_total_req
+      type: gauge
+    - key: redis.listener_total_res
+      value: metric:listener_total_res
+      type: gauge
+    - key: redis.listener_total_started_res
+      value: metric:listener_total_started_res
+      type: gauge
+    - key: redis.listener_write_res
+      value: metric:listener_write_res
+      type: gauge
+    - key: redis.listener_write_started_res
+      value: metric:listener_write_started_res
+      type: gauge
+    - key: redis.listener_acc_latency
+      value: metric:listener_acc_latency
+      type: gauge
+    - key: redis.listener_acc_latency_max
+      value: metric:listener_acc_latency_max
+      type: count
+    - key: redis.listener_acc_other_latency
+      value: metric:listener_acc_other_latency
+      type: gauge
+    - key: redis.listener_acc_other_latency_max
+      value: metric:listener_acc_other_latency_max
+      type: count
+    - key: redis.listener_acc_read_latency
+      value: metric:listener_acc_read_latency
+      type: gauge
+    - key: redis.listener_acc_read_latency_max
+      value: metric:listener_acc_read_latency_max
+      type: gauge
+    - key: redis.listener_acc_write_latency
+      value: metric:listener_acc_write_latency
+      type: gauge
+    - key: redis.listener_acc_write_latency_max
+      value: metric:listener_acc_write_latency_max
+      type: gauge
+    - key: redis.listener_auth_cmds_max
+      value: metric:listener_auth_cmds_max
+      type: gauge
+    - key: redis.listener_auth_errors_max
+      value: metric:listener_auth_errors_max
+      type: gauge
+    - key: redis.listener_cmd_flush
+      value: metric:listener_cmd_flush
+      type: gauge
+    - key: redis.listener_cmd_flush_max
+      value: metric:listener_cmd_flush_max
+      type: gauge
+    - key: redis.listener_cmd_get
+      value: metric:listener_cmd_get
+      type: gauge
+    - key: redis.listener_cmd_get_max
+      value: metric:listener_cmd_get_max
+      type: gauge
+    - key: redis.listener_cmd_set
+      value: metric:listener_cmd_set
+      type: gauge
+    - key: redis.listener_cmd_set_max
+      value: metric:listener_cmd_set_max
+      type: gauge
+    - key: redis.listener_cmd_touch
+      value: metric:listener_cmd_touch
+      type: gauge
+    - key: redis.listener_cmd_touch_max
+      value: metric:listener_cmd_touch_max
+      type: gauge
+    - key: redis.listener_egress_bytes
+      value: metric:listener_egress_bytes
+      type: gauge
+    - key: redis.listener_egress_bytes_max
+      value: metric:listener_egress_bytes_max
+      type: gauge
+    - key: redis.listener_ingress_bytes
+      value: metric:listener_ingress_bytes
+      type: gauge
+    - key: redis.listener_ingress_bytes_max
+      value: metric:listener_ingress_bytes_max
+      type: gauge
+    - key: redis.listener_max_connections_exceeded
+      value: metric:listener_max_connections_exceeded
+      type: gauge
+    - key: redis.listener_max_connections_exceeded_max
+      value: metric:listener_max_connections_exceeded_max
+      type: gauge
+    - key: redis.listener_monitor_sessions_count
+      value: metric:listener_monitor_sessions_count
+      type: gauge
+    - key: redis.listener_other_req
+      value: metric:listener_other_req
+      type: gauge
+    - key: redis.listener_other_req_max
+      value: metric:listener_other_req_max
+      type: gauge
+    - key: redis.listener_other_res
+      value: metric:listener_other_res
+      type: gauge
+    - key: redis.listener_other_res_max
+      value: metric:listener_other_res_max
+      type: gauge
+    - key: redis.listener_other_started_res
+      value: metric:listener_other_started_res
+      type: gauge
+    - key: redis.listener_other_started_res_max
+      value: metric:listener_other_started_res_max
+      type: gauge
+    - key: redis.listener_read_req
+      value: metric:listener_read_req
+      type: gauge
+    - key: redis.listener_read_req_max
+      value: metric:listener_read_req_max
+      type: gauge
+    - key: redis.listener_read_res
+      value: metric:listener_read_res
+      type: gauge
+    - key: redis.listener_read_res_max
+      value: metric:listener_read_res_max
+      type: gauge
+    - key: redis.listener_read_started_res
+      value: metric:listener_read_started_res
+      type: gauge
+    - key: redis.listener_read_started_res_max
+      value: metric:listener_read_started_res_max
+      type: gauge
+    - key: redis.listener_total_connections_received_max
+      value: metric:listener_total_connections_received_max
+      type: gauge
+    - key: redis.listener_total_req_max
+      value: metric:listener_total_req_max
+      type: gauge
+    - key: redis.listener_total_res_max
+      value: metric:listener_total_res_max
+      type: gauge
+    - key: redis.listener_total_started_res_max
+      value: metric:listener_total_started_res_max
+      type: gauge
+    - key: redis.listener_write_req
+      value: metric:listener_write_req
+      type: gauge
+    - key: redis.listener_write_req_max
+      value: metric:listener_write_req_max
+      type: gauge
+    - key: redis.listener_write_res_max
+      value: metric:listener_write_res_max
+      type: gauge
+    - key: redis.listener_write_started_res_max
+      value: metric:listener_write_started_res_max
+      type: gauge
+  - group: redis_replication
+    featureSet: Replication Metrics
+    interval: 1m
+    metrics:
+    - key: redis.bdb_crdt_syncer_ingress_bytes
+      value: metric:bdb_crdt_syncer_ingress_bytes
+      type: gauge
+    - key: redis.bdb_crdt_syncer_ingress_bytes_decompressed
+      value: metric:bdb_crdt_syncer_ingress_bytes_decompressed
+      type: gauge
+    - key: redis.bdb_crdt_syncer_local_ingress_lag_time
+      value: metric:bdb_crdt_syncer_local_ingress_lag_time
+      type: gauge
+    - key: redis.bdb_crdt_syncer_status
+      value: metric:bdb_crdt_syncer_status
+      type: gauge
+    - key: redis.bdb_replicaof_syncer_ingress_bytes
+      value: metric:bdb_replicaof_syncer_ingress_bytes
+      type: gauge
+    - key: redis.bdb_replicaof_syncer_ingress_bytes_decompressed
+      value: metric:bdb_replicaof_syncer_ingress_bytes_decompressed
+      type: gauge
+    - key: redis.bdb_replicaof_syncer_local_ingress_lag_time
+      value: metric:bdb_replicaof_syncer_local_ingress_lag_time
+      type: gauge
+    - key: redis.bdb_replicaof_syncer_status
+      value: metric:bdb_replicaof_syncer_status
+      type: gauge
+    - key: redis.bdb_crdt_syncer_egress_bytes
+      value: metric:bdb_crdt_syncer_egress_bytes
+      type: gauge
+    - key: redis.bdb_crdt_syncer_egress_bytes_decompressed
+      value: metric:bdb_crdt_syncer_egress_bytes_decompressed
+      type: gauge
+    - key: redis.bdb_crdt_syncer_egress_bytes_decompressed_max
+      value: metric:bdb_crdt_syncer_egress_bytes_decompressed_max
+      type: gauge
+    - key: redis.bdb_crdt_syncer_egress_bytes_max
+      value: metric:bdb_crdt_syncer_egress_bytes_max
+      type: gauge
+    - key: redis.redis_crdt_stale_replica
+      value: metric:redis_crdt_stale_replica
+      type: count
+    - key: redis.redis_crdt_oom_latch
+      value: metric:redis_crdt_oom_latch
+      type: count
+    - key: redis.redis_crdt_clock
+      value: metric:redis_crdt_clock
+      type: count
+    - key: redis.redis_crdt_peer_id
+      value: metric:redis_crdt_peer_id
+      type: count
+    - key: redis.redis_crdt_peer_peer_state
+      value: metric:redis_crdt_peer_peer_state
+      type: count
+    - key: redis.redis_crdt_peer_offset
+      value: metric:redis_crdt_peer_offset
+      type: count
+    - key: redis.redis_crdt_peer_lag
+      value: metric:redis_crdt_peer_lag
+      type: count
+    - key: redis.redis_crdt_peer_dst_id
+      value: metric:redis_crdt_peer_dst_id
+      type: count
+    - key: redis.redis_crdt_backlog_size
+      value: metric:redis_crdt_backlog_size
+      type: count
+    - key: redis.redis_crdt_backlog_idx
+      value: metric:redis_crdt_backlog_idx
+      type: count
+    - key: redis.redis_crdt_backlog_histlen
+      value: metric:redis_crdt_backlog_histlen
+      type: count
+    - key: redis.redis_crdt_backlog_offset
+      value: metric:redis_crdt_backlog_offset
+      type: count
+    - key: redis.redis_crdt_backlog_master_offset
+      value: metric:redis_crdt_backlog_master_offset
+      type: count
+    - key: redis.redis_crdt_backlog_refs
+      value: metric:redis_crdt_backlog_refs
+      type: count
+    - key: redis.redis_crdt_merge_reqs
+      value: metric:redis_crdt_merge_reqs
+      type: count
+    - key: redis.redis_crdt_effect_reqs
+      value: metric:redis_crdt_effect_reqs
+      type: count
+    - key: redis.redis_crdt_ovc_filtered_effect_reqs
+      value: metric:redis_crdt_ovc_filtered_effect_reqs
+      type: count
+    - key: redis.redis_crdt_gc_pending
+      value: metric:redis_crdt_gc_pending
+      type: count
+    - key: redis.redis_crdt_gc_attempted
+      value: metric:redis_crdt_gc_attempted
+      type: count
+    - key: redis.redis_crdt_gc_collected
+      value: metric:redis_crdt_gc_collected
+      type: count
+    - key: redis.redis_crdt_gc_skipped
+      value: metric:redis_crdt_gc_skipped
+      type: count
+    - key: redis.redis_crdt_gc_elements_attempted
+      value: metric:redis_crdt_gc_elements_attempted
+      type: count
+    - key: redis.redis_crdt_gc_elements_collected
+      value: metric:redis_crdt_gc_elements_collected
+      type: count
+    - key: redis.redis_crdt_list_trimmed_vertices
+      value: metric:redis_crdt_list_trimmed_vertices
+      type: count
+    - key: redis.redis_crdt_pending_list_trimmed_vertices
+      value: metric:redis_crdt_pending_list_trimmed_vertices
+      type: count
+    - key: redis.redis_crdt_replica_config_version
+      value: metric:redis_crdt_replica_config_version
+      type: count
+    - key: redis.redis_crdt_replica_shards
+      value: metric:redis_crdt_replica_shards
+      type: count
+    - key: redis.redis_crdt_replica_slots
+      value: metric:redis_crdt_replica_slots
+      type: count
+    - key: redis.redis_crdt_replica_slot_coverage_by_any_ovc
+      value: metric:redis_crdt_replica_slot_coverage_by_any_ovc
+      type: count
+    - key: redis.redis_crdt_replica_slot_coverage_by_only_ovc
+      value: metric:redis_crdt_replica_slot_coverage_by_only_ovc
+      type: count
+    - key: redis.redis_crdt_replica_max_ops_lag
+      value: metric:redis_crdt_replica_max_ops_lag
+      type: count
+    - key: redis.redis_crdt_replica_min_ops_lag
+      value: metric:redis_crdt_replica_min_ops_lag
+      type: count
+    - key: redis.redis_crdt_raw_dbsize
+      value: metric:redis_crdt_raw_dbsize
+      type: gauge
+    - key: redis.redis_crdt_key_headers
+      value: metric:redis_crdt_key_headers
+      type: count
+    - key: redis.redis_crdt_ts_key_headers
+      value: metric:redis_crdt_ts_key_headers
+      type: count
+  - group: redis_shard
+    featureSet: Shard Metrics
+    interval: 1m
+    metrics:
+    - key: redis.redis_used_memory
+      value: metric:redis_used_memory
+      type: gauge
+    - key: redis.redis_total_connections_received
+      value: metric:redis_total_connections_received
+      type: gauge
+    - key: redis.redis_aof_delayed_fsync
+      value: metric:redis_aof_delayed_fsync
+      type: gauge
+    - key: redis.redis_blocked_clients
+      value: metric:redis_blocked_clients
+      type: gauge
+    - key: redis.redis_connected_clients
+      value: metric:redis_connected_clients
+      type: gauge
+    - key: redis.redis_up
+      value: metric:redis_up
+      type: gauge
+    - key: redis.redis_total_commands_processed
+      value: metric:redis_total_commands_processed
+      type: gauge
+    - key: redis.redis_allocator_active
+      value: metric:redis_allocator_active
+      type: gauge
+    - key: redis.redis_allocator_allocated
+      value: metric:redis_allocator_allocated
+      type: gauge
+    - key: redis.redis_allocator_resident
+      value: metric:redis_allocator_resident
+      type: gauge
+    - key: redis.redis_aof_last_cow_size
+      value: metric:redis_aof_last_cow_size
+      type: gauge
+    - key: redis.redis_aof_rewrite_in_progress
+      value: metric:redis_aof_rewrite_in_progress
+      type: gauge
+    - key: redis.redis_aof_rewrites
+      value: metric:redis_aof_rewrites
+      type: gauge
+    - key: redis.redis_connected_slaves
+      value: metric:redis_connected_slaves
+      type: gauge
+    - key: redis.redis_db0_avg_ttl
+      value: metric:redis_db0_avg_ttl
+      type: gauge
+    - key: redis.redis_db0_expires
+      value: metric:redis_db0_expires
+      type: gauge
+    - key: redis.redis_db0_keys
+      value: metric:redis_db0_keys
+      type: gauge
+    - key: redis.redis_evicted_keys
+      value: metric:redis_evicted_keys
+      type: gauge
+    - key: redis.redis_expire_cycle_cpu_milliseconds
+      value: metric:redis_expire_cycle_cpu_milliseconds
+      type: gauge
+    - key: redis.redis_expired_keys
+      value: metric:redis_expired_keys
+      type: gauge
+    - key: redis.redis_forwarding_state
+      value: metric:redis_forwarding_state
+      type: gauge
+    - key: redis.redis_keys_trimmed
+      value: metric:redis_keys_trimmed
+      type: gauge
+    - key: redis.redis_keyspace_read_hits
+      value: metric:redis_keyspace_read_hits
+      type: gauge
+    - key: redis.redis_keyspace_read_misses
+      value: metric:redis_keyspace_read_misses
+      type: gauge
+    - key: redis.redis_keyspace_write_hits
+      value: metric:redis_keyspace_write_hits
+      type: gauge
+    - key: redis.redis_keyspace_write_misses
+      value: metric:redis_keyspace_write_misses
+      type: gauge
+    - key: redis.redis_master_link_status
+      value: metric:redis_master_link_status
+      type: gauge
+    - key: redis.redis_master_repl_offset
+      value: metric:redis_master_repl_offset
+      type: gauge
+    - key: redis.redis_master_sync_in_progress
+      value: metric:redis_master_sync_in_progress
+      type: gauge
+    - key: redis.redis_max_process_mem
+      value: metric:redis_max_process_mem
+      type: gauge
+    - key: redis.redis_maxmemory
+      value: metric:redis_maxmemory
+      type: gauge
+    - key: redis.redis_mem_aof_buffer
+      value: metric:redis_mem_aof_buffer
+      type: gauge
+    - key: redis.redis_mem_clients_normal
+      value: metric:redis_mem_clients_normal
+      type: gauge
+    - key: redis.redis_mem_clients_slaves
+      value: metric:redis_mem_clients_slaves
+      type: gauge
+    - key: redis.redis_mem_fragmentation_ratio
+      value: metric:redis_mem_fragmentation_ratio
+      type: histogram
+    - key: redis.redis_mem_not_counted_for_evict
+      value: metric:redis_mem_not_counted_for_evict
+      type: gauge
+    - key: redis.redis_mem_replication_backlog
+      value: metric:redis_mem_replication_backlog
+      type: gauge
+    - key: redis.redis_module_fork_in_progress
+      value: metric:redis_module_fork_in_progress
+      type: gauge
+    - key: redis.redis_process_cpu_system_seconds_total
+      value: metric:redis_process_cpu_system_seconds_total
+      type: gauge
+    - key: redis.redis_process_cpu_usage_percent
+      value: metric:redis_process_cpu_usage_percent
+      type: gauge
+    - key: redis.redis_process_cpu_user_seconds_total
+      value: metric:redis_process_cpu_user_seconds_total
+      type: gauge
+    - key: redis.redis_process_main_thread_cpu_system_seconds_total
+      value: metric:redis_process_main_thread_cpu_system_seconds_total
+      type: gauge
+    - key: redis.redis_process_main_thread_cpu_user_seconds_total
+      value: metric:redis_process_main_thread_cpu_user_seconds_total
+      type: gauge
+    - key: redis.redis_process_max_fds
+      value: metric:redis_process_max_fds
+      type: gauge
+    - key: redis.redis_process_open_fds
+      value: metric:redis_process_open_fds
+      type: gauge
+    - key: redis.redis_process_resident_memory_bytes
+      value: metric:redis_process_resident_memory_bytes
+      type: gauge
+    - key: redis.redis_process_start_time_seconds
+      value: metric:redis_process_start_time_seconds
+      type: gauge
+    - key: redis.redis_process_virtual_memory_bytes
+      value: metric:redis_process_virtual_memory_bytes
+      type: gauge
+    - key: redis.redis_rdb_bgsave_in_progress
+      value: metric:redis_rdb_bgsave_in_progress
+      type: gauge
+    - key: redis.redis_rdb_last_cow_size
+      value: metric:redis_rdb_last_cow_size
+      type: gauge
+    - key: redis.redis_rdb_saves
+      value: metric:redis_rdb_saves
+      type: gauge
+    - key: redis.redis_repl_touch_bytes
+      value: metric:redis_repl_touch_bytes
+      type: gauge
+    - key: redis.redis_total_net_input_bytes
+      value: metric:redis_total_net_input_bytes
+      type: gauge
+    - key: redis.redis_total_net_output_bytes
+      value: metric:redis_total_net_output_bytes
+      type: gauge
+
+# --- TOPOLOGY MAPPING ---
+# CLUSTER (redis) - cluster
+# DATABASE (redis.bdb) - cluster-bdb # issue with this prefix and replication
+# NODE (redis.node) - cluster-node
+# PROXY (redis.listener) - cluster-bdb-proxy or cluster-bdb-endpoint?
+# REPLICA (redis.bdb_crdt) - ? (maybe grouped with Database)
+# SHARD (redis.redis) - cluster-bdb-redis
+# --- /TOPOLOGY MAPPING ---
+topology:
+  types:
+  # REDIS CLUSTER
+  - name: prometheus:com_dynatrace_extension_redis_cluster
+    enabled: true
+    displayName: Redis Cluster
+    rules:
+    - idPattern: prometheus_redis_{cluster}
+      instanceNamePattern: Redis Cluster - {cluster}
+      sources:
+      - sourceType: Metrics
+        condition: $prefix(redis)
+      attributes:
+      - pattern: '{cluster}'
+        key: cluster
+        displayName: cluster
+  # REDIS DATABASE - bdb
+  - name: prometheus:com_dynatrace_extension_redis_database
+    enabled: true
+    displayName: Redis Database
+    rules:
+    - idPattern: prometheus_redis_{cluster}_{bdb}
+      instanceNamePattern: Redis Database {bdb_name} id={bdb} on {cluster}
+      sources:
+      - sourceType: Metrics
+        condition: $prefix(redis)
+      attributes:
+      - pattern: '{cluster}'
+        key: cluster
+        displayName: cluster
+      - pattern: '{bdb}'
+        key: bdb
+        displayName: bdb
+      - pattern: '{bdb_name}'
+        key: bdb_name
+        displayName: bdb_name
+  # REDIS NODE
+  - name: prometheus:com_dynatrace_extension_redis_node
+    enabled: true
+    displayName: Redis Node
+    rules:
+    - idPattern: prometheus_redis_{cluster}_{node}
+      instanceNamePattern: Redis Node {node} on {cluster}
+      sources:
+      - sourceType: Metrics
+        condition: $prefix(redis)
+      attributes:
+      - pattern: '{cluster}'
+        key: cluster
+        displayName: cluster
+      - pattern: '{node}'
+        key: node
+        displayName: Node
+  # TODO - proxy, replica, shard
+
+  relationships:
+  # Node is part of a cluster
+  - enabled: true
+    sources:
+    - sourceType: Metrics
+      condition: $prefix(redis)
+    fromType: prometheus:com_dynatrace_extension_redis_node
+    typeOfRelation: PART_OF
+    toType: prometheus:com_dynatrace_extension_redis_cluster
+  # The Node is the same as the monitored host
+  - enabled: true
+    sources:
+    - sourceType: Metrics
+      condition: $prefix(redis)
+    fromType: prometheus:com_dynatrace_extension_redis_node
+    typeOfRelation: SAME_AS
+    toType: host # dt.entity.host
+  # DB runs on a cluster
+  - enabled: true
+    sources:
+    - sourceType: Metrics
+      condition: $prefix(redis)
+    fromType: prometheus:com_dynatrace_extension_redis_database
+    typeOfRelation: RUNS_ON
+    toType: prometheus:com_dynatrace_extension_redis_cluster
+
+screens:
+# REDIS CLUSTER
+  - entityType: prometheus:com_dynatrace_extension_redis_cluster
+    detailsSettings:
+      staticContent:
+        breadcrumbs:
+          - type: ENTITY_LIST_REF
+            entityType: prometheus:com_dynatrace_extension_redis_cluster
+            displayName: Redis Clusters
+        showProblems: true
+        showProperties: true
+        showTags: true
+        showGlobalFilter: true
+        showAddTag: true
+      layout:
+        autoGenerate: false
+        cards:
+        - key: database_entities
+          type: ENTITIES_LIST
+        - key: node_entities
+          type: ENTITIES_LIST
+        - key: database_charts
+          type: CHART_GROUP
+        - key: node_charts
+          type: CHART_GROUP
+        - key: proxy_charts
+          type: CHART_GROUP
+        - key: replication_charts
+          type: CHART_GROUP
+        - key: shard_charts
+          type: CHART_GROUP
+    entitiesListCards:
+    - key: database_entities
+      displayName: Redis Databases
+      pageSize: 10
+      displayCharts: false
+      enableDetailsExpandability: false
+      numberOfVisibleCharts: 3
+      displayIcons: true
+      entitySelectorTemplate: type(prometheus:com_dynatrace_extension_redis_database),fromRelationship.runsOn($(entityConditions))
+    - key: node_entities
+      displayName: Redis Nodes
+      pageSize: 10
+      displayCharts: false
+      enableDetailsExpandability: false
+      numberOfVisibleCharts: 3
+      displayIcons: true
+      entitySelectorTemplate: type(prometheus:com_dynatrace_extension_redis_node),fromRelationship.isPartOf($(entityConditions))
+    chartsCards:
+    # DATABASE METRICS - 11
+    - key: database_charts
+      displayName: Database Metrics
+      chartsInRow: 3
+      numberOfVisibleCharts: 9
+      charts:
+      - displayName: DB Client Connections
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_conns:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: DB Outgoing Traffic
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_egress_bytes:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: DB Incoming Traffic
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_ingress_bytes:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: DB Memory Limit
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_memory_limit:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: DB Request Rate
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_total_req:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Database Status
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_up:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: DB Used Memory
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_used_memory:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: DB Number of Keys
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_no_of_keys:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: DB Read Latency Max
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_avg_read_latency_max:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: DB Write Latency Max
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_avg_write_latency_max:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: DB Average Latency
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_avg_latency:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+    # NODE METRICS - 10
+    - key: node_charts
+      displayName: Node Metrics
+      chartsInRow: 3
+      numberOfVisibleCharts: 9
+      charts:
+      - displayName: Node Available Memory
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.node_available_memory:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Node Average Latency
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.node_avg_latency:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Node Client Connections
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.node_conns:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Node Outgoing Traffic
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.node_egress_bytes:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Node Incoming Traffic
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.node_ingress_bytes:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Node Persistant Storage Available
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.node_persistent_storage_avail:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Node Provisional Memory
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.node_provisional_memory:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Node Request Rate
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.node_total_req:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Node Up Status
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.node_up:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+    # PROXY METRICS - 11
+    - key: proxy_charts
+      displayName: Proxy Metrics
+      chartsInRow: 3
+      numberOfVisibleCharts: 9
+      charts:
+      - displayName: Listener AUTH Commands
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.listener_auth_cmds:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Listener AUTH Errors
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.listener_auth_errors:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Endpoint Client Connections
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.listener_conns:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Last Command Request Time
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.listener_last_req_time:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Last Command Response Time
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.listener_last_res_time:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Client Connection Rate
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.listener_total_connections_received:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Endpoint Request Rate
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.listener_total_req:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Endpoint Response Rate
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.listener_total_res:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Number of Database Responses
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.listener_total_started_res:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Endpoint Write Response Rate
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.listener_write_res:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Endpoint Write Response Count
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.listener_write_started_res:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+    # REPLICATION METRICS - 4
+    - key: replication_charts
+      displayName: Replication Metrics
+      chartsInRow: 2
+      numberOfVisibleCharts: 4
+      charts:
+      - displayName: CRDB Incoming Compressed Traffic Rate
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_crdt_syncer_ingress_bytes:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: CRDB Incoming Decompressed Traffic Rate
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_crdt_syncer_ingress_bytes_decompressed:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: CRDM Traffic Lag Time
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_crdt_syncer_local_ingress_lag_time:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: CRDB Syncer Status
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.bdb_crdt_syncer_status:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+    # SHARD METRICS - 7
+    - key: shard_charts
+      displayName: Shard Metrics
+      chartsInRow: 3
+      numberOfVisibleCharts: 7
+      charts:
+      - displayName: Redis AOF Delayed Fsync
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.redis_aof_delayed_fsync:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Redis Blocked Clients
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.redis_blocked_clients:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Redis Connected Clients
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.redis_connected_clients:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Redis Up Status
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.redis_up:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Redis Total Commands Processed
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.redis_total_commands_processed:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Redis Total Commands Received
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.redis_total_connections_received:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+      - displayName: Redis Used Memory
+        visualizationType: GRAPH_CHART
+        graphChartConfig:
+          metrics:
+            - metricSelector: redis.redis_used_memory:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
+# REDIS DATABASE - autogen + breadcrum
+  - entityType: prometheus:com_dynatrace_extension_redis_database
+    detailsSettings:
+      staticContent:
+        breadcrumbs:
+          - type: ENTITY_LIST_REF
+            entityType: prometheus:com_dynatrace_extension_redis_database
+            displayName: Redis Databases
+        showProblems: true
+        showProperties: true
+        showTags: true
+        showGlobalFilter: true
+        showAddTag: true
+      layout:
+        autoGenerate: true
+# REDIS NODE - autogen + breadcrum
+  - entityType: prometheus:com_dynatrace_extension_redis_node
+    detailsSettings:
+      staticContent:
+        breadcrumbs:
+          - type: ENTITY_LIST_REF
+            entityType: prometheus:com_dynatrace_extension_redis_node
+            displayName: Redis Nodes
+        showProblems: true
+        showProperties: true
+        showTags: true
+        showGlobalFilter: true
+        showAddTag: true
+      layout:
+        autoGenerate: true

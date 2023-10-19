@@ -70,7 +70,7 @@ To ensure network connectivity, the the Splunk collector must run within a netwo
 
 == Dashboards
 
-This respository includes sample Splunk dashboards for monitoring your Redis deplyoment. See the link:/dashboards[dashboards] folder for the available set of dashboards.
+This respository includes sample Splunk dashboards for monitoring your Redis deplyoment. See the link:/splunk/dashboards[dashboards] folder for the available set of dashboards.
 
 image::../.github/images/splunk-redis-shard-dashboard.png[]
 

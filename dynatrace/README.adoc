@@ -24,6 +24,10 @@ Follow the instructions here:
 
 https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/sign-extension
 
+== Dashboards
+
+This respository includes sample Dynatrace dashboards for monitoring your Redis deplyoment. See the link:/dynatrace/dashboards[dashboards] folder for the available set of dashboards.
+
 == Support
 
 Support for metrics collection for Redis Enterprise with Dynatrace is provided on a good faith effort basis by Redis. Inc. To report bugs, request features, or receive assistance, please https://github.com/{project-owner}/{project-name}/issues[file an issue].

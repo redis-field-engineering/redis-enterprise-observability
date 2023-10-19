@@ -1,1 +1,1 @@
-# redis-enterprise-observability
+# Redis Enterprise Observability

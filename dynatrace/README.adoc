@@ -8,7 +8,6 @@ To collect metrics in Dynatrace from Redis Enterprise Software or Redis Cloud, w
 
 == Table of Contents
 
-* link:#Requirements[Requirements]
 * link:#Installation[Installation]
 * link:#Dashboards[Dashboards]
 * link:#Dashboards[Alternative Redis Plugins]

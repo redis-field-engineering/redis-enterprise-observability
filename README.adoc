@@ -1,0 +1,20 @@
+:linkattrs:
+:project-owner:      redis-field-engineering
+:project-name:       redis-enterprise-observability
+
+= Redis Enterprise Observability
+
+Redis Enterprise and Redis Cloud expose database metrics using a Prometheus endpoint.
+
+== Observability Platforms
+
+* link:#Dynatrace[/dynatrace]
+* link:#Splunk[/Splunk]
+
+== Support
+
+Support for the observability platforms mentioned in this repository is provided on a good faith effort basis by Redis. Inc. To report bugs, request features, or receive assistance, please https://github.com/{project-owner}/{project-name}/issues[file an issue].
+
+== License
+
+This code in this repository is licensed under the MIT License. Copyright (C) 2023 Redis, Inc.

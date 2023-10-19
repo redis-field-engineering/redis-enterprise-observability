@@ -8,8 +8,8 @@ Redis Enterprise and Redis Cloud expose database metrics using a Prometheus endp
 
 == Observability Platforms
 
-* link:#Dynatrace[/dynatrace]
-* link:#Splunk[/Splunk]
+* link:/dynatrace[Dynatrace]
+* link:/splunk[Splunk]
 
 == Support
 

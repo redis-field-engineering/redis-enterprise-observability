@@ -8,7 +8,10 @@ Redis Enterprise and Redis Cloud expose database metrics using a Prometheus endp
 
 == Observability Platforms
 
+* https://github.com/redis-field-engineering/redis-enterprise-grafana-dashboards[Grafana]
+* https://github.com/redis-field-engineering/redis-enterprise-datadog-prometheus-collector[Datadog]
 * link:/dynatrace[Dynatrace]
+* https://github.com/redis-field-engineering/redis-enterprise-new-relic-dashboards[New Relic]
 * link:/splunk[Splunk]
 
 == Support

@@ -15,27 +15,15 @@ To collect metrics in Dynatrace from Redis Enterprise Software or Redis Cloud, w
 * link:#Support[Support]
 * link:#License[License]
 
-== Requirements
-
-To collect Redis Enterprise metrics from Splunk, you will need:
-
-* A Redis Enterprise deployment or a Redis Cloud account with a https://docs.redis.com/latest/rc/subscriptions/create-flexible-subscription/[Flexible or Annual subscription]
-* A Dynatrace account
-
-If you're using Redis Enterprise Software, you will need the fully-qualified domain name for your cluster.
-
-If you're using Redis Cloud, you will need:
-
-* The https://docs.redis.com/latest/rc/databases/view-edit-database/[private endpoint] for one of the databases associated with your Redis Cloud subscription. This private endpoint will look something like this: `redis-12345.internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:121212`.
-* A https://docs.redis.com/latest/rc/security/vpc-peering/[VPC-peering] between the infrastructure running your Dynatrace Collector and Redis Cloud.
-
 == Installation
 
-== Dashboards
+The Dyntrace v2.0 Extensions support Prometheus metrics, and as such we have created the necessary extension file and dashboards so that this option is available. At this time Dynatrace are still testing their signing mechanism so that this extension is not available directly from them, but will have to be built and signed according to their instructions. They have indicated that they will sign 3rd party extensions starting in Q1 2024, at which point this process will no longer be necessary.
 
-This respository includes sample Dynatrace dashboards for monitoring your Redis deplyoment. See the link:/dashboards[dashboards] folder for the available set of dashboards.
+Clone the repository and cd into its root folder ('redis-enterprise-dynatrace-observability'). The contents are already in the required format; a 'src' directory containing a .yml file and a folder containing .json dashboard files.
 
-== Alternatives
+Follow the instructions here:
+
+https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/sign-extension
 
 == Support
 

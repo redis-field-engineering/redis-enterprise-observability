@@ -4,7 +4,9 @@
 
 = Redis Enterprise Observability
 
-Redis Enterprise and Redis Cloud expose database metrics using a Prometheus endpoint.
+Redis Enterprise and Redis Cloud expose database metrics using a Prometheus endpoint. To collect and view these metrics, you will need an observabilty platform, such as Prometheus with Grafana.
+
+This repository contains documentation and dashboard configurations for using several major observability platforms with Redis Enterprise/Cloud.
 
 == Observability Platforms
 

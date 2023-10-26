@@ -1,0 +1,106 @@
+:linkattrs:
+:project-owner:      redis-field-engineering
+:project-name:       redis-enterprise-new-relic-dashboards-prometheus
+:name:               Redis Enterprise New Relic Prometheus Exporter
+
+= Redis Enterprise New Relic Prometheus Exporter
+
+This repository contains a set of New Relic dashboards configured to display Redis Enterprise metrics exported through Prometheus.
+
+== Table of Contents
+
+* link:#Requirements[Requirements]
+* link:#Usage[Usage]
+* link:#Dashboards[Dashboards]
+* link:#Support[Support]
+* link:#License[License]
+
+== Requirements
+
+To use this project, you will need:
+
+* A https://docs.redis.com/latest/rs/[Redis Enterprise] deployment or a https://docs.redis.com/latest/rc/[Redis Cloud] account with a https://docs.redis.com/latest/rc/subscriptions/create-flexible-subscription/[Flexible or Annual subscription]
+* A https://newrelic.com/[New Relic account]
+* A Prometheus deployment. You can run Prometheus in a container using the provided Dockerfile, or you can configure an existing Prometheus by referencing the included link:/prometheus.yml[prometheus.yml].
+
+=== Redis Enterprise Software
+
+To monitor a Redis Enterprise Software deployment, you will need your cluster"s FQDN or hostname. The Prometheus endpoint is available on port 8070.
+
+=== Redis Enterprise Cloud
+
+To monitor a Redis Cloud deployment, you will need the https://docs.redis.com/latest/rc/databases/view-edit-database/[private endpoint] for one of the databases associated with your Redis Cloud subscription.
+
+This private endpoint will have the following form:
+
+`redis-12345.internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:121212`.
+
+To get the Prometheus endpoint for your Redis Cloud subscription, drop the section before the first dot (in this case, the "redis-12345"), and specify the Prometheus exporter port 8070:
+
+`internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:8070`
+
+This is the endpoint that you will provide when you configure Prometheus.
+
+== Usage
+
+=== Configure Prometheus
+
+From New Relic UI, find the left-hand menu and click "Add Data".
+
+Type "Prometheus" in the search bar and then select "Prometheus Remote Write Integration".
+
+Enter a name for the installation (e.g., "redis-server-prod") and click "generate". This will generate a remote write configuration with a bearer token.
+
+Open the sample link:/prometheus.yml[prometheus.yml] file and find the "remote_write" configuration directive.
+
+Under "url", replace "REDIS_ENTERPRISE_SERVER_NAME" with the installation name you just provided when generating your token (e.g., "redis-server-prod").
+
+Next, find the "remote_write" -> "authorization" -> "credentials" configuration directive. Replace NEW_RELIC_BEARER_TOKEN with the value of the bearer token you just generated.
+
+Finally, find the "scrape_config" configuration directive where "job_name" is "redis-enterprise". Under "static_configs", replace REDIS_ENTERPRISE_HOST with the FQDN or hostname of your Redis Enterprise deployment.
+
+=== Run a Prometheus Server using Docker
+
+If you don"t already have a Prometheus server, you can run Prometheus using a Docker container. This container will forward Prometheus metrics from Redis Enterprise to New Relic.
+
+For Redis Enterprise Cloud deployments, ensure that the VM running your Prometheus container is https://docs.redis.com/latest/rc/security/vpc-peering/:[VPC-peered with your Redis cluster"s VPC].
+
+Next, use the included link:/Dockerfile[Dockerfile] to create a container image.
+
+Build and tag the image:
+
+[source,bash]
+docker build -t new-relic-redis-cloud-prometheus .
+
+Then run the image you just created: 
+
+[source,bash]
+docker run \
+    -d \
+    --name prometheus-exporter \
+    --network=host \
+    --cap-add=SYS_PTRACE \
+    --privileged \
+    --pid=host \
+    --cgroupns=host
+	new-relic-redis-cloud-prometheus
+
+Now you can test that metrics are flowing correctly to New Relic.
+
+Once the container has been running for five minutes, open the New Relic UI and click "Query Your Data" in the left-hand menu. In the "Metric" search bar, enter "bdb_up", which should then appear in the results. You can then click to launch a https://docs.newrelic.com/docs/query-your-data/nrql-new-relic-query-language/get-started/introduction-nrql-new-relics-query-language/[NRQL query], and this will return a value corresponding to the number of databases.
+
+== Dashboards
+
+This project includes link:/dashboards[sample New Relic dashboards] that you can install to get you up and running quickly. See the link:/dashboards[dashboards] folder.
+
+To install the dashboards in the New Relic console, click on the ""Dashboards"" link in the left menu, and then click "Import Dashboard" in the top right. Then paste the contents of the JSON file.
+
+Once you"ve installed the dashboards, open the Cluster Dashboard and select a cluster using the "cluster" dropdown menu. If data is flowing correctly, you will see a set of charts with active data. If you cannot see any data, ensure that the time range for the dashboards is set to the last 10 minutes (you can find this settings at the upper right-hand corner of the UI).
+
+== Support
+
+This project is supported by Redis, Inc. on a good faith effort basis. To report bugs, request features, or receive assistance, please https://github.com/{project-owner}/{project-name}/issues[file an issue].
+
+== License
+
+This code in this repository is licensed under the MIT License. Copyright (C) 2023 Redis, Inc.

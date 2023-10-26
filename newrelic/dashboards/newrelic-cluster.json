@@ -1,0 +1,293 @@
+{
+  "name": "Redis Software Cluster Dashboard",
+  "description": null,
+  "permissions": "PUBLIC_READ_WRITE",
+  "pages": [
+    {
+      "name": "Redis Software Database Dashboard",
+      "description": null,
+      "widgets": [
+        {
+          "title": "Used Memory",
+          "layout": {
+            "column": 1,
+            "row": 1,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_used_memory) AS 'Used Memory' FROM Metric WHERE cluster={{cluster}} LIMIT 100 TIMESERIES 30000"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "units": {
+              "unit": "BYTES"
+            },
+            "yAxisLeft": {
+              "zero": false
+            }
+          }
+        },
+        {
+          "title": "Operations",
+          "layout": {
+            "column": 5,
+            "row": 1,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_read_req) AS 'Read' FROM Metric WHERE cluster={{cluster}} LIMIT 100 TIMESERIES 30000"
+              },
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_write_req) AS 'Write' FROM Metric WHERE cluster={{cluster}} LIMIT 100 TIMESERIES 30000"
+              },
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_other_req) AS 'Other' FROM Metric WHERE cluster={{cluster}} LIMIT 100 TIMESERIES 30000"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "units": {
+              "unit": "COUNT"
+            },
+            "yAxisLeft": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Latency",
+          "layout": {
+            "column": 9,
+            "row": 1,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_avg_read_latency) AS 'Read' FROM Metric WHERE cluster={{cluster}} LIMIT 100 TIMESERIES 30000"
+              },
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_avg_write_latency) AS 'Write' FROM Metric  WHERE cluster={{cluster}} LIMIT 100 TIMESERIES 30000"
+              },
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_avg_other_latency) AS 'Other' FROM Metric WHERE cluster={{cluster}} LIMIT 100 TIMESERIES 30000"
+              }
+            ],
+            "nullValues": {
+              "nullValue": "zero"
+            },
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "units": {
+              "unit": "MS"
+            },
+            "yAxisLeft": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Objects",
+          "layout": {
+            "column": 1,
+            "row": 4,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_no_of_keys) AS 'Object Count' FROM Metric  WHERE cluster={{cluster}} LIMIT 100 TIMESERIES 30000"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "yAxisLeft": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Connections",
+          "layout": {
+            "column": 5,
+            "row": 4,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_conns) AS 'Connections' FROM Metric  WHERE cluster={{cluster}} LIMIT 100 TIMESERIES 30000"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "yAxisLeft": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "CPU Usage",
+          "layout": {
+            "column": 9,
+            "row": 4,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "colors": {
+              "seriesOverrides": [
+                {
+                  "color": "#05ca02",
+                  "seriesName": "j8-redis-field.local"
+                }
+              ]
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_main_thread_cpu_system) AS 'System' FROM Metric WHERE cluster={{cluster}} TIMESERIES"
+              },
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_main_thread_cpu_user) AS 'User' FROM Metric  WHERE cluster={{cluster}} TIMESERIES"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "units": {
+              "unit": "PERCENTAGE"
+            },
+            "yAxisLeft": {
+              "zero": true
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "cluster",
+      "items": null,
+      "defaultValues": [],
+      "nrqlQuery": {
+        "accountIds": [
+          3462097
+        ],
+        "query": "FROM Metric SELECT uniques(cluster) WHERE metricName='bdb_up' "
+      },
+      "title": "Cluster",
+      "type": "NRQL",
+      "isMultiSelection": false,
+      "replacementStrategy": "STRING"
+    }
+  ]
+}

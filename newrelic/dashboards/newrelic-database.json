@@ -1,0 +1,490 @@
+{
+  "name": "Redis Software Database Dashboard",
+  "description": null,
+  "permissions": "PUBLIC_READ_WRITE",
+  "pages": [
+    {
+      "name": "Redis Software Database Dashboard",
+      "description": null,
+      "widgets": [
+        {
+          "title": "Used Memory",
+          "layout": {
+            "column": 1,
+            "row": 1,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "bdb_used_memory",
+                "precision": 2,
+                "type": "humanized"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_used_memory)/latest(bdb_memory_limit) * 100 as 'Used Memory (%)' FROM Metric WHERE cluster = {{cluster}} AND bdb_name={{database}}"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Used Memory",
+          "layout": {
+            "column": 3,
+            "row": 1,
+            "width": 4,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_used_memory) FROM Metric WHERE cluster = {{cluster}} AND bdb_name={{database}} FACET bdb_name LIMIT 100 TIMESERIES 30000"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "units": {
+              "unit": "BYTES"
+            },
+            "yAxisLeft": {
+              "zero": false
+            }
+          }
+        },
+        {
+          "title": "Latency",
+          "layout": {
+            "column": 7,
+            "row": 1,
+            "width": 4,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_avg_read_latency) AS 'read' FROM Metric  WHERE cluster = {{cluster}} AND bdb_name={{database}} TIMESERIES"
+              },
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_avg_write_latency) AS 'write' FROM Metric WHERE bdb_name={{database}} SINCE 30 MINUTES AGO TIMESERIES"
+              },
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_avg_other_latency) AS 'other' FROM Metric SINCE 30 MINUTES AGO TIMESERIES"
+              }
+            ],
+            "nullValues": {
+              "nullValue": "zero"
+            },
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "units": {
+              "unit": "MS"
+            },
+            "yAxisLeft": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Average Latency",
+          "layout": {
+            "column": 11,
+            "row": 1,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "Average Latency per Second",
+                "type": "humanized"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_avg_latency) AS 'Average Latency per Second' FROM Metric WHERE bdb_name={{database}}"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Total Operations",
+          "layout": {
+            "column": 1,
+            "row": 3,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT count(bdb_total_req) AS 'Total Operations per Second' FROM Metric WHERE cluster={{cluster}} AND bdb_name={{database}}"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Operations",
+          "layout": {
+            "column": 3,
+            "row": 3,
+            "width": 4,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_read_req) AS 'read' FROM Metric WHERE cluster={{cluster}} AND bdb_name={{database}} LIMIT 100 TIMESERIES 30000"
+              },
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_write_req) AS 'write' FROM Metric  WHERE cluster={{cluster}} AND bdb_name={{database}} LIMIT 100 TIMESERIES 30000"
+              },
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_other_req) AS 'other' FROM Metric  WHERE cluster={{cluster}} AND bdb_name={{database}} LIMIT 100 TIMESERIES 30000"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "yAxisLeft": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Average Keys",
+          "layout": {
+            "column": 7,
+            "row": 3,
+            "width": 4,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_no_of_keys) FROM Metric WHERE cluster={{cluster}} AND bdb_name={{database}} LIMIT 100 TIMESERIES 30000"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "yAxisLeft": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Total Keys",
+          "layout": {
+            "column": 11,
+            "row": 3,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_no_of_keys) as 'Total Keys' FROM Metric WHERE cluster={{cluster}} AND bdb_name={{database}}"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Connections",
+          "layout": {
+            "column": 1,
+            "row": 5,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_conns) AS 'Connections' FROM Metric WHERE cluster={{cluster}} AND bdb_name={{database}}"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Retention",
+          "layout": {
+            "column": 3,
+            "row": 5,
+            "width": 4,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_evicted_objects) AS 'Evicted' FROM Metric WHERE cluster={{cluster}} AND bdb_name={{database}} LIMIT 100 TIMESERIES 30000"
+              },
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_expired_objects) AS 'Expired' FROM Metric WHERE cluster={{cluster}} AND bdb_name={{database}} LIMIT 100 TIMESERIES 30000"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "units": {
+              "unit": "PERCENTAGE"
+            },
+            "yAxisLeft": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Ingress/Egress",
+          "layout": {
+            "column": 7,
+            "row": 5,
+            "width": 4,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_ingress_bytes) AS 'Ingress' FROM Metric WHERE cluster={{cluster}} AND bdb_name={{database}} LIMIT 100 TIMESERIES 30000"
+              },
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_egress_bytes) AS 'Egress' FROM Metric WHERE cluster={{cluster}} AND bdb_name={{database}} LIMIT 100 TIMESERIES 30000"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "yAxisLeft": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Total Misses",
+          "layout": {
+            "column": 11,
+            "row": 5,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3462097
+                ],
+                "query": "SELECT latest(bdb_write_misses)+latest(bdb_read_misses) AS 'Total Misses' FROM Metric WHERE cluster={{cluster}} AND bdb_name={{database}}"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "cluster",
+      "items": null,
+      "defaultValues": [],
+      "nrqlQuery": {
+        "accountIds": [
+          3462097
+        ],
+        "query": "FROM Metric SELECT uniques(cluster) WHERE metricName='bdb_up' "
+      },
+      "title": "Cluster",
+      "type": "NRQL",
+      "isMultiSelection": false,
+      "replacementStrategy": "STRING"
+    },
+    {
+      "name": "database",
+      "items": null,
+      "defaultValues": [],
+      "nrqlQuery": {
+        "accountIds": [
+          3462097
+        ],
+        "query": "FROM Metric SELECT uniques(bdb_name) WHERE metricName='bdb_up'"
+      },
+      "title": "Database",
+      "type": "NRQL",
+      "isMultiSelection": false,
+      "replacementStrategy": "STRING"
+    }
+  ]
+}

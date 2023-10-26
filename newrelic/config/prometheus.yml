@@ -1,0 +1,58 @@
+# Prometheus configuration for monitoring Redis Enterprise (Software/Cloud) with New Relic
+# Prometheus scrapes metrics from Redis Enterprise and forwards them to New Relic using Prometheus Remote Write (https://prometheus.io/docs/concepts/remote_write_spec/)
+# New Relic documents this strategy here: https://docs.newrelic.com/docs/infrastructure/prometheus-integrations/install-configure-remote-write/set-your-prometheus-remote-write-integration/
+# 
+# Usage
+#
+# - Replace REDIS_ENTERPRISE_HOST with your cluster's hostname.
+# - Replace REDIS_ENTERPRISE_SERVICE NAME with any name you'd like to use to refer to this data source.
+# - Replace NEW_RELIC_BEARER_TOKEN with the token you generated in the New Relic UI.
+#
+# Configuration
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# Scrape configuration for Redis Enterprise and Prometheus
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # Redis Enterprise
+  - job_name: "redis-enterprise"
+    scrape_interval: 30s
+    scrape_timeout: 30s
+    metrics_path: /
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+    static_configs:
+      # The default Redis Enterprise Prometheus port is 8070. 
+      # Replace REDIS_ENTERPRISE_HOST with your cluster's hostname.
+      - targets: ["REDIS_ENTERPRISE_HOST:8070"]
+
+# Remote write configuration for New Relic.
+# - Replace REDIS_ENTERPRISE_SERVICE NAME with any name you'd like to use to refer to this data source.
+# - Replace NEW_RELIC_BEARER_TOKEN with the token you generated in the New Relic UI.
+remote_write:
+- url: https://metric-api.newrelic.com/prometheus/v1/write?prometheus_server=REDIS_ENTERPRISE_SERVICE_NAME
+  authorization:
+    credentials: NEW_RELIC_BEARER_TOKEN

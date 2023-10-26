@@ -1,0 +1,32 @@
+# This is the main input for unit testing.
+# Only this file is passed as command line argument.
+
+rule_files:
+  - ../rules/alerts.yml
+
+evaluation_interval: 1m
+
+tests:
+  # Test 1.
+  - interval: 1m
+    # Series data.
+    input_series:
+      - series: 'bdb_used_memory{job="redis", instance="localhost:6379"}'
+        values: '96 97 98 99 99 99 99 99 99 99 99 99 99 98 97'
+      - series: 'bdb_memory_limit{job="redis", instance="localhost:6379"}'
+        values: '100 100 100 100 100 100 100 100 100 100 100 100 100 100 100'
+
+    # Unit test for alerting rules.
+    alert_rule_test:
+      # Unit test 1.
+      - eval_time: 1m
+        alertname: DB full
+        exp_alerts:
+          # Alert 1.
+          - exp_labels:
+              severity: critical
+              instance: localhost:6379
+              job: redis            
+            exp_annotations:
+              summary: "DB is full"
+              description: "DB Usage - Cluster: {{ $labels.cluster }} DB: {{$labels.bdb}} Usage: {{$value}}% full "

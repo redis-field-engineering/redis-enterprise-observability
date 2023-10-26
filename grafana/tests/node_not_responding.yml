@@ -1,0 +1,30 @@
+# This is the main input for unit testing.
+# Only this file is passed as command line argument.
+
+rule_files:
+  - ../rules/alerts.yml
+
+evaluation_interval: 1m
+
+tests:
+  # Test 1.
+  - interval: 1m
+    # Series data.
+    input_series:
+      - series: 'node_up{job="redis", instance="localhost:6379"}'
+        values: '3 2 1 1 1 2 2 1 1 2 2 2 1 2 3'
+
+    # Unit test for alerting rules.
+    alert_rule_test:
+      # Unit test 1.
+      - eval_time: 5m
+        alertname: Node Not Responding
+        exp_alerts:
+          # Alert 1.
+          - exp_labels:
+              severity: critical
+              job: redis            
+            exp_annotations:
+              summary: Node Not Responding
+              description: "Node Down - Cluster:  Expected Nodes: 3 Actual: 1"
+              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/nodes.md#node-not-responding

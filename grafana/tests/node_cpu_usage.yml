@@ -1,0 +1,31 @@
+# This is the main input for unit testing.
+# Only this file is passed as command line argument.
+
+rule_files:
+  - ../rules/alerts.yml
+
+evaluation_interval: 1m
+
+tests:
+  # Test 1.
+  - interval: 30s
+    # Series data.
+    input_series:
+      - series: 'node_cpu_idle{job="redis", cluster="localhost"}'
+        values: '0.02 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.01 0.02 0.03'
+
+    # Unit test for alerting rules.
+    alert_rule_test:
+      # Unit test 1.
+      - eval_time: 2m
+        alertname: Node CPU Usage
+        exp_alerts:
+          # Alert 1.
+          - exp_labels:
+              severity: critical
+              cluster: localhost
+              job: redis            
+            exp_annotations:
+              summary: Node CPU Usage
+              description: "High CPU Usage - Cluster: localhost Usage: 99%"
+              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/nodes.md#node-cpu-usage

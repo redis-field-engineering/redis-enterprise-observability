@@ -1,0 +1,42 @@
+node_available_flash	Available flash in node (bytes)
+node_available_flash_no_overbooking	Available flash in node (bytes), without taking into account overbooking
+node_available_memory	Amount of free memory in node (bytes) that is available for database provisioning
+node_available_memory_no_overbooking	Available ram in node (bytes) without taking into account overbooking
+node_avg_latency	Average latency of requests handled by endpoints on node (seconds); returned only when there is traffic
+node_bigstore_free	Sum of free space of back-end flash (used by flash DB’s [BigRedis]) on all cluster nodes (bytes); returned only when BigRedis is enabled
+node_bigstore_iops	Rate of i/o operations against back-end flash for all shards which are part of a flash based DB (BigRedis) in cluster (ops/sec); returned only when BigRedis is enabled
+node_bigstore_kv_ops	Rate of value read/write operations against back-end flash for all shards which are part of a flash based DB (BigRedis) in cluster (ops/sec); returned only when BigRedis is enabled
+node_bigstore_throughput	Throughput i/o operations against back-end flash for all shards which are part of a flash based DB (BigRedis) in cluster (bytes/sec); returned only when BigRedis is enabled
+node_conns	Number of clients connected to endpoints on node
+node_cpu_idle	CPU idle time portion (0-1, multiply by 100 to get percent)
+node_cpu_idle_max	Highest value of CPU idle time portion (0-1, multiply by 100 to get percent)
+node_cpu_idle_median	Average value of CPU idle time portion (0-1, multiply by 100 to get percent)
+node_cpu_idle_min	Lowest value of CPU idle time portion (0-1, multiply by 100 to get percent)
+node_cpu_system	CPU time portion spent in kernel (0-1, multiply by 100 to get percent)
+node_cpu_system_max	Highest value of CPU time portion spent in kernel (0-1, multiply by 100 to get percent)
+node_cpu_system_median	Average value of CPU time portion spent in kernel (0-1, multiply by 100 to get percent)
+node_cpu_system_min	Lowest value of CPU time portion spent in kernel (0-1, multiply by 100 to get percent)
+node_cpu_user	CPU time portion spent by users-pace processes (0-1, multiply by 100 to get percent)
+node_cpu_user_max	Highest value of CPU time portion spent by users-pace processes (0-1, multiply by 100 to get percent)
+node_cpu_user_median	Average value of CPU time portion spent by users-pace processes (0-1, multiply by 100 to get percent)
+node_cpu_user_min	Lowest value of CPU time portion spent by users-pace processes (0-1, multiply by 100 to get percent)
+node_cur_aof_rewrites	Number of aof rewrites that are currently performed by shards on this node
+node_egress_bytes	Rate of outgoing network traffic to node (bytes/sec)
+node_egress_bytes_max	Highest value of rate of outgoing network traffic to node (bytes/sec)
+node_egress_bytes_median	Average value of rate of outgoing network traffic to node (bytes/sec)
+node_egress_bytes_min	Lowest value of rate of outgoing network traffic to node (bytes/sec)
+node_ephemeral_storage_avail	Disk space available to RLEC processes on configured ephemeral disk (bytes)
+node_ephemeral_storage_free	Free disk space on configured ephemeral disk (bytes)
+node_free_memory	Free memory in node (bytes)
+node_ingress_bytes	Rate of incoming network traffic to node (bytes/sec)
+node_ingress_bytes_max	Highest value of rate of incoming network traffic to node (bytes/sec)
+node_ingress_bytes_median	Average value of rate of incoming network traffic to node (bytes/sec)
+node_ingress_bytes_min	Lowest value of rate of incoming network traffic to node (bytes/sec)
+node_persistent_storage_avail	Disk space available to RLEC processes on configured persistent disk (bytes)
+node_persistent_storage_free	Free disk space on configured persistent disk (bytes)
+node_provisional_flash	Amount of flash available for new shards on this node, taking into account overbooking, max redis servers, reserved flash and provision and migration thresholds (bytes)
+node_provisional_flash_no_overbooking	Amount of flash available for new shards on this node, without taking into account overbooking, max redis servers, reserved flash and provision and migration thresholds (bytes)
+node_provisional_memory	Amount of RAM that is available for provisioning to databases out of the total RAM allocated for databases
+node_provisional_memory_no_overbooking	Amount of RAM that is available for provisioning to databases out of the total RAM allocated for databases, without taking into account overbooking
+node_total_req	Request rate handled by endpoints on node (ops/sec)
+node_up	Node is part of the cluster and is connected

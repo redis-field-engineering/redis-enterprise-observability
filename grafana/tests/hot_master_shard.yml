@@ -1,0 +1,32 @@
+# This is the main input for unit testing.
+# Only this file is passed as command line argument.
+
+rule_files:
+  - ../rules/alerts.yml
+
+evaluation_interval: 30s
+
+tests:
+  # Test 1.
+  - interval: 30s
+    # Series data.
+    input_series:
+      - series: 'redis_process_cpu_usage_percent{job="redis", role="master", cluster="localhost", redis="1"}'
+        values: '0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99'
+
+    # Unit test for alerting rules.
+    alert_rule_test:
+      # Unit test 1.
+      - eval_time: 3m
+        alertname: Hot Master Shard
+        exp_alerts:
+          # Alert 1.
+          - exp_labels:
+              severity: critical
+              job: redis            
+              cluster: localhost
+              redis: 1            
+            exp_annotations:
+              summary: Hot Master Shard
+              description: "Hot Shard - Cluster: {{ $labels.cluster }} Shard: {{$labels.redis}} Node: {{$labels.node}} CPU: {{$value}}%"
+              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#hot-master-shard

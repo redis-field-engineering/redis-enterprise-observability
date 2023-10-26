@@ -1,0 +1,38 @@
+bdb_conns{cluster=\"$cluster\"}
+redis_connected_clients{cluster=\"$cluster\"}
+node_up{cluster=\"$cluster\"}
+cluster={\"$cluster\", alertstate=\"firing\"}
+redis_used_memory{cluster=\"$cluster\"}
+node_available_memory{cluster=\"$cluster\"}
+node_provisional_memory{cluster=\"$cluster\"}
+node_provisional_memory_no_overbooking{cluster=\"$cluster\"}
+bdb_used_memory{cluster=\"$cluster\"}[1m])) by (bdb),
+bdb_total_req{cluster=\"$cluster\"}
+node_cpu_idle{cluster=\"$cluster\", node=\"$node\"
+listener_total_req{cluster=\"$cluster\"}
+redis_used_memory{node=\"$node\", cluster=\"$cluster\"}
+bdb_used_memory{cluster=\"$cluster\”}
+bdb_used_memory{cluster=\"$cluster\”}
+bdb_conns{cluster=\"$cluster\"}
+listener_conns{bdb=\"$bdb\", cluster=\"$cluster\"}
+bdb_avg_latency{cluster=\"$cluster\"}
+
+
+
+# sum(node_disk_bytes_read * on(instance) group_left(node_name) node_meta{}) by (node_name)
+
+bdb_used_memory{} * on(bdb) group_left(bdb_name) bdb_up{}
+bdb_conns{} * on(bdb) group_left(bdb_name) bdb_up{}
+
+bdb_used_memory{} * on(bdb) group_left(bdb_name) bdb_up{}
+bdb_avg_latency{} * on(bdb) group_left(bdb_name) bdb_up{}
+bdb_total_req{} * on(bdb) group_left(bdb_name) bdb_up{}
+
+listener_total_req{} * on(bdb) group_left(bdb_name) bdb_up{}
+
+redis_used_memory{node="$node"} * on(bdb) group_left(bdb_name) bdb_up{}
+
+bdb_evicted_objects{bdb="$bdb", cluster="$cluster"} * on(bdb) group_left(bdb_name) bdb_up{}
+
+redis-11971.
+c23411.us-east4-mz.gcp.cloud.rlrcp.com

@@ -1,0 +1,33 @@
+# This is the main input for unit testing.
+# Only this file is passed as command line argument.
+
+rule_files:
+  - ../rules/alerts.yml
+
+evaluation_interval: 15s
+
+tests:
+  # Test 1.
+  - interval: 15s
+    # Series data.
+    input_series:
+      - series: 'bdb_avg_latency{job="redis", cluster="localhost", bdb="1"}'
+        values: '0.001 0.002 0.001 0.001 0.002 0.003 0.004 0.005 0.004 0.003 0.002 0.001 0.001 0.001 0.002'
+
+    # Unit test for alerting rules.
+    alert_rule_test:
+      # Unit test 1.
+      - eval_time: 2m
+        alertname: Average Latency Warning
+        exp_alerts:
+          # Alert 1.
+          - exp_labels:
+              severity: notification
+              job: redis            
+              cluster: localhost
+              bdb: 1
+            exp_annotations:
+              summary: Average Latency Warning
+              description: "High Latency - Cluster: localhost DB: 1 Latency: 4 ms"
+              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/latency.md#average-latency
+

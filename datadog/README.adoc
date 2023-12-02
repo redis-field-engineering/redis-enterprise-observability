@@ -44,7 +44,7 @@ Optionally, ensure that you can issue HTTP requests against your Redis Enterpris
 
 `curl https://internal.c28486.us-central1-mz.gcp.cloud.rlrcp.com:8070`
 
-Next, configure the Datadog agent's Prometheus extension to read from this endpont. You can find a sample Datadog Prometheus configuration file in this repository at link:/src/config.yml[src/config.yml].
+Next, configure the Datadog agent's Prometheus extension to read from this endpont. You can find a sample Datadog Prometheus configuration file in this repository at link:/datadog/src/conf.yml[src/config.yml].
 
 Under `instances`, describe one Prometheus endpoint for each Redis Enterprise cluster and/or Redis Cloud subscription that you want to monitor. For example, the configuration for monitoring two separate Redis Cloud subscriptions might look like this:
 

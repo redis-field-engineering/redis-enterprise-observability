@@ -1,13 +1,11 @@
 :linkattrs:
 :project-owner:      redis-field-engineering
-:project-name:       redis-cloud-datadog-prometheus-collector
-:name:               Redis Cloud DataDog Prometheus Collector
+:project-name:       redis-enterprise-observability
+:name:               Redis Datadog Prometheus
 
-= Redis Cloud DataDog Prometheus Collector
+= Redis Datadog Prometheus
 
-The {name} collects metrics from a Redis Cloud subscription's Prometheus endpoint and then exports those metrics to DataDog. This project is provided as a Docker image for ease of use.
-
-You can run this container in any environment that is VPC-peered with your Redis Cloud subscription.
+You can monitor your Redis Enteprise and Redis Cloud deployments using Datadog. This repository contains configuration and dashboards to get you up and running quickly.
 
 == Table of Contents
 
@@ -19,100 +17,86 @@ You can run this container in any environment that is VPC-peered with your Redis
 
 == Requirements
 
-To use the {name}, you will need:
+To monitor your Redis Enterprise/Cloud deployments with Datadog, you will need:
 
-* A Redis Cloud account with a https://docs.redis.com/latest/rc/subscriptions/create-flexible-subscription/[Flexible or Annual subscription]
-* A https://www.datadoghq.com/[DataDog account]
-* A container runtime that is https://docs.redis.com/latest/rc/security/vpc-peering/[VPC-peered with your Redis Cloud subscription]
+* A https://www.datadoghq.com/[Datadog account]
+* A Redis Cloud account with a https://docs.redis.com/latest/rc/subscriptions/create-flexible-subscription/[Flexible/Annual subscription] *or* a self-managed Redis Enterprise software deployment.
+* A https://docs.datadoghq.com/agent/[Datadog agent] running in an environment that can connect to your Redis cluster's Prometheus endpoint. For Redis Cloud deployments, this means that the environment running your Datadog agent must be https://docs.redis.com/latest/rc/security/vpc-peering/[VPC-peered with your Redis Cloud subscription].
 
-Additionally, you will need the following information:
+Additionally, you will need the following configuration details:
 
-* A https://docs.datadoghq.com/account_management/api-app-keys/[DataDog API key] associated with your DataDog account
-* The https://docs.redis.com/latest/rc/databases/view-edit-database/[private endpoint] for one of the databases associated with your Redis Cloud subscription. This private endpoint will look something like this: `redis-12345.internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:121212`. You can provide the private endpoint for any of the databases from your subscription. The DataDog agent will then monitor all of your subscription's databases.
-* The https://docs.redis.com/latest/rc/api/get-started/manage-api-keys/[API account key] for your Redis Cloud account. There is one API account key per Redis Cloud account.
-* An https://docs.redis.com/latest/rc/api/get-started/manage-api-keys/[API user key] for your Redis Cloud account. You should create a unique user key for this project.
+* A https://docs.datadoghq.com/account_management/api-app-keys/[Datadog API key] associated with your Datadog account
+* The host and port of the Prometheus endpoint exposed by your Redis deployment. See below for details on how to get this endpoint.
+
+=== Prometheus endpoint
+
+Your Redis Enterprise/Cloud deployment's Prometheus endpoint is accessible on port 8070.
+
+If you're running *Redis Enterprise*, you can connect to Prometheus at the fully-qualified domain name (FQDN) of your cluster on port 8070. For example, if your cluster's FQDN is `redis.cluster.example.com`, then Prometheus is available over HTTPS at `redis.cluster.example.com:8070`.
+
+On *Redis Cloud*, you first need to get the domain name of your deployment. Find the https://docs.redis.com/latest/rc/databases/view-edit-database/[private endpoint] for one of the databases associated with your Redis Cloud subscription. The private endpoint will look something like this: `redis-12345.internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:121212`. Drop the first segment of the domain name (e.g., `redis-12345`) and change the port to 8070. In this example, the Prometheus endpoint is at `internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:8070`.
 
 == Usage
 
-You can run the container as follows. Note that all of the specified environment variables are required:
+First, https://docs.datadoghq.com/agent/[install the Datadog agent] in your environment of choice.
 
-```
-docker run -d -e DATADOG_SITE=datadoghq.com \
-	-e DATADOG_API_KEY=<API_KEY> \
-	-e REDIS_CLOUD_PRIVATE_ENDPOINT=<REDIS_CLOUD_ENDPOINT> \
-	-e REDIS_CLOUD_API_ACCOUNT_KEY=<SECRET_ACCOUNT_KEY> \
-	-e REDIS_CLOUD_API_SECRET=<SECRET_USER_KEY> \
-	fieldengineering/redis-cloud-datadog
-```
+Optionally, ensure that you can issue HTTP requests against your Redis Enterprise/Cloud Prometheus endpoint. You can test this using `curl`:
 
-If the DataDog agent is running and able to collect metrics, you'll see these metrics in the DataDog console within a few minutes. These metrics will be prefixed with `redise`. 
+`curl https://internal.c28486.us-central1-mz.gcp.cloud.rlrcp.com:8070`
 
-=== Verifying the certificate chain (optional)
+Next, configure the Datadog agent's Prometheus extension to read from this endpont. You can find a sample Datadog Prometheus configuration file in this repository at link:/datadog/src/config.yml[src/config.yml].
 
-The DataDog agent connects to the Redis Cloud Prometheus endpoint over HTTPS. For additional security, you can *optionally* tell the DataDog agent to verify the certificate chain. To do this, first get the Prometheus host and port from your database endpoint.
+Under `instances`, describe one Prometheus endpoint for each Redis Enterprise cluster and/or Redis Cloud subscription that you want to monitor. For example, the configuration for monitoring two separate Redis Cloud subscriptions might look like this:
 
-For the private endpoint
+[source, yaml]
+----
+instances:
+  - prometheus_url: https://internal.c123.us-central1-mz.gcp.cloud.rlrcp.com:8070
+    namespace: redise
+    metrics:
+      - "*"
+  - prometheus_url: https://internal.c456.us-central1-mz.gcp.cloud.rlrcp.com:8070
+    namespace: redise
+    metrics:
+      - "*"
+----
 
-`redis-12345.internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:121212`
+Ensure that the namespace is set to `redise` for all instances. 
 
-the Prometheus host and port will be:
+To add certificate verification, see <<verifying-the-certificate-chain, Verifying the Certificate Chain>>.
 
-`internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:8070`
+Once your configuration file is ready, copy or mount it at `/etc/datadog-agent/conf.d/prometheus.d/conf.yml`. Then restart the agent.
 
-Once you have the Prometheus host and port, download the certificate chain by running the following command:
+If the Datadog agent is running and able to collect metrics, you'll see these metrics in the Datadog console within a few minutes. These metrics will be prefixed with `redise`.
 
-```
-echo -n "" | openssl s_client -showcerts -servername server \
-	-connect <PROMETHEUS_HOST_PORT> > cacert.pem
-```
+Finally, import the cluster and database dashboards:
+* link:/datadog/dashboards/redis-enterprise-cluster-dashboard[Cluster dashboard JSON]
+* link:/datadog/dashboards/redis-enterprise-database-dashboard[Database dashboard JSON]
 
-This will write a file called `cacert.pem`. Open the file and remove any text that precedes 
+Use the dropdowns at the top of each dashboard for filter by cluster and database.
 
-``-----BEGIN CERTIFICATE-----``
+=== Verifying the certificate chain
 
-at the head of the file. In addition, remove any text that comes after
+The Datadog agent connects to the Redis Cloud Prometheus endpoint over HTTPS. For additional security, you can *optionally* tell the Datadog agent to verify the certificate chain.
 
-``-----END CERTIFICATE-----``
+In `conf.yml`, set `ssl_ca_cert` to the path of the file containing the certificate chain for your deployment.
 
-at the end of the file.
+If you're running self-deployed Redis Enterprise, consult with your deployment team to obtain the required `.pem` file.
 
-You'll then pass the contents of this file as an environment variable when you start the container:
+For Redis Cloud subscriptions, you can download the certificate chain from the Redis Cloud console security settings page. Then ensure that Datadog agent can access this file. Specify the path to this file in `conf.yml`, like this:
 
-```
-docker run -d -e DATADOG_SITE=datadoghq.com \
-	-e DATADOG_API_KEY=<API_KEY> \
-	-e REDIS_CLOUD_PRIVATE_ENDPOINT=<REDIS_CLOUD_ENDPOINT> \
-	-e REDIS_CLOUD_API_ACCOUNT_KEY=<SECRET_ACCOUNT_KEY> \
-	-e REDIS_CLOUD_API_SECRET=<SECRET_USER_KEY> \
-	-e REDIS_CLOUD_CA_CERT=$(cat cacert.pem) \
-	fieldengineering/redis-cloud-datadog
-```
+[source,yaml]
+----
+ssl_ca_cert: "/etc/ca-certificates/redis_ca.pem"
+----
 
 == Troubleshooting
 
-You can confirm that metrics are being collected correctly by viewing the DataDog agent logs:
-
-``docker exec -it <CONTAINER_ID> tail -n 1000 /tmp/datadog.log``
-
-If DataDog is unable to connect to your Redis Cloud prometheus endpoint, confirm in the logs that the agent is connecting to the correct URL. This URL is derived from the private endpoint. For the private endpoint
-
-`redis-12345.internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:19694`
-
-the Prometheus URL will be:
-
-`https://internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:8070/metric`
-
-If you're not seeing the expected subscription-level metrics (e.g., `redise.bdb_estimated_max_throughput`), consult the logs for the Redis Cloud API metrics collector:
-
-``docker exec -it <CONTAINER_ID> tail -n 1000 /tmp/cloud-api.log``
-
-You may also want to view the `supervisord` logs. `supervisord` manages the DataDog agent and the Redis Cloud API metrics collector.
-
-``docker exec -it <CONTAINER_ID> tail -n 1000 /tmp/supervisord.log``
+Review the Datadog UI for troubleshooting the Datadog agent. You can also consult the Datadog agent logs at `/var/log/datadog`.
 
 == Support
 
-The {name} is supported by Redis, Inc. on a good faith effort basis. To report bugs, request features, or receive assistance, please https://github.com/{project-owner}/{project-name}/issues[file an issue].
+This integration is supported by Redis, Inc. on a good faith effort basis. To report bugs, request features, or receive assistance, please https://github.com/{project-owner}/{project-name}/issues[file an issue].
 
 == License
 

@@ -70,6 +70,7 @@ Once your configuration file is ready, copy or mount it at `/etc/datadog-agent/c
 If the Datadog agent is running and able to collect metrics, you'll see these metrics in the Datadog console within a few minutes. These metrics will be prefixed with `redise`.
 
 Finally, import the cluster and database dashboards:
+
 * link:/datadog/dashboards/redis-enterprise-cluster-dashboard.json[Cluster dashboard JSON]
 * link:/datadog/dashboards/redis-enterprise-database-dashboard.json[Database dashboard JSON]
 

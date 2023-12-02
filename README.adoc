@@ -10,8 +10,8 @@ This repository contains documentation and dashboard configurations for using se
 
 == Observability Platforms
 
-* https://github.com/redis-field-engineering/redis-enterprise-grafana-dashboards[Grafana]
-* https://github.com/redis-field-engineering/redis-enterprise-datadog-prometheus-collector[Datadog]
+* link:/grafana[Grafana]
+* link:/datadog[Datadog]
 * link:/dynatrace[Dynatrace]
 * https://github.com/redis-field-engineering/redis-enterprise-new-relic-dashboards[New Relic]
 * link:/splunk[Splunk]

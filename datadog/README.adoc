@@ -1,4 +1,4 @@
-:linkattrs:
+f:linkattrs:
 :project-owner:      redis-field-engineering
 :project-name:       redis-enterprise-observability
 :name:               Redis Datadog Prometheus
@@ -44,7 +44,7 @@ Optionally, ensure that you can issue HTTP requests against your Redis Enterpris
 
 `curl https://internal.c28486.us-central1-mz.gcp.cloud.rlrcp.com:8070`
 
-Next, configure the Datadog agent's Prometheus extension to read from this endpont. You can find a sample Datadog Prometheus configuration file in this repository at link:/datadog/src/conf.yml[src/config.yml].
+Next, configure the Datadog agent's Prometheus extension to read from this endpont. You can find a sample Datadog Prometheus configuration file in this repository at link:/datadog/src/conf.yml[src/conf.yml].
 
 Under `instances`, describe one Prometheus endpoint for each Redis Enterprise cluster and/or Redis Cloud subscription that you want to monitor. For example, the configuration for monitoring two separate Redis Cloud subscriptions might look like this:
 
@@ -70,8 +70,8 @@ Once your configuration file is ready, copy or mount it at `/etc/datadog-agent/c
 If the Datadog agent is running and able to collect metrics, you'll see these metrics in the Datadog console within a few minutes. These metrics will be prefixed with `redise`.
 
 Finally, import the cluster and database dashboards:
-* link:/datadog/dashboards/redis-enterprise-cluster-dashboard[Cluster dashboard JSON]
-* link:/datadog/dashboards/redis-enterprise-database-dashboard[Database dashboard JSON]
+* link:/datadog/dashboards/redis-enterprise-cluster-dashboard.json[Cluster dashboard JSON]
+* link:/datadog/dashboards/redis-enterprise-database-dashboard.json[Database dashboard JSON]
 
 Use the dropdowns at the top of each dashboard for filter by cluster and database.
 

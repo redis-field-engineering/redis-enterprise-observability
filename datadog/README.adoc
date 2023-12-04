@@ -61,7 +61,9 @@ instances:
       - "*"
 ----
 
-Ensure that the namespace is set to `redise` for all instances. 
+The configuration also includes metrics type overrides to ensure that Datadog interpets the metrics correcty. You can see these type overrides in the link:/datadog/src/config.yml[sample Datadog Prometheus configuration file].
+
+Now, ensure that the namespace is set to `redise` for all instances (the provided dashboards assume this prefix).
 
 To add certificate verification, see <<verifying-the-certificate-chain, Verifying the Certificate Chain>>.
 
@@ -70,9 +72,10 @@ Once your configuration file is ready, copy or mount it at `/etc/datadog-agent/c
 If the Datadog agent is running and able to collect metrics, you'll see these metrics in the Datadog console within a few minutes. These metrics will be prefixed with `redise`.
 
 Finally, import the cluster and database dashboards:
-
 * link:/datadog/dashboards/redis-enterprise-cluster-dashboard.json[Cluster dashboard JSON]
 * link:/datadog/dashboards/redis-enterprise-database-dashboard.json[Database dashboard JSON]
+
+If you are deploying an https://docs.redis.com/latest/rs/databases/active-active/[Active-Active cluster], you should also import the link:/datadog/dashboards/redis-enterprise-active-active-dashboard.json[Active-Active dashboard JSON].
 
 Use the dropdowns at the top of each dashboard for filter by cluster and database.
 

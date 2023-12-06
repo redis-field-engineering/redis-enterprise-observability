@@ -15,7 +15,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "9.4.7"
+      "version": "9.3.6"
     },
     {
       "type": "datasource",
@@ -163,7 +163,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "node_cpu_system_max{node=\"$node\"}",
+          "expr": "node_cpu_system_max{node=\"$node\", cluster=\"$cluster\"}",
           "legendFormat": "{{cluster}} : {{node}}",
           "range": true,
           "refId": "A"
@@ -262,7 +262,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "node_available_memory{node=\"$node\"}",
+          "expr": "node_available_memory{node=\"$node\", cluster=\"$cluster\"}",
           "legendFormat": " {{cluster}} : {{node}}",
           "range": true,
           "refId": "A"
@@ -360,7 +360,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "node_total_req{node=\"$node\"}",
+          "expr": "node_total_req{node=\"$node\", cluster=\"$cluster\"}",
           "legendFormat": "{{cluster}} : {{node}}",
           "range": true,
           "refId": "A"
@@ -458,7 +458,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "node_avg_latency{node=\"$node\"}",
+          "expr": "node_avg_latency{node=\"$node\", cluster=\"$cluster\"}",
           "legendFormat": "{{cluster}} : {{node}}",
           "range": true,
           "refId": "A"
@@ -470,7 +470,7 @@
   ],
   "refresh": "",
   "revision": 1,
-  "schemaVersion": 38,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -531,6 +531,6 @@
   "timezone": "",
   "title": "Cluster Nodes",
   "uid": "ca62332a-7ff3-4173-ba5f-94d4cd931e78",
-  "version": 33,
+  "version": 5,
   "weekStart": ""
 }

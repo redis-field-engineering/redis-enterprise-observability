@@ -1,8 +1,3 @@
-f:linkattrs:
-:project-owner:      redis-field-engineering
-:project-name:       redis-enterprise-observability
-:name:               Redis Datadog Prometheus
-
 = Redis Datadog Prometheus
 
 You can monitor your Redis Enteprise and Redis Cloud deployments using Datadog. This repository contains configuration and dashboards to get you up and running quickly.

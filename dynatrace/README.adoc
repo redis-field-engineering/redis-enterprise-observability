@@ -4,7 +4,7 @@
 
 = Observe Redis Enterprise with Dynatrace
 
-To collect metrics in Dynatrace from Redis Enterprise Software or Redis Cloud, we recommend the https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/extensions-concepts[Dynatrace Extensions 2.0 Framework].
+To collect metrics in Dynatrace from Redis Enterprise Software or Redis Cloud, use the https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/extensions-concepts[Dynatrace Extensions 2.0 Framework].
 
 == Table of Contents
 

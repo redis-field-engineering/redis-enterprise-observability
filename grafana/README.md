@@ -20,7 +20,6 @@ databases and nodes.
 The top-level dashboard (e.g., Databases or Nodes) displays all instances of that type. For example, the [databases dashboard](dashboards/workflow/databases/redis-software-cluster-databases.json) shows metrics for every database in the Redis cluster. The individual rows make it easy to access different types of 
 details about a particular instance.
 #### Databases
-* 
 * [Database-CPU](dashboards/workflow/databases/redis-software-cluster-database-cpu.json)
 * [Database-Latency](dashboards/workflow/databases/redis-software-cluster-database-latency.json)
 * [Database-Memory](dashboards/workflow/databases/redis-software-cluster-database-memory.json)

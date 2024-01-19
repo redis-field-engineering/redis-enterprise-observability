@@ -1,0 +1,13 @@
+# Logs
+logs
+*.log
+
+# Editor
+.idea
+.DS_Store
+
+# Packages
+*.tar.gz
+
+# Lock files
+*.lock

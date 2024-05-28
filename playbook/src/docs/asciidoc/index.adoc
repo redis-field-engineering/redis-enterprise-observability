@@ -1,0 +1,255 @@
+= Redis Enterprise Developer Observability Playbook
+:revnumber: 1.0
+:docinfo1:
+
+== Introduction
+
+This guide is provide monitoring guidance to DevOps and SREs who are responsible for operating
+Redis Enterprise clusters either on premise or self-managed in the cloud.
+This is not intended for use with Redis services hosted by either Redis Inc or various cloud vendors.
+This data can be collected using the native Prometheus integration or Dynatrace or Datadog Redis Enterprise extensions.
+
+== Monitoring Overview
+
+== Core system resources
+
+=== Memory
+
+[cols="1,1,1"]
+|===
+| *Metric name* | *Definition* | *Unit*
+| memory_usage_percent | Uses memory / memory limit for database | Percentage
+|===
+
+Every Redis Enterprise databases has a maximum configured memory limit to ensure isolation
+in a multi-database cluster.
+
+==== Thresholds
+
+The appropriate memory threshold depends on how the application is using Redis.
+
+===== Caching workloads
+
+For applications using Redis solely as a cache, you can safely let the memory usage
+reach 100% as long as you have an https://xxx[eviction policy] in place. This will ensure
+that Redis can evict keys while continuing to accept new writes.
+
+While your Redis database is using 100% of available memory, it's important to monitor
+performance.
+
+1. [Latency]
+
+Average latency should be at or below 1 ms.
+
+2. [Cache miss ratio]
+
+TBD
+
+3. [Evicted keys]
+
+TBD
+
+===== Non-caching workloads
+
+If no eviction policy is enabled, then Redis will stop accepting writes once memory reaches 100%.
+Therefore, for non-caching workloads, we recommend that you configure an alert at 80% memory usage.
+Once your database reaches this 80% threshold, you should closely review the rate of memory usage growth.
+
+=== Troubleshooting
+
+|===
+|Issue |Possible causes
+
+|Column 1, row 1
+|Column 2, row 1
+
+|Column 1, row 2
+|Column 2, row 2
+
+|Column 1, row 3
+|Column 2, row 3
+
+|Column 1, row 4
+|Column 2, row 4
+
+|Column 1, row 5
+|Column 2, row 5
+
+|Column 1, row 6
+|Column 2, row 6
+|===
+
+
+Cause
+Factors
+Possible spike in activity
+Check both the Network Traffic and Operations Per Second metrics to determine if there is a corresponding increase
+Database sized incorrectly
+View the Memory Usage raw bytes over time to see if a usage pattern has changed
+Incorrect retention policies
+Check to see if keys are being Evicted or Expired
+
+=== Remediation
+
+|===
+|Action |Method
+
+|Increase database memory
+|Raise the database memory limit using the Redis Enterprise console or its API.
+
+|Modify eviction policy
+|For workloads that can tolerate evicted keys (e.g., caching), configure a global eviction policy for your database.
+Alternatively, or in addition, determine whether the application can set a reasonable TTL (time-to-live) on some or all
+of the data written to Redis.
+
+|Column 1, row 3
+|Column 2, row 3
+
+|Column 1, row 4
+|Column 2, row 4
+|===
+
+=== CPU
+
+[cols="1,1,1"]
+|===
+| *Metric name* | *Definition* | *Unit*
+| Node CPU (User and System) | CPU time portion spent by user-space processes | Percentage (values falls between 0 and 1, inclusive, multiply by 100 to get percent)
+| Proxy CPU |
+| Shard CPU | CPU u
+|===
+
+To understand CPU metrics, it's worth recalling how a Redis Enterprise cluster is organized.
+A cluster consists of one or more nodes. Each node is a VM (or cloud compute instance) or
+a bare-metal server.
+
+A database is a set of processes, known as shards, deployed across the nodes of a cluster.
+
+In the dashboard, shard CPU is the CPU utilization of the processes that make up the database.
+When diagnosing performance issues, start by looking at shard CPU.
+
+==== Thresholds
+
+Shard CPU, Proxy CPU, and Node CPU should remain below 80%.
+
+=== Troubleshooting
+
+There are many possible causes of high CPU utilization.
+
+|===
+|Cause |Explanation| Actions
+
+|Hot keys
+|Column 2, row 1
+
+|Inefficient operations
+|Review the slow log to see if any operations are taking a long time (e.g, > 5 ms) to complete.
+Calls to O(n) Redis commands such as KEYS and complex Lua scripts are common culprits.
+These generally need to be remediated at the application level.
+
+|Increasing workload
+|Even when an application i
+
+|Column 1, row 4
+|Column 2, row 4
+
+|Column 1, row 5
+|Column 2, row 5
+
+|Column 1, row 6
+|Column 2, row 6
+|===
+
+=== Connections
+
+Definition
+redis_enterprise.conns (unit: count)
+The count of current client connections to the database.
+
+==== Monitoring notes
+This metric should be monitored with both a minimum and maximum number of connections.  The minimum number of connections not being met is an excellent indicator of either networking or application configuration errors.  The maximum number of connections being exceeded may indicate a need to tune the database.
+Possible Causes
+
+Cause
+Factors
+Minimum clients not met
+Incorrect client configuration, network firewall or network issues
+Maximum connections exceeded
+Client library is not releasing connections or an increase in the number of clients
+
+Remediation
+
+Action
+Method
+Clients Misconfigured
+Confirm  client configurations
+Networking issue
+From a client node TELNET to the endpoint and issue the PING command
+Too many connections
+Be sure that you are using pooling on your client library and that your pools are sized according
+Too many connections
+Using rladmin run "tune proxy PROXY_NUMBER threads VALUE"
+
+== Performance measures
+
+=== Latency
+
+Definition
+redis_enterprise.avg_latency (unit: microseconds)
+This is the average amount of time that a request takes to return from the time that it first hits the Redis Enterprise proxy until the response is returned.  It does not include the full time from the remote client’s perspective.
+
+Characteristics
+Due to the fact that Redis is popular due to performance, generally you would expect most operations to return in single digit milliseconds.  Tune any alerts to match your SLA.  It is generally recommended that you also measure Redis operation latency at the client side to make it easier to determine if a server slow down or an increase in network latency is the culprit in any performance issues.
+
+Possible Causes
+
+Cause
+Factors
+Possible spike in requests
+Check both the Network Traffic and Operations Per Second metrics to determine if there is a corresponding increase
+Slow Running queries
+Check the slow log in the Redis Enterprise UI for the database
+Insufficient compute resources
+Check to see if the CPU Usage, Memory Usage Percentage, or Evictions are increasing
+
+
+Remediation
+
+Action
+Method
+Increase resources
+The database can be scaled up online by going to the Web UI and enabling clustering on the database.  In extreme cases more nodes can be added to the cluster and resources rebalanced.
+Inefficient Queries
+Redis allows you to view a slow log with a tunable threshold.  It can be viewed either in the Redis Enterprise UI or by running
+
+redis-cli -h HOST -p PORT -a PASSWORD SLOWLOG GET 100
+
+
+
+=== Cache Hit Rate
+Definition
+redis_enterprise.cache_hit_rate (unit: percent)
+This is the percentage of time that Redis is accessing a key that already exists.
+Characteristics
+This metric is useful only in the caching use case and should be ignored for all other use cases.  There are tradeoffs between the freshness of the data in the cache and efficacy of the cache mitigating traffic to any backend data service.  These tradeoffs should be considered carefully when determining the threshold for alerting.
+Possible Causes
+This is highly specific to the application caching with no general rules that are applicable in the majority of cases.Remediation
+Note that redis commands return information on whether or not a key or field already exists.  For example, HSET command returns the number of fields in the hash that were added.
+
+=== Evictions
+Definition
+redis_enterprise.evicted_objects (unit: count)
+This is the count of items that have been evicted from the database.
+Characteristics
+Eviction occurs when the database is close to capacity.  In this condition, the eviction policy starts to take effect.  While Expiration is fairly common in the caching use case, Eviction from the cache should generally be a matter of concern.  At very high throughput and very restricted resource use cases, sometimes the eviction sweeps cannot keep up with memory pressure.  Relying on Eviction as a memory management technique should be considered carefully.
+Possible Causes
+See Memory Usage Percentage Possible Causes
+Remediation
+See Memory Usage Percentage Remediation
+Secondary Indicators
+Network Traffic
+redis_enterprise.ingress_bytes/redis_enterprise.egress_bytes (unit: bytes)
+Counters for the network traffic coming into the database and out from the database
+Definition
+While these two metrics will not help you pinpoint a root cause, network traffic is an excellent leading indicator of trouble.  Changes in network traffic patterns indicate corresponding changes in database behavior and further investigation is usually warranted.
+

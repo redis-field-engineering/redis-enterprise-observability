@@ -11,13 +11,23 @@ This data can be collected using the native Prometheus integration or Dynatrace 
 
 == Monitoring Overview
 
-== Core system resources
+=== Alerting
+
+Included in the Redis Observability package is a suite of alerts and their associated tests for use with Prometheus. There are alerts for all of the metrics described in both the Resources and the Performance sections below.
+
+Not all the alerts are appropriate for all environments; installations that do not use persistence have no need of storage alerts, for example.
+
+There are tests included with the alerts that validate the individual triggers. These can be used to validate any modifications made when tailoring the alerts for specfic environments and/or use cases.
+
+
+== Core System Resources
 
 === Memory
 
 [cols="1,1,1"]
 |===
 | *Metric name* | *Definition* | *Unit*
+
 | memory_usage_percent | Used memory / memory limit for database | Percentage
 |===
 
@@ -63,7 +73,7 @@ Once your database reaches this 80% threshold, you should closely review the rat
 ==== Troubleshooting
 
 |===
-|Issue |Possible causes
+|*Issue* |*Possible causes*
 
 |Possible spike in activity
 |Check both the Network Traffic and Operations Per Second metrics to determine if there is a corresponding increase
@@ -78,7 +88,7 @@ Once your database reaches this 80% threshold, you should closely review the rat
 ==== Remediation
 
 |===
-|Action |Method
+|*Action*|*Method*
 
 |Increase database memory
 |Raise the database memory limit using the Redis Enterprise console or its API.
@@ -89,7 +99,6 @@ Once your database reaches this 80% threshold, you should closely review the rat
 |Modify key retention policy
 |Determine whether the application can set a reasonable TTL (time-to-live) on some or all
 of the data written to Redis.
-
 |===
 
 === CPU
@@ -97,10 +106,10 @@ of the data written to Redis.
 [cols="1,1,1"]
 |===
 | *Metric name* | *Definition* | *Unit*
+
 | Node CPU (User and System) | CPU time portion spent by user-space processes | Percentage (values falls between 0 and 1, inclusive, multiply by 100 to get percent)
 | Proxy CPU | CPU time portion spent by user-space processes | Percentage (values falls between 0 and 1, inclusive, multiply by 100 to get percent)
 | Shard CPU | CPU time portion spent by user-space processes | Percentage (values falls between 0 and 1, inclusive, multiply by 100 to get percent)
-
 |===
 
 To understand CPU metrics, it's worth recalling how a Redis Enterprise cluster is organized.
@@ -121,7 +130,7 @@ Shard CPU, Proxy CPU, and Node CPU should remain below 80%.
 There are many possible causes of high CPU utilization.
 
 |===
-|Issue| Possible causes
+|*Issue*|*Possible causes*
 
 |Hot keys
 |Inefficient Operations
@@ -137,9 +146,10 @@ There are many possible causes of high CPU utilization.
 ==== Remediation
 
 |===
-|Action |Method
+|*Action*|*Method*
 
-|Improve distribution |Increase number of shards
+|Improve distribution
+|Increase number of shards
 
 |Increase database memory
 |Raise the database memory limit using the Redis Enterprise console or its API.
@@ -163,30 +173,29 @@ This metric should be monitored with both a minimum and maximum number of connec
 Possible Causes
 
 |===
-|Cause |Explanation| Actions
+|*Cause*|*Explanation*|*Actions*
 
 |Minimum clients not met| Incorrect client configuration, network firewall or network issues|Check client configurations and firewall settings
 |Maximum connections exceeded|Client library is not releasing connections or an increase in the number of clients|Check client application configurations
-
 |===
 
 ==== Troubleshooting
 
 |===
-|Issue| Possible causes
+|*Issue*|*Possible causes*
 
 |No client connections
 |Poorly configured client
 
 |Too many connections
 |Poorly configured client
-
 |===
 
 
 ==== Remediation
+
 |===
-|Action |Method
+|*Action*|*Method*
 
 |Clients Misconfigured
 |Confirm client configurations
@@ -199,8 +208,27 @@ Possible Causes
 
 |Too many connections
 |Using rladmin run "tune proxy PROXY_NUMBER threads VALUE"
+|===
+
+=== Storage
+
+Installations that use Redis' persistence feature will also want to monitor available disk space to ensure availability.
+
+==== Troubleshooting
 
 |===
+|*Issue*|*Possible causes*
+
+|===
+
+
+==== Remediation
+
+|===
+|*Action*|*Method*
+
+|===
+
 
 == Performance measures
 
@@ -218,7 +246,7 @@ Due to the fact that Redis is popular due to performance, generally you would ex
 ==== Troubleshooting
 
 |===
-|Issue| Possible causes
+|*Issue*|*Possible causes*
 
 |Possible spike in requests
 |Check both the Network Traffic and Operations Per Second metrics to determine if there is a corresponding increase
@@ -232,7 +260,7 @@ Due to the fact that Redis is popular due to performance, generally you would ex
 
 ==== Remediation
 |===
-|Action |Method
+|*Action*|*Method*
 
 |Increase resources
 |The database can be scaled up online by going to the Web UI and enabling clustering on the database.  In extreme cases more nodes can be added to the cluster and resources rebalanced.
@@ -258,7 +286,7 @@ This metric is useful only in the caching use case and should be ignored for all
 This is highly specific to the application caching with no general rules that are applicable in the majority of cases.
 
 |===
-|Issue| Possible causes
+|*Issue*|*Possible causes*
 
 |Low hit rate
 |Data is being evicted due to TTL policy
@@ -269,7 +297,7 @@ This is highly specific to the application caching with no general rules that ar
 Note that redis commands return information on whether or not a key or field already exists.  For example, HSET command returns the number of fields in the hash that were added.
 
 |===
-|Action |Method
+|*Action*|*Method*
 
 |Monitor activity
 |Check return values to determine if values were added
@@ -289,7 +317,7 @@ Eviction occurs when the database is close to capacity.  In this condition, the 
 While memory usage and network traffic will not help you pinpoint a root cause, network traffic is an excellent leading indicator of trouble.  Changes in network traffic patterns indicate corresponding changes in database behavior and further investigation is usually warranted.
 
 |===
-|Issue| Possible causes
+|*Issue*|*Possible causes*
 
 |See Memory Usage Percentage Possible Causes
 |===
@@ -298,7 +326,7 @@ While memory usage and network traffic will not help you pinpoint a root cause, 
 See Memory Usage Percentage Remediation
 
 |===
-|Action |Method
+|*Action*|*Method*
 
 |===
 
@@ -308,3 +336,55 @@ Network Traffic
 redis_enterprise.ingress_bytes/redis_enterprise.egress_bytes (unit: bytes)
 Counters for the network traffic coming into the database and out from the database
 
+
+=== Proxy
+
+In addition to automatic shard migration, Redis Enterprise offers additional capabilities. The DMC proxy can automatically scale the number of threads, starting from a default number up to a maximum and according to configurable criteria (threshold and duration).
+
+==== Monitoring notes
+
+If a node cannot host all the shards, one or more shards can spill over to another node due to resource insufficiency. Still, the placement policy doesn't change: there is an attempt to keep as many shards as possible on the same node. Always keeping the limit, hardcoded, of 10 shards per CPU.
+
+==== Troubleshooting
+
+|===
+|*Issue*|*Possible causes*
+
+|Poor Performance|Thundering herd
+|Auto-scale event|Insufficient threads
+|High ops per second/thread|Insufficient threads
+|===
+
+
+==== Remediation
+|===
+|*Action*|*Method*
+
+|Increase thread count|
+|Restart the proxy|
+|===
+
+
+=== Replication
+
+In Redis Enterprise, Active-Active geo-distribution is based on CRDT technology. The Redis Enterprise implementation of CRDT is called an Active-Active database (formerly known as CRDB). With Active-Active databases, applications can read and write to the same data set from different geographical locations seamlessly and with latency less than one millisecond (ms), without changing the way the application connects to the database.
+
+Active-Active databases also provide disaster recovery and accelerated data read-access for geographically distributed users.
+
+==== Monitoring notes
+
+Clustering and replication are used together in Active-Active databases to distribute multiple copies of the dataset across multiple nodes and multiple clusters. As a result, a node or cluster is less likely to become a single point of failure. If a primary node or primary shard fails, a replica is automatically promoted to primary. To avoid having one node hold all copies of certain data, the replica HA feature (enabled by default) automatically migrates replica shards to available nodes.
+
+==== Troubleshooting
+
+|===
+|*Issue*|*Possible causes*
+
+|===
+
+
+==== Remediation
+|===
+|*Action*|*Method*
+
+|===

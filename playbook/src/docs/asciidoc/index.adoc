@@ -11,13 +11,13 @@ This data can be collected using the native Prometheus integration or Dynatrace 
 
 == Monitoring Overview
 
-=== Alerting
+== Alerting
 
-Included in the Redis Observability package is a suite of alerts and their associated tests for use with Prometheus. There are alerts for all of the metrics described in both the Resources and the Performance sections below.
+Included in the Redis Observability package is a suite of alerts and their associated tests for use with Prometheus. There are https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/grafana#alerts[alerts] for all of the metrics described in both the Resources and the Performance sections below.
 
 Not all the alerts are appropriate for all environments; installations that do not use persistence have no need of storage alerts, for example.
 
-There are tests included with the alerts that validate the individual triggers. These can be used to validate any modifications made when tailoring the alerts for specfic environments and/or use cases.
+There are https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/grafana/tests[tests] included with the alerts that validate the individual triggers. These can be used to validate any modifications made when tailoring the alerts for specfic environments and/or use cases.
 
 
 == Core System Resources
@@ -33,6 +33,8 @@ There are tests included with the alerts that validate the individual triggers. 
 
 Every Redis Enterprise database has a maximum configured memory limit to ensure isolation
 in a multi-database cluster.
+
+image::../images/playbook_used-memory.png[]
 
 ==== Thresholds
 
@@ -121,6 +123,8 @@ A database is a set of processes, known as shards, deployed across the nodes of 
 In the dashboard, shard CPU is the CPU utilization of the processes that make up the database.
 When diagnosing performance issues, start by looking at shard CPU.
 
+image::../images/playbook_cpu-usage.png[]
+
 ==== Thresholds
 
 Shard CPU, Proxy CPU, and Node CPU should remain below 80%.
@@ -178,6 +182,8 @@ Possible Causes
 |Minimum clients not met| Incorrect client configuration, network firewall or network issues|Check client configurations and firewall settings
 |Maximum connections exceeded|Client library is not releasing connections or an increase in the number of clients|Check client application configurations
 |===
+
+image::../images/playbook_connections.png[]
 
 ==== Troubleshooting
 
@@ -243,6 +249,8 @@ This is the average amount of time that a request takes to return from the time 
 
 Due to the fact that Redis is popular due to performance, generally you would expect most operations to return in single digit milliseconds.  Tune any alerts to match your SLA.  It is generally recommended that you also measure Redis operation latency at the client side to make it easier to determine if a server slow down or an increase in network latency is the culprit in any performance issues.
 
+image::../images/playbook_latency.png[]
+
 ==== Troubleshooting
 
 |===
@@ -281,6 +289,7 @@ This is the percentage of time that Redis is accessing a key that already exists
 ==== Monitoring notes
 This metric is useful only in the caching use case and should be ignored for all other use cases.  There are tradeoffs between the freshness of the data in the cache and efficacy of the cache mitigating traffic to any backend data service.  These tradeoffs should be considered carefully when determining the threshold for alerting.
 
+image::../images/playbook_hit-miss-ratios.png[]
 
 ==== Troubleshooting
 This is highly specific to the application caching with no general rules that are applicable in the majority of cases.
@@ -313,6 +322,8 @@ This is the count of items that have been evicted from the database.
 ==== Monitoring notes
 Eviction occurs when the database is close to capacity.  In this condition, the eviction policy starts to take effect.  While Expiration is fairly common in the caching use case, Eviction from the cache should generally be a matter of concern.  At very high throughput and very restricted resource use cases, sometimes the eviction sweeps cannot keep up with memory pressure.  Relying on Eviction as a memory management technique should be considered carefully.
 
+image::../images/playbook_evicted-objects.png[]
+
 ==== Troubleshooting
 While memory usage and network traffic will not help you pinpoint a root cause, network traffic is an excellent leading indicator of trouble.  Changes in network traffic patterns indicate corresponding changes in database behavior and further investigation is usually warranted.
 
@@ -344,6 +355,8 @@ In addition to automatic shard migration, Redis Enterprise offers additional cap
 ==== Monitoring notes
 
 If a node cannot host all the shards, one or more shards can spill over to another node due to resource insufficiency. Still, the placement policy doesn't change: there is an attempt to keep as many shards as possible on the same node. Always keeping the limit, hardcoded, of 10 shards per CPU.
+
+image::../images/playbook_proxy-cpu-usage.png[]
 
 ==== Troubleshooting
 

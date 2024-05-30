@@ -380,6 +380,8 @@ Clustering and replication are used together in Active-Active databases to distr
 |===
 |*Issue*|*Possible causes*
 
+|Constant Syncing|Unreliable Networking
+|Lag|
 |===
 
 

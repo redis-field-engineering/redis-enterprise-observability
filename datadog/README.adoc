@@ -1,0 +1,103 @@
+= Redis Datadog Prometheus
+
+You can monitor your Redis Enteprise and Redis Cloud deployments using Datadog. This repository contains configuration and dashboards to get you up and running quickly.
+
+== Table of Contents
+
+* link:#Requirements[Requirements]
+* link:#Usage[Usage]
+* link:#Troubleshooting[Troubleshooting]
+* link:#Support[Support]
+* link:#License[License]
+
+== Requirements
+
+To monitor your Redis Enterprise/Cloud deployments with Datadog, you will need:
+
+* A https://www.datadoghq.com/[Datadog account]
+* A Redis Cloud account with a https://docs.redis.com/latest/rc/subscriptions/create-flexible-subscription/[Flexible/Annual subscription] *or* a self-managed Redis Enterprise software deployment.
+* A https://docs.datadoghq.com/agent/[Datadog agent] running in an environment that can connect to your Redis cluster's Prometheus endpoint. For Redis Cloud deployments, this means that the environment running your Datadog agent must be https://docs.redis.com/latest/rc/security/vpc-peering/[VPC-peered with your Redis Cloud subscription].
+
+Additionally, you will need the following configuration details:
+
+* A https://docs.datadoghq.com/account_management/api-app-keys/[Datadog API key] associated with your Datadog account
+* The host and port of the Prometheus endpoint exposed by your Redis deployment. See below for details on how to get this endpoint.
+
+=== Prometheus endpoint
+
+Your Redis Enterprise/Cloud deployment's Prometheus endpoint is accessible on port 8070.
+
+If you're running *Redis Enterprise*, you can connect to Prometheus at the fully-qualified domain name (FQDN) of your cluster on port 8070. For example, if your cluster's FQDN is `redis.cluster.example.com`, then Prometheus is available over HTTPS at `redis.cluster.example.com:8070`.
+
+On *Redis Cloud*, you first need to get the domain name of your deployment. Find the https://docs.redis.com/latest/rc/databases/view-edit-database/[private endpoint] for one of the databases associated with your Redis Cloud subscription. The private endpoint will look something like this: `redis-12345.internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:121212`. Drop the first segment of the domain name (e.g., `redis-12345`) and change the port to 8070. In this example, the Prometheus endpoint is at `internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:8070`.
+
+== Usage
+
+First, https://docs.datadoghq.com/agent/[install the Datadog agent] in your environment of choice.
+
+Optionally, ensure that you can issue HTTP requests against your Redis Enterprise/Cloud Prometheus endpoint. You can test this using `curl`:
+
+`curl https://internal.c28486.us-central1-mz.gcp.cloud.rlrcp.com:8070`
+
+Next, configure the Datadog agent's Prometheus extension to read from this endpont. You can find a sample Datadog Prometheus configuration file in this repository at link:/datadog/src/conf.yml[src/conf.yml].
+
+Under `instances`, describe one Prometheus endpoint for each Redis Enterprise cluster and/or Redis Cloud subscription that you want to monitor. For example, the configuration for monitoring two separate Redis Cloud subscriptions might look like this:
+
+[source, yaml]
+----
+instances:
+  - prometheus_url: https://internal.c123.us-central1-mz.gcp.cloud.rlrcp.com:8070
+    namespace: redise
+    metrics:
+      - "*"
+  - prometheus_url: https://internal.c456.us-central1-mz.gcp.cloud.rlrcp.com:8070
+    namespace: redise
+    metrics:
+      - "*"
+----
+
+The configuration also includes metrics type overrides to ensure that Datadog interpets the metrics correcty. You can see these type overrides in the link:/datadog/src/conf.yml[sample Datadog Prometheus configuration file].
+
+Now, ensure that the namespace is set to `redise` for all instances (the provided dashboards assume this prefix).
+
+To add certificate verification, see <<verifying-the-certificate-chain, Verifying the Certificate Chain>>.
+
+Once your configuration file is ready, copy or mount it at `/etc/datadog-agent/conf.d/prometheus.d/conf.yml`. Then restart the agent.
+
+If the Datadog agent is running and able to collect metrics, you'll see these metrics in the Datadog console within a few minutes. These metrics will be prefixed with `redise`.
+
+Finally, import the cluster and database dashboards:
+
+* link:/datadog/dashboards/redis-enterprise-cluster-dashboard.json[Cluster dashboard JSON]
+* link:/datadog/dashboards/redis-enterprise-database-dashboard.json[Database dashboard JSON]
+
+If you are deploying an https://docs.redis.com/latest/rs/databases/active-active/[Active-Active cluster], you should also import the link:/datadog/dashboards/redis-enterprise-active-active-dashboard.json[Active-Active dashboard JSON].
+
+Use the dropdowns at the top of each dashboard for filter by cluster and database.
+
+=== Verifying the certificate chain
+
+The Datadog agent connects to the Redis Cloud Prometheus endpoint over HTTPS. For additional security, you can *optionally* tell the Datadog agent to verify the certificate chain.
+
+In `conf.yml`, set `ssl_ca_cert` to the path of the file containing the certificate chain for your deployment.
+
+If you're running self-deployed Redis Enterprise, consult with your deployment team to obtain the required `.pem` file.
+
+For Redis Cloud subscriptions, you can download the certificate chain from the Redis Cloud console security settings page. Then ensure that Datadog agent can access this file. Specify the path to this file in `conf.yml`, like this:
+
+[source,yaml]
+----
+ssl_ca_cert: "/etc/ca-certificates/redis_ca.pem"
+----
+
+== Troubleshooting
+
+Review the Datadog UI for troubleshooting the Datadog agent. You can also consult the Datadog agent logs at `/var/log/datadog`.
+
+== Support
+
+This integration is supported by Redis, Inc. on a good faith effort basis. To report bugs, request features, or receive assistance, please https://github.com/{project-owner}/{project-name}/issues[file an issue].
+
+== License
+
+This code in this repository is licensed under the MIT License. Copyright (C) 2023 Redis, Inc.

@@ -140,7 +140,7 @@ In the dashboard, shard CPU is the CPU utilization of the processes that make up
 When diagnosing performance issues, start by looking at shard CPU.
 
 .Dashboard displaying CPU usage
-image::images/playbook_cpu-usage.png[]
+image::images/playbook_database-cpu.png[]
 
 ==== Thresholds
 
@@ -237,7 +237,7 @@ This number should remain relatively constant over time.
 |===
 
 .Dashboard displaying connections
-image::images/playbook_connections.png[]
+image::images/playbook_bdb-connections.png[]
 
 ==== Troubleshooting
 
@@ -279,7 +279,7 @@ redis_enterprise.avg_latency (unit: microseconds)
 This is the average amount of time that a request takes to return from the time that it first hits the Redis Enterprise proxy until the response is returned.  It does not include the full time from the remote client’s perspective.
 
 .Dashboard display of latency metrics
-image::images/playbook_latency.png[]
+image::images/playbook_bdb-latency.png[]
 
 ==== Monitoring notes
 

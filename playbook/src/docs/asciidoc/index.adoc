@@ -441,3 +441,20 @@ with the alerts that validate the individual triggers. These can be used to vali
 alerts for specific environments and/or use cases.
 
 == Appendix A: Grafana Dashboards
+
+Redis' Grafana dashboards are available tailored for Software(Enterprise) and Cloud installations.
+They come in two flavors: basic, which has no third-party dependencies; and extended, which requires a third-party library to perform ReST calls.
+
+There are two additional sets for software that provide drill-down functionality; the workflow dashboards.
+
+=== Software
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/basic[Basic]
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/extended[Extended]
+
+==== Workflow
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/workflow/databases[Database]
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/workflow/nodes[Node]
+
+=== Cloud
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/cloud/basic[Basic]
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/cloud/extended[Exteneded]

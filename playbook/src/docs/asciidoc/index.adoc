@@ -326,7 +326,10 @@ redis_enterprise.cache_hit_rate (unit: percent)
 This is the percentage of time that Redis is accessing a key that already exists.
 
 ==== Monitoring notes
-This metric is useful only in the caching use case and should be ignored for all other use cases.  There are tradeoffs between the freshness of the data in the cache and efficacy of the cache mitigating traffic to any backend data service.  These tradeoffs should be considered carefully when determining the threshold for alerting.
+This metric is useful only in the caching use case and should be ignored for all other use cases.
+There are tradeoffs between the freshness of the data in the cache and efficacy of the cache mitigating traffic to any backend data service.
+https://redis.io/glossary/cache-miss/[Cache misses] can have consequential impacts on system performance.
+These tradeoffs should be considered carefully when determining the threshold for alerting.
 
 .Dashboard showing Hit/Miss ratios
 image::images/playbook_read-write-misses.png[]

@@ -4,23 +4,31 @@
 
 == Introduction
 
-This guide provides monitoring guidance for developers running applications that use
-Redis Enterprise clusters either on premise or self-managed in the cloud.
+This document provides monitoring guidance for developers running applications
+that connect to Redis Enterprise. In particular, this guide focuses on the systems
+and resources that are most likely to impact the performance of your application.
 
-== Monitoring Overview
+To effectively monitor a Redis Enterprise cluster, you need to observe
+core cluster resources and key database performance indicators.
 
-== Alerting
+Core cluster resources include:
 
-Included in the Redis Observability package is a suite of alerts and their associated tests for use with Prometheus. There are https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/grafana#alerts[alerts] for all of the metrics described in both the Resources and the Performance sections below.
+* <<Memory, Memory utilization>>
+* <<CPU, CPU utilization>>
+* <<Connections, Database connections>>
 
-Not all the alerts are appropriate for all environments; installations that do not use persistence have no need of storage alerts, for example.
+Key database performance indicators include:
 
-There are https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/grafana/tests[tests] included with the alerts that validate the individual triggers. These can be used to validate any modifications made when tailoring the alerts for specfic environments and/or use cases.
+* <<Latency>>
+* <<Cache hit rate>>
+* <<Key eviction rate>>
 
-
-== Core System Resources
+== Core cluster resource monitoring
 
 === Memory
+
+Every Redis Enterprise database has a maximum configured memory limit to ensure isolation
+in a multi-database cluster.
 
 [cols="1,1,1"]
 |===
@@ -29,16 +37,16 @@ There are https://github.com/redis-field-engineering/redis-enterprise-observabil
 | memory_usage_percent | Used memory / memory limit for database | Percentage
 |===
 
-Every Redis Enterprise database has a maximum configured memory limit to ensure isolation
-in a multi-database cluster.
-
-image::../images/playbook_used-memory.png[]
+image::images/playbook_used-memory.png[]
 
 ==== Thresholds
 
 The appropriate memory threshold depends on how the application is using Redis.
 
-===== Caching workloads
+* <<Caching workloads>>, which permit Redis to evict key, can safely use 100% of memory.
+* <<Non-caching workloads>> do not permit key eviction and should be closely monitored as soon as memory usage reaches 80%.
+
+==== Caching workloads
 
 For applications using Redis solely as a cache, you can safely let the memory usage
 reach 100% as long as you have an https://redis.io/blog/cache-eviction-strategies/[eviction policy] in place. This will ensure
@@ -47,25 +55,25 @@ that Redis can evict keys while continuing to accept new writes.
 While your Redis database is using 100% of available memory, it's important to monitor
 performance.
 
-1. https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/latency/[Latency]
-
+* https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/latency/[Latency]
++
 Average latency should be at or below 1 ms.
 
-2. Cache miss ratio should be below 50%
-
+* Cache miss ratio should be below 50%
++
 (100 * bdb_read_hits / (bdb_read_hits + bdb_read_misses)) < 50
-
++
 The ideal cache miss ratio depends on the application, but generally, the ratio should fall below 50%.
 High miss ratios coupled with high numbers of object evictions may indicate that your cache is too small.
 This can cause thrashing on the application side, where the cache is constantly being invalidated.
 
-3. https://redis.io/docs/latest/develop/reference/eviction/[Evicted keys]
-
+* https://redis.io/docs/latest/develop/reference/eviction/[Evicted keys]
++
 bdb_evicted_objects > 1
-
++
 Keys are being evicted from your database. In some caching use scenarios this may be acceptable, so please disable this check if you meet such requirements.
 
-===== Non-caching workloads
+==== Non-caching workloads
 
 If no eviction policy is enabled, then Redis will stop accepting writes once memory reaches 100%.
 Therefore, for non-caching workloads, we recommend that you configure an alert at 80% memory usage.
@@ -104,13 +112,15 @@ of the data written to Redis.
 
 === CPU
 
+Redis Enterprise provides several CPU metrics:
+
 [cols="1,1,1"]
 |===
 | *Metric name* | *Definition* | *Unit*
 
-| Node CPU (User and System) | CPU time portion spent by user-space processes | Percentage (values fall between 0 and 1, inclusive. Multiply by 100 to get percent)
-| Proxy CPU | CPU time portion spent by user-space processes | Percentage (values fall between 0 and 1, inclusive. Multiply by 100 to get percent)
-| Shard CPU | CPU time portion spent by user-space processes | Percentage (values fall between 0 and 1, inclusive. Multiply by 100 to get percent)
+| Shard CPU | CPU time portion spent by database shards  | Percentage, up to 100% per shard
+| Proxy CPU | CPU time portion spent by the cluster's proxy(s) | Percentage, 100% per proxy thread
+| Node CPU (User and System) | CPU time portion spent by all user-space and kernel-level processes | Percentage, 100% per node CPU
 |===
 
 To understand CPU metrics, it's worth recalling how a Redis Enterprise cluster is organized.
@@ -122,76 +132,98 @@ A database is a set of processes, known as shards, deployed across the nodes of 
 In the dashboard, shard CPU is the CPU utilization of the processes that make up the database.
 When diagnosing performance issues, start by looking at shard CPU.
 
-image::../images/playbook_cpu-usage.png[]
+image::images/playbook_cpu-usage.png[]
 
 ==== Thresholds
+
+In general, we define high CPU as any CPU utilization above 80% of total capacity.
 
 Shard CPU should remain below 80%. Shards are single-threaded, so a shard CPU of 100% means that the shard is fully utilized.
 
 Proxy CPU should remain below 80% of total capacity.
 The proxy is a multi-threaded process that handles client connections and forwards requests to the appropriate shard.
-Because the total number of threads is configurable, the proxy CPU may exceed 100%.
+Because the total number of proxy threads is configurable, the proxy CPU may exceed 100%.
 A proxy configured with 6 threads can reach 600% CPU utilization, so in this case,
-keeping utilization below 80% means keeping it below 480%.
+keeping utilization below 80% means keeping the total proxy CPU usage below 480%.
 
 Node CPU should also remain below 80% of total capacity. As with the proxy, the node CPU is variable depending
-on the CPU capacity of the node.
+on the CPU capacity of the node. You will need to calibrate your alerting based on the number of cores in your nodes.
 
 ==== Troubleshooting
 
-High CPU utilization is generally caused by an under-provisioned cluster, excess inefficient Redis operations,
-or hot master shards.
+High CPU utilization has multiple possible causes. Common causes include an under-provisioned cluster,
+excess inefficient Redis operations, and hot master shards.
 
 |===
-|*Issue*|*Possible causes*
+|*Issue*|*Possible causes*|*Remediation*
 
 |High CPU utilization across all shards of a database
-|This indicates that the database is under-provisioned. Increase the number of shards.
+|This usually indicates that the database is under-provisioned in terms of number of shards.
+A secondary cause may be that the application is running too many inefficient Redis operations.
+You can detect slow Redis operations by enabling the slow log in the Redis Enterprise UI.
+|First, rule out inefficient Redis operations as the cause of the high CPU utilization.
+See <<Slow operations>> for details on this.
+If inefficient Redis operations are not the cause, then increase the number of shards in the database.
 
-|Hot Master Shard
-|Inefficient usage
+|High CPU utilization on a single shard, with the remaining shards having low CPU utilization
+|This usually indicates a master shard with at least one hot key.
+Hot keys are keys that are accessed extremely frequently (e.g., more than 1000 times per second).
+|Hot key issues generally cannot be resolved by increasing the number of shards.
+To resole this issue, see <<Hot keys>>.
 
 |High Proxy CPU
-|Thundering herd of TLS connections
-|===
+|There are several possible causes of high proxy CPU.
+First, review the behavior of connections to the database.
+Frequent cycling of connections, especially with TLS is enabled, can cause high proxy CPU utilization.
+This is especially true when you see more than 100 connections per second per thread.
+Such behavior is almost always a sign of a misbehaving application.
 
-==== Remediation
+Seconds, review the total number of operations per second against the cluster.
+If you see more than 50k operations per second per thread, you may need to increase the number of proxy threads.
+|In the case of high connection cycling, review the application's connection behavior.
 
-|===
-|*Action*|*Method*
+In the case of high operations per second, https://redis.io/docs/latest/operate/rs/references/cli-utilities/rladmin/tune/#tune-proxy[increase the number of proxy threads].
 
-|Improve distribution
-|Increase number of shards
+|High Node CPU
+|You will typically detect high shard or proxy CPU utilization before you detect high node CPU utilization.
+Use the remediation steps above to address high shard and proxy CPU utilization.
+In spite of this, if you see high node CPU utilization, you may need to increase the number of nodes in the cluster.
+|Consider increasing the number of nodes in the cluster and the rebalancing the shards across the new nodes.
+This is a complex operation and should be done with the help of Redis support.
 
-|Increase database memory
-|Raise the database memory limit using the Redis Enterprise console or its API.
-
-|Modify eviction policy
-|For workloads that can tolerate evicted keys (e.g., caching), configure a global eviction policy for your database.
-
-|Modify key retention policy
-|Determine whether the application can set a reasonable TTL (time-to-live) on some or all
-of the data written to Redis.
+|High System CPU
+|Most of the issues above will reflect user-space CPU utilization.
+However, if you see high system CPU utilization, this may indicate a problem at the network or storage level.
+|Review network bytes in and network bytes out to rule out any unexpected spikes in network traffic.
+You may need perform some deeper network diagnostics to identify the cause of the high system CPU utilization.
+For example, with high rates of packet loss, you may need to review network configurations or even the network hardware.
 |===
 
 === Connections
 
-Definition
-redis_enterprise.conns (unit: count)
-The count of current client connections to the database.
+The Redis Enterprise database dashboard indicates to the total number of connections to the database over time.
 
-==== Monitoring notes
-This metric should be monitored with both a minimum and maximum number of connections.  The minimum number of connections not being met is an excellent indicator of either networking or application configuration errors.  The maximum number of connections being exceeded may indicate a need to tune the database.
-Possible Causes
+This connection count metric should be monitored with both a minimum and maximum number of connections in mind.
+Based on the number of application instances connecting to Redis (and whether your application uses connection pooling),
+you should have a rough idea of the minimum and maximum number of connections you expect to see for any given database.
+This number should remain relatively constant over time.
 
 |===
-|*Cause*|*Explanation*|*Actions*
+|*Issue*|*Possible causes*|*Remediation*
 
-|Minimum clients not met| Incorrect client configuration, network firewall or network issues|Check client configurations and firewall settings
-|Maximum connections exceeded|Client library is not releasing connections or an increase in the number of clients|Check client application configurations
+|Minimum number of clients not met
+|Incorrect client configuration, network firewall or network issues
+|Check client configurations and firewall settings
+
+|Maximum connections exceeded
+|Your application may not be releasing connections
+|Review the application's connection configuration.
+
+|Erratic connection counts (e.g, spikes and drops)
 |===
 
-image::../images/playbook_connections.png[]
+. This is an image
+image::images/playbook_connections.png[]
 
 ==== Troubleshooting
 
@@ -204,7 +236,6 @@ image::../images/playbook_connections.png[]
 |Too many connections
 |Poorly configured client
 |===
-
 
 ==== Remediation
 
@@ -224,27 +255,7 @@ image::../images/playbook_connections.png[]
 |Using rladmin run "tune proxy PROXY_NUMBER threads VALUE"
 |===
 
-=== Storage
-
-Installations that use Redis' persistence feature will also want to monitor available disk space to ensure availability.
-
-==== Troubleshooting
-
-|===
-|*Issue*|*Possible causes*
-
-|===
-
-
-==== Remediation
-
-|===
-|*Action*|*Method*
-
-|===
-
-
-== Performance measures
+== Database performance indicators
 
 === Latency
 
@@ -257,7 +268,7 @@ This is the average amount of time that a request takes to return from the time 
 
 Due to the fact that Redis is popular due to performance, generally you would expect most operations to return in single digit milliseconds.  Tune any alerts to match your SLA.  It is generally recommended that you also measure Redis operation latency at the client side to make it easier to determine if a server slow down or an increase in network latency is the culprit in any performance issues.
 
-image::../images/playbook_latency.png[]
+image::images/playbook_latency.png[]
 
 ==== Troubleshooting
 
@@ -287,8 +298,7 @@ image::../images/playbook_latency.png[]
 redis-cli -h HOST -p PORT -a PASSWORD SLOWLOG GET 100
 |===
 
-
-=== Cache Hit Rate
+=== Cache hit rate
 Definition
 redis_enterprise.cache_hit_rate (unit: percent)
 
@@ -297,7 +307,7 @@ This is the percentage of time that Redis is accessing a key that already exists
 ==== Monitoring notes
 This metric is useful only in the caching use case and should be ignored for all other use cases.  There are tradeoffs between the freshness of the data in the cache and efficacy of the cache mitigating traffic to any backend data service.  These tradeoffs should be considered carefully when determining the threshold for alerting.
 
-image::../images/playbook_hit-miss-ratios.png[]
+image::images/playbook_hit-miss-ratios.png[]
 
 ==== Troubleshooting
 This is highly specific to the application caching with no general rules that are applicable in the majority of cases.
@@ -309,7 +319,6 @@ This is highly specific to the application caching with no general rules that ar
 |Data is being evicted due to TTL policy
 |===
 
-
 ==== Remediation
 Note that redis commands return information on whether or not a key or field already exists.  For example, HSET command returns the number of fields in the hash that were added.
 
@@ -320,17 +329,17 @@ Note that redis commands return information on whether or not a key or field alr
 |Check return values to determine if values were added
 |===
 
-=== Evictions
+=== Key eviction rate
+
 Definition
 redis_enterprise.evicted_objects (unit: count)
 
 This is the count of items that have been evicted from the database.
 
-
 ==== Monitoring notes
 Eviction occurs when the database is close to capacity.  In this condition, the eviction policy starts to take effect.  While Expiration is fairly common in the caching use case, Eviction from the cache should generally be a matter of concern.  At very high throughput and very restricted resource use cases, sometimes the eviction sweeps cannot keep up with memory pressure.  Relying on Eviction as a memory management technique should be considered carefully.
 
-image::../images/playbook_evicted-objects.png[]
+image::images/playbook_evicted-objects.png[]
 
 ==== Troubleshooting
 While memory usage and network traffic will not help you pinpoint a root cause, network traffic is an excellent leading indicator of trouble.  Changes in network traffic patterns indicate corresponding changes in database behavior and further investigation is usually warranted.
@@ -355,7 +364,6 @@ Network Traffic
 redis_enterprise.ingress_bytes/redis_enterprise.egress_bytes (unit: bytes)
 Counters for the network traffic coming into the database and out from the database
 
-
 === Proxy
 
 In addition to automatic shard migration, Redis Enterprise offers additional capabilities. The DMC proxy can automatically scale the number of threads, starting from a default number up to a maximum and according to configurable criteria (threshold and duration).
@@ -364,7 +372,7 @@ In addition to automatic shard migration, Redis Enterprise offers additional cap
 
 If a node cannot host all the shards, one or more shards can spill over to another node due to resource insufficiency. Still, the placement policy doesn't change: there is an attempt to keep as many shards as possible on the same node. Always keeping the limit, hardcoded, of 10 shards per CPU.
 
-image::../images/playbook_proxy-cpu-usage.png[]
+image::images/playbook_proxy-cpu-usage.png[]
 
 ==== Troubleshooting
 
@@ -376,7 +384,6 @@ image::../images/playbook_proxy-cpu-usage.png[]
 |High ops per second/thread|Insufficient threads
 |===
 
-
 ==== Remediation
 |===
 |*Action*|*Method*
@@ -384,7 +391,6 @@ image::../images/playbook_proxy-cpu-usage.png[]
 |Increase thread count|
 |Restart the proxy|
 |===
-
 
 === Replication
 
@@ -405,9 +411,33 @@ Clustering and replication are used together in Active-Active databases to distr
 |Lag|
 |===
 
-
 ==== Remediation
 |===
 |*Action*|*Method*
 
 |===
+
+== Data access anti-patterns
+
+=== Slow operations
+
+Any Redis operation whose performance is O(n) (or worse) can cause high CPU utilization.
+Examples include https://redis.io/docs/latest/commands/keys/[KEYS], https://redis.io/docs/latest/commands/smembers/[SMEMBERS],
+and https://redis.io/docs/latest/commands/lrem/[LREM]. In additionl
+
+=== Hot keys
+
+== Alerting
+
+Included in the Redis Observability package is a suite of alerts and their associated tests for use with Prometheus.
+There are https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/grafana#alerts[alerts] for
+all of the metrics described in both the Resources and the Performance sections below.
+
+Not all the alerts are appropriate for all environments; installations that do not use persistence have no need of storage
+alerts, for example.
+
+There are https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/grafana/tests[tests] included
+with the alerts that validate the individual triggers. These can be used to validate any modifications made when tailoring the
+alerts for specific environments and/or use cases.
+
+== Appendix A: Grafana Dashboards

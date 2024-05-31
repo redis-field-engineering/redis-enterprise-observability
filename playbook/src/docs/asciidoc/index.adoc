@@ -329,7 +329,7 @@ This is the percentage of time that Redis is accessing a key that already exists
 This metric is useful only in the caching use case and should be ignored for all other use cases.  There are tradeoffs between the freshness of the data in the cache and efficacy of the cache mitigating traffic to any backend data service.  These tradeoffs should be considered carefully when determining the threshold for alerting.
 
 .Dashboard showing Hit/Miss ratios
-image::images/playbook_hit-miss-ratios.png[]
+image::images/playbook_read-write-misses.png[]
 
 ==== Troubleshooting
 This is highly specific to the application caching with no general rules that are applicable in the majority of cases.
@@ -498,10 +498,12 @@ Redis' Grafana dashboards are available tailored for Software(Enterprise) and Cl
 They come in two flavors: basic, which has no third-party dependencies; and extended, which requires a third-party library to perform ReST calls.
 
 There are two additional sets for software that provide drill-down functionality; the workflow dashboards.
+Lastly there are legacy dashboards which can be found in Classic.
 
 === Software
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/basic[Basic]
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/extended[Extended]
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/classic[Classic]
 
 ==== Workflow
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/workflow/databases[Database]

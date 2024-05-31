@@ -8,6 +8,9 @@ This document provides monitoring guidance for developers running applications
 that connect to Redis Enterprise. In particular, this guide focuses on the systems
 and resources that are most likely to impact the performance of your application.
 
+.Dashboard showing relevant statistics for a Node
+image::images/node_summary.png[]
+
 To effectively monitor a Redis Enterprise cluster, you need to observe
 core cluster resources and key database performance indicators.
 
@@ -22,6 +25,10 @@ Key database performance indicators include:
 * <<Latency>>
 * <<Cache hit rate>>
 * <<Key eviction rate>>
+
+.Dashboard showing an overview of cluster metrics
+image::images/cluster_overview.png[]
+
 
 == Core cluster resource monitoring
 
@@ -141,11 +148,17 @@ In general, we define high CPU as any CPU utilization above 80% of total capacit
 
 Shard CPU should remain below 80%. Shards are single-threaded, so a shard CPU of 100% means that the shard is fully utilized.
 
+.Display showing DMC Proxy CPU usage
+image::images/playbook_proxy-cpu-usage.png[]
+
 Proxy CPU should remain below 80% of total capacity.
 The proxy is a multi-threaded process that handles client connections and forwards requests to the appropriate shard.
 Because the total number of proxy threads is configurable, the proxy CPU may exceed 100%.
 A proxy configured with 6 threads can reach 600% CPU utilization, so in this case,
 keeping utilization below 80% means keeping the total proxy CPU usage below 480%.
+
+.Dashboard displaying an ensemble of Node CPU usage data
+image::images/node_cpu.png[]
 
 Node CPU should also remain below 80% of total capacity. As with the proxy, the node CPU is variable depending
 on the CPU capacity of the node. You will need to calibrate your alerting based on the number of cores in your nodes.
@@ -272,8 +285,8 @@ image::images/playbook_latency.png[]
 
 Due to the fact that Redis is popular due to performance, generally you would expect most operations to return in single digit milliseconds.  Tune any alerts to match your SLA.  It is generally recommended that you also measure Redis operation latency at the client side to make it easier to determine if a server slow down or an increase in network latency is the culprit in any performance issues.
 
-.Cloud console showing slow log entries
-image::images/slow_log.png[]
+.Display showing a noticeable spike in latency
+image::images/latency_spike.png[]
 
 ==== Troubleshooting
 
@@ -289,6 +302,9 @@ image::images/slow_log.png[]
 |Insufficient compute resources
 |Check to see if the CPU Usage, Memory Usage Percentage, or Evictions are increasing
 |===
+
+.Cloud console slow log display
+image::images/slow_log.png[]
 
 ==== Remediation
 |===
@@ -370,60 +386,6 @@ Secondary Indicators
 Network Traffic
 redis_enterprise.ingress_bytes/redis_enterprise.egress_bytes (unit: bytes)
 Counters for the network traffic coming into the database and out from the database
-
-=== Proxy
-
-In addition to automatic shard migration, Redis Enterprise offers additional capabilities. The DMC proxy can automatically scale the number of threads, starting from a default number up to a maximum and according to configurable criteria (threshold and duration).
-
-==== Monitoring notes
-
-If a node cannot host all the shards, one or more shards can spill over to another node due to resource insufficiency. Still, the placement policy doesn't change: there is an attempt to keep as many shards as possible on the same node. Always keeping the limit, hardcoded, of 10 shards per CPU.
-
-.Display showing DMC Proxy CPU usage
-image::images/playbook_proxy-cpu-usage.png[]
-
-==== Troubleshooting
-
-|===
-|*Issue*|*Possible causes*
-
-|Poor Performance|Thundering herd
-|Auto-scale event|Insufficient threads
-|High ops per second/thread|Insufficient threads
-|===
-
-==== Remediation
-|===
-|*Action*|*Method*
-
-|Increase thread count|
-|Restart the proxy|
-|===
-
-=== Replication
-
-In Redis Enterprise, Active-Active geo-distribution is based on CRDT technology. The Redis Enterprise implementation of CRDT is called an Active-Active database (formerly known as CRDB). With Active-Active databases, applications can read and write to the same data set from different geographical locations seamlessly and with latency less than one millisecond (ms), without changing the way the application connects to the database.
-
-Active-Active databases also provide disaster recovery and accelerated data read-access for geographically distributed users.
-
-==== Monitoring notes
-
-Clustering and replication are used together in Active-Active databases to distribute multiple copies of the dataset across multiple nodes and multiple clusters. As a result, a node or cluster is less likely to become a single point of failure. If a primary node or primary shard fails, a replica is automatically promoted to primary. To avoid having one node hold all copies of certain data, the replica HA feature (enabled by default) automatically migrates replica shards to available nodes.
-
-==== Troubleshooting
-
-|===
-|*Issue*|*Possible causes*
-
-|Constant Syncing|Unreliable Networking
-|Lag|
-|===
-
-==== Remediation
-|===
-|*Action*|*Method*
-
-|===
 
 == Data access anti-patterns
 

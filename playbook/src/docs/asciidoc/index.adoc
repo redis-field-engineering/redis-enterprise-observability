@@ -410,6 +410,88 @@ There are https://github.com/redis-field-engineering/redis-enterprise-observabil
 with the alerts that validate the individual triggers. These can be used to validate any modifications made when tailoring the
 alerts for specific environments and/or use cases.
 
+The following is a list of alerts contained in the alerts.yml file. There are several points to be considered:
+
+- Not all installations have all metrics
+- Most metrics only alert if the specified trigger persists for a given duraction
+
+|===
+|Name |Trigger
+
+|Average Latency Warning
+|round(bdb_avg_latency * 1000) > 1
+
+|Average Latency Critical
+|round(bdb_avg_latency * 1000) > 4
+
+|No Redis Connections
+|bdb_conns < 1
+
+|Excessive Connections
+|bdb_conns > 64000
+
+|No Redis Requests
+|bdb_total_req < 1
+
+|Excessive Redis Requests
+|bdb_total_req > 1000000
+
+|DB full
+|round((bdb_used_memory/bdb_memory_limit) * 100) > 98
+
+|DB full in 2 hours
+|round((bdb_used_memory/bdb_memory_limit) * 100) < 98 and (predict_linear(bdb_used_memory[15m], 2 * 3600) / bdb_memory_limit) > 0.3 and round(predict_linear(bdb_used_memory[15m], 2 * 3600)/bdb_memory_limit) > 0.98
+
+|Low Hit Ratio
+|(100 * bdb_read_hits)/(bdb_read_hits + bdb_read_misses) < 50
+
+|Unexpected Object Eviction
+|bdb_evicted_objects > 1
+
+|ReplicaSync Status
+|bdb_replicaof_syncer_status > 0
+
+|CRDTSync Status
+|bdb_crdt_syncer_status > 0
+
+|ReplicaLag Status
+|bdb_replicaof_syncer_local_ingress_lag_time > 500
+
+|CRDTLag Status
+|bdb_crdt_syncer_local_ingress_lag_time > 500
+
+|Node Not Responding
+|count(node_up) != 3
+
+|Node Persistent Storage
+|round((node_persistent_storage_free/node_persistent_storage_avail) * 100) <= 5
+
+|Node Ephemeral Storage
+|round((node_ephemeral_storage_free/node_ephemeral_storage_avail) * 100) <= 5
+
+|Node Free Memory
+|round((node_available_memory/node_free_memory) * 100) <= 15
+
+|Node CPU Usage
+|round((1 - node_cpu_idle) * 100) >= 80
+
+|Shard Down
+|redis_up == 0
+
+|Master Shard Down
+|floor(redis_master_link_status{role="slave"}) < 1
+
+|Shard CPU Usage
+|redis_process_cpu_usage_percent >= 80
+
+|Hot Master Shard
+|redis_process_cpu_usage_percent{role="master"} > 0.75 and redis_process_cpu_usage_percent{role="master"} > on (bdb) group_left() (avg by (bdb)(redis_process_cpu_usage_percent{role="master"}) + on(bdb) 1.2 * stddev by (bdb) (redis_process_cpu_usage_percent{role="master"}))
+
+|ShardConnectionCount
+|redis_connected_clients > 500
+|===
+
+
 == Appendix A: Grafana Dashboards
 
 Redis' Grafana dashboards are available tailored for Software(Enterprise) and Cloud installations.

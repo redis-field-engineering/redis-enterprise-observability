@@ -132,6 +132,7 @@ A database is a set of processes, known as shards, deployed across the nodes of 
 In the dashboard, shard CPU is the CPU utilization of the processes that make up the database.
 When diagnosing performance issues, start by looking at shard CPU.
 
+.Dashboard displaying CPU usage
 image::images/playbook_cpu-usage.png[]
 
 ==== Thresholds
@@ -222,7 +223,7 @@ This number should remain relatively constant over time.
 |Erratic connection counts (e.g, spikes and drops)
 |===
 
-. This is an image
+.Dashboard displaying connections
 image::images/playbook_connections.png[]
 
 ==== Troubleshooting
@@ -264,11 +265,15 @@ redis_enterprise.avg_latency (unit: microseconds)
 
 This is the average amount of time that a request takes to return from the time that it first hits the Redis Enterprise proxy until the response is returned.  It does not include the full time from the remote client’s perspective.
 
+.Dashboard display of latency metrics
+image::images/playbook_latency.png[]
+
 ==== Monitoring notes
 
 Due to the fact that Redis is popular due to performance, generally you would expect most operations to return in single digit milliseconds.  Tune any alerts to match your SLA.  It is generally recommended that you also measure Redis operation latency at the client side to make it easier to determine if a server slow down or an increase in network latency is the culprit in any performance issues.
 
-image::images/playbook_latency.png[]
+.Cloud console showing slow log entries
+image::images/slow_log.png[]
 
 ==== Troubleshooting
 
@@ -307,6 +312,7 @@ This is the percentage of time that Redis is accessing a key that already exists
 ==== Monitoring notes
 This metric is useful only in the caching use case and should be ignored for all other use cases.  There are tradeoffs between the freshness of the data in the cache and efficacy of the cache mitigating traffic to any backend data service.  These tradeoffs should be considered carefully when determining the threshold for alerting.
 
+.Dashboard showing Hit/Miss ratios
 image::images/playbook_hit-miss-ratios.png[]
 
 ==== Troubleshooting
@@ -339,6 +345,7 @@ This is the count of items that have been evicted from the database.
 ==== Monitoring notes
 Eviction occurs when the database is close to capacity.  In this condition, the eviction policy starts to take effect.  While Expiration is fairly common in the caching use case, Eviction from the cache should generally be a matter of concern.  At very high throughput and very restricted resource use cases, sometimes the eviction sweeps cannot keep up with memory pressure.  Relying on Eviction as a memory management technique should be considered carefully.
 
+.Dashboard displaying object evictions
 image::images/playbook_evicted-objects.png[]
 
 ==== Troubleshooting
@@ -372,6 +379,7 @@ In addition to automatic shard migration, Redis Enterprise offers additional cap
 
 If a node cannot host all the shards, one or more shards can spill over to another node due to resource insufficiency. Still, the placement policy doesn't change: there is an attempt to keep as many shards as possible on the same node. Always keeping the limit, hardcoded, of 10 shards per CPU.
 
+.Display showing DMC Proxy CPU usage
 image::images/playbook_proxy-cpu-usage.png[]
 
 ==== Troubleshooting

@@ -362,7 +362,7 @@ This is the count of items that have been evicted from the database.
 Eviction occurs when the database is close to capacity.  In this condition, the eviction policy starts to take effect.  While Expiration is fairly common in the caching use case, Eviction from the cache should generally be a matter of concern.  At very high throughput and very restricted resource use cases, sometimes the eviction sweeps cannot keep up with memory pressure.  Relying on Eviction as a memory management technique should be considered carefully.
 
 .Dashboard displaying object evictions
-image::images/playbook_evicted-objects.png[]
+image::images/playbook_eviction-expiration.png[]
 
 ==== Troubleshooting
 While memory usage and network traffic will not help you pinpoint a root cause, network traffic is an excellent leading indicator of trouble.  Changes in network traffic patterns indicate corresponding changes in database behavior and further investigation is usually warranted.

@@ -4,10 +4,8 @@
 
 == Introduction
 
-This guide is intended to provide monitoring guidance to DevOps and SREs who are responsible for operating
+This guide provides monitoring guidance for developers running applications that use
 Redis Enterprise clusters either on premise or self-managed in the cloud.
-It is not intended for use with Redis services hosted by either Redis Inc or various cloud vendors.
-This data can be collected using the native Prometheus integration or Dynatrace or Datadog Redis Enterprise extensions.
 
 == Monitoring Overview
 
@@ -53,12 +51,13 @@ performance.
 
 Average latency should be at or below 1 ms.
 
-2. https://redis.io/glossary/cache-miss/[Cache miss ratio]
+2. Cache miss ratio should be below 50%
 
-100*bdb_read_hits/(bdb_read_hits+bdb_read_misses) < 50
+(100 * bdb_read_hits / (bdb_read_hits + bdb_read_misses)) < 50
 
-Read hit ratio is below 50%. If you are not using redis in a caching scenario, please disable this check. You may need to tune the threshold to match your application performance criteria.
-
+The ideal cache miss ratio depends on the application, but generally, the ratio should fall below 50%.
+High miss ratios coupled with high numbers of object evictions may indicate that your cache is too small.
+This can cause thrashing on the application side, where the cache is constantly being invalidated.
 
 3. https://redis.io/docs/latest/develop/reference/eviction/[Evicted keys]
 
@@ -109,9 +108,9 @@ of the data written to Redis.
 |===
 | *Metric name* | *Definition* | *Unit*
 
-| Node CPU (User and System) | CPU time portion spent by user-space processes | Percentage (values falls between 0 and 1, inclusive, multiply by 100 to get percent)
-| Proxy CPU | CPU time portion spent by user-space processes | Percentage (values falls between 0 and 1, inclusive, multiply by 100 to get percent)
-| Shard CPU | CPU time portion spent by user-space processes | Percentage (values falls between 0 and 1, inclusive, multiply by 100 to get percent)
+| Node CPU (User and System) | CPU time portion spent by user-space processes | Percentage (values fall between 0 and 1, inclusive. Multiply by 100 to get percent)
+| Proxy CPU | CPU time portion spent by user-space processes | Percentage (values fall between 0 and 1, inclusive. Multiply by 100 to get percent)
+| Shard CPU | CPU time portion spent by user-space processes | Percentage (values fall between 0 and 1, inclusive. Multiply by 100 to get percent)
 |===
 
 To understand CPU metrics, it's worth recalling how a Redis Enterprise cluster is organized.
@@ -127,17 +126,27 @@ image::../images/playbook_cpu-usage.png[]
 
 ==== Thresholds
 
-Shard CPU, Proxy CPU, and Node CPU should remain below 80%.
+Shard CPU should remain below 80%. Shards are single-threaded, so a shard CPU of 100% means that the shard is fully utilized.
+
+Proxy CPU should remain below 80% of total capacity.
+The proxy is a multi-threaded process that handles client connections and forwards requests to the appropriate shard.
+Because the total number of threads is configurable, the proxy CPU may exceed 100%.
+A proxy configured with 6 threads can reach 600% CPU utilization, so in this case,
+keeping utilization below 80% means keeping it below 480%.
+
+Node CPU should also remain below 80% of total capacity. As with the proxy, the node CPU is variable depending
+on the CPU capacity of the node.
 
 ==== Troubleshooting
 
-There are many possible causes of high CPU utilization.
+High CPU utilization is generally caused by an under-provisioned cluster, excess inefficient Redis operations,
+or hot master shards.
 
 |===
 |*Issue*|*Possible causes*
 
-|Hot keys
-|Inefficient Operations
+|High CPU utilization across all shards of a database
+|This indicates that the database is under-provisioned. Increase the number of shards.
 
 |Hot Master Shard
 |Inefficient usage
@@ -145,7 +154,6 @@ There are many possible causes of high CPU utilization.
 |High Proxy CPU
 |Thundering herd of TLS connections
 |===
-
 
 ==== Remediation
 

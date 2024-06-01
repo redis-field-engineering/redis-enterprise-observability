@@ -413,6 +413,35 @@ There are https://github.com/redis-field-engineering/redis-enterprise-observabil
 with the alerts that validate the individual triggers. These can be used to validate any modifications made when tailoring the
 alerts for specific environments and/or use cases.
 
+In order to trigger alerts it is necessary to install Prometheus' https://prometheus.io/docs/alerting/latest/configuration/[Alertmanager].
+Grafana have published a fairly straightforward guide should you wish for more comprehensive https://grafana.com/blog/2020/02/25/step-by-step-guide-to-setting-up-prometheus-alertmanager-with-slack-pagerduty-and-gmail/[instructions] than what are provided below.
+
+There are two sections that must be configured, and by and large they can use the default values. The first section should be un-commented, eg. everything below Alertmanager configuration. This will start the Alertmanager and instruct it to listen on its default port of 9093.
+
+[subs="+quotes"]
+----
+# Alertmanager configuration
+#alerting:
+#  alertmanagers:
+#    - static_configs:
+#        - targets:
+#          - alertmanager:9093
+----
+
+The second section instructs the Alertmanager to read specific rules files. If you pasted the 'rules.yml' file into '/etc/prometheus' then the following configuration would be required.
+
+[subs="+quotes"]
+----
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - "error_rules.yml"
+  - "rules.yml"
+----
+
+Once this is done you should restart Prometheus.
+The built-in configuration, error_rules.yml, has a single alert: Critical Connection Exception.
+If you open the Prometheus console, by default located at port 9090, and select the Alert tab you should see it.
+
 The following is a list of alerts contained in the alerts.yml file. There are several points to be considered:
 
 - Not all installations have all metrics

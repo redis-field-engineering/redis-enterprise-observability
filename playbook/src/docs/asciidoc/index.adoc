@@ -50,7 +50,7 @@ image::images/playbook_used-memory.png[]
 
 The appropriate memory threshold depends on how the application is using Redis.
 
-* <<Caching workloads>>, which permit Redis to evict key, can safely use 100% of memory.
+* <<Caching workloads>>, which permit Redis to evict keys, can safely use 100% of available memory.
 * <<Non-caching workloads>> do not permit key eviction and should be closely monitored as soon as memory usage reaches 80%.
 
 ==== Caching workloads
@@ -59,26 +59,58 @@ For applications using Redis solely as a cache, you can safely let the memory us
 reach 100% as long as you have an https://redis.io/blog/cache-eviction-strategies/[eviction policy] in place. This will ensure
 that Redis can evict keys while continuing to accept new writes.
 
-While your Redis database is using 100% of available memory, it's important to monitor
-performance.
+While your Redis database is using 100% of available memory in a caching context,
+it's still important to monitor performance. The key performance indicators include:
 
-* https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/latency/[Latency]
-+
-Average latency should be at or below 1 ms.
+* Latency
+* Cache hit ratio
+* Evicted keys
 
-* Cache miss ratio should be below 50%
-+
-(100 * bdb_read_hits / (bdb_read_hits + bdb_read_misses)) < 50
-+
-The ideal cache miss ratio depends on the application, but generally, the ratio should fall below 50%.
-High miss ratios coupled with high numbers of object evictions may indicate that your cache is too small.
-This can cause thrashing on the application side, where the cache is constantly being invalidated.
+===== Read latency
 
-* https://redis.io/docs/latest/develop/reference/eviction/[Evicted keys]
-+
-bdb_evicted_objects > 1
-+
-Keys are being evicted from your database. In some caching use scenarios this may be acceptable, so please disable this check if you meet such requirements.
+*Latency* has two important definitions, depending on context:
+
+* In context Redis itself, latency is *the time it takes for Redis
+to respond to a request*. See <<Latency>> for a broader discussion of this metric.
+
+* In the context of your application, latency is *the time it takes for the application
+to process a request*. This will include the time it takes to execute both reads and writes
+to Redis, as well as calls to other databases and services. Note that its possible for
+Redis to report low latency while the application is experiencing high latency.
+This may indicate a low cache hit ratio, ultimately caused by insufficient memory.
+
+You need to monitor both application-level and Redis-level latency to diagnose
+caching performance issues in production.
+
+===== Cache hit ratio and eviction
+
+*Cache hit ratio* is the percentage of read requests that Redis serves successfully.
+*Eviction rate* is the rate at which Redis evicts keys from the cache. These metrics
+are often inversely correlated: a high eviction rate may cause a low cache hit ratio.
+
+If the Redis server is empty, the hit ratio will be 0%. As the application runs and the fills the cache,
+the hit ratio will increase.
+
+*When the entire cached working set fits in memory*, then the cache hit ratio will reach close to 100%
+while the percent of used memory will remain below 100%.
+
+*When the working set cannot fit in memory*, the eviction policy will start to evict keys.
+The greater the rate of key eviction, the lower the cache hit ratio.
+
+In both cases, keys will may be manually invalidated by the application or evicted through
+the uses of TTLs (time-to-live) and an eviction policy.
+
+The ideal cache hit ratio depends on the application, but generally, the ratio should be greater than 50%.
+Low hit ratios coupled with high numbers of object evictions may indicate that your cache is too small.
+This can cause thrashing on the application side, a scenario where the cache is constantly being invalidated.
+
+The upshot here is that when your Redis database is using 100% of available memory, you need
+to measure the rate of
+https://redis.io/docs/latest/operate/rs/references/metrics/database-operations/#evicted-objectssec[key evictions].
+
+An acceptable rate of key evictions depends on the total number of keys in the database
+and the measure of application-level latency. If application latency is high,
+check to see that key evictions have not increased.
 
 ==== Non-caching workloads
 
@@ -89,32 +121,38 @@ Once your database reaches this 80% threshold, you should closely review the rat
 ==== Troubleshooting
 
 |===
-|*Issue* |*Possible causes*
+|*Issue* |*Possible causes* | *Remediation*
 
-|Possible spike in activity
-|Check both the Network Traffic and Operations Per Second metrics to determine if there is a corresponding increase
+|Redis memory usage has reached 100%
+|This may indicate an insufficient Redis memory limit for your application's workload
+|For non-caching workloads (where eviction is unacceptable),
+immediately increase the memory limit for the database.
+You can accomplish this through the Redis Enterprise console or its API.
+Alternatively, you can contact Redis support to assist.
 
-|Database sized incorrectly
-|View the Memory Usage raw bytes over time to see if a usage pattern has changed
+For caching workloads, you need to monitor performance closely.
+Confirm that you have an https://redis.io/docs/latest/operate/rs/databases/memory-performance/eviction-policy/[eviction policy]
+in place.
+If your application's performance starts to degrade, you may need to increase the memory limit,
+as described above.
 
-|Incorrect retention policies
-|Check to see if keys are being Evicted or Expired
-|===
+|Redis has stopped accepting writes
+|Memory is at 100% and no eviction policy is in place
+|Increase the database's total amount of memory.
+If this is for a caching workload, consider enabling
+an https://redis.io/docs/latest/operate/rs/databases/memory-performance/eviction-policy/[eviction policy]
 
-==== Remediation
+In addition, you may want to determine whether the application can set a reasonable TTL (time-to-live) on some or all
+of the data being written to Redis.
 
-|===
-|*Action*|*Method*
+|Cache hit ratio is steadily decreasing
+|The application's working set size may be steadily increasing.
 
-|Increase database memory
-|Raise the database memory limit using the Redis Enterprise console or its API.
+Alternatively, the application may be misconfigured (e.g., generating
+more than one unique cache key per cached item.)
+|If the working set size is increasing, consider increasing the memory limit for the database.
+If the application is misconfigured, review the application's cache key generation logic.
 
-|Modify eviction policy
-|For workloads that can tolerate evicted keys (e.g., caching), configure a global eviction policy for your database.
-
-|Modify key retention policy
-|Determine whether the application can set a reasonable TTL (time-to-live) on some or all
-of the data written to Redis.
 |===
 
 === CPU
@@ -474,8 +512,8 @@ The following is a list of alerts contained in the alerts.yml file. There are se
 |DB full in 2 hours
 |round((bdb_used_memory/bdb_memory_limit) * 100) < 98 and (predict_linear(bdb_used_memory[15m], 2 * 3600) / bdb_memory_limit) > 0.3 and round(predict_linear(bdb_used_memory[15m], 2 * 3600)/bdb_memory_limit) > 0.98
 
-|Low Hit Ratio
-|(100 * bdb_read_hits)/(bdb_read_hits + bdb_read_misses) < 50
+|Cache hit ratio below 50%
+|(100 * bdb_read_hits) / (bdb_read_hits + bdb_read_misses) < 50
 
 |Unexpected Object Eviction
 |bdb_evicted_objects > 1

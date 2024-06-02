@@ -488,76 +488,76 @@ The following is a list of alerts contained in the alerts.yml file. There are se
 |===
 |Name |Trigger
 
-|Average Latency Warning
+|Average latency has reached a warning level
 |round(bdb_avg_latency * 1000) > 1
 
-|Average Latency Critical
+|Average latency has reached a critical level indicating system degradation
 |round(bdb_avg_latency * 1000) > 4
 
-|No Redis Connections
+|Absence of any connection indicates improper configuration or firewall issue
 |bdb_conns < 1
 
-|Excessive Connections
+|A flood of connections has occurred that will impact normal operations
 |bdb_conns > 64000
 
-|No Redis Requests
+|Absence of any requests indicates improperly configured clients
 |bdb_total_req < 1
 
-|Excessive Redis Requests
+|Excessive number of client requests indicates configuration and/or programmatic issues
 |bdb_total_req > 1000000
 
-|DB full
+|The database in question will soon be unable to accept new data
 |round((bdb_used_memory/bdb_memory_limit) * 100) > 98
 
-|DB full in 2 hours
+|The database in question will be unable to accept new data in two hours
 |round((bdb_used_memory/bdb_memory_limit) * 100) < 98 and (predict_linear(bdb_used_memory[15m], 2 * 3600) / bdb_memory_limit) > 0.3 and round(predict_linear(bdb_used_memory[15m], 2 * 3600)/bdb_memory_limit) > 0.98
 
-|Cache hit ratio below 50%
-|(100 * bdb_read_hits) / (bdb_read_hits + bdb_read_misses) < 50
+|Database read operations are failing to find entries more than 50% of the time
+|(100 * bdb_read_hits)/(bdb_read_hits + bdb_read_misses) < 50
 
-|Unexpected Object Eviction
+|In situations where TTL values are not set this indicates a problem
 |bdb_evicted_objects > 1
 
-|ReplicaSync Status
+|Replication between nodes is not in a satisfactory state
 |bdb_replicaof_syncer_status > 0
 
-|CRDTSync Status
+|Record synchronization between nodes is not in a satisfactory state
 |bdb_crdt_syncer_status > 0
 
-|ReplicaLag Status
+|The amount by which replication lags behind events is worrisome
 |bdb_replicaof_syncer_local_ingress_lag_time > 500
 
-|CRDTLag Status
+|The amount by which object replication lags behind events is worrisome
 |bdb_crdt_syncer_local_ingress_lag_time > 500
 
-|Node Not Responding
+|The expected number of active nodes is less than expected
 |count(node_up) != 3
 
-|Node Persistent Storage
+|Persistent storage will soon be exhausted
 |round((node_persistent_storage_free/node_persistent_storage_avail) * 100) <= 5
 
-|Node Ephemeral Storage
+|Ephemeral storage will soon be exhausted
 |round((node_ephemeral_storage_free/node_ephemeral_storage_avail) * 100) <= 5
 
-|Node Free Memory
+|The node in question is close to running out of memory
 |round((node_available_memory/node_free_memory) * 100) <= 15
 
-|Node CPU Usage
+|The node in question has exceeded expected levels of CPU usage
 |round((1 - node_cpu_idle) * 100) >= 80
 
-|Shard Down
+|The shard in question is not reachable
 |redis_up == 0
 
-|Master Shard Down
+|The master shard is not reachable
 |floor(redis_master_link_status{role="slave"}) < 1
 
-|Shard CPU Usage
+|The shard in question has exceeded expected levels of CPU usage
 |redis_process_cpu_usage_percent >= 80
 
-|Hot Master Shard
+|The master shard has exceeded expected levels of CPU usage
 |redis_process_cpu_usage_percent{role="master"} > 0.75 and redis_process_cpu_usage_percent{role="master"} > on (bdb) group_left() (avg by (bdb)(redis_process_cpu_usage_percent{role="master"}) + on(bdb) 1.2 * stddev by (bdb) (redis_process_cpu_usage_percent{role="master"}))
 
-|ShardConnectionCount
+|The shard in question has an unhealthily high level of connections
 |redis_connected_clients > 500
 |===
 

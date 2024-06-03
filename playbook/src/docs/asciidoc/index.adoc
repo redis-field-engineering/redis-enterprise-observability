@@ -41,7 +41,7 @@ in a multi-database cluster.
 |===
 | *Metric name* | *Definition* | *Unit*
 
-| memory_usage_percent | Used memory / memory limit for database | Percentage
+| Memory usage percentage | Percentage of used memory relative to the configured memory limit for a given database | Percentage
 |===
 
 image::images/playbook_used-memory.png[]
@@ -253,7 +253,7 @@ For example, with high rates of packet loss, you may need to review network conf
 
 === Connections
 
-The Redis Enterprise database dashboard indicates to the total number of connections to the database over time.
+The Redis Enterprise database dashboard indicates to the total number of connections to the database.
 
 This connection count metric should be monitored with both a minimum and maximum number of connections in mind.
 Based on the number of application instances connecting to Redis (and whether your application uses connection pooling),
@@ -263,15 +263,21 @@ This number should remain relatively constant over time.
 |===
 |*Issue*|*Possible causes*|*Remediation*
 
-|Minimum number of clients not met
-|Incorrect client configuration, network firewall or network issues
-|Check client configurations and firewall settings
+|Fewer connections to Redis than expected
+|The application may not be connecting to the correct Redis database.
+There may be a network partition between the application and the Redis database.
+|Confirm that the application can successfully connect to Redis.
+This may require consulting the application logs or the application's connection configuration.
 
-|Maximum connections exceeded
-|Your application may not be releasing connections
-|Review the application's connection configuration.
+|Connection count continues to grow over time
+|Your application may not be releasing connections.
+The most common of such a connection leak is a manually implemented
+connection pool or a connection pool that is not properly configured.
+|Review the application's connection configuration
 
 |Erratic connection counts (e.g, spikes and drops)
+|
+|
 |===
 
 .Dashboard displaying connections

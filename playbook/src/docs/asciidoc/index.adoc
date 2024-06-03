@@ -339,6 +339,7 @@ a low <<Cache hit rate, cache hit rate>>, a high rate of <<Key eviction rate, ev
 
 |Insufficient CPU
 |Check to see if the CPU Usage, Memory Usage Percentage, or Evictions are increasing
+|===
 
 ==== Remediation
 |===

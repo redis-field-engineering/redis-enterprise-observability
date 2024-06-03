@@ -287,11 +287,7 @@ image::images/playbook_bdb-used-connections.png[]
 
 ==== Network ingress / egress
 
-[In progress]
-
 ==== Troubleshooting
-
-[In progress]
 
 == Database performance indicators
 
@@ -311,7 +307,7 @@ microseconds.
 .Dashboard display of latency metrics
 image::images/playbook_bdb-cluster-latency.png[]
 
-[In progress]
+TODO: In progress
 - Discuss read vs write vs other latency
 - Max latency
 
@@ -339,18 +335,11 @@ a low <<Cache hit rate, cache hit rate>>, a high rate of <<Key eviction rate, ev
 
 |Insufficient CPU
 |Check to see if the CPU Usage, Memory Usage Percentage, or Evictions are increasing
-|===
-
-==== Remediation
-|===
-|*Action*|*Method*
-
-|Increase resources
-|The database can be scaled up online by going to the Web UI and enabling clustering on the database.  In extreme cases more nodes can be added to the cluster and resources rebalanced.
-
-|Inefficient Queries
 
 |===
+
+TODO: Fix this
+The database can be scaled up online by going to the Web UI and enabling clustering on the database.  In extreme cases more nodes can be added to the cluster and resources rebalanced.
 
 === Cache hit rate
 Definition
@@ -377,16 +366,6 @@ This is highly specific to the application caching with no general rules that ar
 |Data is being evicted due to TTL policy
 |===
 
-==== Remediation
-Note that redis commands return information on whether or not a key or field already exists.  For example, HSET command returns the number of fields in the hash that were added.
-
-|===
-|*Action*|*Method*
-
-|Monitor activity
-|Check return values to determine if values were added
-|===
-
 === Key eviction rate
 
 Definition
@@ -408,12 +387,7 @@ While memory usage and network traffic will not help you pinpoint a root cause, 
 
 |High number of evictions
 |Increased number of network connections/clients
-|===
-*Also See Memory Usage Percentage Possible Causes
 
-
-==== Remediation
-See Memory Usage Percentage Remediation
 
 |===
 |*Action*|*Method*
@@ -449,24 +423,6 @@ However, if you centralize the access down to a few pieces of data accessed cons
 In a Redis cluster, the key is actually what determines where in the cluster that data is stored.
 The data is stored in one single primary location based on hashing that key.
 So, when you access a single key over and over again, you’re actually accessing a single node/shard over and over again.
-=======
-and https://redis.io/docs/latest/commands/lrem/[LREM]. In addition, customer Lua scripts can also be
-computationally expensive.
-
-You can review slow operations from the Redis Enterprise and Redis Cloud UI:
-
-.Cloud console slow log display
-image::images/slow_log.png[]
-
-You can also review slow operations from the Redis CLI. For example, here's the command
-to review the 100 most recent slow operations:
-
-[source,bash]
-----
-redis-cli -h HOST -p PORT -a PASSWORD SLOWLOG GET 100
-----
-
-=== Hot keys
 
 In progress
 

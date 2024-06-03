@@ -11,7 +11,7 @@ and resources that are most likely to impact the performance of your application
 .Dashboard showing relevant statistics for a Node
 image::images/node_summary.png[]
 
-To effectively monitor a Redis Enterprise cluster, you need to observe
+To effectively monitor a Redis Enterprise cluster you need to observe
 core cluster resources and key database performance indicators.
 
 Core cluster resources include:
@@ -417,14 +417,22 @@ While memory usage and network traffic will not help you pinpoint a root cause, 
 |===
 |*Issue*|*Possible causes*
 
-|See Memory Usage Percentage Possible Causes
+|High number of evictions
+|Increased number of network connections/clients
 |===
+*Also See Memory Usage Percentage Possible Causes
+
 
 ==== Remediation
 See Memory Usage Percentage Remediation
 
 |===
 |*Action*|*Method*
+
+|Reconfigure database
+|Increase the number of shards
+|Resize database
+|Increase the memory limit of the database
 
 |===
 
@@ -440,9 +448,16 @@ Counters for the network traffic coming into the database and out from the datab
 
 Any Redis operation whose performance is O(n) (or worse) can cause high CPU utilization.
 Examples include https://redis.io/docs/latest/commands/keys/[KEYS], https://redis.io/docs/latest/commands/smembers/[SMEMBERS],
-and https://redis.io/docs/latest/commands/lrem/[LREM]. In additionl
+and https://redis.io/docs/latest/commands/lrem/[LREM].
+In addition, certain operations such as https://redis.io/docs/latest/commands/keys/[KEYS] should never be issued against a production system due to the impact they have on performance.
 
 === Hot keys
+
+Redis can easily become the core of your app’s operational data, holding valuable and frequently accessed information.
+However, if you centralize the access down to a few pieces of data accessed constantly, you create what is known as a hot-key problem.
+In a Redis cluster, the key is actually what determines where in the cluster that data is stored.
+The data is stored in one single primary location based on hashing that key.
+So, when you access a single key over and over again, you’re actually accessing a single node/shard over and over again.
 
 == Alerting
 
@@ -460,7 +475,9 @@ alerts for specific environments and/or use cases.
 In order to trigger alerts it is necessary to install Prometheus' https://prometheus.io/docs/alerting/latest/configuration/[Alertmanager].
 Grafana have published a fairly straightforward guide should you wish for more comprehensive https://grafana.com/blog/2020/02/25/step-by-step-guide-to-setting-up-prometheus-alertmanager-with-slack-pagerduty-and-gmail/[instructions] than what are provided below.
 
-There are two sections that must be configured, and by and large they can use the default values. The first section should be un-commented, eg. everything below Alertmanager configuration. This will start the Alertmanager and instruct it to listen on its default port of 9093.
+There are two sections of the 'prometheus.yml' file that must be configured, and by and large they can use the default values.
+The first section should be un-commented, eg. everything below Alertmanager configuration.
+This will start the Alertmanager and instruct it to listen on its default port of 9093.
 
 [subs="+quotes"]
 ----
@@ -484,7 +501,9 @@ rule_files:
 
 Once this is done you should restart Prometheus.
 The built-in configuration, error_rules.yml, has a single alert: Critical Connection Exception.
-If you open the Prometheus console, by default located at port 9090, and select the Alert tab you should see it.
+If you open the Prometheus console, by default located at port 9090, and select the Alert tab you should see it, as well as the alerts in any other file you have included as a rules file.
+
+image::images/playbook_prometheus-alerts.png[]
 
 The following is a list of alerts contained in the alerts.yml file. There are several points to be considered:
 
@@ -492,7 +511,7 @@ The following is a list of alerts contained in the alerts.yml file. There are se
 - Most metrics only alert if the specified trigger persists for a given duraction
 
 |===
-|Name |Trigger
+|Description |Trigger
 
 |Average latency has reached a warning level
 |round(bdb_avg_latency * 1000) > 1

@@ -392,6 +392,7 @@ While memory usage and network traffic will not help you pinpoint a root cause, 
 
 |High number of evictions
 |Increased number of network connections/clients
+|===
 
 
 |===

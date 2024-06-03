@@ -260,6 +260,8 @@ Based on the number of application instances connecting to Redis (and whether yo
 you should have a rough idea of the minimum and maximum number of connections you expect to see for any given database.
 This number should remain relatively constant over time.
 
+==== Troubleshooting
+
 |===
 |*Issue*|*Possible causes*|*Remediation*
 
@@ -276,79 +278,67 @@ connection pool or a connection pool that is not properly configured.
 |Review the application's connection configuration
 
 |Erratic connection counts (e.g, spikes and drops)
-|
-|
+|Application misbehavior (thundering herds, connection cycling, ) or networking issues
+|Review the application logs and network traffic to determine the cause of the erratic connection counts.
 |===
 
 .Dashboard displaying connections
 image::images/playbook_bdb-used-connections.png[]
 
+==== Network ingress / egress
+
+[In progress]
+
 ==== Troubleshooting
 
-|===
-|*Issue*|*Possible causes*
-
-|No client connections
-|Poorly configured client
-
-|Too many connections
-|Poorly configured client
-|===
-
-==== Remediation
-
-|===
-|*Action*|*Method*
-
-|Clients Misconfigured
-|Confirm client configurations
-
-|Networking issue
-|From a client node TELNET to the endpoint and issue the PING command
-
-|Too many connections
-|Be sure that you are using pooling on your client library and that your pools are sized according
-
-|Too many connections
-|Using rladmin run "tune proxy PROXY_NUMBER threads VALUE"
-|===
+[In progress]
 
 == Database performance indicators
 
+There several key performance indicators that report your database's performance against your application's workload:
+
+* Latency
+* Cache hit rate
+* Key eviction rate
+
 === Latency
 
-Definition
-redis_enterprise.avg_latency (unit: microseconds)
-
-This is the average amount of time that a request takes to return from the time that it first hits the Redis Enterprise proxy until the response is returned.  It does not include the full time from the remote client’s perspective.
+Latency is *the time it takes for Redis to respond to a request*. An adequately provisioned Redis database running
+efficient Redis operations will report an average latency below 1 millisecond. In fact, it's common to measure
+latency in terms is microseconds. Customers regularly achieve, and sometime require, average latencies of 400-600
+microseconds.
 
 .Dashboard display of latency metrics
 image::images/playbook_bdb-cluster-latency.png[]
 
-==== Monitoring notes
+[In progress]
+- Discuss read vs write vs other latency
+- Max latency
 
-Due to the fact that Redis is popular due to performance, generally you would expect most operations to return in single digit milliseconds.  Tune any alerts to match your SLA.  It is generally recommended that you also measure Redis operation latency at the client side to make it easier to determine if a server slow down or an increase in network latency is the culprit in any performance issues.
+Note that this latency metric does not include network round trip time or application-level serialization,
+which is why it's essential to measure request latency at the application, as well.
 
 .Display showing a noticeable spike in latency
 image::images/latency_spike.png[]
 
 ==== Troubleshooting
 
+Here are some possible causes of high database latency. Note that high database latency is just one possible
+cause of high application latency. Application latency can be caused by a variety of factors, including
+a low <<Cache hit rate, cache hit rate>>, a high rate of <<Key eviction rate, evictions>>, or a
+<<Network ingress / egress, networking issue>>.
+
 |===
-|*Issue*|*Possible causes*
+|*Issues*|*Investigation*|*Remediation*
 
-|Possible spike in requests
-|Check both the Network Traffic and Operations Per Second metrics to determine if there is a corresponding increase
-
-|Slow Running queries
+|Slow database operations
 |Check the slow log in the Redis Enterprise UI for the database
 
-|Insufficient compute resources
-|Check to see if the CPU Usage, Memory Usage Percentage, or Evictions are increasing
-|===
+|Increased traffic to the database
+|Check both the Network Traffic and Operations Per Second metrics to determine if there is a corresponding increase
 
-.Cloud console slow log display
-image::images/slow_log.png[]
+|Insufficient CPU
+|Check to see if the CPU Usage, Memory Usage Percentage, or Evictions are increasing
 
 ==== Remediation
 |===
@@ -358,9 +348,7 @@ image::images/slow_log.png[]
 |The database can be scaled up online by going to the Web UI and enabling clustering on the database.  In extreme cases more nodes can be added to the cluster and resources rebalanced.
 
 |Inefficient Queries
-|Redis allows you to view a slow log with a tunable threshold.  It can be viewed either in the Redis Enterprise UI or by running
 
-redis-cli -h HOST -p PORT -a PASSWORD SLOWLOG GET 100
 |===
 
 === Cache hit rate
@@ -439,17 +427,19 @@ See Memory Usage Percentage Remediation
 See Memory Usage Percentage Remediation
 Secondary Indicators
 Network Traffic
-redis_enterprise.ingress_bytes/redis_enterprise.egress_bytes (unit: bytes)
-Counters for the network traffic coming into the database and out from the database
 
 == Data access anti-patterns
+
+In progress
 
 === Slow operations
 
 Any Redis operation whose performance is O(n) (or worse) can cause high CPU utilization.
 Examples include https://redis.io/docs/latest/commands/keys/[KEYS], https://redis.io/docs/latest/commands/smembers/[SMEMBERS],
 and https://redis.io/docs/latest/commands/lrem/[LREM].
-In addition, certain operations such as https://redis.io/docs/latest/commands/keys/[KEYS] should never be issued against a production system due to the impact they have on performance.
+
+Certain operations, such as https://redis.io/docs/latest/commands/keys/[KEYS], should never be issued against a
+production system due to the impact they have on performance.
 
 === Hot keys
 
@@ -458,6 +448,30 @@ However, if you centralize the access down to a few pieces of data accessed cons
 In a Redis cluster, the key is actually what determines where in the cluster that data is stored.
 The data is stored in one single primary location based on hashing that key.
 So, when you access a single key over and over again, you’re actually accessing a single node/shard over and over again.
+=======
+and https://redis.io/docs/latest/commands/lrem/[LREM]. In addition, customer Lua scripts can also be
+computationally expensive.
+
+You can review slow operations from the Redis Enterprise and Redis Cloud UI:
+
+.Cloud console slow log display
+image::images/slow_log.png[]
+
+You can also review slow operations from the Redis CLI. For example, here's the command
+to review the 100 most recent slow operations:
+
+[source,bash]
+----
+redis-cli -h HOST -p PORT -a PASSWORD SLOWLOG GET 100
+----
+
+=== Hot keys
+
+In progress
+
+=== Large keys
+
+In progress
 
 == Alerting
 

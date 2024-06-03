@@ -65,6 +65,7 @@ groups:
      for: 30s
      labels:
        severity: notification
+       type: latency
      annotations:
        summary: Average Latency Warning
        description: "High Latency - Cluster: {{ $labels.cluster }} DB: {{$labels.bdb}} Latency: {{$value}} ms"
@@ -74,6 +75,7 @@ groups:
      for: 30s
      labels:
        severity: critical
+       type: latency
      annotations:
        summary: Average Latency Critical
        description: "High Latency - Cluster: {{ $labels.cluster }} DB: {{$labels.bdb}} Latency: {{$value}} ms"
@@ -86,6 +88,8 @@ groups:
      for: 30s
      labels:
        severity: notification
+       job: redis
+       type: connection
      annotations:
        summary: "No Redis Connections"
        description: "No Connections - Cluster: {{ $labels.cluster }} DB: {{$labels.bdb}} Connections: {{$value}}"
@@ -96,8 +100,7 @@ groups:
      labels:
        severity: critical
        job: redis
-       cluster: localhost
-       bdb: 1
+       type: connection
      annotations:
        summary: "Too many connections"
        description: "Too Many Connections - Cluster: {{ $labels.cluster }} DB: {{$labels.bdb}} Connections: {{$value}}"
@@ -110,6 +113,7 @@ groups:
      for: 30s
      labels:
        severity: critical
+       type: throughput
      annotations:
        summary: No Redis Requests
        description: "Too few Redis operations - Cluster: {{ $labels.cluster }} DB: {{$labels.bdb}}  {{$value}} (ops/sec)"
@@ -119,6 +123,7 @@ groups:
      for: 30s
      labels:
        severity: notification
+       type: throughput
      annotations:
        summary: Excessive Redis Requests
        description: "Too Many Redis Operations - Cluster: {{ $labels.cluster }} DB: {{$labels.bdb}} {{$value}} (ops/sec)"
@@ -131,6 +136,7 @@ groups:
      for: 30s
      labels:
        severity: critical
+       type: capacity
      annotations:
        summary: DB is full
        description: "DB Usage - Cluster: {{ $labels.cluster }} DB: {{$labels.bdb}} Usage: {{$value}}% full "
@@ -140,6 +146,7 @@ groups:
      for: 30s
      labels:
        severity: notification
+       type: capacity
      annotations:
        summary: DB will be full in two hours
        description: "DB Usage - Cluster: {{ $labels.cluster }} DB: {{$labels.bdb}} Usage: {{$value}}% in 2 hours "
@@ -152,6 +159,7 @@ groups:
      for: 1m
      labels:
        severity: notification
+       type: utilization
      annotations:
        summary: Low Hit Ratio
        description: "Low Hit Ratio: {{ $labels.cluster }} DB: {{$labels.bdb}} Hit Ratio: {{$value}}%"
@@ -161,6 +169,7 @@ groups:
      for: 3m
      labels:
        severity: critical
+       type: utilization
      annotations:
        summary: Unexpected Object Eviction
        description: "Evictions Occuring: {{ $labels.cluster }} DB: {{$labels.bdb}} EvictionsPerSecond: {{$value}}"
@@ -173,6 +182,7 @@ groups:
      for: 5m
      labels:
        severity: warning
+       type: synchronization
      annotations:
        summary: Replication - Resynchronization Requests (Status)
        description: Replication on {{ $labels.cluster }} not synchronized in 10 minutes
@@ -181,6 +191,7 @@ groups:
      for: 5m
      labels:
        severity: warning
+       type: synchronization
      annotations:
        summary: Replication - Unsynchronized (CRDT)
        description: CRDT Replication on {{ $labels.cluster }} not synchronized for 5 minutes
@@ -189,6 +200,7 @@ groups:
      for: 5m
      labels:
        severity: warning
+       type: synchronization
      annotations:
        summary: Replication - High Latency (Status)
        description: Replication Latency {{ $labels.cluster }} exceeded 500ms for 10 minutes
@@ -197,6 +209,7 @@ groups:
      for: 5m
      labels:
        severity: warning
+       type: synchronization
      annotations:
        summary: Replication - High Latency (CRDT)
        description: CRDT Replication Latency on {{ $labels.cluster }} exceeded 500ms for 10 minutes
@@ -210,6 +223,7 @@ groups:
      labels:
        severity: critical
        job: redis
+       type: node
      annotations:
        summary: Node Not Responding
        description: "Node Down - Cluster: {{ $labels.cluster }} Expected Nodes: 3 Actual: {{$value}}"
@@ -220,6 +234,7 @@ groups:
      labels:
        severity: critical
        job: redis
+       type: node
      annotations:
        summary: Node Persistent Storage
        description: "Low on Persistent Storage - Cluster: {{ $labels.cluster }} Space Free: {{$value}}%"
@@ -229,6 +244,7 @@ groups:
      for: 2m
      labels:
        severity: critical
+       type: node
      annotations:
        summary: Node Ephemeral Storage
        description: "Low on Ephemeral Storage - Cluster: {{ $labels.cluster }} Space Free: {{$value}}%"
@@ -238,6 +254,7 @@ groups:
      for: 2m
      labels:
        severity: critical
+       type: node
      annotations:
        summary: Node Free Memory
        description: "Low on Memory - Cluster: {{ $labels.cluster }} Memory Free: {{$value}}%"
@@ -247,6 +264,7 @@ groups:
      for: 2m
      labels:
        severity: critical
+       type: node
      annotations:
        summary: Node CPU Usage
        description: "High CPU Usage - Cluster: {{ $labels.cluster }} Usage: {{$value}}%"
@@ -261,6 +279,7 @@ groups:
      for: 1m
      labels:
        severity: page
+       type: shard
      annotations:
        summary: Redis Shard instance is down
        description: Redis Shard instance {{ $labels.cluster }} is down
@@ -269,6 +288,7 @@ groups:
      for: 2m
      labels:
        severity: notification
+       type: shard
      annotations:
        summary: Master Shard Down
        description: "Slave has no master - Cluster: {{ $labels.cluster }} Shard: {{$labels.redis}} Node: {{$labels.node}}"
@@ -278,6 +298,7 @@ groups:
      for: 1m
      labels:
        severity: notification
+       type: shard
      annotations:
        summary: Shard CPU Usage
        description: "Busy Shard - Cluster: {{ $labels.cluster }} Shard: {{$labels.redis}} Node: {{$labels.node}} CPU: {{$value}}%"
@@ -287,6 +308,7 @@ groups:
      for: 1m
      labels:
        severity: critical
+       type: shard
      annotations:
        summary: Hot Master Shard
        description: "Hot Shard - Cluster: {{ $labels.cluster }} Shard: {{$labels.redis}} Node: {{$labels.node}} CPU: {{$value}}%"

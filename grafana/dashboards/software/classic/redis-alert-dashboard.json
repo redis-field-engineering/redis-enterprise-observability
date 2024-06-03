@@ -31,8 +31,20 @@
     },
     {
       "type": "panel",
-      "id": "table-old",
-      "name": "Table (old)",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
       "version": ""
     }
   ],
@@ -41,19 +53,13 @@
       {
         "builtIn": 1,
         "datasource": {
-          "type": "datasource",
-          "uid": "grafana"
+          "type": "grafana",
+          "uid": "-- Grafana --"
         },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
-        "target": {
-          "limit": 100,
-          "matchAny": false,
-          "tags": [],
-          "type": "dashboard"
-        },
         "type": "dashboard"
       }
     ]
@@ -70,7 +76,7 @@
       "tags": [
         "RLEC"
       ],
-      "targetBlank": false,
+      "targetBlank": true,
       "type": "dashboards"
     }
   ],
@@ -88,119 +94,458 @@
         "x": 0,
         "y": 0
       },
-      "id": 67,
+      "id": 59,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "grafana"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Dashboard Row",
       "type": "row"
     },
     {
-      "columns": [],
+      "datasource": {
+        "type": "datasource",
+        "uid": "grafana"
+      },
+      "editable": true,
+      "error": false,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 9,
+      "links": [],
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<b style=\"font-size: 20pt\">$status<b>\n<b style=\"font-size: 20pt\">$newStatus<b>",
+        "mode": "html"
+      },
+      "pluginVersion": "10.0.3",
+      "style": {
+        "font-size": "72pt"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "grafana"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "Status for BDB:$bdb",
+      "type": "text"
+    },
+    {
       "datasource": {
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "fontSize": "100%",
-      "gridPos": {
-        "h": 6,
-        "w": 24,
-        "x": 0,
-        "y": 1
-      },
-      "hideTimeOverride": false,
-      "id": 66,
-      "links": [],
-      "scroll": true,
-      "showHeader": true,
-      "sort": {
-        "col": 0,
-        "desc": true
-      },
-      "styles": [
-        {
-          "alias": "Time",
-          "align": "auto",
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "pattern": "Time",
-          "type": "hidden"
-        },
-        {
-          "alias": "",
-          "align": "auto",
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgb(31, 120, 193)",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
           ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "pattern": "__name__",
-          "thresholds": [],
-          "type": "hidden",
-          "unit": "short"
-        },
-        {
-          "alias": "Used memory",
-          "align": "auto",
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "decimals": 1,
-          "pattern": "Value",
-          "thresholds": [],
-          "type": "number",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
           "unit": "bytes"
         },
-        {
-          "alias": "",
-          "align": "auto",
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "id": 4,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
           ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "pattern": "crdt_guid",
-          "thresholds": [],
-          "type": "hidden",
-          "unit": "short"
+          "fields": "",
+          "values": false
         },
-        {
-          "alias": "",
-          "align": "auto",
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "pattern": "job",
-          "thresholds": [],
-          "type": "hidden",
-          "unit": "short"
-        }
-      ],
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_used_memory{crdt_guid=\"$crdt_guid\"}",
-          "instant": false,
-          "legendFormat": "{{instance}}",
-          "range": true,
-          "refId": "A"
+          "expr": "scalar(bdb_used_memory{bdb=\"$bdb\", cluster=\"$cluster\"})",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "",
+          "refId": "A",
+          "step": 14400
         }
       ],
-      "timeFrom": "0m",
-      "title": "instances",
-      "transform": "timeseries_to_rows",
-      "type": "table-old"
+      "title": "BDB:$bdb used memory",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgb(31, 120, 193)",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
+      "id": 5,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "scalar(bdb_no_of_keys{bdb=\"$bdb\", cluster=\"$cluster\"})",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "",
+          "refId": "A",
+          "step": 14400
+        }
+      ],
+      "title": "BDB:$bdb #Keys",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgb(31, 120, 193)",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "id": 6,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "scalar(bdb_conns{bdb=\"$bdb\", cluster=\"$cluster\"})",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "",
+          "refId": "A",
+          "step": 14400
+        }
+      ],
+      "title": "BDB:$bdb #Connections",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "id": 7,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "count(listener_total_req{bdb=\"$bdb\", cluster=\"$cluster\"})",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "",
+          "refId": "A",
+          "step": 14400
+        }
+      ],
+      "title": "BDB:$bdb #Listeners",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgb(31, 120, 193)",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 12,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "count(redis_no_of_keys{cluster=\"$cluster\", bdb=\"$bdb\"}) or count(redis_used_memory{cluster=\"$cluster\", bdb=\"$bdb\"})",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "",
+          "refId": "A",
+          "step": 14400
+        }
+      ],
+      "title": "BDB:$bdb #Shards",
+      "type": "stat"
     },
     {
       "collapsed": false,
@@ -212,10 +557,19 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 7
+        "y": 5
       },
-      "id": 68,
+      "id": 60,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "grafana"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Dashboard Row",
       "type": "row"
     },
@@ -234,7 +588,7 @@
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 8
+        "y": 6
       },
       "hiddenSeries": false,
       "id": 1,
@@ -278,69 +632,74 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_avg_latency{crdt_guid=\"$crdt_guid\"}",
-          "instant": false,
-          "legendFormat": "bdb_avg_latency - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "A"
+          "expr": "bdb_avg_latency{bdb=\"$bdb\", cluster=\"$cluster\"}",
+          "format": "time_series",
+          "hide": false,
+          "intervalFactor": 2,
+          "legendFormat": "bdb_avg_latency",
+          "metric": "",
+          "refId": "A",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_avg_write_latency{crdt_guid=\"$crdt_guid\"}",
+          "expr": "bdb_avg_write_latency{bdb=\"$bdb\", cluster=\"$cluster\"}",
+          "format": "time_series",
           "hide": false,
-          "instant": false,
-          "legendFormat": "bdb_avg_write_latency - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "B"
+          "intervalFactor": 2,
+          "legendFormat": "bdb_avg_write_latency",
+          "metric": "",
+          "refId": "B",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_avg_read_latency{crdt_guid=\"$crdt_guid\"}",
+          "expr": "bdb_avg_read_latency{bdb=\"$bdb\", cluster=\"$cluster\"}",
+          "format": "time_series",
           "hide": false,
-          "instant": false,
-          "legendFormat": "bdb_avg_read_latency - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "C"
+          "intervalFactor": 2,
+          "legendFormat": "bdb_avg_read_latency",
+          "metric": "",
+          "refId": "C",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_avg_other_latency{crdt_guid=\"$crdt_guid\"}",
+          "expr": "bdb_avg_other_latency{bdb=\"$bdb\", cluster=\"$cluster\"}",
+          "format": "time_series",
           "hide": false,
-          "instant": false,
-          "legendFormat": "bdb_avg_other_latency - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "D"
+          "intervalFactor": 2,
+          "legendFormat": "bdb_avg_other_latency",
+          "metric": "",
+          "refId": "D",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "max_over_time(bdb_avg_latency_max{crdt_guid=\"$crdt_guid\"}[$aggregation])",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "bdb_avg_latency (max over $aggregation) - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "E"
+          "expr": "max_over_time(bdb_avg_latency_max{bdb=\"$bdb\", cluster=\"$cluster\"}[$aggregation])",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "bdb_avg_latency (max over $aggregation)",
+          "refId": "E",
+          "step": 1200
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Avg latency for BDB",
+      "title": "Avg latency for BDB:$bdb",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -384,7 +743,7 @@
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 8
+        "y": 6
       },
       "hiddenSeries": false,
       "id": 55,
@@ -428,17 +787,20 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "listener_acc_latency{crdt_guid=\"$crdt_guid\"} / listener_total_started_res{crdt_guid=\"$crdt_guid\"}",
-          "instant": false,
-          "legendFormat": "Replica:{{crdt_replica_id}} - listener {{proxy}}  node {{node}}",
-          "range": true,
-          "refId": "A"
+          "expr": "listener_acc_latency{bdb=~\"$bdb.*\", cluster=\"$cluster\"} / listener_total_started_res{bdb=~\"$bdb.*\", cluster=\"$cluster\"}",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "listener {{proxy}}  node {{node}}",
+          "metric": "",
+          "refId": "A",
+          "step": 2400
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Avg listener latency for BDB",
+      "title": "Avg listener latency for BDB:$bdb",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -483,7 +845,7 @@
         "h": 7,
         "w": 8,
         "x": 16,
-        "y": 8
+        "y": 6
       },
       "hiddenSeries": false,
       "id": 44,
@@ -525,30 +887,32 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_used_memory{crdt_guid=\"$crdt_guid\"}",
-          "instant": false,
-          "legendFormat": "used_memory - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "A"
+          "expr": "bdb_used_memory{bdb=\"$bdb\", cluster=\"$cluster\"}",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "used_memory",
+          "metric": "",
+          "refId": "A",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_memory_limit{crdt_guid=\"$crdt_guid\"} < bdb_used_memory{crdt_guid=\"$crdt_guid\"} * 1.5",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "limit (when low, near used) - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "B"
+          "expr": "bdb_memory_limit{bdb=\"$bdb\", cluster=\"$cluster\"} < bdb_used_memory{bdb=\"$bdb\", cluster=\"$cluster\"} * 1.5",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "limit (when low, near used)",
+          "refId": "B",
+          "step": 2400
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Used Memory for BDB",
+      "title": "Used Memory for BDB:$bdb",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -587,10 +951,19 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 13
       },
-      "id": 69,
+      "id": 61,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "grafana"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Dashboard Row",
       "type": "row"
     },
@@ -609,7 +982,7 @@
         "h": 9,
         "w": 8,
         "x": 0,
-        "y": 16
+        "y": 14
       },
       "hiddenSeries": false,
       "id": 10,
@@ -647,30 +1020,32 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_conns{crdt_guid=\"$crdt_guid\"}",
-          "instant": false,
-          "legendFormat": "Replica:{{crdt_replica_id}} - Total",
-          "range": true,
-          "refId": "A"
+          "expr": "bdb_conns{bdb=\"$bdb\", cluster=\"$cluster\"}",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Total",
+          "metric": "",
+          "refId": "A",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "listener_conns{crdt_guid=\"$crdt_guid\"}",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Replica:{{crdt_replica_id}} - endpoint {{proxy}} node: {{node}}",
-          "range": true,
-          "refId": "B"
+          "expr": "listener_conns{bdb=\"$bdb\", cluster=\"$cluster\"}",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "endpoint {{proxy}} node: {{node}}",
+          "metric": "",
+          "refId": "B",
+          "step": 2400
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "BDB Connections",
+      "title": "BDB:$bdb Connections",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -715,7 +1090,7 @@
         "h": 9,
         "w": 8,
         "x": 8,
-        "y": 16
+        "y": 14
       },
       "hiddenSeries": false,
       "id": 14,
@@ -759,82 +1134,81 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_total_req{crdt_guid=\"$crdt_guid\"}",
-          "instant": false,
-          "legendFormat": "total requests - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "A"
+          "expr": "bdb_total_req{cluster=\"$cluster\",bdb=\"$bdb\"}",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "total requests",
+          "refId": "A",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_other_req{crdt_guid=\"$crdt_guid\"}",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "other requests - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "B"
+          "expr": "bdb_other_req{cluster=\"$cluster\",bdb=\"$bdb\"}",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "other requests",
+          "refId": "B",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_read_req{crdt_guid=\"$crdt_guid\"}",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "read requests - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "C"
+          "expr": "bdb_read_req{cluster=\"$cluster\",bdb=\"$bdb\"}",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "read requests",
+          "refId": "C",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_write_req{crdt_guid=\"$crdt_guid\"}",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "write requests - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "D"
+          "expr": "bdb_write_req{cluster=\"$cluster\",bdb=\"$bdb\"}",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "write requests",
+          "refId": "D",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_total_req_max{crdt_guid=\"$crdt_guid\"}",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "total requests (max) - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "E"
+          "expr": "bdb_total_req_max{cluster=\"$cluster\",bdb=\"$bdb\"}",
+          "format": "time_series",
+          "hide": true,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "total requests (max)",
+          "refId": "E",
+          "step": 240
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "max_over_time(bdb_total_req_max{crdt_guid=\"$crdt_guid\"}[$aggregation])",
+          "expr": "max_over_time(bdb_total_req_max{cluster=\"$cluster\",bdb=\"$bdb\"}[$aggregation])\n",
+          "format": "time_series",
           "hide": false,
-          "instant": false,
-          "legendFormat": "total requests (max over $aggregation) - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "F"
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "total requests (max over $aggregation)",
+          "refId": "F",
+          "step": 2400
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Requests[total,read,write,other] for bdb",
+      "title": "Requests[total,read,write,other] for bdb:$bdb",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -877,7 +1251,7 @@
         "h": 9,
         "w": 8,
         "x": 16,
-        "y": 16
+        "y": 14
       },
       "hiddenSeries": false,
       "id": 16,
@@ -887,7 +1261,6 @@
         "current": true,
         "max": true,
         "min": true,
-        "rightSide": false,
         "show": true,
         "sort": "current",
         "sortDesc": true,
@@ -906,7 +1279,12 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [],
+      "seriesOverrides": [
+        {
+          "alias": "Egress",
+          "yaxis": 2
+        }
+      ],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
@@ -916,82 +1294,29 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "- bdb_egress_bytes{crdt_guid=\"$crdt_guid\"}",
-          "instant": false,
-          "legendFormat": "BDB Egress - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "A"
+          "expr": "bdb_egress_bytes{bdb=\"$bdb\",cluster=\"$cluster\"}",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "Egress",
+          "refId": "A",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_ingress_bytes{crdt_guid=\"$crdt_guid\"}",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "BDB Ingress - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "sum by (crdt_replica_id) (rate(redis_total_net_input_bytes{crdt_guid=\"$crdt_guid\", role=\"master\"}[1m]))",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Master shard Ingress - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "- (sum by (crdt_replica_id) (rate(redis_total_net_output_bytes{crdt_guid=\"$crdt_guid\", role=\"master\"}[1m]) - rate(redis_master_repl_offset{crdt_guid=\"$crdt_guid\", role=\"master\"}[1m])))",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Master shard Egress - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "sum by (crdt_replica_id) (rate(redis_master_repl_offset{crdt_guid=\"$crdt_guid\", role=\"master\"}[1m]))",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Master shard replication - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "E"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "sum by (crdt_replica_id) (rate(redis_repl_touch_bytes{crdt_guid=\"$crdt_guid\", role=\"master\"}[1m]))!=0",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Master shard repl touch - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "F"
+          "expr": "bdb_ingress_bytes{bdb=\"$bdb\",cluster=\"$cluster\"}",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "Ingress",
+          "refId": "B",
+          "step": 2400
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "BDB Ingress/Egress",
+      "title": "BDB:$bdb Ingress/Egress",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1012,9 +1337,9 @@
         },
         {
           "format": "Bps",
-          "label": "",
+          "label": "Egress",
           "logBase": 1,
-          "show": false
+          "show": true
         }
       ],
       "yaxis": {
@@ -1036,7 +1361,7 @@
         "h": 9,
         "w": 8,
         "x": 0,
-        "y": 25
+        "y": 23
       },
       "hiddenSeries": false,
       "id": 43,
@@ -1072,95 +1397,95 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_main_thread_cpu_system{crdt_guid=\"$crdt_guid\"} + bdb_main_thread_cpu_user{crdt_guid=\"$crdt_guid\"}",
-          "instant": false,
-          "legendFormat": "main threads (masters) - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "A"
+          "expr": "bdb_main_thread_cpu_system{bdb=\"$bdb\",cluster=\"$cluster\"} + bdb_main_thread_cpu_user{bdb=\"$bdb\",cluster=\"$cluster\"}",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "main threads (masters)",
+          "metric": "",
+          "refId": "A",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_shard_cpu_system{crdt_guid=\"$crdt_guid\"} + bdb_shard_cpu_user{crdt_guid=\"$crdt_guid\"}",
+          "expr": "bdb_shard_cpu_system{bdb=\"$bdb\",cluster=\"$cluster\"} + bdb_shard_cpu_user{bdb=\"$bdb\",cluster=\"$cluster\"}",
+          "format": "time_series",
           "hide": false,
-          "instant": false,
-          "legendFormat": "all threads (masters) - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "B"
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "all threads (masters)",
+          "refId": "B",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_fork_cpu_system{crdt_guid=\"$crdt_guid\"} + bdb_fork_cpu_user{crdt_guid=\"$crdt_guid\"}",
+          "expr": "bdb_fork_cpu_system{bdb=\"$bdb\",cluster=\"$cluster\"} + bdb_fork_cpu_user{bdb=\"$bdb\",cluster=\"$cluster\"}",
+          "format": "time_series",
           "hide": false,
-          "instant": false,
-          "legendFormat": "all forks (masters) - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "C"
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "all forks (masters)",
+          "refId": "C",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_main_thread_cpu_system_max{crdt_guid=\"$crdt_guid\"} + bdb_main_thread_cpu_user_max{crdt_guid=\"$crdt_guid\"}",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "main threads max (masters) - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "D"
+          "expr": "bdb_main_thread_cpu_system_max{bdb=\"$bdb\",cluster=\"$cluster\"} + bdb_main_thread_cpu_user_max{bdb=\"$bdb\",cluster=\"$cluster\"}",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "main threads max (masters)",
+          "refId": "D",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "bdb_shard_cpu_system_max{crdt_guid=\"$crdt_guid\"} + bdb_shard_cpu_user_max{crdt_guid=\"$crdt_guid\"}",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "all threads max (masters) - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "E"
+          "expr": "bdb_shard_cpu_system_max{bdb=\"$bdb\",cluster=\"$cluster\"} + bdb_shard_cpu_user_max{bdb=\"$bdb\",cluster=\"$cluster\"}",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "all threads max (masters)",
+          "refId": "E",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "sum by (crdt_replica_id) ((delta(redis_process_main_thread_cpu_system_seconds_total{crdt_guid=\"$crdt_guid\",role=\"slave\"}[60s]) + delta(redis_process_main_thread_cpu_user_seconds_total{crdt_guid=\"$crdt_guid\",role=\"slave\"}[60s]))/60)",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Slave main threads - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "F"
+          "expr": "sum((delta(redis_process_main_thread_cpu_system_seconds_total{bdb=\"$bdb\",role=\"slave\", cluster=\"$cluster\"}[60s]) + delta(redis_process_main_thread_cpu_user_seconds_total{bdb=\"$bdb\",role=\"slave\", cluster=\"$cluster\"}[60s]))/60)",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "Slave main threads",
+          "refId": "F",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "sum by (crdt_replica_id) ((delta(redis_process_cpu_system_seconds_total{crdt_guid=\"$crdt_guid\",role=\"slave\"}[60s]) + delta(redis_process_cpu_user_seconds_total{crdt_guid=\"$crdt_guid\",role=\"slave\"}[60s]))/60)",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Slave all threads - Replica:{{crdt_replica_id}}",
-          "range": true,
-          "refId": "G"
+          "expr": "sum((delta(redis_process_cpu_system_seconds_total{bdb=\"$bdb\",role=\"slave\",cluster=\"$cluster\"}[60s]) + delta(redis_process_cpu_user_seconds_total{bdb=\"$bdb\",role=\"slave\",cluster=\"$cluster\"}[60s]))/60)",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Slave all threads",
+          "refId": "G",
+          "step": 2400
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "BDB CPU utilization for bdb",
+      "title": "BDB CPU utilization for bdb:$bdb",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1204,7 +1529,7 @@
         "h": 9,
         "w": 8,
         "x": 8,
-        "y": 25
+        "y": 23
       },
       "hiddenSeries": false,
       "id": 13,
@@ -1242,17 +1567,18 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "(delta(redis_process_cpu_system_seconds_total{crdt_guid=\"$crdt_guid\"}[60s]) + delta(redis_process_cpu_user_seconds_total{crdt_guid=\"$crdt_guid\"}[60s]))/60*100 or redis_cpu_percent{crdt_guid=\"$crdt_guid\"}",
-          "instant": false,
-          "legendFormat": "Replica:{{crdt_replica_id}} - shard: {{redis}} role: {{role}} node:{{node}}, slots:{{slots}}",
-          "range": true,
-          "refId": "A"
+          "expr": "(delta(redis_process_cpu_system_seconds_total{bdb=\"$bdb\",cluster=\"$cluster\"}[60s]) + delta(redis_process_cpu_user_seconds_total{bdb=\"$bdb\",cluster=\"$cluster\"}[60s]))/60*100 or redis_cpu_percent{bdb=\"$bdb\", cluster=\"$cluster\"}",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "shard: {{redis}} role: {{role}} node:{{node}}, slots:{{slots}}",
+          "refId": "B",
+          "step": 2400
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "CPU usage by shards for bdb",
+      "title": "CPU usage by shards for bdb:$bdb",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1266,14 +1592,12 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:268",
           "format": "percent",
           "logBase": 1,
           "min": "0",
           "show": true
         },
         {
-          "$$hashKey": "object:269",
           "format": "short",
           "logBase": 1,
           "show": true
@@ -1298,7 +1622,7 @@
         "h": 9,
         "w": 8,
         "x": 16,
-        "y": 25
+        "y": 23
       },
       "hiddenSeries": false,
       "id": 53,
@@ -1343,30 +1667,35 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "redis_used_memory{crdt_guid=\"$crdt_guid\"}",
-          "instant": false,
-          "legendFormat": "Replica:{{crdt_replica_id}} - redis:{{redis}}, role:{{role}}, node:{{node}}, slots:{{slots}}",
-          "range": true,
-          "refId": "A"
+          "expr": "redis_used_memory{bdb=\"$bdb\",cluster=\"$cluster\"}",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "redis:{{redis}}, role:{{role}}, node:{{node}}, slots:{{slots}}",
+          "metric": "redis_used_memory",
+          "refId": "A",
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "redis_maxmemory{crdt_guid=\"$crdt_guid\"}",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Replica:{{crdt_replica_id}} - maxmemory: redis:{{redis}}, role:{{role}}, node:{{node}}",
-          "range": true,
-          "refId": "B"
+          "expr": "redis_maxmemory{bdb=\"$bdb\",cluster=\"$cluster\"}",
+          "format": "time_series",
+          "hide": true,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "maxmemory: redis:{{redis}}, bdb:{{bdb}},  role:{{role}}, node:{{node}}",
+          "metric": "redis_used_memory",
+          "refId": "B",
+          "step": 240
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Sizes of shards for bdb",
+      "title": "Sizes of shards for bdb:$bdb",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1380,13 +1709,11 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:422",
           "format": "bytes",
           "logBase": 1,
           "show": true
         },
         {
-          "$$hashKey": "object:423",
           "format": "short",
           "logBase": 1,
           "show": false
@@ -1406,10 +1733,19 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 34
+        "y": 32
       },
-      "id": 70,
+      "id": 62,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "grafana"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Dashboard Row",
       "type": "row"
     },
@@ -1428,7 +1764,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 35
+        "y": 33
       },
       "hiddenSeries": false,
       "id": 17,
@@ -1469,12 +1805,14 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "redis_no_of_keys{crdt_guid=\"$crdt_guid\"} or redis_db0_keys{crdt_guid=\"$crdt_guid\"}",
-          "instant": false,
-          "legendFormat": "Replica:{{crdt_replica_id}} - redis:{{redis}}, role: {{role}}, node:{{node}}, slots:{{slots}}",
-          "range": true,
-          "refId": "A"
+          "expr": "redis_no_of_keys{bdb=\"$bdb\", cluster=\"$cluster\"} or redis_db0_keys{bdb=\"$bdb\", cluster=\"$cluster\"}",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "redis:{{redis}}, role: {{role}}, node:{{node}}, slots:{{slots}}",
+          "metric": "",
+          "refId": "A",
+          "step": 2400
         }
       ],
       "thresholds": [],
@@ -1494,13 +1832,11 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:324",
           "format": "short",
           "logBase": 1,
           "show": true
         },
         {
-          "$$hashKey": "object:325",
           "format": "short",
           "logBase": 1,
           "show": true
@@ -1525,7 +1861,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 35
+        "y": 33
       },
       "hiddenSeries": false,
       "id": 11,
@@ -1565,11 +1901,91 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "",
-          "instant": false,
-          "range": true,
-          "refId": "A"
+          "expr": "bdb_no_of_keys{bdb=\"$bdb\", cluster=\"$cluster\"}",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "num of keys",
+          "metric": "",
+          "refId": "A",
+          "step": 2400
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum(redis_db0_expires{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"})",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "num of volatile keys",
+          "refId": "B",
+          "step": 2400
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum(max(redis_bigdb0_ram{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"} or redis_bigdb_ram{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster))",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "ram keys",
+          "refId": "C",
+          "step": 2400
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum(max(redis_bigdb0_disk{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"} or redis_bigdb_disk{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster))",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "disk keys",
+          "refId": "D",
+          "step": 2400
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "(sum(max(redis_bigdb0_disk{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"} or redis_bigdb_disk{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster)) + sum(max(redis_bigdb0_ram{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"} or redis_bigdb_ram{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster))) - sum(redis_db0_keys{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"})",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "overlapping keys",
+          "refId": "E",
+          "step": 2400
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum(max(redis_bigdb0_dirty{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"} or redis_bigdb_dirty{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster))",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "dirty keys",
+          "refId": "F",
+          "step": 2400
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum(max(redis_bigdb0_clean{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"} or redis_bigdb_clean{bdb=\"$bdb\", cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster))",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "clean keys",
+          "refId": "G",
+          "step": 2400
         }
       ],
       "thresholds": [],
@@ -1589,13 +2005,11 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:808",
           "format": "short",
           "logBase": 1,
           "show": true
         },
         {
-          "$$hashKey": "object:809",
           "format": "short",
           "logBase": 1,
           "show": false
@@ -1611,7 +2025,8 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": {
-        "uid": "$datasource"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
       "fill": 1,
       "fillGradient": 0,
@@ -1619,7 +2034,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 35
+        "y": 33
       },
       "hiddenSeries": false,
       "id": 20,
@@ -1657,33 +2072,20 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "bdb_evicted_objects{crdt_guid=\"$crdt_guid\"}",
+          "editorMode": "code",
+          "expr": "bdb_evicted_objects{bdb=\"$bdb\", cluster=\"$cluster\"}",
           "format": "time_series",
-          "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "Evicted BDB",
+          "legendFormat": "BDB:$bdb",
           "metric": "",
+          "range": true,
           "refId": "A",
-          "step": 240
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "expr": "sum by (crdt_replica_id) (redis_keys_trimmed{crdt_guid=\"$crdt_guid\"})!=0",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "Reshard trimmed BDB - Replica:{{crdt_replica_id}}",
-          "metric": "",
-          "refId": "B",
-          "step": 240
+          "step": 2400
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Evicted objects for BDB",
+      "title": "Evicted objects for BDB:$bdb",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -1718,7 +2120,8 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": {
-        "uid": "$datasource"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
       "fill": 1,
       "fillGradient": 0,
@@ -1726,7 +2129,7 @@
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 35
+        "y": 33
       },
       "hiddenSeries": false,
       "id": 21,
@@ -1764,18 +2167,18 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "bdb_expired_objects{crdt_guid=\"$crdt_guid\"}",
+          "expr": "bdb_expired_objects{bdb=\"$bdb\", cluster=\"$cluster\"}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "Replica:{{crdt_replica_id}}",
+          "legendFormat": "BDB:$bdb",
           "metric": "",
           "refId": "A",
-          "step": 240
+          "step": 2400
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Expired objects for BDB",
+      "title": "Expired objects for BDB:$bdb",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -1814,10 +2217,19 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 41
+        "y": 39
       },
-      "id": 71,
+      "id": 63,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "grafana"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Dashboard Row",
       "type": "row"
     },
@@ -1827,7 +2239,8 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": {
-        "uid": "$datasource"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
       "fill": 5,
       "fillGradient": 0,
@@ -1835,7 +2248,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 42
+        "y": 40
       },
       "hiddenSeries": false,
       "id": 48,
@@ -1872,12 +2285,12 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "delta(redis_aof_rewrites{crdt_guid=\"$crdt_guid\"}[$aggregation]) !=0",
+          "expr": "delta(redis_aof_rewrites{cluster=\"$cluster\", bdb=\"$bdb\"}[$aggregation]) !=0",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "Replica:{{crdt_replica_id}} - Redis {{redis}} node {{node}}",
+          "legendFormat": "Redis {{redis}} node {{node}}",
           "refId": "A",
-          "step": 240
+          "step": 2400
         }
       ],
       "thresholds": [],
@@ -1917,7 +2330,8 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": {
-        "uid": "$datasource"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
       "fill": 5,
       "fillGradient": 0,
@@ -1925,7 +2339,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 42
+        "y": 40
       },
       "hiddenSeries": false,
       "id": 57,
@@ -1962,38 +2376,25 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "redis_rdb_bgsave_in_progress{crdt_guid=\"$crdt_guid\"} !=0",
+          "expr": "redis_rdb_bgsave_in_progress{cluster=\"$cluster\", bdb=\"$bdb\"} !=0",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "BGSAVE Replica:{{crdt_replica_id}} - {{redis}} node {{node}}",
+          "legendFormat": "BGSAVE {{redis}} node {{node}}",
           "refId": "A",
-          "step": 240
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "redis_aof_rewrite_in_progress{crdt_guid=\"$crdt_guid\"} !=0",
+          "expr": "redis_aof_rewrite_in_progress{cluster=\"$cluster\", bdb=\"$bdb\"} !=0",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "AOFRW Replica:{{crdt_replica_id}} - {{redis}} node {{node}}",
+          "legendFormat": "AOFRW {{redis}} node {{node}}",
           "refId": "B",
-          "step": 240
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "expr": "redis_module_fork_in_progress{crdt_guid=\"$crdt_guid\"} !=0",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "Module fork Replica:{{crdt_replica_id}} - {{redis}} node {{node}}",
-          "refId": "C",
-          "step": 240
+          "step": 2400
         }
       ],
       "thresholds": [],
@@ -2028,20 +2429,114 @@
       }
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 40
+      },
+      "id": 65,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "bdb_read_hits{bdb=\"$bdb\",cluster=\"$cluster\"}/(bdb_read_hits{bdb=\"$bdb\",cluster=\"$cluster\"} + bdb_read_misses{bdb=\"$bdb\",cluster=\"$cluster\"})",
+          "instant": false,
+          "legendFormat": "{{bdb_name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Cache Hit Ratio",
+      "type": "timeseries"
+    },
+    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
       "datasource": {
-        "uid": "$datasource"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 6,
         "w": 6,
-        "x": 12,
-        "y": 42
+        "x": 18,
+        "y": 40
       },
       "hiddenSeries": false,
       "id": 49,
@@ -2079,67 +2574,54 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "bdb_read_misses{crdt_guid=\"$crdt_guid\"}",
+          "expr": "bdb_read_misses{cluster=\"$cluster\", bdb=\"$bdb\"}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "Read Misses - Replica:{{crdt_replica_id}}",
+          "legendFormat": "Read Misses",
           "refId": "A",
-          "step": 240
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "bdb_write_misses{crdt_guid=\"$crdt_guid\"}",
+          "expr": "bdb_write_misses{cluster=\"$cluster\", bdb=\"$bdb\"}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "Write Misses - Replica:{{crdt_replica_id}}",
+          "legendFormat": "Write Misses",
           "refId": "B",
-          "step": 240
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "bdb_read_hits{crdt_guid=\"$crdt_guid\"}",
+          "expr": "bdb_read_hits{cluster=\"$cluster\", bdb=\"$bdb\"}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "Read Hits - Replica:{{crdt_replica_id}}",
+          "legendFormat": "Read Hits",
           "refId": "C",
-          "step": 240
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "bdb_write_hits{crdt_guid=\"$crdt_guid\"}",
+          "expr": "bdb_write_hits{cluster=\"$cluster\", bdb=\"$bdb\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "Write Hits - Replica:{{crdt_replica_id}}",
+          "legendFormat": "Write Hits",
           "refId": "D",
-          "step": 240
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "expr": "delta(redis_total_error_replies{crdt_guid=\"$crdt_guid\"}[60s])/60  ",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "Error Replies - Replica:{{crdt_replica_id}}",
-          "refId": "E",
-          "step": 240
+          "step": 2400
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Read/Write Hits / Misses  + lazyfree + errors",
+      "title": "Read/Write Misses",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2172,100 +2654,9 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {},
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 18,
-        "y": 42
-      },
-      "hiddenSeries": false,
-      "id": 23,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": false,
-        "min": false,
-        "show": true,
-        "sort": "current",
-        "sortDesc": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "connected",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "10.0.3",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "redis_fragmentation{crdt_guid=\"$crdt_guid\"} or redis_mem_fragmentation_ratio{crdt_guid=\"$crdt_guid\"} ",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "Replica:{{crdt_replica_id}} - Redis {{redis}} ({{role}})",
-          "metric": "",
-          "range": true,
-          "refId": "A",
-          "step": 240
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "Shard RSS fragmentation",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "percentunit",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
       "datasource": {
-        "uid": "$datasource"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
       "fill": 1,
       "fillGradient": 0,
@@ -2273,7 +2664,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 48
+        "y": 46
       },
       "hiddenSeries": false,
       "id": 26,
@@ -2310,13 +2701,15 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "(bdb_read_hits{crdt_guid=\"$crdt_guid\"} + bdb_write_hits{crdt_guid=\"$crdt_guid\"}) / (bdb_read_req{crdt_guid=\"$crdt_guid\"} + bdb_write_req{crdt_guid=\"$crdt_guid\"}) > 0",
+          "editorMode": "code",
+          "expr": "(bdb_read_hits{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_write_hits{bdb=\"$bdb\", cluster=\"$cluster\"}) / (bdb_read_req{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_write_req{bdb=\"$bdb\", cluster=\"$cluster\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "DB hit ratio - Replica:{{crdt_replica_id}}",
+          "legendFormat": "DB hit ratio",
+          "range": true,
           "refId": "A",
-          "step": 240
+          "step": 2400
         }
       ],
       "thresholds": [],
@@ -2364,7 +2757,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 48
+        "y": 46
       },
       "hiddenSeries": false,
       "id": 47,
@@ -2400,28 +2793,28 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "bdb_replicaof_syncer_local_ingress_lag_time{crdt_guid=\"$crdt_guid\"}",
+          "expr": "bdb_replicaof_syncer_local_ingress_lag_time{bdb=\"$bdb\", cluster=\"$cluster\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "Replica:{{crdt_replica_id}} src_id {{src_id}}",
+          "legendFormat": "BDB $bdb  src_id {{src_id}}",
           "metric": "",
           "refId": "A",
-          "step": 240
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "bdb_crdt_syncer_local_ingress_lag_time{crdt_guid=\"$crdt_guid\"}",
+          "expr": "bdb_crdt_syncer_local_ingress_lag_time{bdb=\"$bdb\", cluster=\"$cluster\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "Replica:{{crdt_replica_id}} crdt src_id {{src_id}}",
+          "legendFormat": "BDB $bdb crdt src_id {{src_id}}",
           "metric": "",
           "refId": "B",
-          "step": 240
+          "step": 2400
         }
       ],
       "thresholds": [],
@@ -2469,7 +2862,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 48
+        "y": 46
       },
       "hiddenSeries": false,
       "id": 34,
@@ -2505,43 +2898,43 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (crdt_replica_id) (redis_mem_fragmentation_ratio{crdt_guid=\"$crdt_guid\"}) / count by (crdt_replica_id) (redis_mem_fragmentation_ratio{crdt_guid=\"$crdt_guid\"})",
+          "expr": "sum(redis_mem_fragmentation_ratio{bdb=\"$bdb\",cluster=\"$cluster\"}) / count(redis_mem_fragmentation_ratio{bdb=\"$bdb\",cluster=\"$cluster\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "redis_mem_fragmentation_ratio - Replica:{{crdt_replica_id}}",
+          "legendFormat": "redis_mem_fragmentation_ratio",
           "metric": "",
           "refId": "A",
-          "step": 240
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (crdt_replica_id) (redis_allocator_active{crdt_guid=\"$crdt_guid\"}) / sum by (crdt_replica_id) (redis_allocator_allocated{crdt_guid=\"$crdt_guid\"})",
+          "expr": "sum(redis_allocator_active{bdb=\"$bdb\",cluster=\"$cluster\"}) / sum(redis_allocator_allocated{bdb=\"$bdb\",cluster=\"$cluster\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "Shard allocator fragmentation - Replica:{{crdt_replica_id}}",
+          "legendFormat": "Shard allocator fragmentation",
           "refId": "B",
-          "step": 240
+          "step": 2400
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (crdt_replica_id) (redis_allocator_resident{crdt_guid=\"$crdt_guid\"}) / sum by (crdt_replica_id) (redis_allocator_active{crdt_guid=\"$crdt_guid\"})",
+          "expr": "sum(redis_allocator_resident{bdb=\"$bdb\",cluster=\"$cluster\"}) / sum(redis_allocator_active{bdb=\"$bdb\",cluster=\"$cluster\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "shard allocator rss - Replica:{{crdt_replica_id}}",
+          "legendFormat": "shard allocator rss",
           "refId": "C",
-          "step": 240
+          "step": 2400
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "BDB total fragmentation",
+      "title": "BDB:$bdb total fragmentation",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2584,10 +2977,10 @@
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 48
+        "y": 46
       },
       "hiddenSeries": false,
-      "id": 50,
+      "id": 23,
       "legend": {
         "alignAsTable": true,
         "avg": false,
@@ -2603,7 +2996,7 @@
       "lines": true,
       "linewidth": 1,
       "links": [],
-      "nullPointMode": "null",
+      "nullPointMode": "connected",
       "options": {
         "alertThreshold": true
       },
@@ -2622,19 +3015,19 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "redis_allocator_active{crdt_guid=\"$crdt_guid\"} / redis_allocator_allocated{crdt_guid=\"$crdt_guid\"}",
+          "expr": "redis_fragmentation{bdb=\"$bdb\", cluster=\"$cluster\"} or redis_mem_fragmentation_ratio{bdb=\"$bdb\", cluster=\"$cluster\"} ",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "Replica:{{crdt_replica_id}} - redis:{{redis}} role:{{role}}",
-          "metric": "redis_allocator_active",
+          "legendFormat": "Redis {{redis}} ({{role}})",
+          "metric": "",
           "refId": "A",
-          "step": 240
+          "step": 2400
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Shard allocator fragmentation % (defraggable)",
+      "title": "Shard RSS fragmentation",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2655,7 +3048,7 @@
         {
           "format": "short",
           "logBase": 1,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -2677,7 +3070,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 54
+        "y": 52
       },
       "hiddenSeries": false,
       "id": 30,
@@ -2713,13 +3106,13 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "redis_active_defrag_running{crdt_guid=\"$crdt_guid\"}",
+          "expr": "redis_active_defrag_running{cluster=\"$cluster\",bdb=\"$bdb\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "Replica:{{crdt_replica_id}} - redis:{{redis}} role:{{role}}",
+          "legendFormat": "redis:{{redis}} role:{{role}}",
           "refId": "A",
-          "step": 240
+          "step": 2400
         }
       ],
       "thresholds": [],
@@ -2767,7 +3160,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 54
+        "y": 52
       },
       "hiddenSeries": false,
       "id": 22,
@@ -2803,14 +3196,14 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "delta(redis_aof_delayed_fsync{crdt_guid=\"$crdt_guid\"}[$aggregation])",
+          "expr": "delta(redis_aof_delayed_fsync{bdb=\"$bdb\", cluster=\"$cluster\"}[$aggregation])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "Replica:{{crdt_replica_id}} - Redis {{redis}} ({{role}})",
+          "legendFormat": "Redis {{redis}} ({{role}})",
           "metric": "redis_aof_delayed_fsync",
           "refId": "A",
-          "step": 240
+          "step": 2400
         }
       ],
       "thresholds": [],
@@ -2858,10 +3251,10 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 54
+        "y": 52
       },
       "hiddenSeries": false,
-      "id": 65,
+      "id": 58,
       "legend": {
         "alignAsTable": true,
         "avg": false,
@@ -2896,14 +3289,14 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "redis_allocator_active{crdt_guid=\"$crdt_guid\"} - redis_allocator_allocated{crdt_guid=\"$crdt_guid\"}",
+          "expr": "redis_allocator_active{bdb=\"$bdb\",cluster=\"$cluster\"} - redis_allocator_allocated{bdb=\"$bdb\",cluster=\"$cluster\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "Replica:{{crdt_replica_id}} - redis:{{redis}} role:{{role}}",
+          "legendFormat": "redis:{{redis}} role:{{role}}",
           "metric": "redis_allocator_active",
           "refId": "A",
-          "step": 240
+          "step": 2400
         }
       ],
       "thresholds": [],
@@ -2922,7 +3315,7 @@
       },
       "yaxes": [
         {
-          "format": "bytes",
+          "format": "decbytes",
           "logBase": 1,
           "show": true
         },
@@ -2951,18 +3344,16 @@
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 54
+        "y": 52
       },
       "hiddenSeries": false,
-      "id": 77,
+      "id": 50,
       "legend": {
         "alignAsTable": true,
-        "avg": true,
+        "avg": false,
         "current": true,
-        "hideEmpty": false,
-        "hideZero": false,
-        "max": true,
-        "min": true,
+        "max": false,
+        "min": false,
         "show": true,
         "sort": "current",
         "sortDesc": true,
@@ -2991,131 +3382,19 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "exemplar": false,
-          "expr": "redis_crdt_ts_key_headers{crdt_guid=\"$crdt_guid\"}",
+          "expr": "redis_allocator_active{bdb=\"$bdb\",cluster=\"$cluster\"} / redis_allocator_allocated{bdb=\"$bdb\",cluster=\"$cluster\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "Replica:{{crdt_replica_id}} - redis:{{redis}}, role: {{role}}, node:{{node}}, slots:{{slots}}",
-          "metric": "",
+          "legendFormat": "redis:{{redis}} role:{{role}}",
+          "metric": "redis_allocator_active",
           "refId": "A",
-          "step": 240
+          "step": 2400
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Number of Tombstones",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:220",
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "$$hashKey": "object:221",
-          "format": "short",
-          "logBase": 1,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "a7f30025-9f9b-4869-b2cf-f18900ce4cbb"
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 60
-      },
-      "id": 72,
-      "panels": [],
-      "title": "Dashboard Row",
-      "type": "row"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 61
-      },
-      "hiddenSeries": false,
-      "id": 62,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "10.0.3",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": true,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "expr": "bdb_crdt_syncer_status{crdt_guid=\"$crdt_guid\"}",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "Replica:{{crdt_replica_id}}",
-          "metric": "status",
-          "refId": "A",
-          "step": 120
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "bdb_crdt_syncer_status: [ in-sync: 0,   syncing: 1,   out-of-sync: 2 ]",
+      "title": "Shard allocator fragmentation % (defraggable)",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -3129,766 +3408,7 @@
       },
       "yaxes": [
         {
-          "format": "none",
-          "label": "state",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 61
-      },
-      "hiddenSeries": false,
-      "id": 63,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "10.0.3",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": true,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "expr": "redis_crdt_peer_peer_state{crdt_guid=\"$crdt_guid\"} != 1",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "Replica:{{crdt_replica_id}} - redis:{{redis}}",
-          "metric": "status",
-          "refId": "A",
-          "step": 120
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "redis_crdt_peer_peer_state != 1.  [ initialized: 0, online: 1, wait_fullsync: 2, fullsync: 3, fullsync_ack: 4, closed: 5 ]",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "none",
-          "label": "status",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 69
-      },
-      "hiddenSeries": false,
-      "id": 64,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "10.0.3",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": true,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "expr": "redis_crdt_stale_replica{crdt_guid=\"$crdt_guid\"} > 0",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "stale - Replica:{{crdt_replica_id}} - redis:{{redis}}",
-          "metric": "status",
-          "refId": "A",
-          "step": 120
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "expr": "redis_crdt_oom_latch{crdt_guid=\"$crdt_guid\"} > 0",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "oom - Replica:{{crdt_replica_id}} - redis:{{redis}}",
-          "metric": "status",
-          "refId": "C",
-          "step": 120
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "redis_crdt_stale_replica , redis_crdt_oom_latch",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "none",
-          "label": "",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "a7f30025-9f9b-4869-b2cf-f18900ce4cbb"
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 77
-      },
-      "id": 73,
-      "panels": [],
-      "title": "Syncer",
-      "type": "row"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "description": "",
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 0,
-        "y": 78
-      },
-      "hiddenSeries": false,
-      "id": 59,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": true,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "connected",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "10.0.3",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "expr": "min by (crdt_replica_id) (redis_crdt_replica_min_ops_lag{crdt_guid=\"$crdt_guid\"})",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "min lag - Replica:{{crdt_replica_id}}",
-          "metric": "",
-          "refId": "A",
-          "step": 240
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "expr": "max by (crdt_replica_id) (redis_crdt_replica_max_ops_lag{crdt_guid=\"$crdt_guid\"})",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "max lag - Replica:{{crdt_replica_id}}",
-          "metric": "",
-          "refId": "C",
-          "step": 240
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "replica min/max ops lag",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "decbytes",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "description": "",
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 8,
-        "y": 78
-      },
-      "hiddenSeries": false,
-      "id": 60,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": true,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "connected",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "10.0.3",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "expr": "max by (crdt_replica_id) (bdb_crdt_syncer_pending_local_writes_max{crdt_guid=\"$crdt_guid\"})",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "bdb1 max local writes - Replica:{{crdt_replica_id}}",
-          "metric": "",
-          "refId": "A",
-          "step": 240
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "expr": "min by (crdt_replica_id) (bdb_crdt_syncer_pending_local_writes_min{crdt_guid=\"$crdt_guid\"})",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "bdb1 min local writes - Replica:{{crdt_replica_id}}",
-          "metric": "",
-          "refId": "C",
-          "step": 240
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "GC ops lag",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "description": "",
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 16,
-        "y": 78
-      },
-      "hiddenSeries": false,
-      "id": 61,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": true,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "connected",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "10.0.3",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "expr": "bdb_crdt_syncer_local_ingress_lag_time{crdt_guid=\"$crdt_guid\"}",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "syncer_local_ingress_lag_time - Replica:{{crdt_replica_id}}",
-          "metric": "",
-          "refId": "A",
-          "step": 240
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "crdt_syncer_local_ingress_lag_time",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "ms",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$datasource"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "unit": "decbytes"
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 16,
-        "y": 85
-      },
-      "hiddenSeries": false,
-      "id": 76,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": true,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "connected",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "10.0.3",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "exemplar": true,
-          "expr": "bdb_crdt_syncer_ingress_bytes{crdt_guid=\"$crdt_guid\"}",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "bdb_crdt_syncer_ingress_bytes - Replica:{{crdt_replica_id}}",
-          "metric": "",
-          "refId": "A",
-          "step": 240
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "bdb_crdt_syncer_ingress_bytes",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "decbytes",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "collapsed": false,
-      "datasource": {
-        "type": "datasource",
-        "uid": "grafana"
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 92
-      },
-      "id": 74,
-      "panels": [],
-      "title": "crdt module",
-      "type": "row"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "uid": "$datasource"
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 93
-      },
-      "hiddenSeries": false,
-      "id": 58,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "hideEmpty": false,
-        "hideZero": false,
-        "max": false,
-        "min": false,
-        "show": false,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "connected",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "10.0.3",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "/.*pending.*/",
-          "yaxis": 2
-        }
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "expr": "sum by (crdt_replica_id) (delta(redis_crdt_gc_attempted{crdt_guid=\"$crdt_guid\"}[1m]))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "crdt_gc_attempted - Replica:{{crdt_replica_id}}",
-          "metric": "",
-          "refId": "A",
-          "step": 60
-        },
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "expr": "sum by (crdt_replica_id) (delta(redis_crdt_gc_collected{crdt_guid=\"$crdt_guid\"}[1m]))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "crdt_gc_collected - Replica:{{crdt_replica_id}}",
-          "metric": "",
-          "refId": "C",
-          "step": 60
-        },
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "expr": "sum by (crdt_replica_id) (redis_crdt_gc_pending{crdt_guid=\"$crdt_guid\"})",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "gc pending - Replica:{{crdt_replica_id}}",
-          "refId": "E",
-          "step": 60
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "CRDT GC",
-      "tooltip": {
-        "msResolution": false,
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "opm",
+          "format": "percentunit",
           "logBase": 1,
           "show": true
         },
@@ -3912,9 +3432,9 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 100
+        "y": 58
       },
-      "id": 75,
+      "id": 64,
       "panels": [
         {
           "aliasColors": {},
@@ -3922,23 +3442,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 94
+            "y": 67
           },
-          "hiddenSeries": false,
           "id": 51,
           "legend": {
             "alignAsTable": false,
@@ -3954,11 +3467,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "connected",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -3975,32 +3484,33 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_used_ram{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_used_ram{bdb=\"$bdb\", cluster=\"$cluster\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "bdb_used_ram - Replica:{{crdt_replica_id}}",
+              "legendFormat": "bdb_used_ram",
               "metric": "",
               "refId": "A",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_ram_limit{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_ram_limit{bdb=\"$bdb\", cluster=\"$cluster\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "limit (when low, near used) - Replica:{{crdt_replica_id}}",
+              "legendFormat": "limit (when low, near used)",
               "refId": "B",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
-          "title": "BDB (ROF) used RAM for",
+          "title": "BDB (ROF) used RAM for $bdb",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -4024,10 +3534,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -4035,23 +3542,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 94
+            "y": 67
           },
-          "hiddenSeries": false,
           "id": 25,
           "legend": {
             "alignAsTable": true,
@@ -4068,11 +3568,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -4100,51 +3596,54 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "(bdb_big_fetch_ram{crdt_guid=\"$crdt_guid\"} + bdb_big_write_ram{crdt_guid=\"$crdt_guid\"} + bdb_big_del_ram{crdt_guid=\"$crdt_guid\"}) / (bdb_big_fetch_flash{crdt_guid=\"$crdt_guid\"} + bdb_big_write_flash{crdt_guid=\"$crdt_guid\"} + bdb_big_del_flash{crdt_guid=\"$crdt_guid\"} + bdb_big_fetch_ram{crdt_guid=\"$crdt_guid\"} + bdb_big_write_ram{crdt_guid=\"$crdt_guid\"} + bdb_big_del_ram{crdt_guid=\"$crdt_guid\"}) > 0",
+              "expr": "(bdb_big_fetch_ram{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_write_ram{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_del_ram{bdb=\"$bdb\", cluster=\"$cluster\"}) / (bdb_big_fetch_flash{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_write_flash{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_del_flash{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_fetch_ram{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_write_ram{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_del_ram{bdb=\"$bdb\", cluster=\"$cluster\"}) > 0",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "DB ram hit ratio - Replica:{{crdt_replica_id}}",
+              "legendFormat": "DB ram hit ratio",
               "refId": "A",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_fetch_ram{crdt_guid=\"$crdt_guid\"}  / (bdb_big_fetch_flash{crdt_guid=\"$crdt_guid\"}  + bdb_big_fetch_ram{crdt_guid=\"$crdt_guid\"} ) > 0",
+              "expr": "bdb_big_fetch_ram{bdb=\"$bdb\", cluster=\"$cluster\"}  / (bdb_big_fetch_flash{bdb=\"$bdb\", cluster=\"$cluster\"}  + bdb_big_fetch_ram{bdb=\"$bdb\", cluster=\"$cluster\"} ) > 0",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "read hit ratio - Replica:{{crdt_replica_id}}",
+              "legendFormat": "read hit ratio",
               "refId": "B",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_write_ram{crdt_guid=\"$crdt_guid\"}  / (bdb_big_write_flash{crdt_guid=\"$crdt_guid\"}  + bdb_big_write_ram{crdt_guid=\"$crdt_guid\"} ) > 0",
+              "expr": "bdb_big_write_ram{bdb=\"$bdb\", cluster=\"$cluster\"}  / (bdb_big_write_flash{bdb=\"$bdb\", cluster=\"$cluster\"}  + bdb_big_write_ram{bdb=\"$bdb\", cluster=\"$cluster\"} ) > 0",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "write hit ratio - Replica:{{crdt_replica_id}}",
+              "legendFormat": "write hit ratio",
               "refId": "C",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_del_ram{crdt_guid=\"$crdt_guid\"}  / (bdb_big_del_flash{crdt_guid=\"$crdt_guid\"}  + bdb_big_del_ram{crdt_guid=\"$crdt_guid\"} ) > 0",
+              "expr": "bdb_big_del_ram{bdb=\"$bdb\", cluster=\"$cluster\"}  / (bdb_big_del_flash{bdb=\"$bdb\", cluster=\"$cluster\"}  + bdb_big_del_ram{bdb=\"$bdb\", cluster=\"$cluster\"} ) > 0",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "del hit ratio - Replica:{{crdt_replica_id}}",
+              "legendFormat": "del hit ratio",
               "refId": "D",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "DB ram hit ratio",
           "tooltip": {
             "shared": true,
@@ -4168,10 +3667,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -4179,24 +3675,17 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "Positive is RAM, Negative is Flash",
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
-          },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 94
+            "y": 67
           },
-          "hiddenSeries": false,
           "id": 52,
           "legend": {
             "alignAsTable": true,
@@ -4212,11 +3701,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -4232,53 +3717,56 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg by (crdt_replica_id) (delta(redis_big_io_ratio_redis{crdt_guid=\"$crdt_guid\",role=\"master\"}[1m]))/60",
+              "expr": "avg(delta(redis_big_io_ratio_redis{cluster=\"$cluster\",bdb=\"$bdb\",role=\"master\"}[1m]))/60",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "RAM Ops for Redis - Replica:{{crdt_replica_id}}",
+              "legendFormat": "RAM Ops for Redis",
               "refId": "A",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg by (crdt_replica_id) (delta(redis_big_io_ratio_flash{crdt_guid=\"$crdt_guid\",role=\"master\"}[1m]) * -1)/60",
+              "expr": "avg(delta(redis_big_io_ratio_flash{cluster=\"$cluster\",bdb=\"$bdb\",role=\"master\"}[1m]) * -1)/60",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "Flash Ops for Redis - Replica:{{crdt_replica_id}}",
+              "legendFormat": "Flash Ops for Redis",
               "refId": "B",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg by (crdt_replica_id) (delta(redis_big_user_io_ratio_redis{crdt_guid=\"$crdt_guid\",role=\"master\"}[1m]))/60",
+              "expr": "avg(delta(redis_big_user_io_ratio_redis{cluster=\"$cluster\",bdb=\"$bdb\",role=\"master\"}[1m]))/60",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "User RAM Ops for Redis - Replica:{{crdt_replica_id}}",
+              "legendFormat": "User RAM Ops for Redis",
               "refId": "C",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg by (crdt_replica_id) (delta(redis_big_user_io_ratio_flash{crdt_guid=\"$crdt_guid\",role=\"master\"}[1m]) * -1)/60",
+              "expr": "avg(delta(redis_big_user_io_ratio_flash{cluster=\"$cluster\",bdb=\"$bdb\",role=\"master\"}[1m]) * -1)/60",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "User Flash Ops for Redis - Replica:{{crdt_replica_id}}",
+              "legendFormat": "User Flash Ops for Redis",
               "refId": "D",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB RAM:Flash access ratio",
           "tooltip": {
             "shared": true,
@@ -4302,10 +3790,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -4313,24 +3798,17 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "Positive is RAM, Negative is Flash",
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
-          },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 102
+            "y": 75
           },
-          "hiddenSeries": false,
           "id": 54,
           "legend": {
             "alignAsTable": true,
@@ -4346,11 +3824,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -4361,30 +3835,31 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "delta(redis_big_io_ratio_redis{crdt_guid=\"$crdt_guid\"}[1m])/60",
+              "expr": "delta(redis_big_io_ratio_redis{cluster=\"$cluster\",bdb=\"$bdb\"}[1m])/60",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "RAM Ops for Redis - Replica:{{crdt_replica_id}} - redis:{{redis}}",
+              "legendFormat": "RAM Ops for Redis {{redis}}",
               "refId": "A",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "delta(redis_big_io_ratio_flash{crdt_guid=\"$crdt_guid\"}[1m]) / -60",
+              "expr": "delta(redis_big_io_ratio_flash{cluster=\"$cluster\",bdb=\"$bdb\"}[1m]) / -60",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "Flash Ops for Redis - Replica:{{crdt_replica_id}} - redis:{{redis}}",
+              "legendFormat": "Flash Ops for Redis {{redis}}",
               "refId": "B",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "RAM:Flash access ratio",
           "tooltip": {
             "shared": true,
@@ -4408,10 +3883,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -4419,23 +3891,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 102
+            "y": 75
           },
-          "hiddenSeries": false,
           "id": 19,
           "legend": {
             "alignAsTable": true,
@@ -4452,11 +3917,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -4467,30 +3928,31 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_io_read_bytes{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_bigstore_io_read_bytes{bdb=\"$bdb\", cluster=\"$cluster\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Reads - Replica:{{crdt_replica_id}}",
+              "legendFormat": "Reads",
               "refId": "A",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_io_write_bytes{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_bigstore_io_write_bytes{bdb=\"$bdb\", cluster=\"$cluster\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "Writes - Replica:{{crdt_replica_id}}",
+              "legendFormat": "Writes",
               "refId": "B",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "Flash IO Banwidth",
           "tooltip": {
             "shared": true,
@@ -4514,10 +3976,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -4525,23 +3984,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 102
+            "y": 75
           },
-          "hiddenSeries": false,
           "id": 18,
           "legend": {
             "alignAsTable": true,
@@ -4558,11 +4010,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -4573,41 +4021,43 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_io_reads{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_bigstore_io_reads{bdb=\"$bdb\", cluster=\"$cluster\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Reads - Replica:{{crdt_replica_id}}",
+              "legendFormat": "Reads",
               "refId": "A",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_io_writes{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_bigstore_io_writes{bdb=\"$bdb\", cluster=\"$cluster\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "Writes - Replica:{{crdt_replica_id}}",
+              "legendFormat": "Writes",
               "refId": "B",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_io_dels{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_bigstore_io_dels{bdb=\"$bdb\", cluster=\"$cluster\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Deletes - Replica:{{crdt_replica_id}}",
+              "legendFormat": "Deletes",
               "refId": "C",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "Flash IOPS",
           "tooltip": {
             "shared": true,
@@ -4631,10 +4081,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -4642,23 +4089,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 110
+            "y": 83
           },
-          "hiddenSeries": false,
           "id": 33,
           "legend": {
             "alignAsTable": false,
@@ -4674,11 +4114,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -4689,18 +4125,18 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum by (crdt_replica_id) (delta(redis_wait_busy_key{crdt_guid=\"$crdt_guid\"}[$aggregation]))",
+              "expr": "sum(delta(redis_wait_busy_key{bdb=\"$bdb\",cluster=\"$cluster\"}[$aggregation]))",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Replica:{{crdt_replica_id}}",
+              "legendFormat": "bdb:{{$bdb}}",
               "refId": "A",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB sum redis wait busy key / $aggregation",
           "tooltip": {
             "shared": true,
@@ -4724,10 +4160,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -4735,23 +4168,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 110
+            "y": 83
           },
-          "hiddenSeries": false,
           "id": 31,
           "legend": {
             "alignAsTable": false,
@@ -4767,11 +4193,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -4782,18 +4204,18 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum by (crdt_replica_id) (delta(redis_blocking_reads{crdt_guid=\"$crdt_guid\"}[$aggregation]))",
+              "expr": "sum(delta(redis_blocking_reads{bdb=\"$bdb\",cluster=\"$cluster\"}[$aggregation]))",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Replica:{{crdt_replica_id}}",
+              "legendFormat": "bdb:{{$bdb}}",
               "refId": "A",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB sum redis blocking reads / $aggregation",
           "tooltip": {
             "shared": true,
@@ -4817,10 +4239,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -4828,23 +4247,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 110
+            "y": 83
           },
-          "hiddenSeries": false,
           "id": 37,
           "legend": {
             "alignAsTable": false,
@@ -4860,11 +4272,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -4880,43 +4288,45 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_used_bigstore{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_used_bigstore{bdb=\"$bdb\",cluster=\"$cluster\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "used - Replica:{{crdt_replica_id}}",
+              "legendFormat": "used",
               "metric": "",
               "refId": "A",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_used_bigstore{crdt_guid=\"$crdt_guid\"} * bdb_disk_frag_ratio{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_used_bigstore{bdb=\"$bdb\",cluster=\"$cluster\"} * bdb_disk_frag_ratio{bdb=\"$bdb\",cluster=\"$cluster\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "actual - Replica:{{crdt_replica_id}}",
+              "legendFormat": "actual",
               "refId": "B",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_disk_frag_ratio{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_disk_frag_ratio{bdb=\"$bdb\",cluster=\"$cluster\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "frag ratio - Replica:{{crdt_replica_id}}",
+              "legendFormat": "frag ratio",
               "refId": "C",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB used flash",
           "tooltip": {
             "shared": true,
@@ -4940,10 +4350,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -4951,23 +4358,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 118
+            "y": 91
           },
-          "hiddenSeries": false,
           "id": 29,
           "legend": {
             "alignAsTable": false,
@@ -4983,11 +4383,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -4998,18 +4394,18 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_postponed_clients{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_big_postponed_clients{cluster=\"$cluster\",bdb=\"$bdb\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Replica:{{crdt_replica_id}}",
+              "legendFormat": "bdb:{{$bdb}}",
               "refId": "A",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB postponed clients",
           "tooltip": {
             "shared": true,
@@ -5033,10 +4429,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -5044,23 +4437,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 118
+            "y": 91
           },
-          "hiddenSeries": false,
           "id": 27,
           "legend": {
             "alignAsTable": true,
@@ -5077,11 +4463,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -5092,19 +4474,19 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_blocked_clients{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_big_blocked_clients{bdb=\"$bdb\",cluster=\"$cluster\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Number of blocked clients - Replica:{{crdt_replica_id}}",
+              "legendFormat": "Number of blocked clients",
               "metric": "bdb_big_blocked_clients",
               "refId": "A",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB blocked clients",
           "tooltip": {
             "shared": true,
@@ -5128,10 +4510,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -5139,23 +4518,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 118
+            "y": 91
           },
-          "hiddenSeries": false,
           "id": 28,
           "legend": {
             "alignAsTable": true,
@@ -5172,11 +4544,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -5197,44 +4565,45 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_ram_overhead{crdt_guid=\"$crdt_guid\"} ",
+              "expr": "bdb_ram_overhead{cluster=\"$cluster\",bdb=\"$bdb\"} ",
               "format": "time_series",
               "hide": true,
               "intervalFactor": 2,
-              "legendFormat": "actual (bytes) - Replica:{{crdt_replica_id}}",
+              "legendFormat": "actual (bytes)",
               "refId": "A",
               "step": 120
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "(bdb_ram_overhead{crdt_guid=\"$crdt_guid\"} - bdb_mem_not_counted_for_evict{crdt_guid=\"$crdt_guid\"}) / bdb_ram_limit{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_ram_overhead{cluster=\"$cluster\",bdb=\"$bdb\"}  / bdb_ram_limit{cluster=\"$cluster\",bdb=\"$bdb\"}",
               "format": "time_series",
               "hide": false,
-              "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "Total Ratio - Replica:{{crdt_replica_id}}",
+              "legendFormat": "Total Ratio",
               "refId": "B",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "(redis_ram_overhead{crdt_guid=\"$crdt_guid\"} - redis_mem_clients_slaves{crdt_guid=\"$crdt_guid\"} - redis_mem_aof_buffer{crdt_guid=\"$crdt_guid\"}) / redis_max_ram{crdt_guid=\"$crdt_guid\"}",
+              "expr": "redis_ram_overhead{cluster=\"$cluster\",bdb=\"$bdb\"} / redis_max_ram{cluster=\"$cluster\",bdb=\"$bdb\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "Replica:{{crdt_replica_id}} - redis: {{redis}} role:{{role}}",
+              "legendFormat": "redis: {{redis}} role:{{role}}",
               "refId": "C",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB ram overhead",
           "tooltip": {
             "shared": true,
@@ -5249,7 +4618,6 @@
           },
           "yaxes": [
             {
-              "$$hashKey": "object:637",
               "format": "percentunit",
               "label": "",
               "logBase": 1,
@@ -5258,15 +4626,11 @@
               "show": true
             },
             {
-              "$$hashKey": "object:638",
               "format": "percentunit",
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -5274,23 +4638,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 126
+            "y": 99
           },
-          "hiddenSeries": false,
           "id": 32,
           "legend": {
             "alignAsTable": false,
@@ -5306,11 +4663,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -5321,18 +4674,18 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum by (crdt_replica_id) (rate(redis_blocking_writes{crdt_guid=\"$crdt_guid\"}[1m]))",
+              "expr": "sum(rate(redis_blocking_writes{bdb=\"$bdb\",cluster=\"$cluster\"}[1m]))",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Replica:{{crdt_replica_id}}",
+              "legendFormat": "bdb:{{$bdb}}",
               "refId": "A",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB sum redis blocking writes",
           "tooltip": {
             "shared": true,
@@ -5356,10 +4709,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -5367,23 +4717,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 126
+            "y": 99
           },
-          "hiddenSeries": false,
           "id": 36,
           "legend": {
             "alignAsTable": false,
@@ -5399,11 +4742,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -5414,18 +4753,18 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum by (crdt_replica_id) (redis_big_inst_avg_read_io_queue{crdt_guid=\"$crdt_guid\"})",
+              "expr": "sum(redis_big_inst_avg_read_io_queue{bdb=\"$bdb\",cluster=\"$cluster\"})",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Replica:{{crdt_replica_id}}",
+              "legendFormat": "bdb:{{$bdb}}",
               "refId": "A",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB sum redis big inst avg read io queue",
           "tooltip": {
             "shared": true,
@@ -5449,10 +4788,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -5460,23 +4796,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 126
+            "y": 99
           },
-          "hiddenSeries": false,
           "id": 35,
           "legend": {
             "alignAsTable": false,
@@ -5492,11 +4821,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -5507,18 +4832,18 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum by (crdt_replica_id) (redis_big_inst_avg_write_io_queue{crdt_guid=\"$crdt_guid\"})",
+              "expr": "sum(redis_big_inst_avg_write_io_queue{bdb=\"$bdb\",cluster=\"$cluster\"})",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Replica:{{crdt_replica_id}}",
+              "legendFormat": "bdb:{{$bdb}}",
               "refId": "A",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB sum redis big inst avg write io queue",
           "tooltip": {
             "shared": true,
@@ -5542,10 +4867,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -5553,23 +4875,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 134
+            "y": 107
           },
-          "hiddenSeries": false,
           "id": 40,
           "legend": {
             "alignAsTable": false,
@@ -5585,11 +4900,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -5600,31 +4911,32 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_objs_flash{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_bigstore_objs_flash{bdb=\"$bdb\",cluster=\"$cluster\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "objects in flash (sum of all master shards) - Replica:{{crdt_replica_id}}",
+              "legendFormat": "objects in flash (sum of all master shards)",
               "metric": "",
               "refId": "A",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_objs_ram{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_bigstore_objs_ram{bdb=\"$bdb\",cluster=\"$cluster\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "objects in ram (sum of all master shards) - Replica:{{crdt_replica_id}}",
+              "legendFormat": "objects in ram (sum of all master shards)",
               "refId": "B",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB objects(values) in FLASH",
           "tooltip": {
             "shared": true,
@@ -5648,10 +4960,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -5659,23 +4968,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 134
+            "y": 107
           },
-          "hiddenSeries": false,
           "id": 46,
           "legend": {
             "alignAsTable": false,
@@ -5691,11 +4993,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -5719,95 +5017,101 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_objs_ram{crdt_guid=\"$crdt_guid\"} / bdb_no_of_keys{crdt_guid=\"$crdt_guid\"} ",
+              "expr": "bdb_bigstore_objs_ram{bdb=\"$bdb\",cluster=\"$cluster\"} / bdb_no_of_keys{bdb=\"$bdb\",cluster=\"$cluster\"} ",
               "format": "time_series",
               "hide": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "BDB % values in RAM (masters) - Replica:{{crdt_replica_id}}",
+              "legendFormat": "BDB % values in RAM (masters)",
               "metric": "",
               "refId": "A",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg((max(redis_bigdb0_ram{crdt_guid=\"$crdt_guid\",role=\"master\"} or redis_bigdb_ram{crdt_guid=\"$crdt_guid\",role=\"master\"}) by (redis,bdb,crdt_replica_id)) / on (redis,bdb,crdt_replica_id) redis_db0_keys{crdt_guid=\"$crdt_guid\",role=\"master\"})",
+              "expr": "avg((max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster)) / on (redis,bdb,cluster) redis_db0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"})",
               "format": "time_series",
               "hide": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "average master shard % values in RAM - Replica:{{crdt_replica_id}}",
+              "legendFormat": "average master shard % values in RAM",
               "refId": "C",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg((max(redis_bigdb0_ram{crdt_guid=\"$crdt_guid\",role=\"slave\"} or redis_bigdb_ram{crdt_guid=\"$crdt_guid\",role=\"slave\"}) by (redis,bdb,crdt_replica_id)) / on (redis,bdb,crdt_replica_id) redis_db0_keys{crdt_guid=\"$crdt_guid\",role=\"slave\"})",
+              "expr": "avg((max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"}) by (redis,bdb,cluster)) / on (redis,bdb,cluster) redis_db0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"})",
               "format": "time_series",
               "hide": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "average slave shard % values in RAM - Replica:{{crdt_replica_id}}",
+              "legendFormat": "average slave shard % values in RAM",
               "refId": "D",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "topk(1, min((max(redis_bigdb0_ram{crdt_guid=\"$crdt_guid\",role=\"master\"} or redis_bigdb_ram{crdt_guid=\"$crdt_guid\",role=\"master\"}) by (redis,bdb,crdt_replica_id)) / on (redis,bdb,cluster) redis_db0_keys{crdt_guid=\"$crdt_guid\",role=\"master\"}) by (redis) * -1) *-1",
+              "expr": "topk(1, min((max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster)) / on (redis,bdb,cluster) redis_db0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (redis) * -1) *-1",
               "format": "time_series",
               "hide": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "lowest master shard % values in RAM - redsi:{{redis}} - Replica:{{crdt_replica_id}}",
+              "legendFormat": "lowest master shard % values in RAM - redsi:{{redis}}",
               "refId": "F",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "topk(1, min((max(redis_bigdb0_ram{crdt_guid=\"$crdt_guid\",role=\"slave\"} or redis_bigdb_ram{crdt_guid=\"$crdt_guid\",role=\"slave\"}) by (redis,bdb,crdt_replica_id)) / on (redis,bdb,cluster) redis_db0_keys{crdt_guid=\"$crdt_guid\",role=\"slave\"}) by (redis) * -1) *-1",
+              "expr": "topk(1, min((max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"}) by (redis,bdb,cluster)) / on (redis,bdb,cluster) redis_db0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"}) by (redis) * -1) *-1",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "lowest slave shard % values in RAM - redsi:{{redis}} - Replica:{{crdt_replica_id}}",
+              "legendFormat": "lowest slave shard % values in RAM - redsi:{{redis}}",
               "refId": "G",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "min by (crdt_replica_id) (redis_bigdb0_ram{crdt_guid=\"$crdt_guid\",role=\"master\"} / redis_bigdb0_keys{crdt_guid=\"$crdt_guid\",role=\"master\"})",
+              "expr": "min(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"} / redis_bigdb0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"})",
               "format": "time_series",
               "hide": true,
               "intervalFactor": 2,
-              "legendFormat": "lowest master shard % values in RAM Replica:{{crdt_replica_id}} - Replica:{{crdt_replica_id}}",
+              "legendFormat": "lowest master shard % values in RAM",
               "refId": "B",
               "step": 10
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "min by (crdt_replica_id) (redis_bigdb0_ram{crdt_guid=\"$crdt_guid\",role=\"slave\"} / redis_bigdb0_keys{crdt_guid=\"$crdt_guid\",role=\"slave\"})",
+              "expr": "min(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} / redis_bigdb0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"})",
               "format": "time_series",
               "hide": true,
               "intervalFactor": 2,
-              "legendFormat": "lowest slave shard % values in RAM - Replica:{{crdt_replica_id}}",
+              "legendFormat": "lowest slave shard % values in RAM",
               "refId": "E",
               "step": 10
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB % values in RAM",
           "tooltip": {
             "shared": true,
@@ -5831,10 +5135,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -5842,23 +5143,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 134
+            "y": 107
           },
-          "hiddenSeries": false,
           "id": 39,
           "legend": {
             "alignAsTable": false,
@@ -5874,11 +5168,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -5898,99 +5188,105 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_objs_ram{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_bigstore_objs_ram{bdb=\"$bdb\",cluster=\"$cluster\"}",
               "format": "time_series",
               "hide": true,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "Replica:{{crdt_replica_id}} (sum of masters)",
+              "legendFormat": "bdb:{{$bdb}} (sum of masters)",
               "metric": "",
               "refId": "A",
               "step": 10
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg(max(redis_bigdb0_ram{crdt_guid=\"$crdt_guid\",role=\"slave\"} or redis_bigdb_ram{crdt_guid=\"$crdt_guid\",role=\"slave\"}) by (redis,bdb,crdt_replica_id))",
+              "expr": "avg(max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"}) by (redis,bdb,cluster))",
               "format": "time_series",
               "hide": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "average number of values in ram per slave shard - Replica:{{crdt_replica_id}}",
+              "legendFormat": "average number of values in ram per slave shard",
               "refId": "D",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg(max(redis_bigdb0_ram{crdt_guid=\"$crdt_guid\",role=\"master\"} or redis_bigdb_ram{crdt_guid=\"$crdt_guid\",role=\"master\"}) by (redis,bdb,crdt_replica_id))",
+              "expr": "avg(max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster))",
               "format": "time_series",
               "hide": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "average number of values in ram per master shard - Replica:{{crdt_replica_id}}",
+              "legendFormat": "average number of values in ram per master shard",
               "refId": "E",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "min(max(redis_bigdb0_ram{crdt_guid=\"$crdt_guid\",role=\"slave\"} or redis_bigdb_ram{crdt_guid=\"$crdt_guid\",role=\"slave\"}) by (redis,bdb,crdt_replica_id))",
+              "expr": "min(max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"}) by (redis,bdb,cluster))",
               "format": "time_series",
               "hide": true,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "lowest number of values in ram per slave shard - Replica:{{crdt_replica_id}}",
+              "legendFormat": "lowest number of values in ram per slave shard",
               "refId": "B",
               "step": 10
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "min(max(redis_bigdb0_ram{crdt_guid=\"$crdt_guid\",role=\"master\"} or redis_bigdb_ram{crdt_guid=\"$crdt_guid\",role=\"master\"}) by (redis,bdb,crdt_replica_id))",
+              "expr": "min(max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster))",
               "format": "time_series",
               "hide": true,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "lowest number of values in ram per master shard - Replica:{{crdt_replica_id}}",
+              "legendFormat": "lowest number of values in ram per master shard",
               "refId": "C",
               "step": 10
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "topk(1, min(max(redis_bigdb0_ram{crdt_guid=\"$crdt_guid\",role=\"slave\"} or redis_bigdb_ram{crdt_guid=\"$crdt_guid\",role=\"slave\"}) by (redis,bdb,crdt_replica_id) < on(crdt_replica_id,bdb,redis) redis_db0_keys{crdt_guid=\"$crdt_guid\",role=\"slave\"} ) by (bdb, redis,crdt_replica_id) * -1) * -1",
+              "expr": "topk(1, min(max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"}) by (redis,bdb,cluster) < on(cluster,bdb,redis) redis_db0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} ) by (bdb, redis) * -1) * -1",
               "format": "time_series",
               "hide": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "lowest number of values in ram per slave shard - redis:{{redis}} - Replica:{{crdt_replica_id}}",
+              "legendFormat": "lowest number of values in ram per slave shard - redis:{{redis}}",
               "refId": "F",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "topk(1, min(max(redis_bigdb0_ram{crdt_guid=\"$crdt_guid\",role=\"master\"} or redis_bigdb_ram{crdt_guid=\"$crdt_guid\",role=\"master\"}) by (redis,bdb,crdt_replica_id) < on(crdt_replica_id,bdb,redis) redis_db0_keys{crdt_guid=\"$crdt_guid\",role=\"master\"}) by (bdb, redis,crdt_replica_id) * -1) * -1",
+              "expr": "topk(1, min(max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster) < on(cluster,bdb,redis) redis_db0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (bdb, redis) * -1) * -1",
               "format": "time_series",
               "hide": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "lowest number of values in ram per master shard  - redis:{{redis}} - Replica:{{crdt_replica_id}}",
+              "legendFormat": "lowest number of values in ram per master shard  - redis:{{redis}}",
               "refId": "G",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "Shard objects(values) in RAM",
           "tooltip": {
             "shared": true,
@@ -6014,10 +5310,7 @@
               "logBase": 1,
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -6025,23 +5318,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 142
+            "y": 115
           },
-          "hiddenSeries": false,
           "id": 42,
           "legend": {
             "alignAsTable": false,
@@ -6057,11 +5343,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -6072,19 +5354,19 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_ram_dirty_evictions{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_big_ram_dirty_evictions{bdb=\"$bdb\",cluster=\"$cluster\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Replica:{{crdt_replica_id}}",
+              "legendFormat": "bdb:{{$bdb}}",
               "metric": "",
               "refId": "A",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB dirty RAM evictions",
           "tooltip": {
             "shared": true,
@@ -6108,10 +5390,7 @@
               "logBase": 1,
               "show": false
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -6119,23 +5398,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 142
+            "y": 115
           },
-          "hiddenSeries": false,
           "id": 41,
           "legend": {
             "alignAsTable": false,
@@ -6151,11 +5423,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -6166,19 +5434,19 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_ram_clean_evictions{crdt_guid=\"$crdt_guid\"}",
+              "expr": "bdb_big_ram_clean_evictions{bdb=\"$bdb\",cluster=\"$cluster\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Replica:{{crdt_replica_id}}",
+              "legendFormat": "bdb:{{$bdb}}",
               "metric": "",
               "refId": "A",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "BDB clean RAM evictions",
           "tooltip": {
             "shared": true,
@@ -6202,10 +5470,7 @@
               "logBase": 1,
               "show": false
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
         },
         {
           "aliasColors": {},
@@ -6213,23 +5478,16 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": {
-            "uid": "$datasource"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
-          "fillGradient": 0,
           "gridPos": {
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 142
+            "y": 115
           },
-          "hiddenSeries": false,
           "id": 56,
           "legend": {
             "alignAsTable": false,
@@ -6245,11 +5503,7 @@
           "linewidth": 1,
           "links": [],
           "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
           "percentage": false,
-          "pluginVersion": "7.2.1",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -6269,57 +5523,60 @@
           "targets": [
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum by (crdt_replica_id) (delta(redis_rocks_comp_started{crdt_guid=\"$crdt_guid\"}[1m]))",
+              "expr": "sum(delta(redis_rocks_comp_started{bdb=\"$bdb\", cluster=\"$cluster\"}[1m]))",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "compactions - Replica:{{crdt_replica_id}}",
+              "legendFormat": "compactions",
               "metric": "",
               "refId": "A",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum by (crdt_replica_id) (delta(redis_rocks_flush_started{crdt_guid=\"$crdt_guid\"}[1m]))",
+              "expr": "sum(delta(redis_rocks_flush_started{bdb=\"$bdb\", cluster=\"$cluster\"}[1m]))",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "flushes - Replica:{{crdt_replica_id}}",
+              "legendFormat": "flushes",
               "refId": "B",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum by (crdt_replica_id) (delta(redis_rocks_flush_writes_slowdown{crdt_guid=\"$crdt_guid\"}[$aggregation]))",
+              "expr": "sum(delta(redis_rocks_flush_writes_slowdown{bdb=\"$bdb\", cluster=\"$cluster\"}[$aggregation]))",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "slowdowns / $aggregation - Replica:{{crdt_replica_id}}",
+              "legendFormat": "slowdowns / $aggregation",
               "metric": "",
               "refId": "C",
-              "step": 240
+              "step": 1200
             },
             {
               "datasource": {
-                "uid": "$datasource"
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum by (crdt_replica_id) (delta(redis_rocks_flush_writes_stop{crdt_guid=\"$crdt_guid\"}[$aggregation]))",
+              "expr": "sum(delta(redis_rocks_flush_writes_stop{bdb=\"$bdb\", cluster=\"$cluster\"}[$aggregation]))",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "stalls / $aggregation - Replica:{{crdt_replica_id}}",
+              "legendFormat": "stalls / $aggregation",
               "metric": "",
               "refId": "D",
-              "step": 240
+              "step": 1200
             }
           ],
           "thresholds": [],
-          "timeRegions": [],
           "title": "RocksDB",
           "tooltip": {
             "shared": true,
@@ -6346,10 +5603,16 @@
               "min": "0",
               "show": true
             }
-          ],
-          "yaxis": {
-            "align": false
-          }
+          ]
+        }
+      ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "grafana"
+          },
+          "refId": "A"
         }
       ],
       "title": "ROF Metrics",
@@ -6359,26 +5622,30 @@
   "refresh": "",
   "schemaVersion": 38,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "RLEC"
+  ],
   "templating": {
     "list": [
       {
-        "current": {
-          "selected": false,
-          "text": "No data sources found",
-          "value": ""
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
         },
-        "hide": 2,
+        "definition": "",
+        "hide": 0,
         "includeAll": false,
         "multi": false,
-        "name": "datasource",
+        "name": "cluster",
         "options": [],
-        "query": "prometheus",
-        "queryValue": "",
+        "query": "label_values(node_up,cluster)",
         "refresh": 1,
-        "regex": "PrometheusNew",
+        "regex": "",
         "skipUrlSync": false,
-        "type": "datasource"
+        "sort": 1,
+        "type": "query",
+        "useTags": false
       },
       {
         "current": {},
@@ -6386,20 +5653,58 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(crdt_guid)",
+        "definition": "",
         "hide": 0,
         "includeAll": false,
+        "label": "BDB Id",
         "multi": false,
-        "name": "crdt_guid",
+        "name": "bdb",
         "options": [],
-        "query": {
-          "query": "label_values(crdt_guid)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 2,
+        "query": "label_values(bdb_conns{cluster=\"$cluster\"}, bdb)",
+        "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "status",
+        "options": [],
+        "query": "label_values(bdb_status{bdb=\"$bdb\", cluster=\"$cluster\"}, status)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "newStatus",
+        "options": [],
+        "query": "label_values(bdb_up{bdb=\"$bdb\", cluster=\"$cluster\"}, status)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
         "type": "query",
         "useTags": false
       },
@@ -6476,30 +5781,11 @@
         "refresh": 2,
         "skipUrlSync": false,
         "type": "interval"
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "datasource",
-          "uid": "grafana"
-        },
-        "definition": "",
-        "hide": 0,
-        "includeAll": false,
-        "multi": false,
-        "name": "query0",
-        "options": [],
-        "query": "",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-7d",
     "to": "now"
   },
   "timepicker": {
@@ -6528,8 +5814,8 @@
     ]
   },
   "timezone": "utc",
-  "title": "Active-Active (Classic)",
-  "uid": "ab331feb-b3d0-4a69-94e0-4195198e1590",
-  "version": 5,
+  "title": "Database Dashboard (Classic)",
+  "uid": "d16e0e2c-ccac-4f7a-b9fc-200051749edf",
+  "version": 14,
   "weekStart": ""
 }

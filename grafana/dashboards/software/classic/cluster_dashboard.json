@@ -1443,7 +1443,7 @@
     ]
   },
   "time": {
-    "from": "now-12h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -1474,6 +1474,6 @@
   "timezone": "utc",
   "title": "Cluster Dashboard",
   "uid": "b4906ca4-a47e-421a-8ecb-74f4a75496e8",
-  "version": 9,
+  "version": 10,
   "weekStart": ""
 }

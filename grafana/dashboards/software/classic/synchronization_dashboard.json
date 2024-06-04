@@ -340,7 +340,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Avg latency for BDB",
+      "title": "Average database latency",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -438,7 +438,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Avg listener latency for BDB",
+      "title": "Average database listener latency",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -548,7 +548,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Used Memory for BDB",
+      "title": "Database used memory",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -670,7 +670,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "BDB Connections",
+      "title": "Database Connections",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -834,7 +834,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Requests[total,read,write,other] for bdb",
+      "title": "Requests[total,read,write,other] for database",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -991,7 +991,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "BDB Ingress/Egress",
+      "title": "Database Ingress/Egress",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1160,7 +1160,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "BDB CPU utilization for bdb",
+      "title": "BDB CPU utilization for database",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1252,7 +1252,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "CPU usage by shards for bdb",
+      "title": "CPU usage by shards for database",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1366,7 +1366,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Sizes of shards for bdb",
+      "title": "Sizes of shards for database",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1574,7 +1574,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "#Keys for BDB",
+      "title": "#Keys for database",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -1683,7 +1683,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Evicted objects for BDB",
+      "title": "Evicted objects for database",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -1775,7 +1775,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Expired objects for BDB",
+      "title": "Expired objects for database",
       "tooltip": {
         "msResolution": false,
         "shared": true,
@@ -2321,7 +2321,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "DB Hit Ratio (hits / requests)",
+      "title": "Database Hit Ratio (hits / requests)",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2541,7 +2541,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "BDB total fragmentation",
+      "title": "Database total fragmentation",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2724,7 +2724,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "BDB sum redis active defrag running",
+      "title": "Database sum redis active defrag running",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -6528,8 +6528,8 @@
     ]
   },
   "timezone": "utc",
-  "title": "Active-Active (Classic)",
+  "title": "Synchronization (Classic)",
   "uid": "ab331feb-b3d0-4a69-94e0-4195198e1590",
-  "version": 5,
+  "version": 23,
   "weekStart": ""
 }

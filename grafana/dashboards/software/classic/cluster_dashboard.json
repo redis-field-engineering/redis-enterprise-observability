@@ -160,7 +160,7 @@
           "step": 7200
         }
       ],
-      "title": "# BDBs",
+      "title": "# Databases",
       "type": "stat"
     },
     {
@@ -607,11 +607,13 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(delta(bdb_used_memory{cluster=\"$cluster\"}[1m])) by (bdb) > 100 * 1024*1024",
+          "editorMode": "code",
+          "expr": "sum(delta(bdb_used_memory{cluster=\"$cluster\"}[1m])) by (bdb) * on(bdb) group_left(bdb_name) bdb_up{} > 100 * 1024*1024",
           "format": "time_series",
           "interval": "1m",
           "intervalFactor": 2,
-          "legendFormat": "BDB #{{bdb}}",
+          "legendFormat": " {{bdb_name}}",
+          "range": true,
           "refId": "A",
           "step": 600
         }
@@ -707,18 +709,20 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "topk(10, sum(bdb_total_req{cluster=\"$cluster\"}) by (bdb) > 0)",
+          "editorMode": "code",
+          "expr": "topk(10, sum(bdb_total_req{cluster=\"$cluster\"}) by (bdb) > 0) * on(bdb) group_left(bdb_name) bdb_up{}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "#{{bdb}}",
+          "legendFormat": "{{bdb_name}}",
           "metric": "",
+          "range": true,
           "refId": "A",
           "step": 600
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Top 10 Requests by BDB",
+      "title": "Top 10 Requests by database",
       "tooltip": {
         "msResolution": false,
         "shared": false,
@@ -899,10 +903,12 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "topk(10, listener_total_req{cluster=\"$cluster\"})",
+          "editorMode": "code",
+          "expr": "topk(10, listener_total_req{cluster=\"$cluster\"}) * on(bdb) group_left(bdb_name) bdb_up{}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "listener {{proxy}} for bdb {{bdb}}",
+          "legendFormat": "listener {{proxy}} for {{bdb_name}}",
+          "range": true,
           "refId": "A",
           "step": 600
         }
@@ -993,18 +999,20 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "redis_used_memory{node=\"$node\", cluster=\"$cluster\"}",
+          "editorMode": "code",
+          "expr": "redis_used_memory{node=\"$node\", cluster=\"$cluster\"} * on(bdb) group_left(bdb_name) bdb_up{}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "BDB: {{bdb}} Redis: {{redis}}",
+          "legendFormat": "database: {{bdb_name}} shard: {{redis}}",
           "metric": "redis_used_memory",
+          "range": true,
           "refId": "A",
           "step": 600
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Used Mem By redis for Node $node",
+      "title": "Used Memory By redis for Node $node",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1035,10 +1043,12 @@
     {
       "columns": [
         {
+          "$$hashKey": "object:1038",
           "text": "Avg",
           "value": "avg"
         },
         {
+          "$$hashKey": "object:1039",
           "text": "Current",
           "value": "current"
         }
@@ -1090,14 +1100,16 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "bdb_used_memory{cluster=\"$cluster\"}",
+          "editorMode": "code",
+          "expr": "bdb_used_memory{cluster=\"$cluster\"} * on(bdb) group_left(bdb_name) bdb_up{}",
           "intervalFactor": 2,
-          "legendFormat": "BDB {{bdb}}",
+          "legendFormat": "database {{bdb_name}}",
+          "range": true,
           "refId": "A",
           "step": 2400
         }
       ],
-      "title": "List of BDBs",
+      "title": "List of Databases",
       "transform": "timeseries_aggregations",
       "type": "table-old"
     },
@@ -1154,18 +1166,20 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "bdb_used_memory{cluster=\"$cluster\"} > 30 * 1024 * 1024",
+          "editorMode": "code",
+          "expr": "bdb_used_memory{cluster=\"$cluster\"} * on(bdb) group_left(bdb_name) bdb_up{} > 30 * 1024 * 1024",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "BDB: {{bdb}} ",
+          "legendFormat": "database: {{bdb_name}} ",
           "metric": "bdb_used_memory",
+          "range": true,
           "refId": "A",
           "step": 1200
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Used Mem By BDB over 30MB",
+      "title": "Used Memory by database over 30MB",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1246,11 +1260,13 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "topk(10, bdb_conns{cluster=\"$cluster\"})",
+          "editorMode": "code",
+          "expr": "topk(10, bdb_conns{cluster=\"$cluster\"}) * on(bdb) group_left(bdb_name) bdb_up{}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "Conns for BDB: {{bdb}} ",
+          "legendFormat": "Conns for BDB: {{bdb_name}} ",
           "metric": "bdb_conns",
+          "range": true,
           "refId": "A",
           "step": 1200
         },
@@ -1269,7 +1285,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Top 10 Used conns By BDB",
+      "title": "Top 10 Used conns by database",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1350,18 +1366,20 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "topk(10,bdb_avg_latency{cluster=\"$cluster\"} )",
+          "editorMode": "code",
+          "expr": "topk(10,bdb_avg_latency{cluster=\"$cluster\"}) * on(bdb) group_left(bdb_name) bdb_up{}",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "Latency for BDB: {{bdb}} ",
+          "legendFormat": "Latency for database: {{bdb_name}} ",
           "metric": "bdb_conns",
+          "range": true,
           "refId": "A",
           "step": 1200
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Top bdb by latency in cluster",
+      "title": "Top databases by latency in cluster",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1443,7 +1461,7 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-7d",
     "to": "now"
   },
   "timepicker": {
@@ -1474,6 +1492,6 @@
   "timezone": "utc",
   "title": "Cluster Dashboard",
   "uid": "b4906ca4-a47e-421a-8ecb-74f4a75496e8",
-  "version": 10,
+  "version": 25,
   "weekStart": ""
 }

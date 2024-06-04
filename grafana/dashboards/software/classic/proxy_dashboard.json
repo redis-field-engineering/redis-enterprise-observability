@@ -123,7 +123,7 @@
           "editorMode": "code",
           "expr": "dmcproxy_process_resident_memory_bytes{cluster=\"$cluster\", node=\"$node\"}",
           "instant": false,
-          "legendFormat": "dmc:{{node}} memory consumption",
+          "legendFormat": "proxy:{{node}} memory consumption",
           "range": true,
           "refId": "A"
         }
@@ -216,14 +216,14 @@
           "editorMode": "code",
           "expr": "sum by (node) (listener_conns{cluster=\"$cluster\", node=\"$node\"})",
           "instant": false,
-          "legendFormat": "Number of client connections to dmc:{{node}}",
+          "legendFormat": "Number of client connections to proxy:{{node}}",
           "range": true,
           "refId": "A"
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Number of client connections to DMC:$node",
+      "title": "Number of client connections to Proxy:$node",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -545,12 +545,12 @@
           },
           "editorMode": "code",
           "expr": "count(count(redis_used_memory{cluster=\"$cluster\", node=\"$node\"}) by (bdb))",
-          "legendFormat": "Number of BDBs in cluster",
+          "legendFormat": "Number of databases in cluster",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Number of BDBs in cluster",
+      "title": "Number of databases in cluster",
       "type": "timeseries"
     },
     {
@@ -643,7 +643,7 @@
           "refId": "A"
         }
       ],
-      "title": "DMC:$node number of endpoints",
+      "title": "Proxy:$node number of endpoints",
       "type": "timeseries"
     },
     {
@@ -715,14 +715,14 @@
           },
           "editorMode": "code",
           "expr": "dmcproxy_process_cpu_usage_percent{cluster=\"$cluster\", node=\"$node\"}/100",
-          "legendFormat": "dmc:{{node}}",
+          "legendFormat": "proxy:{{node}}",
           "range": true,
           "refId": "A"
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "DMC:$node CPU usage",
+      "title": "Proxy:$node CPU usage",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -837,7 +837,7 @@
         }
       ],
       "timeRegions": [],
-      "title": "DMC:$node thread utilization",
+      "title": "Proxy:$node thread utilization",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -925,7 +925,7 @@
           },
           "editorMode": "code",
           "expr": "sum by (cluster, node) (listener_total_req{cluster=\"$cluster\", node=\"$node\"})",
-          "legendFormat": "dmc:{{node}} request rate",
+          "legendFormat": "proxy:{{node}} request rate",
           "range": true,
           "refId": "A"
         }
@@ -1021,7 +1021,7 @@
           },
           "editorMode": "code",
           "expr": "sum by (cluster, node) (listener_total_res{cluster=\"$cluster\", node=\"$node\"})",
-          "legendFormat": "dmc:{{node}} response rate",
+          "legendFormat": "proxy:{{node}} response rate",
           "range": true,
           "refId": "A"
         }
@@ -1117,7 +1117,7 @@
           },
           "editorMode": "code",
           "expr": "sum by (cluster, node) (listener_read_req{cluster=\"$cluster\", node=\"$node\"})",
-          "legendFormat": "dmc:{{node}} read request rate",
+          "legendFormat": "proxy:{{node}} read request rate",
           "range": true,
           "refId": "A"
         },
@@ -1129,7 +1129,7 @@
           "editorMode": "code",
           "expr": "sum by (cluster, node) (listener_read_res{cluster=\"$cluster\", node=\"$node\"})",
           "hide": false,
-          "legendFormat": "dmc:{{node}} read response rate",
+          "legendFormat": "proxy:{{node}} read response rate",
           "range": true,
           "refId": "B"
         }
@@ -1225,7 +1225,7 @@
           },
           "editorMode": "code",
           "expr": "sum by (cluster, node) (listener_write_req{cluster=\"$cluster\", node=\"$node\"})",
-          "legendFormat": "dmc:{{node}} write request rate",
+          "legendFormat": "proxy:{{node}} write request rate",
           "range": true,
           "refId": "A"
         },
@@ -1237,7 +1237,7 @@
           "editorMode": "code",
           "expr": "sum by (cluster, node) (listener_write_res{cluster=\"$cluster\", node=\"$node\"})",
           "hide": false,
-          "legendFormat": "dmc:{{node}} write response rate",
+          "legendFormat": "proxy:{{node}} write response rate",
           "range": true,
           "refId": "B"
         }
@@ -1333,7 +1333,7 @@
           },
           "editorMode": "code",
           "expr": "sum by (cluster, node) (listener_cmd_get{cluster=\"$cluster\", node=\"$node\"})",
-          "legendFormat": "dmc:{{node}} GET request rate",
+          "legendFormat": "proxy:{{node}} GET request rate",
           "range": true,
           "refId": "A"
         }
@@ -1429,7 +1429,7 @@
           },
           "editorMode": "code",
           "expr": "sum by (cluster, node) (listener_cmd_set{cluster=\"$cluster\", node=\"$node\"})",
-          "legendFormat": "dmc:{{node}} SET request rate",
+          "legendFormat": "proxy:{{node}} SET request rate",
           "range": true,
           "refId": "A"
         }
@@ -1522,13 +1522,13 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "DMC resource consumption",
+  "title": "Proxy Resources",
   "uid": "PQOQVbxSz",
-  "version": 10,
+  "version": 29,
   "weekStart": "sunday"
 }

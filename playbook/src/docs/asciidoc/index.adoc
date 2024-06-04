@@ -20,6 +20,7 @@ Core cluster resources include:
 * <<CPU, CPU utilization>>
 * <<Connections, Database connections>>
 * <<Network ingress / egress, Network traffic>>
+* <<Synchronization, Synchronization>>
 
 Key database performance indicators include:
 
@@ -293,24 +294,24 @@ image::images/playbook_database-used-connections.png[]
 ==== Network ingress / egress
 
 The network ingress / egress panel show the amount of data being sent to and received from the database.
-Large spikes in network traffic can indicate that the cluster in underprovisioned or that
+Large spikes in network traffic can indicate that the cluster in under-provisioned or that
 the application is reading and/or writing unusually large keys. A correlation between high network traffic
 and high CPU utilization may indicate a large key scenario.
 
 Extreme network traffic utilization may approach the limits of the underlying network infrastructure.
 In this case, the only remediation is to add additional nodes to the cluster and scale the database's shards across them.
 
-=== Active-Active
+=== Synchronization
 
-In Redis Enterprise, Active-Active geo-distribution is based on CRDT technology.
+In Redis Enterprise, geographically-distributed synchronization is based on CRDT technology.
 The Redis Enterprise implementation of CRDT is called an Active-Active database (formerly known as CRDB).
 With Active-Active databases, applications can read and write to the same data set from different geographical locations seamlessly and with latency less than one millisecond (ms), without changing the way the application connects to the database.
 
-Keeping multiple copies of the dataset consistent across multiple clusters is no small task. To achieve consistency between participating clusters, Redis Active-Active replication uses a process called the syncer.
+Keeping multiple copies of the dataset consistent across multiple clusters is no small task. To achieve consistency between participating clusters, Redis Active-Active synchronization uses a process called the syncer.
 
 The syncer keeps a replication backlog, which stores changes to the dataset that the syncer sends to other participating clusters. The syncer uses partial syncs to keep replicas up to date with changes, or a full sync in the event a replica or primary is lost.
 
-.Dashboard displaying connection metrics between zones - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/active_dashboard.json[Active-Active]
+.Dashboard displaying connection metrics between zones - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/synchronization_dashboard.json[Synchronization]
 image::images/playbook_network-connectivity.png[]
 
 

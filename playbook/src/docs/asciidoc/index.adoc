@@ -62,6 +62,8 @@ For applications using Redis solely as a cache, you can safely let the memory us
 reach 100% as long as you have an https://redis.io/blog/cache-eviction-strategies/[eviction policy] in place. This will ensure
 that Redis can evict keys while continuing to accept new writes.
 
+*NB* Eviction will increase write command latency as Redis has to cleanup the memory/objects before accepting a new write to prevent OOM when memory usage is at 100%
+
 While your Redis database is using 100% of available memory in a caching context,
 it's still important to monitor performance. The key performance indicators include:
 
@@ -324,8 +326,10 @@ There several key performance indicators that report your database's performance
 
 === Latency
 
-Latency is *the time it takes for Redis to respond to a request*. An adequately provisioned Redis database running
-efficient Redis operations will report an average latency below 1 millisecond. In fact, it's common to measure
+Latency is *the time it takes for Redis to respond to a request*.
+Redis Enterprise measures latency from the first byte received by the proxy to the last byte sent in the command's response.
+
+An adequately provisioned Redis database running efficient Redis operations will report an average latency below 1 millisecond. In fact, it's common to measure
 latency in terms is microseconds. Customers regularly achieve, and sometime require, average latencies of 400-600
 microseconds.
 

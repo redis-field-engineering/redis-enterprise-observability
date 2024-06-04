@@ -686,4 +686,4 @@ There are two additional sets of dashboards for Redis Enterprise software that p
 
 === Cloud
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/cloud/basic[Basic]
-- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/cloud/extended[Exteneded]
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/cloud/extended[Extended]

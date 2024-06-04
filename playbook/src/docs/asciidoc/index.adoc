@@ -287,6 +287,11 @@ image::images/playbook_bdb-used-connections.png[]
 
 ==== Network ingress / egress
 
+.Dashboard displaying connection metrics between zones
+image::images/playbook_network-connectivity.png[]
+
+[In progress]
+
 ==== Troubleshooting
 
 == Database performance indicators
@@ -354,7 +359,7 @@ https://redis.io/glossary/cache-miss/[Cache misses] can have consequential impac
 These tradeoffs should be considered carefully when determining the threshold for alerting.
 
 .Dashboard showing Hit/Miss ratios
-image::images/playbook_read-write-misses.png[]
+image::images/playbook_cache-hit.png[]
 
 ==== Troubleshooting
 This is highly specific to the application caching with no general rules that are applicable in the majority of cases.

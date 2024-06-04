@@ -191,7 +191,7 @@ In general, we define high CPU as any CPU utilization above 80% of total capacit
 
 Shard CPU should remain below 80%. Shards are single-threaded, so a shard CPU of 100% means that the shard is fully utilized.
 
-.Display showing DMC Proxy CPU usage - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/dmc_dashboard.json[DMC Dashboard]
+.Display showing Proxy CPU usage - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/proxy_dashboard.json[DMC Dashboard]
 image::images/playbook_proxy-cpu-usage.png[]
 
 Proxy CPU should remain below 80% of total capacity.
@@ -288,7 +288,7 @@ connection pool or a connection pool that is not properly configured.
 |===
 
 .Dashboard displaying connections - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/database_dashboard.json[Database Dashboard]
-image::images/playbook_bdb-used-connections.png[]
+image::images/playbook_database-used-connections.png[]
 
 ==== Network ingress / egress
 
@@ -334,7 +334,7 @@ latency in terms is microseconds. Customers regularly achieve, and sometime requ
 microseconds.
 
 .Dashboard display of latency metrics - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/database_dashboard.json[Database Dashboard]
-image::images/playbook_bdb-cluster-latency.png[]
+image::images/playbook_database-cluster-latency.png[]
 
 The metrics distinguish between read and write latency. Understanding whether high latency is due
 to read or writes can help you to isolate the underlying issue.

@@ -19,6 +19,7 @@ Core cluster resources include:
 * <<Memory, Memory utilization>>
 * <<CPU, CPU utilization>>
 * <<Connections, Database connections>>
+* <<Network ingress / egress, Network traffic>>
 
 Key database performance indicators include:
 
@@ -29,6 +30,7 @@ Key database performance indicators include:
 .Dashboard showing an overview of cluster metrics
 image::images/cluster_overview.png[]
 
+In addition to manually monitoring these resources and indicators, we recommend <<Alerting, setting up alerts>>.
 
 == Core cluster resource monitoring
 
@@ -287,12 +289,16 @@ image::images/playbook_bdb-used-connections.png[]
 
 ==== Network ingress / egress
 
+The network ingress / egress panel show the amount of data being sent to and received from the database.
+Large spikes in network traffic can indicate that the cluster in underprovisioned or that
+the application is reading and/or writing unusually large keys. A correlation between high network traffic
+and high CPU utilization may indicate a large key scenario.
+
+Extreme network traffic utilization may approach the limits of the underlying network infrastructure.
+In this case, the only remediation is to add additional nodes to the cluster and scale the database's shards across them.
+
 .Dashboard displaying connection metrics between zones
 image::images/playbook_network-connectivity.png[]
-
-[In progress]
-
-==== Troubleshooting
 
 == Database performance indicators
 
@@ -312,11 +318,10 @@ microseconds.
 .Dashboard display of latency metrics
 image::images/playbook_bdb-cluster-latency.png[]
 
-TODO: In progress
-- Discuss read vs write vs other latency
-- Max latency
+The metrics distinguish between read and write latency. Understanding whether high latency is due
+to read or writes can help you to isolate the underlying issue.
 
-Note that this latency metric does not include network round trip time or application-level serialization,
+Note that these latency metrics do not include network round trip time or application-level serialization,
 which is why it's essential to measure request latency at the application, as well.
 
 .Display showing a noticeable spike in latency
@@ -330,143 +335,215 @@ a low <<Cache hit rate, cache hit rate>>, a high rate of <<Key eviction rate, ev
 <<Network ingress / egress, networking issue>>.
 
 |===
-|*Issues*|*Investigation*|*Remediation*
+|*Issue*|*Possible causes*|*Remediation*
 
 |Slow database operations
-|Check the slow log in the Redis Enterprise UI for the database
+|Confirm that there are no excessive slow operations in the <<Slow operations, Redis slow log>>.
+|If possible, reduce the number of slow operations being sent to the database.
+If this not possible, consider increasing the number of shards in the database.
 
 |Increased traffic to the database
-|Check both the Network Traffic and Operations Per Second metrics to determine if there is a corresponding increase
+|Review the <<Network ingress / egress, network traffic>> and the database operations per second chart
+to determine if increased traffic is causing the latency.
+|If the database is underprovisioned due to increased traffic, consider increasing the number of shards in the database.
 
 |Insufficient CPU
-|Check to see if the CPU Usage, Memory Usage Percentage, or Evictions are increasing
+|Check to see if the <<CPU, CPU utilization>> is increasing.
+|Confirm that <<Slow operations, slow operations>> are not causing the high CPU utilization.
+If the high CPU utilization is due to increased load, consider adding shards to the database.
 
 |===
-
-TODO: Fix this
-The database can be scaled up online by going to the Web UI and enabling clustering on the database.  In extreme cases more nodes can be added to the cluster and resources rebalanced.
 
 === Cache hit rate
-Definition
-redis_enterprise.cache_hit_rate (unit: percent)
 
-This is the percentage of time that Redis is accessing a key that already exists.
+*Cache hit rate* is the percentage of all read operations that return a response.footnote:[Cache hit rate is a composite statistic that is computed by dividing the number of read hits by the total number of read operations.]
+When an application tries to read a key that exists, this is known as a *cache hit*.
+Alternatively, when an application tries to read a key that does not exist, this is knows as a *cache miss*.
 
-==== Monitoring notes
-This metric is useful only in the caching use case and should be ignored for all other use cases.
-There are tradeoffs between the freshness of the data in the cache and efficacy of the cache mitigating traffic to any backend data service.
-https://redis.io/glossary/cache-miss/[Cache misses] can have consequential impacts on system performance.
-These tradeoffs should be considered carefully when determining the threshold for alerting.
+For <<Caching workloads, caching workloads>>, the cache hit rate should generally be above 50%, although
+the exact ideal cache hit rate can vary greatly depending on the application and depending on whether the cache
+is already populated.
 
-.Dashboard showing Hit/Miss ratios
+.Dashboard showing the cache hit ratio along with read/write misses
 image::images/playbook_cache-hit.png[]
 
+Note: Redis Enterprise actually reports four different cache hit / miss metrics.
+These are defined as follows:
+
+|===
+|*Metric name*|*Definition*
+
+|bdb_read_hits|The number of successful read operations
+|bdb_read_misses|The number of read operations returning null
+|bdb_write_hits|The number of write operations against existing keys
+|bdb_write_misses|The number of write operations that create new keys
+
+|===
+
 ==== Troubleshooting
-This is highly specific to the application caching with no general rules that are applicable in the majority of cases.
 
-|===
-|*Issue*|*Possible causes*
-
-|Low hit rate
-|Data is being evicted due to TTL policy
-|===
+Cache hit rate is usually only relevant for caching workloads. See <<Cache hit ratio and eviction>>
+for tips on troubleshooting cache hit rate.
 
 === Key eviction rate
 
-Definition
-redis_enterprise.evicted_objects (unit: count)
+They *key eviction rate* is rate at which objects are being evicted from the database.
+If an https://redis.io/docs/latest/operate/rs/databases/memory-performance/eviction-policy/[eviction policy] is in place
+for a database, eviction will begin once the database approaches its max memory capacity.
 
-This is the count of items that have been evicted from the database.
+A high or increasing rate of evictions will negatively affect database latency, especially
+if the rate of necessary key evictions exceeds the rate of new key insertions.
 
-==== Monitoring notes
-Eviction occurs when the database is close to capacity.  In this condition, the eviction policy starts to take effect.  While Expiration is fairly common in the caching use case, Eviction from the cache should generally be a matter of concern.  At very high throughput and very restricted resource use cases, sometimes the eviction sweeps cannot keep up with memory pressure.  Relying on Eviction as a memory management technique should be considered carefully.
+See <<Cache hit ratio and eviction>> for a discussion if key eviction and its relationship with memory usage.
 
 .Dashboard displaying object evictions
 image::images/playbook_eviction-expiration.png[]
 
-==== Troubleshooting
-While memory usage and network traffic will not help you pinpoint a root cause, network traffic is an excellent leading indicator of trouble.  Changes in network traffic patterns indicate corresponding changes in database behavior and further investigation is usually warranted.
-
-|===
-|*Issue*|*Possible causes*
-
-|High number of evictions
-|Increased number of network connections/clients
-|===
-
-
-|===
-|*Action*|*Method*
-
-|Reconfigure database
-|Increase the number of shards
-|Resize database
-|Increase the memory limit of the database
-
-|===
-
-See Memory Usage Percentage Remediation
-Secondary Indicators
-Network Traffic
-
 == Data access anti-patterns
 
-In progress
+There are three data access patterns that can limit the performance of your Redis database:
+
+* Slow operations
+* Hot keys
+* Large keys
+
+This section defines each of these patterns and describes how to diagnose and mitigate them.
 
 === Slow operations
 
-Any Redis operation whose performance is O(n) (or worse) can cause high CPU utilization.
-Examples include https://redis.io/docs/latest/commands/keys/[KEYS], https://redis.io/docs/latest/commands/smembers/[SMEMBERS],
-and https://redis.io/docs/latest/commands/lrem/[LREM].
+*Slow operations* are operations that take longer than a few milliseconds to complete.
 
-Certain operations, such as https://redis.io/docs/latest/commands/keys/[KEYS], should never be issued against a
-production system due to the impact they have on performance.
+Not all Redis operations are equally efficient.
+The most efficient Redis operations are O(1) operations; that is, they have a constant time complexity.
+Example of such operations include https://redis.io/docs/latest/commands/get/[GET],
+https://redis.io/docs/latest/commands/set/[SET], https://redis.io/docs/latest/commands/sadd/[SADD],
+and https://redis.io/docs/latest/commands/hset/[HSET].
+
+These constant time operations are unlikely to cause high CPU utilization.footnote:[Even so,
+it's still possible for a high rate of constant time operations to overwhelm an underprovisioned database.]
+
+Other Redis operations exhibit greater levels of time complexity.
+O(n) (linear time) operations are more likely to cause high CPU utilization.
+Examples include https://redis.io/docs/latest/commands/keys/[HGETALL], https://redis.io/docs/latest/commands/smembers/[SMEMBERS],
+and https://redis.io/docs/latest/commands/lrem/[LREM].
+These operations are not necessarily problematic, but they can be if executed against data structures holding
+a large number of elements (e.g., a list with 1 million elements).
+
+That said, the https://redis.io/docs/latest/commands/keys/[KEYS] command should almost never be run against a
+production system, since returning a list of all keys in a large Redis database can cause significant slowdowns
+and block other operations. If you need to scan the keyspace, especially in a production cluster, always use the
+https://redis.io/docs/latest/commands/scan[SCAN] command instead.
+
+==== Troubleshooting
+
+The best way to discover slow operations is to view the slow log.
+The slow low is available in the Redis Enterprise and Redis Cloud consoles:
+* https://redis.io/docs/latest/operate/rs/clusters/logging/redis-slow-log/[Redis Enterprise slow log docs]
+* https://redis.io/docs/latest/operate/rc/databases/view-edit-database/#other-actions-and-info[Redis cloud slow log docs]
+
+.Redis Cloud dashboard showing slow database operations
+image::images/slow_log.png[]
+
+|===
+|*Issue*|*Remediation*
+
+|The KEYS command shows up in the slow log
+|Find the application that issuing the KEYS command and replace it with a SCAN command.
+In an emergency situation, you can https://redis.io/docs/latest/operate/rs/security/access-control/rbac/configure-acl/[alter the ACLs for the database user]
+so that Redis will reject the KEYS command altogether.
+
+|The slow log shows a significant number of slow, O(n) operations
+|If these operations are being issued against large data structures,
+then the application may need to be refactored to use more efficient Redis commands.
+
+|The slow logs contains only O(1) commands, and these commands are taking several milliseconds
+or more to complete
+|This likely indicate that the database is underprovisioned. Consider increasing the number o shards and/or nodes.
+|===
 
 === Hot keys
 
-Redis can easily become the core of your app’s operational data, holding valuable and frequently accessed information.
-However, if you centralize the access down to a few pieces of data accessed constantly, you create what is known as a hot-key problem.
-In a Redis cluster, the key is actually what determines where in the cluster that data is stored.
-The data is stored in one single primary location based on hashing that key.
-So, when you access a single key over and over again, you’re actually accessing a single node/shard over and over again.
+A *hot key* is a key that is accessed extremely frequently (e.g., thousands of time a second or more).
 
-In progress
+Each key in Redis belongs to one, and only one, shard.
+For this reason, a hot key can cause high CPU utilization on that one shard,
+which can increase latency for all other operations.
+
+==== Troubleshooting
+
+You may suspect that you have a hot key if you see high CPU utilization on a single shard.
+There are two main way to identify hot keys: using the Redis CLI and sampling the operations against Redis.
+
+To use the Redis CLI to identify hot keys:
+
+1. First confirm that you have enough available memory to enable an eviction policy.
+2. Next, enable the LFU (least-frequently used) eviction policy on the database.
+3. Finally, run `+redis-cli --hotkeys+`
+
+You may also identify hot keys by sampling the operations against Redis.
+You can use do this by running the https://redis.io/docs/latest/commands/monitor/[MONITOR] command
+against the high CPU shard. Since this a potentially high-impact operation, you should only
+use this technique as a secondary restort. For mission-critical databases, consider
+contact Redis support for assistance.
+
+==== Remediation
+
+Once you discover a hot key, you need to find a way to reduce the number of operations against it.
+This means getting an understanding of the application's access pattern and the reasons for such frequently access.
+
+If the hot key operations are read-only, then consider implementing an application-local cache so
+that fewer read request are sent to Redis. For example, even a local cache that expires every 5 seconds
+can entirely eliminate a hot key issue.
 
 === Large keys
 
-In progress
+*Large keys* are keys that are hundreds of kilobytes or larger.
+High network traffic and high CPU utilization can be caused by large keys.
+
+==== Troubleshooting
+
+To identify large keys, you can sample the keyspace using the Redis CLI.
+
+Run `+redis-cli --memkeys+` against your database to sample the keyspace in real time
+and potentially identify the largest keys in your database.
+
+==== Remediation
+
+Addressing a large key issues requires understanding why the application is creating large keys in the first place.
+As such, it's difficult to provide general advice to solving this issue. Resolution often requires a change
+to the application's data model or the way it interacts with Redis.
 
 == Alerting
 
-Included in the Redis Observability package is a suite of alerts and their associated tests for use with Prometheus.
-There are https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/grafana#alerts[alerts] for
-all of the metrics described in both the Resources and the Performance sections below.
+The Redis Enterprise observability package includes
+https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/grafana#alerts[a suite of alerts and their associated tests for use with Prometheus].footnote:[Not all the alerts are appropriate for all environments; for example, installations that do not use persistence have no need for storage alerts.]
 
-Not all the alerts are appropriate for all environments; installations that do not use persistence have no need of storage
-alerts, for example.
+The alerts are packaged with https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/grafana/tests[a series of test]
+that validate the individual triggers. You can use these test to validate your modification to these alerts for specific environments and use cases.
 
-There are https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/grafana/tests[tests] included
-with the alerts that validate the individual triggers. These can be used to validate any modifications made when tailoring the
-alerts for specific environments and/or use cases.
+To use these alerts, install https://prometheus.io/docs/alerting/latest/configuration/[Prometheus Alertmanager].
+For a comprehensive guide to alerting with Prometheus and Grafana,
+see the https://grafana.com/blog/2020/02/25/step-by-step-guide-to-setting-up-prometheus-alertmanager-with-slack-pagerduty-and-gmail/[Grafana blog post on the subject].
 
-In order to trigger alerts it is necessary to install Prometheus' https://prometheus.io/docs/alerting/latest/configuration/[Alertmanager].
-Grafana have published a fairly straightforward guide should you wish for more comprehensive https://grafana.com/blog/2020/02/25/step-by-step-guide-to-setting-up-prometheus-alertmanager-with-slack-pagerduty-and-gmail/[instructions] than what are provided below.
+=== Configuring Prometheus
 
-There are two sections of the 'prometheus.yml' file that must be configured, and by and large they can use the default values.
-The first section should be un-commented, eg. everything below Alertmanager configuration.
-This will start the Alertmanager and instruct it to listen on its default port of 9093.
+To configure Prometheus for alerting, open the `prometheus.yml` configuration file.
+
+Uncomment the `Alertmanager` section of the file.
+The following configuration starts Alertmanager and instructs it to listen on its default port of 9093.
 
 [subs="+quotes"]
 ----
 # Alertmanager configuration
-#alerting:
-#  alertmanagers:
-#    - static_configs:
-#        - targets:
-#          - alertmanager:9093
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
 ----
 
-The second section instructs the Alertmanager to read specific rules files. If you pasted the 'alerts.yml' file into '/etc/prometheus' then the following configuration would be required.
+The Rule file section of the config file instructs Alertmanager to read specific rules files.
+If you pasted the 'alerts.yml' file into '/etc/prometheus' then the following configuration would be required.
 
 [subs="+quotes"]
 ----
@@ -476,19 +553,23 @@ rule_files:
   - "alerts.yml"
 ----
 
-Once this is done you should restart Prometheus.
-The built-in configuration, error_rules.yml, has a single alert: Critical Connection Exception.
-If you open the Prometheus console, by default located at port 9090, and select the Alert tab you should see it, as well as the alerts in any other file you have included as a rules file.
+Once this is done, restart Prometheus.
+
+The built-in configuration, `error_rules.yml`, has a single alert: Critical Connection Exception.
+If you open the Prometheus console, by default located at port 9090, and select the Alert tab,
+you will see this alert, as well as the alerts in any other file you have included as a rules file.
 
 image::images/playbook_prometheus-alerts.png[]
 
-The following is a list of alerts contained in the alerts.yml file. There are several points to be considered:
+The following is a list of alerts contained in the `alerts.yml` file. There are several points consider:
 
-- Not all installations have all metrics
-- Most metrics only alert if the specified trigger persists for a given duraction
+- Not all Redis Enterprise deployments export all metrics
+- Most metrics only alert if the specified trigger persists for a given duration
+
+=== List of alerts
 
 |===
-|Description |Trigger
+|*Description*|*Trigger*
 
 |Average latency has reached a warning level
 |round(bdb_avg_latency * 1000) > 1
@@ -563,14 +644,18 @@ The following is a list of alerts contained in the alerts.yml file. There are se
 |redis_connected_clients > 500
 |===
 
-
 == Appendix A: Grafana Dashboards
 
-Redis' Grafana dashboards are available tailored for Software(Enterprise) and Cloud installations.
-They come in two flavors: basic, which has no third-party dependencies; and extended, which requires a third-party library to perform ReST calls.
+Grafana dashboards are available for Redis Enterprise Software and Redis Cloud deployments.
 
-There are two additional sets for software that provide drill-down functionality; the workflow dashboards.
-Lastly there are legacy dashboards which can be found in Classic.
+These dashboards come in three styles, which may be used in concert with one another to provide
+a holistic picture of your deployment.
+
+1. Classic dashboards provide detailed information about the cluster, nodes, and individual databases.
+2. Basic dashboards provide a high-level overviews of the various cluster components.
+3. Extended dashboards which requires a third-party library to perform ReST calls.
+
+There are two additional sets of dashboards for Redis Enterprise software that provide drill-down functionality: the workflow dashboards.
 
 === Software
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/basic[Basic]

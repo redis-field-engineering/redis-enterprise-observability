@@ -11,3 +11,7 @@ logs
 
 # Lock files
 *.lock
+
+playbook/target
+
+.vscode

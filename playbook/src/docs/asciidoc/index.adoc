@@ -681,10 +681,12 @@ There are two additional sets of dashboards for Redis Enterprise software that p
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/extended[Extended]
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/classic[Classic]
 
-==== Workflow
+=== Workflow
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/workflow/databases[Database]
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/workflow/nodes[Node]
 
 === Cloud
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/cloud/basic[Basic]
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/cloud/extended[Extended]
+
+*NB* - The 'workflow' dashboards are intended to be used as a package. Therefore they should all be installed, as they contain links to the other dashboards in the group permitting rapid navigation between the overview and the drill-down views.

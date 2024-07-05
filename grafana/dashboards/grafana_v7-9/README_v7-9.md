@@ -1,42 +1,32 @@
-# Redis Enterprise Grafana Dashboards
-
-This repository contains a collection of Grafana dashboards for [Redis Enterprise](https://docs.redis.com/latest/rs/) and [Redis 
-Cloud](https://docs.redis.com/latest/rc/).
-These dashboards rely on metrics exported by the Redis Enterprise and Redis Cloud Prometheus endpoints.
-
-The dashboards are separated according Grafana version; older versions used a plugin from Angular which more recent versions do not. 
-
-* For dashboards intended for use with versions 7-9 of Grafana, see [v7-9](dashboards/grafana_v7-9/README_v7-9.md)
-* For dashboards intended for use with versions 9-11 of Grafana, see [v9-11](dashboards/grafana_v9-11/README_v9-11.md)
-
-=== CUT ===
 
 For Redis Enterprise, we provide the following dashboards:
-* [Cluster status](dashboards/software/basic/redis-software-cluster-dashboard.json)
-* [Database status](dashboards/software/basic/redis-software-database-dashboard.json)
-* [Node metrics](dashboards/software/basic/redis-software-node-dashboard.json)
-* [Shard metrics](dashboards/software/basic/redis-software-shard-dashboard.json)
+* [Cluster status](software/basic/redis-software-cluster-dashboard_v7-9.json)
+* [Database status](software/basic/redis-software-database-dashboard_v7-9.json)
+* [Node metrics](software/basic/redis-software-node-dashboard_v7-9.json)
+* [Shard metrics](software/basic/redis-software-shard-dashboard_v7-9.json)
 
 For Redis Cloud, which is fully managed, we provide two dashboards:
-* [Subscription status](dashboards/cloud/basic/redis-cloud-subscription-dashboard.json)
-* [Database status](dashboards/cloud/basic/redis-cloud-database-dashboard.json)
+* [Subscription status](cloud/basic/redis-cloud-subscription-dashboard_v7-9.json)
+* [Database status](cloud/basic/redis-cloud-database-dashboard_v7-9.json)
 
-Lastly, we also provide two sets of dashboards designed to be used in drill-down fashion. These dashboards specifically cover 
-databases and nodes. The top-level dashboard (e.g., Databases or Nodes) displays all instances of that type. For example, the [databases dashboard](dashboards/post-9/workflow/databases/redis-software-cluster-databases.json) shows metrics for every database in the Redis cluster. The individual rows make it easy to access different types of 
+Lastly, we also provide two sets of dashboards designed to be used in a drill-down fashion. These dashboards specifically cover 
+databases and nodes.
+
+The top-level dashboard (e.g., Databases or Nodes) displays all instances of that type. For example, the [databases dashboard](workflow/databases/redis-software-cluster-databases_v7-9.json) shows metrics for every database in the Redis cluster. The individual rows make it easy to access different types of 
 details about a particular instance.
 #### Databases
-* [Databases](dashboards/workflow/databases/redis-software-cluster-databases.json)
-* [Database-CPU](dashboards/workflow/databases/redis-software-cluster-database-cpu.json)
-* [Database-Latency](dashboards/workflow/databases/redis-software-cluster-database-latency.json)
-* [Database-Memory](dashboards/workflow/databases/redis-software-cluster-database-memory.json)
-* [Database-Requests](dashboards/workflow/databases/redis-software-cluster-database-requests.json)
+* [Databases](workflow/databases/redis-software-cluster-databases_v7-9.json)
+* [Database-CPU](workflow/databases/redis-software-cluster-database-cpu_v7-9.json)
+* [Database-Latency](workflow/databases/redis-software-cluster-database-latency_v7-9.json)
+* [Database-Memory](workflow/databases/redis-software-cluster-database-memory_v7-9.json)
+* [Database-Requests](workflow/databases/redis-software-cluster-database-requests_v7-9.json)
 
 #### Nodes
-* [Nodes](dashboards/workflow/nodes/redis-software-cluster-nodes.json)
-* [Node-CPU](dashboards/workflow/nodes/redis-software-cluster-node-cpu.json)
-* [Node-Latency](dashboards/workflow/nodes/redis-software-cluster-node-latency.json)
-* [Node-Memory](dashboards/workflow/nodes/redis-software-cluster-node-memory.json)
-* [Node-Requests](dashboards/workflow/nodes/redis-software-cluster-node-requests.json)
+* [Nodes](workflow/nodes/redis-software-cluster-nodes_v7-9.json)
+* [Node-CPU](workflow/nodes/redis-software-cluster-node-cpu_v7-9.json)
+* [Node-Latency](workflow/nodes/redis-software-cluster-node-latency_v7-9.json)
+* [Node-Memory](workflow/nodes/redis-software-cluster-node-memory_v7-9.json)
+* [Node-Requests](workflow/nodes/redis-software-cluster-node-requests_v7-9.json)
 
 Note that these dashboards, and their associated display panes, all have links in the top-right for the dashboards, and in the top-left for the 
 panes, that make it easy to navigate from the main dashboard to the relevant detail information.
@@ -105,38 +95,38 @@ See the official Redis Enterprise docs for a complete example of configuring bot
 ### Redis Software dashboards
 
 For Redis Enterprise, we provide the following dashboards:
-* [Cluster status](dashboards/software/basic/redis-software-cluster-dashboard.json)
-* [Database status](dashboards/software/basic/redis-software-database-dashboard.json)
-* [Node metrics](dashboards/software/basic/redis-software-node-dashboard.json)
-* [Shard metrics](dashboards/software/basic/redis-software-shard-dashboard.json)
+* [Cluster status](software/basic/redis-software-cluster-dashboard_v7-9.json)
+* [Database status](software/basic/redis-software-database-dashboard_v7-9.json)
+* [Node metrics](software/basic/redis-software-node-dashboard_v7-9.json)
+* [Shard metrics](software/basic/redis-software-shard-dashboard_v7-9.json)
 
 You can upload these dashboards directly though the Grafana UI. For additional installation instructions, see the [Redis Enterprise dashboards 
-README](dashboards/software/README-SOFTWARE.md).
+README](software/README-SOFTWARE.md).
 
 ### Redis Cloud dashboards
 
 For Redis Cloud, which is fully managed, we provide two dashboards:
-* [Subscription status](dashboards/cloud/basic/redis-cloud-subscription-dashboard.json)
-* [Database status](dashboards/cloud/basic/redis-cloud-database-dashboard.json)
+* [Subscription status](cloud/basic/redis-cloud-subscription-dashboard_v7-9.json)
+* [Database status](cloud/basic/redis-cloud-database-dashboard_v7-9.json)
 
 ### Redis Workflow Dashboards
 
 These dashboards can be installed either in Redis Enterprise installations or in Redis Cloud installations. 
 
-* [Databases](dashboards/workflow/databases/redis-software-cluster-databases.json)
-* [Database-CPU](dashboards/workflow/databases/redis-software-cluster-database-cpu.json)
-* [Database-Latency](dashboards/workflow/databases/redis-software-cluster-database-latency.json)
-* [Database-Requests](dashboards/workflow/databases/redis-software-cluster-database-requests.json)
-* [Database-CPU](dashboards/workflow/databases/redis-software-cluster-database-cpu.json)
+* [Databases](workflow/databases/redis-software-cluster-databases_v7-9.json)
+* [Database-CPU](workflow/databases/redis-software-cluster-database-cpu_v7-9.json)
+* [Database-Latency](workflow/databases/redis-software-cluster-database-latency_v7-9.json)
+* [Database-Requests](workflow/databases/redis-software-cluster-database-requests_v7-9.json)
+* [Database-CPU](workflow/databases/redis-software-cluster-database-cpu_v7-9.json)
 ####
-* [Nodes](dashboards/workflow/nodes/redis-software-cluster-nodes.json)
-* [Node-CPU](dashboards/workflow/nodes/redis-software-cluster-node-cpu.json)
-* [Node-Latency](dashboards/workflow/nodes/redis-software-cluster-node-latency.json)
-* [Node-Memory](dashboards/workflow/nodes/redis-software-cluster-node-memory.json)
-* [Node-Requests](dashboards/workflow/nodes/redis-software-cluster-node-requests.json)
+* [Nodes](workflow/nodes/redis-software-cluster-nodes_v7-9.json)
+* [Node-CPU](workflow/nodes/redis-software-cluster-node-cpu_v7-9.json)
+* [Node-Latency](workflow/nodes/redis-software-cluster-node-latency_v7-9.json)
+* [Node-Memory](workflow/nodes/redis-software-cluster-node-memory_v7-9.json)
+* [Node-Requests](workflow/nodes/redis-software-cluster-node-requests_v7-9.json)
 
 You can upload these dashboards directly though the Grafana UI. For additional installation instructions, see the [Redis Cloud dashboards 
-README](dashboards/cloud/README-CLOUD.md).
+README](cloud/README-CLOUD.md).
 
 ## Extended dashboards
 
@@ -170,7 +160,7 @@ rules](https://prometheus.io/docs/prometheus/latest/configuration/unit_testing_r
 ## Support
 
 The Redis Enterprise Grafana dashboards are supported by Redis, Inc. on a good faith effort basis. To report bugs, request features, or receive 
-assistance, please file an [issue](https://github.com/redis-field-engineering/redis-enterprise-grafana-dashboards/issues).
+assistance, please file an [issue](https://github.com/redis-field-engineering/redis-enterprise-grafana-issues).
 
 ## License
 

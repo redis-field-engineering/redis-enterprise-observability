@@ -294,9 +294,15 @@ image::images/playbook_database-used-connections.png[]
 ==== Network ingress / egress
 
 The network ingress / egress panel show the amount of data being sent to and received from the database.
-Large spikes in network traffic can indicate that the cluster in under-provisioned or that
+Large spikes in network traffic can indicate that the cluster is under-provisioned or that
 the application is reading and/or writing unusually large keys. A correlation between high network traffic
 and high CPU utilization may indicate a large key scenario.
+
+===== Unbalanced database endpoint
+
+One possible cause is that the database endpoint is not located on the same node as master shards. In addition to added network latency, if data plane internode encryption is enabled, CPU consumption can increase as well.
+
+One solution is to used the optimal shard placement and proxy policy to ensure endpoints are collocated on nodes hosting master shards. If you need to restore balance (e.g. after node failure) you can manually failover shard(s) with the rladmin cli tool.
 
 Extreme network traffic utilization may approach the limits of the underlying network infrastructure.
 In this case, the only remediation is to add additional nodes to the cluster and scale the database's shards across them.

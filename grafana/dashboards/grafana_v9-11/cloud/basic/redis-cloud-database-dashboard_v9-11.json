@@ -15,7 +15,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "9.4.7"
+      "version": "11.1.0"
     },
     {
       "type": "datasource",
@@ -34,12 +34,6 @@
       "id": "timeseries",
       "name": "Time series",
       "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "yesoreyeram-infinity-datasource",
-      "name": "Infinity",
-      "version": "1.3.0"
     }
   ],
   "annotations": {
@@ -91,6 +85,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "Write",
@@ -104,6 +99,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -158,7 +154,6 @@
         "y": 0
       },
       "id": 16,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -250,6 +245,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -257,9 +253,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "11.1.0",
       "targets": [
         {
           "datasource": {
@@ -316,6 +314,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -323,9 +322,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "11.1.0",
       "targets": [
         {
           "datasource": {
@@ -353,6 +354,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -366,6 +368,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -493,13 +496,13 @@
         "y": 7
       },
       "id": 63,
-      "links": [],
       "maxDataPoints": 100,
       "options": {
         "colorMode": "value",
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -507,9 +510,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "11.1.0",
       "targets": [
         {
           "datasource": {
@@ -566,6 +571,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -573,9 +579,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "11.1.0",
       "targets": [
         {
           "datasource": {
@@ -624,13 +632,13 @@
         "y": 7
       },
       "id": 66,
-      "links": [],
       "maxDataPoints": 100,
       "options": {
         "colorMode": "value",
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -638,9 +646,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "11.1.0",
       "targets": [
         {
           "datasource": {
@@ -700,6 +710,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -707,9 +718,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "11.1.0",
       "targets": [
         {
           "datasource": {
@@ -767,6 +780,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -774,9 +788,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "11.1.0",
       "targets": [
         {
           "datasource": {
@@ -833,6 +849,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -840,9 +857,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "11.1.0",
       "targets": [
         {
           "datasource": {
@@ -862,8 +881,7 @@
   ],
   "refresh": "",
   "revision": 1,
-  "schemaVersion": 38,
-  "style": "dark",
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": [
@@ -889,74 +907,6 @@
         "sort": 1,
         "type": "query",
         "useTags": false
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "yesoreyeram-infinity-datasource",
-          "uid": "${DS_INFINITY}"
-        },
-        "definition": "Infinity- (infinity) json",
-        "hide": 0,
-        "includeAll": false,
-        "multi": false,
-        "name": "subscription",
-        "options": [],
-        "query": {
-          "infinityQuery": {
-            "columns": [
-              {
-                "selector": "id",
-                "text": "subscriptionId",
-                "type": "number"
-              }
-            ],
-            "filters": [],
-            "format": "table",
-            "parser": "backend",
-            "refId": "variable",
-            "root_selector": "subscriptions",
-            "source": "url",
-            "type": "json",
-            "uql": "parse-json",
-            "url": "https://api.redislabs.com/v1/subscriptions",
-            "url_options": {
-              "data": "",
-              "headers": [
-                {
-                  "key": "accept",
-                  "value": "application/json"
-                },
-                {
-                  "key": "x-api-key",
-                  "value": "Armjlu9edjsq139bw4vz628sm5z0wc1isj8pkr91px5pukazxn"
-                },
-                {
-                  "key": "x-api-secret-key",
-                  "value": "S5nfcb3bu7xecok4psfx32e8x2ffgi6su4borw6ai6bpbsbweb3"
-                }
-              ],
-              "method": "GET",
-              "params": [
-                {
-                  "key": "offset",
-                  "value": "0"
-                },
-                {
-                  "key": "limit",
-                  "value": "100"
-                }
-              ]
-            }
-          },
-          "query": "",
-          "queryType": "infinity"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
       },
       {
         "current": {},
@@ -1102,73 +1052,6 @@
         "refresh": 2,
         "skipUrlSync": false,
         "type": "interval"
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "yesoreyeram-infinity-datasource",
-          "uid": "${DS_INFINITY}"
-        },
-        "definition": "Infinity- (infinity) json",
-        "hide": 2,
-        "includeAll": false,
-        "multi": false,
-        "name": "databaseId",
-        "options": [],
-        "query": {
-          "infinityQuery": {
-            "columns": [
-              {
-                "selector": "name",
-                "text": "name",
-                "type": "string"
-              }
-            ],
-            "filters": [],
-            "format": "table",
-            "parser": "backend",
-            "refId": "variable",
-            "root_selector": "subscription[*].databases[*]",
-            "source": "url",
-            "type": "json",
-            "url": "https://api.redislabs.com/v1/subscriptions/2006947/databases",
-            "url_options": {
-              "data": "",
-              "headers": [
-                {
-                  "key": "accept",
-                  "value": "application/json"
-                },
-                {
-                  "key": "x-api-key",
-                  "value": "Armjlu9edjsq139bw4vz628sm5z0wc1isj8pkr91px5pukazxn"
-                },
-                {
-                  "key": "x-api-secret-key",
-                  "value": "S5nfcb3bu7xecok4psfx32e8x2ffgi6su4borw6ai6bpbsbweb3"
-                }
-              ],
-              "method": "GET",
-              "params": [
-                {
-                  "key": "offset",
-                  "value": "0"
-                },
-                {
-                  "key": "limit",
-                  "value": "100"
-                }
-              ]
-            }
-          },
-          "query": "",
-          "queryType": "infinity"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
       }
     ]
   },
@@ -1204,6 +1087,6 @@
   "timezone": "utc",
   "title": "Database Status - Dashboard",
   "uid": "oVMyPiP4k",
-  "version": 4,
+  "version": 1,
   "weekStart": ""
 }

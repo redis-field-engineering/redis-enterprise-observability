@@ -118,6 +118,31 @@ An acceptable rate of key evictions depends on the total number of keys in the d
 and the measure of application-level latency. If application latency is high,
 check to see that key evictions have not increased.
 
+==== Eviction Policies
+|===
+|*Name*|*Description*
+|noeviction|New values aren’t saved when memory limit is reached. When a database uses replication, this applies to the primary database
+|allkeys-lru|Keeps most recently used keys; removes least recently used (LRU) keys
+|allkeys-lfu|Keeps frequently used keys; removes least frequently used (LFU) keys
+|volatile-lru|Removes least recently used keys with the expire field set to true.
+|volatile-lfu|Removes least frequently used keys with the expire field set to true.
+|allkeys-random|Randomly removes keys to make space for the new data added.
+|volatile-random|Randomly removes keys with expire field set to true.
+|volatile-ttl|Removes keys with expire field set to true and the shortest remaining time-to-live (TTL) value.
+|===
+
+==== Eviction policy guidelines
+
+* Use the allkeys-lru policy when you expect a power-law distribution in the popularity of your requests. That is, you expect a subset of elements will be accessed far more often than the rest. This is a good pick if you are unsure.
+
+* Use the allkeys-random if you have a cyclic access where all the keys are scanned continuously, or when you expect the distribution to be uniform.
+
+* Use the volatile-ttl if you want to be able to provide hints to Redis about what are good candidate for expiration by using different TTL values when you create your cache objects.
+
+The volatile-lru and volatile-random policies are mainly useful when you want to use a single instance for both caching and to have a set of persistent keys. However it is usually a better idea to run two Redis instances to solve such a problem.
+
+*NB* Setting an expire value to a key costs memory, so using a policy like allkeys-lru is more memory efficient since there is no need for an expire configuration for the key to be evicted under memory pressure.
+
 ==== Non-caching workloads
 
 If no eviction policy is enabled, then Redis will stop accepting writes once memory reaches 100%.
@@ -423,6 +448,36 @@ See <<Cache hit ratio and eviction>> for a discussion if key eviction and its re
 
 .Dashboard displaying object evictions - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/database_dashboard.json[Database Dashboard]
 image::images/playbook_eviction-expiration.png[]
+
+== CRDB
+
+An Active-Active architecture is a data resiliency architecture that distributes the database information over multiple data centers via independent and geographically distributed clusters and nodes. It is a network of separate processing nodes, each having access to a common replicated database such that all nodes can participate in a common application ensuring local low latency with each region being able to run in isolation.
+
+Active-Active Architecture or an Active-Active Geo-Distributed topology is achieved by implementing CRDTs (conflict-free replicated data types) in Redis Enterprise using a global database that spans multiple clusters. This is called a “conflict-free replicated database” or “CRDB.”
+
+CRDB provides three fundamental benefits over other geo-distributed solutions:
+
+* It offers local latency on read and write operations, regardless of the number of geo-replicated regions and their distance from each other.
+* It enables seamless conflict resolution (“conflict-free”) for simple and complex data types like those of Redis core.
+* Even if most of the geo-replicated regions in a CRDB (for example, 3 out of 5) are down, the remaining geo-replicated regions are uninterrupted and can continue to handle read and write operations, ensuring business continuity.
+
+Monitoring replication in such scenarios  is important in order to detect problems before it can impact ...
+
+== DMS Proxy
+
+Redis Enterprise Software (RS) provides high-performance data access through a proxy process that manages and optimizes access to shards within the RS cluster. Each node contains a single proxy process. Each proxy can be active and take incoming traffic or it can be passive and wait for failovers.
+
+==== Proxy Policies
+
+|===
+|*Policy*|*Description*
+|Single|There is only a single proxy that is bound to the database. This is the default database configuration and preferable in most use cases.
+|All Master Shards|There are multiple proxies that are bound to the database, one on each node that hosts a database master shard. This mode fits most use cases that require multiple proxies.
+|All Nodes|There are multiple proxies that are bound to the database, one on each node in the cluster, regardless of whether or not there is a shard from this database on the node. This mode should be used only in special cases, such as using a load balancer.
+
+|===
+
+
 
 == Data access anti-patterns
 

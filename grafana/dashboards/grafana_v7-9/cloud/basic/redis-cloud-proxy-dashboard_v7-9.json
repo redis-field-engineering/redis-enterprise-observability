@@ -185,7 +185,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "count(namedprocess_namegroup_thread_cpu_seconds_total{threadname=~\"worker-.*\", mode=\"system\"})",
+          "expr": "count(namedprocess_namegroup_thread_cpu_seconds_total{cluster=\"$cluster\", node=\"$node\", mode=\"system\", threadname=~\"worker-.*\"})",
           "hide": true,
           "instant": false,
           "legendFormat": "__auto",
@@ -198,7 +198,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "dmcproxy_process_cpu_usage_percent{cluster=\"$cluster\"}",
+          "expr": "dmcproxy_process_cpu_usage_percent{cluster=\"$cluster\", node=\"$node\"}",
           "hide": true,
           "instant": false,
           "legendFormat": "__auto",
@@ -214,6 +214,17 @@
           "hide": false,
           "refId": "C",
           "type": "math"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "D"
         }
       ],
       "title": "Proxy CPU Usage (avg)",

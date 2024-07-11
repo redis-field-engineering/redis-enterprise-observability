@@ -48,7 +48,7 @@ in a multi-database cluster.
 | Memory usage percentage | Percentage of used memory relative to the configured memory limit for a given database | Percentage
 |===
 
-.Dashboard displaying high-level cluster metrics - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/cluster_dashboard.json[Cluster Dashboard]
+.Dashboard displaying high-level cluster metrics - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/cluster_dashboard.json[Cluster Dashboard]
 image::images/playbook_used-memory.png[]
 
 ==== Thresholds
@@ -209,7 +209,7 @@ A database is a set of processes, known as shards, deployed across the nodes of 
 In the dashboard, shard CPU is the CPU utilization of the processes that make up the database.
 When diagnosing performance issues, start by looking at shard CPU.
 
-.Dashboard displaying CPU usage - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/database_dashboard.json[Database Dashboard]
+.Dashboard displaying CPU usage - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/database_dashboard.json[Database Dashboard]
 image::images/playbook_database-cpu-shard.png[]
 
 ==== Thresholds
@@ -218,7 +218,7 @@ In general, we define high CPU as any CPU utilization above 80% of total capacit
 
 Shard CPU should remain below 80%. Shards are single-threaded, so a shard CPU of 100% means that the shard is fully utilized.
 
-.Display showing Proxy CPU usage - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/proxy_dashboard.json[DMC Dashboard]
+.Display showing Proxy CPU usage - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/proxy_dashboard.json[Proxy Dashboard]
 image::images/playbook_proxy-cpu-usage.png[]
 
 Proxy CPU should remain below 80% of total capacity.
@@ -227,7 +227,7 @@ Because the total number of proxy threads is configurable, the proxy CPU may exc
 A proxy configured with 6 threads can reach 600% CPU utilization, so in this case,
 keeping utilization below 80% means keeping the total proxy CPU usage below 480%.
 
-.Dashboard displaying an ensemble of Node CPU usage data - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/node_dashboard.json[Node Dashboard]
+.Dashboard displaying an ensemble of Node CPU usage data - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/node_dashboard.json[Node Dashboard]
 image::images/node_cpu.png[]
 
 Node CPU should also remain below 80% of total capacity. As with the proxy, the node CPU is variable depending
@@ -314,7 +314,7 @@ connection pool or a connection pool that is not properly configured.
 |Review the application logs and network traffic to determine the cause of the erratic connection counts.
 |===
 
-.Dashboard displaying connections - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/database_dashboard.json[Database Dashboard]
+.Dashboard displaying connections - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/database_dashboard.json[Database Dashboard]
 image::images/playbook_database-used-connections.png[]
 
 ==== Network ingress / egress
@@ -347,7 +347,7 @@ Keeping multiple copies of the dataset consistent across multiple clusters is no
 
 The syncer keeps a replication backlog, which stores changes to the dataset that the syncer sends to other participating clusters. The syncer uses partial syncs to keep replicas up to date with changes, or a full sync in the event a replica or primary is lost.
 
-.Dashboard displaying connection metrics between zones - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/synchronization_dashboard.json[Synchronization]
+.Dashboard displaying connection metrics between zones - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/synchronization_dashboard.json[Synchronization]
 image::images/playbook_network-connectivity.png[]
 
 CRDT provides three fundamental benefits over other geo-distributed solutions:
@@ -373,7 +373,7 @@ An adequately provisioned Redis database running efficient Redis operations will
 latency in terms is microseconds. Customers regularly achieve, and sometime require, average latencies of 400-600
 microseconds.
 
-.Dashboard display of latency metrics - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/database_dashboard.json[Database Dashboard]
+.Dashboard display of latency metrics - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/database_dashboard.json[Database Dashboard]
 image::images/playbook_database-cluster-latency.png[]
 
 The metrics distinguish between read and write latency. Understanding whether high latency is due
@@ -422,7 +422,7 @@ For <<Caching workloads, caching workloads>>, the cache hit rate should generall
 the exact ideal cache hit rate can vary greatly depending on the application and depending on whether the cache
 is already populated.
 
-.Dashboard showing the cache hit ratio along with read/write misses - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/database_dashboard.json[Database Dashboard]
+.Dashboard showing the cache hit ratio along with read/write misses - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/database_dashboard.json[Database Dashboard]
 image::images/playbook_cache-hit.png[]
 
 Note: Redis Enterprise actually reports four different cache hit / miss metrics.
@@ -454,7 +454,7 @@ if the rate of necessary key evictions exceeds the rate of new key insertions.
 
 See <<Cache hit ratio and eviction>> for a discussion if key eviction and its relationship with memory usage.
 
-.Dashboard displaying object evictions - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/database_dashboard.json[Database Dashboard]
+.Dashboard displaying object evictions - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/database_dashboard.json[Database Dashboard]
 image::images/playbook_eviction-expiration.png[]
 
 == Proxy Performance
@@ -735,9 +735,9 @@ a holistic picture of your deployment.
 There are two additional sets of dashboards for Redis Enterprise software that provide drill-down functionality: the workflow dashboards.
 
 === Software
-- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/basic[Basic]
-- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/extended[Extended]
-- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/classic[Classic]
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/v_9-11/software/basic[Basic]
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/v_9-11/software/extended[Extended]
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/v_9-11/software/classic[Classic]
 
 === Workflow
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/workflow/databases[Database]

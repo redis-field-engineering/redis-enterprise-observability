@@ -27,6 +27,7 @@ Key database performance indicators include:
 * <<Latency>>
 * <<Cache hit rate>>
 * <<Key eviction rate>>
+* <<Proxy Performance>>
 
 .Dashboard showing an overview of cluster metrics
 image::images/cluster_overview.png[]
@@ -88,7 +89,7 @@ This may indicate a low cache hit ratio, ultimately caused by insufficient memor
 You need to monitor both application-level and Redis-level latency to diagnose
 caching performance issues in production.
 
-===== Cache hit ratio and eviction
+==== Cache hit ratio and eviction
 
 *Cache hit ratio* is the percentage of read requests that Redis serves successfully.
 *Eviction rate* is the rate at which Redis evicts keys from the cache. These metrics
@@ -338,6 +339,10 @@ In Redis Enterprise, geographically-distributed synchronization is based on CRDT
 The Redis Enterprise implementation of CRDT is called an Active-Active database (formerly known as CRDB).
 With Active-Active databases, applications can read and write to the same data set from different geographical locations seamlessly and with latency less than one millisecond (ms), without changing the way the application connects to the database.
 
+An Active-Active architecture is a data resiliency architecture that distributes the database information over multiple data centers via independent and geographically distributed clusters and nodes. It is a network of separate processing nodes, each having access to a common replicated database such that all nodes can participate in a common application ensuring local low latency with each region being able to run in isolation.
+
+Active-Active Architecture or an Active-Active Geo-Distributed topology is achieved by implementing CRDTs (conflict-free replicated data types) in Redis Enterprise using a global database that spans multiple clusters. This is called a “conflict-free replicated database” or “CRDB.”
+
 Keeping multiple copies of the dataset consistent across multiple clusters is no small task. To achieve consistency between participating clusters, Redis Active-Active synchronization uses a process called the syncer.
 
 The syncer keeps a replication backlog, which stores changes to the dataset that the syncer sends to other participating clusters. The syncer uses partial syncs to keep replicas up to date with changes, or a full sync in the event a replica or primary is lost.
@@ -345,8 +350,11 @@ The syncer keeps a replication backlog, which stores changes to the dataset that
 .Dashboard displaying connection metrics between zones - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/synchronization_dashboard.json[Synchronization]
 image::images/playbook_network-connectivity.png[]
 
+CRDT provides three fundamental benefits over other geo-distributed solutions:
 
-
+* It offers local latency on read and write operations, regardless of the number of geo-replicated regions and their distance from each other.
+* It enables seamless conflict resolution (“conflict-free”) for simple and complex data types like those of Redis core.
+* Even if most of the geo-replicated regions in a CRDT database (for example, 3 out of 5) are down, the remaining geo-replicated regions are uninterrupted and can continue to handle read and write operations, ensuring business continuity.
 
 == Database performance indicators
 
@@ -449,21 +457,7 @@ See <<Cache hit ratio and eviction>> for a discussion if key eviction and its re
 .Dashboard displaying object evictions - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/software/classic/database_dashboard.json[Database Dashboard]
 image::images/playbook_eviction-expiration.png[]
 
-== CRDB
-
-An Active-Active architecture is a data resiliency architecture that distributes the database information over multiple data centers via independent and geographically distributed clusters and nodes. It is a network of separate processing nodes, each having access to a common replicated database such that all nodes can participate in a common application ensuring local low latency with each region being able to run in isolation.
-
-Active-Active Architecture or an Active-Active Geo-Distributed topology is achieved by implementing CRDTs (conflict-free replicated data types) in Redis Enterprise using a global database that spans multiple clusters. This is called a “conflict-free replicated database” or “CRDB.”
-
-CRDB provides three fundamental benefits over other geo-distributed solutions:
-
-* It offers local latency on read and write operations, regardless of the number of geo-replicated regions and their distance from each other.
-* It enables seamless conflict resolution (“conflict-free”) for simple and complex data types like those of Redis core.
-* Even if most of the geo-replicated regions in a CRDB (for example, 3 out of 5) are down, the remaining geo-replicated regions are uninterrupted and can continue to handle read and write operations, ensuring business continuity.
-
-Monitoring replication in such scenarios  is important in order to detect problems before it can impact ...
-
-== DMS Proxy
+== Proxy Performance
 
 Redis Enterprise Software (RS) provides high-performance data access through a proxy process that manages and optimizes access to shards within the RS cluster. Each node contains a single proxy process. Each proxy can be active and take incoming traffic or it can be passive and wait for failovers.
 
@@ -476,6 +470,9 @@ Redis Enterprise Software (RS) provides high-performance data access through a p
 |All Nodes|There are multiple proxies that are bound to the database, one on each node in the cluster, regardless of whether or not there is a shard from this database on the node. This mode should be used only in special cases, such as using a load balancer.
 
 |===
+
+.Dashboard displaying proxy thread activity - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/cloud/basic/redis-cloud-proxy-dashboard_v9-11.json[Proxy Thread Dashboard]
+image::images/proxy-thread-dashboard.png[]
 
 
 

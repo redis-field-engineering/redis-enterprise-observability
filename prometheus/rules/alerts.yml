@@ -313,6 +313,16 @@ groups:
        summary: Hot Master Shard
        description: "Hot Shard - Cluster: {{ $labels.cluster }} Shard: {{$labels.redis}} Node: {{$labels.node}} CPU: {{$value}}%"
        runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#hot-master-shard
+   - alert: Proxy CPU Usage
+     expr: dmcproxy_process_cpu_usage_percent{cluster="$cluster"} / count(namedprocess_namegroup_thread_cpu_seconds_total{threadname=~"worker-.*", mode="system"}) > 0.80
+     for: 30s
+     labels:
+       severity: critical
+       type: proxy
+     annotations:
+       summary: Proxy CPU Usage
+       description: "Proxy worker thread CPU usage has exceeded 80% for more than 30 seconds"
+
 #  - alert: ShardConnectionCount
 #    expr: redis_connected_clients > 500
 #    for: 5m

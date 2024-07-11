@@ -31,8 +31,8 @@
     },
     {
       "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
+      "id": "graph",
+      "name": "Graph (old)",
       "version": ""
     }
   ],
@@ -473,7 +473,7 @@
         }
       ],
       "title": "Average database latency",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -598,7 +598,7 @@
         }
       ],
       "title": "Average database listener latency",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -735,7 +735,7 @@
         }
       ],
       "title": "Database used memory",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "collapsed": false,
@@ -868,7 +868,7 @@
         }
       ],
       "title": "Database Connections",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -1058,7 +1058,7 @@
         }
       ],
       "title": "Requests[total,read,write,other] for database",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -1225,7 +1225,7 @@
         }
       ],
       "title": "Database Ingress/Egress",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "collapsed": false,
@@ -1414,7 +1414,7 @@
         }
       ],
       "title": "CPU utilization for database",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -1517,7 +1517,7 @@
         }
       ],
       "title": "CPU usage by shards for database",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -1654,7 +1654,7 @@
         }
       ],
       "title": "Sizes of shards for database",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "collapsed": false,
@@ -1772,7 +1772,7 @@
         }
       ],
       "title": "# keys/shard",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -1873,7 +1873,7 @@
         }
       ],
       "title": "#Keys for database",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -1988,7 +1988,7 @@
         }
       ],
       "title": "Evicted objects for database",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -2088,7 +2088,7 @@
         }
       ],
       "title": "Expired objects for database",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "collapsed": false,
@@ -2203,7 +2203,7 @@
         }
       ],
       "title": "Shard AOF Rewrites / $aggregation",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -2327,7 +2327,7 @@
         }
       ],
       "title": "Forks",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -2479,7 +2479,7 @@
         }
       ],
       "title": "Read/Write Hits / Misses  + lazyfree + errors",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -2582,7 +2582,7 @@
         }
       ],
       "title": "Shard RSS fragmentation",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -2685,7 +2685,7 @@
         }
       ],
       "title": "Database Hit Ratio (hits / requests)",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -2803,7 +2803,7 @@
         }
       ],
       "title": "Syncer lag",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -2926,7 +2926,7 @@
         }
       ],
       "title": "Database total fragmentation",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -3027,7 +3027,7 @@
         }
       ],
       "title": "Shard allocator fragmentation % (defraggable)",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -3125,7 +3125,7 @@
         }
       ],
       "title": "Database sum redis active defrag running",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -3226,7 +3226,7 @@
         }
       ],
       "title": "Delayed fsync - (events / $aggregation)",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -3327,7 +3327,7 @@
         }
       ],
       "title": "Shard allocator fragmentation bytes (defraggable)",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -3432,7 +3432,7 @@
         }
       ],
       "title": "Number of Tombstones",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "collapsed": false,
@@ -3550,7 +3550,7 @@
         }
       ],
       "title": "bdb_crdt_syncer_status: [ in-sync: 0,   syncing: 1,   out-of-sync: 2 ]",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -3651,7 +3651,7 @@
         }
       ],
       "title": "redis_crdt_peer_peer_state != 1.  [ initialized: 0, online: 1, wait_fullsync: 2, fullsync: 3, fullsync_ack: 4, closed: 5 ]",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -3766,7 +3766,7 @@
         }
       ],
       "title": "redis_crdt_stale_replica , redis_crdt_oom_latch",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -3911,7 +3911,7 @@
         }
       ],
       "title": "CRDT GC",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "collapsed": false,
@@ -4045,7 +4045,7 @@
         }
       ],
       "title": "replica min/max ops lag",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -4160,7 +4160,7 @@
         }
       ],
       "title": "GC ops lag",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -4262,7 +4262,7 @@
         }
       ],
       "title": "crdt_syncer_local_ingress_lag_time",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -4366,7 +4366,7 @@
         }
       ],
       "title": "bdb_crdt_syncer_ingress_bytes",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "collapsed": false,
@@ -4517,7 +4517,7 @@
         }
       ],
       "title": "BDB (ROF) used RAM for",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -4722,7 +4722,7 @@
         }
       ],
       "title": "DB ram hit ratio",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -4882,7 +4882,7 @@
         }
       ],
       "title": "BDB RAM:Flash access ratio",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -4998,7 +4998,7 @@
         }
       ],
       "title": "RAM:Flash access ratio",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -5113,7 +5113,7 @@
         }
       ],
       "title": "Flash IO Banwidth",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -5240,7 +5240,7 @@
         }
       ],
       "title": "Flash IOPS",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -5337,7 +5337,7 @@
         }
       ],
       "title": "BDB sum redis wait busy key / $aggregation",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -5434,7 +5434,7 @@
         }
       ],
       "title": "BDB sum redis blocking reads / $aggregation",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "datasource": {
@@ -5575,7 +5575,7 @@
         }
       ],
       "title": "BDB used flash",
-      "type": "timeseries"
+      "type": "graph"
     },
     {
       "aliasColors": {},
@@ -5644,7 +5644,7 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "type": "timeseries",
+      "type": "graph",
       "xaxis": {
         "mode": "time",
         "show": true,
@@ -5735,7 +5735,7 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "type": "timeseries",
+      "type": "graph",
       "xaxis": {
         "mode": "time",
         "show": true,
@@ -5863,7 +5863,7 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "type": "timeseries",
+      "type": "graph",
       "xaxis": {
         "mode": "time",
         "show": true,
@@ -5957,7 +5957,7 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "type": "timeseries",
+      "type": "graph",
       "xaxis": {
         "mode": "time",
         "show": true,
@@ -6046,7 +6046,7 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "type": "timeseries",
+      "type": "graph",
       "xaxis": {
         "mode": "time",
         "show": true,
@@ -6135,7 +6135,7 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "type": "timeseries",
+      "type": "graph",
       "xaxis": {
         "mode": "time",
         "show": true,
@@ -6238,7 +6238,7 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "type": "timeseries",
+      "type": "graph",
       "xaxis": {
         "mode": "time",
         "show": true,
@@ -6423,7 +6423,7 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "type": "timeseries",
+      "type": "graph",
       "xaxis": {
         "mode": "time",
         "show": true,
@@ -6608,7 +6608,7 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "type": "timeseries",
+      "type": "graph",
       "xaxis": {
         "mode": "time",
         "show": true,
@@ -6698,7 +6698,7 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "type": "timeseries",
+      "type": "graph",
       "xaxis": {
         "mode": "time",
         "show": true,
@@ -6788,7 +6788,7 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "type": "timeseries",
+      "type": "graph",
       "xaxis": {
         "mode": "time",
         "show": true,
@@ -6928,7 +6928,7 @@
         "sort": 0,
         "value_type": "individual"
       },
-      "type": "timeseries",
+      "type": "graph",
       "xaxis": {
         "mode": "time",
         "show": true,

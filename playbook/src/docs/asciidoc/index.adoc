@@ -474,7 +474,33 @@ Redis Enterprise Software (RS) provides high-performance data access through a p
 .Dashboard displaying proxy thread activity - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/cloud/basic/redis-cloud-proxy-dashboard_v9-11.json[Proxy Thread Dashboard]
 image::images/proxy-thread-dashboard.png[]
 
+When needed, we can tune the number of proxy threads using the "rladmin tune proxy" command in order to be able to make the proxy use more CPU cores.
+Nevertheless, cores used by the proxy won't be available for Redis, therefore we need to take into account the number of Redis nodes on the host and the total number of available cores.
 
+How to set a new number of proxy cores using the command:
+
+* <id|all> - you can either tune a specific proxy by its id, or all proxies.
+
+* <mode> - determines whether or not the proxy can automatically adjust the number of threads depending on load.
+
+* <threads> and <max_threads> - determine the initial number of threads created on startup, and the maximum number of threads allowed.
+
+* <scale_threshold> - determines the CPU utilization threshold that triggers spawning new threads. This CPU utilization level needs to be maintained for at least scale_duration seconds before automatic scaling is performed.
+
+The following table indicates ideal proxy thread counts for the specified environments.
+
+|===
+|*Total Cores*|*Redis (ROR)*|*Redis on Flash (ROF)*
+|1|1|1
+|4|3|3
+|8|5|3
+|12|8|4
+|16|10|5
+|32|24|10
+|64/96|32|20
+|128|32|32
+
+|===
 
 == Data access anti-patterns
 

@@ -7,6 +7,7 @@ author:
 dashboards:
 - path: "dashboards/metrics.json"
 - path: "dashboards/overview.json"
+- path: "dashboards/active-active.json"
 
 metrics:
 # memory and connections at the top for dashboard generation

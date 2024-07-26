@@ -342,7 +342,6 @@ With Active-Active databases, applications can read and write to the same data s
 An Active-Active architecture is a data resiliency architecture that distributes the database information over multiple data centers via independent and geographically distributed clusters and nodes.
 It is a network of separate processing nodes, each having access to a common replicated database such that all nodes can participate in a common application ensuring local low latency with each region being able to run in isolation.
 
-Keeping multiple copies of the dataset consistent across multiple clusters is no small task.
 To achieve consistency between participating clusters, Redis Active-Active synchronization uses a process called the syncer.
 
 The syncer keeps a replication backlog, which stores changes to the dataset that the syncer sends to other participating clusters.

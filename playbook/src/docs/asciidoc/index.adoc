@@ -20,12 +20,14 @@ Core cluster resources include:
 * <<CPU, CPU utilization>>
 * <<Connections, Database connections>>
 * <<Network ingress / egress, Network traffic>>
+* <<Synchronization, Synchronization>>
 
 Key database performance indicators include:
 
 * <<Latency>>
 * <<Cache hit rate>>
 * <<Key eviction rate>>
+* <<Proxy Performance>>
 
 .Dashboard showing an overview of cluster metrics
 image::images/cluster_overview.png[]
@@ -46,6 +48,7 @@ in a multi-database cluster.
 | Memory usage percentage | Percentage of used memory relative to the configured memory limit for a given database | Percentage
 |===
 
+.Dashboard displaying high-level cluster metrics - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/cluster_dashboard.json[Cluster Dashboard]
 image::images/playbook_used-memory.png[]
 
 ==== Thresholds
@@ -60,6 +63,8 @@ The appropriate memory threshold depends on how the application is using Redis.
 For applications using Redis solely as a cache, you can safely let the memory usage
 reach 100% as long as you have an https://redis.io/blog/cache-eviction-strategies/[eviction policy] in place. This will ensure
 that Redis can evict keys while continuing to accept new writes.
+
+*NB* Eviction will increase write command latency as Redis has to cleanup the memory/objects before accepting a new write to prevent OOM when memory usage is at 100%
 
 While your Redis database is using 100% of available memory in a caching context,
 it's still important to monitor performance. The key performance indicators include:
@@ -84,7 +89,7 @@ This may indicate a low cache hit ratio, ultimately caused by insufficient memor
 You need to monitor both application-level and Redis-level latency to diagnose
 caching performance issues in production.
 
-===== Cache hit ratio and eviction
+==== Cache hit ratio and eviction
 
 *Cache hit ratio* is the percentage of read requests that Redis serves successfully.
 *Eviction rate* is the rate at which Redis evicts keys from the cache. These metrics
@@ -113,6 +118,31 @@ https://redis.io/docs/latest/operate/rs/references/metrics/database-operations/#
 An acceptable rate of key evictions depends on the total number of keys in the database
 and the measure of application-level latency. If application latency is high,
 check to see that key evictions have not increased.
+
+==== Eviction Policies
+|===
+|*Name*|*Description*
+|noeviction|New values aren’t saved when memory limit is reached. When a database uses replication, this applies to the primary database
+|allkeys-lru|Keeps most recently used keys; removes least recently used (LRU) keys
+|allkeys-lfu|Keeps frequently used keys; removes least frequently used (LFU) keys
+|volatile-lru|Removes least recently used keys with the expire field set to true.
+|volatile-lfu|Removes least frequently used keys with the expire field set to true.
+|allkeys-random|Randomly removes keys to make space for the new data added.
+|volatile-random|Randomly removes keys with expire field set to true.
+|volatile-ttl|Removes keys with expire field set to true and the shortest remaining time-to-live (TTL) value.
+|===
+
+==== Eviction policy guidelines
+
+* Use the allkeys-lru policy when you expect a power-law distribution in the popularity of your requests. That is, you expect a subset of elements will be accessed far more often than the rest. This is a good pick if you are unsure.
+
+* Use the allkeys-random if you have a cyclic access where all the keys are scanned continuously, or when you expect the distribution to be uniform.
+
+* Use the volatile-ttl if you want to be able to provide hints to Redis about what are good candidate for expiration by using different TTL values when you create your cache objects.
+
+The volatile-lru and volatile-random policies are mainly useful when you want to use a single instance for both caching and to have a set of persistent keys. However it is usually a better idea to run two Redis instances to solve such a problem.
+
+*NB* Setting an expire value to a key costs memory, so using a policy like allkeys-lru is more memory efficient since there is no need for an expire configuration for the key to be evicted under memory pressure.
 
 ==== Non-caching workloads
 
@@ -179,7 +209,7 @@ A database is a set of processes, known as shards, deployed across the nodes of 
 In the dashboard, shard CPU is the CPU utilization of the processes that make up the database.
 When diagnosing performance issues, start by looking at shard CPU.
 
-.Dashboard displaying CPU usage
+.Dashboard displaying CPU usage - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/database_dashboard.json[Database Dashboard]
 image::images/playbook_database-cpu-shard.png[]
 
 ==== Thresholds
@@ -188,7 +218,7 @@ In general, we define high CPU as any CPU utilization above 80% of total capacit
 
 Shard CPU should remain below 80%. Shards are single-threaded, so a shard CPU of 100% means that the shard is fully utilized.
 
-.Display showing DMC Proxy CPU usage
+.Display showing Proxy CPU usage - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/proxy_dashboard.json[Proxy Dashboard]
 image::images/playbook_proxy-cpu-usage.png[]
 
 Proxy CPU should remain below 80% of total capacity.
@@ -197,7 +227,7 @@ Because the total number of proxy threads is configurable, the proxy CPU may exc
 A proxy configured with 6 threads can reach 600% CPU utilization, so in this case,
 keeping utilization below 80% means keeping the total proxy CPU usage below 480%.
 
-.Dashboard displaying an ensemble of Node CPU usage data
+.Dashboard displaying an ensemble of Node CPU usage data - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/node_dashboard.json[Node Dashboard]
 image::images/node_cpu.png[]
 
 Node CPU should also remain below 80% of total capacity. As with the proxy, the node CPU is variable depending
@@ -284,21 +314,47 @@ connection pool or a connection pool that is not properly configured.
 |Review the application logs and network traffic to determine the cause of the erratic connection counts.
 |===
 
-.Dashboard displaying connections
-image::images/playbook_bdb-used-connections.png[]
+.Dashboard displaying connections - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/database_dashboard.json[Database Dashboard]
+image::images/playbook_database-used-connections.png[]
 
 ==== Network ingress / egress
 
 The network ingress / egress panel show the amount of data being sent to and received from the database.
-Large spikes in network traffic can indicate that the cluster in underprovisioned or that
+Large spikes in network traffic can indicate that the cluster is under-provisioned or that
 the application is reading and/or writing unusually large keys. A correlation between high network traffic
 and high CPU utilization may indicate a large key scenario.
+
+===== Unbalanced database endpoint
+
+One possible cause is that the database endpoint is not located on the same node as master shards. In addition to added network latency, if data plane internode encryption is enabled, CPU consumption can increase as well.
+
+One solution is to used the optimal shard placement and proxy policy to ensure endpoints are collocated on nodes hosting master shards. If you need to restore balance (e.g. after node failure) you can manually failover shard(s) with the rladmin cli tool.
 
 Extreme network traffic utilization may approach the limits of the underlying network infrastructure.
 In this case, the only remediation is to add additional nodes to the cluster and scale the database's shards across them.
 
-.Dashboard displaying connection metrics between zones
+=== Synchronization
+
+In Redis Enterprise, geographically-distributed synchronization is based on CRDT technology.
+The Redis Enterprise implementation of CRDT is called an Active-Active database (formerly known as CRDB).
+With Active-Active databases, applications can read and write to the same data set from different geographical locations seamlessly and with low latency, without changing the way the application connects to the database.
+
+An Active-Active architecture is a data resiliency architecture that distributes the database information over multiple data centers via independent and geographically distributed clusters and nodes.
+It is a network of separate processing nodes, each having access to a common replicated database such that all nodes can participate in a common application ensuring local low latency with each region being able to run in isolation.
+
+To achieve consistency between participating clusters, Redis Active-Active synchronization uses a process called the syncer.
+
+The syncer keeps a replication backlog, which stores changes to the dataset that the syncer sends to other participating clusters.
+The syncer uses partial syncs to keep replicas up to date with changes, or a full sync in the event a replica or primary is lost.
+
+.Dashboard displaying connection metrics between zones - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/synchronization_dashboard.json[Synchronization]
 image::images/playbook_network-connectivity.png[]
+
+CRDT provides three fundamental benefits over other geo-distributed solutions:
+
+* It offers local latency on read and write operations, regardless of the number of geo-replicated regions and their distance from each other.
+* It enables seamless conflict resolution (“conflict-free”) for simple and complex data types like those of Redis core.
+* Even if most of the geo-replicated regions in a CRDT database (for example, 3 out of 5) are down, the remaining geo-replicated regions are uninterrupted and can continue to handle read and write operations, ensuring business continuity.
 
 == Database performance indicators
 
@@ -310,13 +366,15 @@ There several key performance indicators that report your database's performance
 
 === Latency
 
-Latency is *the time it takes for Redis to respond to a request*. An adequately provisioned Redis database running
-efficient Redis operations will report an average latency below 1 millisecond. In fact, it's common to measure
+Latency is *the time it takes for Redis to respond to a request*.
+Redis Enterprise measures latency from the first byte received by the proxy to the last byte sent in the command's response.
+
+An adequately provisioned Redis database running efficient Redis operations will report an average latency below 1 millisecond. In fact, it's common to measure
 latency in terms is microseconds. Customers regularly achieve, and sometime require, average latencies of 400-600
 microseconds.
 
-.Dashboard display of latency metrics
-image::images/playbook_bdb-cluster-latency.png[]
+.Dashboard display of latency metrics - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/database_dashboard.json[Database Dashboard]
+image::images/playbook_database-cluster-latency.png[]
 
 The metrics distinguish between read and write latency. Understanding whether high latency is due
 to read or writes can help you to isolate the underlying issue.
@@ -364,7 +422,7 @@ For <<Caching workloads, caching workloads>>, the cache hit rate should generall
 the exact ideal cache hit rate can vary greatly depending on the application and depending on whether the cache
 is already populated.
 
-.Dashboard showing the cache hit ratio along with read/write misses
+.Dashboard showing the cache hit ratio along with read/write misses - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/database_dashboard.json[Database Dashboard]
 image::images/playbook_cache-hit.png[]
 
 Note: Redis Enterprise actually reports four different cache hit / miss metrics.
@@ -396,8 +454,53 @@ if the rate of necessary key evictions exceeds the rate of new key insertions.
 
 See <<Cache hit ratio and eviction>> for a discussion if key eviction and its relationship with memory usage.
 
-.Dashboard displaying object evictions
+.Dashboard displaying object evictions - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/v_9-11/software/classic/database_dashboard.json[Database Dashboard]
 image::images/playbook_eviction-expiration.png[]
+
+== Proxy Performance
+
+Redis Enterprise Software (RS) provides high-performance data access through a proxy process that manages and optimizes access to shards within the RS cluster. Each node contains a single proxy process. Each proxy can be active and take incoming traffic or it can be passive and wait for failovers.
+
+==== Proxy Policies
+
+|===
+|*Policy*|*Description*
+|Single|There is only a single proxy that is bound to the database. This is the default database configuration and preferable in most use cases.
+|All Master Shards|There are multiple proxies that are bound to the database, one on each node that hosts a database master shard. This mode fits most use cases that require multiple proxies.
+|All Nodes|There are multiple proxies that are bound to the database, one on each node in the cluster, regardless of whether or not there is a shard from this database on the node. This mode should be used only in special cases, such as using a load balancer.
+
+|===
+
+.Dashboard displaying proxy thread activity - https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana/dashboards/cloud/basic/redis-cloud-proxy-dashboard_v9-11.json[Proxy Thread Dashboard]
+image::images/proxy-thread-dashboard.png[]
+
+When needed, we can tune the number of proxy threads using the "rladmin tune proxy" command in order to be able to make the proxy use more CPU cores.
+Nevertheless, cores used by the proxy won't be available for Redis, therefore we need to take into account the number of Redis nodes on the host and the total number of available cores.
+
+How to set a new number of proxy cores using the command:
+
+* <id|all> - you can either tune a specific proxy by its id, or all proxies.
+
+* <mode> - determines whether or not the proxy can automatically adjust the number of threads depending on load.
+
+* <threads> and <max_threads> - determine the initial number of threads created on startup, and the maximum number of threads allowed.
+
+* <scale_threshold> - determines the CPU utilization threshold that triggers spawning new threads. This CPU utilization level needs to be maintained for at least scale_duration seconds before automatic scaling is performed.
+
+The following table indicates ideal proxy thread counts for the specified environments.
+
+|===
+|*Total Cores*|*Redis (ROR)*|*Redis on Flash (ROF)*
+|1|1|1
+|4|3|3
+|8|5|3
+|12|8|4
+|16|10|5
+|32|24|10
+|64/96|32|20
+|128|32|32
+
+|===
 
 == Data access anti-patterns
 
@@ -658,14 +761,16 @@ a holistic picture of your deployment.
 There are two additional sets of dashboards for Redis Enterprise software that provide drill-down functionality: the workflow dashboards.
 
 === Software
-- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/basic[Basic]
-- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/extended[Extended]
-- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/software/classic[Classic]
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/v_9-11/software/basic[Basic]
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/v_9-11/software/extended[Extended]
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/v_9-11/software/classic[Classic]
 
-==== Workflow
+=== Workflow
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/workflow/databases[Database]
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/workflow/nodes[Node]
 
 === Cloud
 - https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/cloud/basic[Basic]
-- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/cloud/extended[Exteneded]
+- https://github.com/redis-field-engineering/redis-enterprise-observability/tree/playbook/grafana/dashboards/cloud/extended[Extended]
+
+*NB* - The 'workflow' dashboards are intended to be used as a package. Therefore they should all be installed, as they contain links to the other dashboards in the group permitting rapid navigation between the overview and the drill-down views.

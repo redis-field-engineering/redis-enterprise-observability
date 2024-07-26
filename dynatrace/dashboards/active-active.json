@@ -7,7 +7,7 @@
   },
   "id": "ee67e4ea-6081-423d-b199-966e27c34d37",
   "dashboardMetadata": {
-    "name": "Experimental Redis Enterprise Cloud Dashboard",
+    "name": "Redis Active-Active Dashboard",
     "shared": false,
     "owner": "john.burke@redis.com",
     "dynamicFilters": {

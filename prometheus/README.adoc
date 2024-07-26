@@ -1,0 +1,33 @@
+== Configuring Prometheus
+
+To configure Prometheus for alerting, open the `prometheus.yml` configuration file.
+
+Uncomment the `Alertmanager` section of the file.
+The following configuration starts Alertmanager and instructs it to listen on its default port of 9093.
+
+[subs="+quotes"]
+----
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+----
+
+The Rule file section of the config file instructs Alertmanager to read specific rules files.
+If you pasted the 'alerts.yml' file into '/etc/prometheus' then the following configuration would be required.
+
+[subs="+quotes"]
+----
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - "error_rules.yml"
+  - "alerts.yml"
+----
+
+Once this is done, restart Prometheus.
+
+The built-in configuration, `error_rules.yml`, has a single alert: Critical Connection Exception.
+If you open the Prometheus console, by default located at port 9090, and select the Alert tab,
+you will see this alert, as well as the alerts in any other file you have included as a rules file.

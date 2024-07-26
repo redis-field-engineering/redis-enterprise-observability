@@ -37,62 +37,59 @@ First, https://docs.datadoghq.com/agent/[install the Datadog agent] in your envi
 
 Optionally, ensure that you can issue HTTP requests against your Redis Enterprise/Cloud Prometheus endpoint. You can test this using `curl`:
 
-`curl https://internal.c28486.us-central1-mz.gcp.cloud.rlrcp.com:8070`
+`curl -k https://internal.c28486.us-central1-mz.gcp.cloud.rlrcp.com:8070`
 
-Next, configure the Datadog agent's Prometheus extension to read from this endpont. You can find a sample Datadog Prometheus configuration file in this repository at link:/datadog/src/conf.yml[src/conf.yml].
+First, install the Datadog integration onto the machine or container. NB: depending on version the binary might be called 'datadog-agent' and not simply 'agent'.
+
+`agent integration install -r -t datadog-redis_enterprise==1.0.0`
+
+Next, configure the Datadog agent's Redis Software extension to read from this endpoint. You can find a sample Datadog Redis Software configuration file in this repository at link:/datadog/src/conf.yml[src/conf.yaml.example].
+
+All Datadog integrations have their configurations stored underneath this directory: `/etc/datadog-agent/conf.d`.
+
+We recommend that you delete the 'redisdb' folder found in this folder, and then copy the example file found in 'redis_enterprise.d' to 'conf.yaml' and edit this file.
 
 Under `instances`, describe one Prometheus endpoint for each Redis Enterprise cluster and/or Redis Cloud subscription that you want to monitor. For example, the configuration for monitoring two separate Redis Cloud subscriptions might look like this:
 
 [source, yaml]
 ----
 instances:
-  - prometheus_url: https://internal.c123.us-central1-mz.gcp.cloud.rlrcp.com:8070
-    namespace: redise
-    metrics:
-      - "*"
-  - prometheus_url: https://internal.c456.us-central1-mz.gcp.cloud.rlrcp.com:8070
-    namespace: redise
-    metrics:
-      - "*"
+    ## @param openmetrics_endpoint - string - required
+    ## Insert Description here for rdse OpenMetrics endpoint or link to docs
+    #
+  - openmetrics_endpoint: https://internal.c123.us-central1-mz.gcp.cloud.rlrcp.com:8070
+
+    ## @param tls_verify - boolean - optional - default: false
+    ## Instructs the check to validate the TLS certificate of services.
+    #
+    tls_verify: false
+
+    ## @param openmetrics_endpoint - string - required
+    ## Insert Description here for rdse OpenMetrics endpoint or link to docs
+    #
+  - openmetrics_endpoint: https://internal.c456.us-central1-mz.gcp.cloud.rlrcp.com:8070
+
+    ## @param tls_verify - boolean - optional - default: false
+    ## Instructs the check to validate the TLS certificate of services.
+    #
+    tls_verify: false
+
 ----
 
-The configuration also includes metrics type overrides to ensure that Datadog interpets the metrics correcty. You can see these type overrides in the link:/datadog/src/conf.yml[sample Datadog Prometheus configuration file].
+When you've finished editing the configuration file restart the agent.
 
-Now, ensure that the namespace is set to `redise` for all instances (the provided dashboards assume this prefix).
+If the Datadog agent is running and able to collect metrics, you'll see these metrics in the Datadog console within a few minutes. These metrics will be prefixed with `rdse`, or, in the event you have chosen the Redis Cloud integration, with `rdsc`.
 
-To add certificate verification, see <<verifying-the-certificate-chain, Verifying the Certificate Chain>>.
-
-Once your configuration file is ready, copy or mount it at `/etc/datadog-agent/conf.d/prometheus.d/conf.yml`. Then restart the agent.
-
-If the Datadog agent is running and able to collect metrics, you'll see these metrics in the Datadog console within a few minutes. These metrics will be prefixed with `redise`.
-
-Finally, import the cluster and database dashboards:
-
-* link:/datadog/dashboards/redis-enterprise-cluster-dashboard.json[Cluster dashboard JSON]
-* link:/datadog/dashboards/redis-enterprise-database-dashboard.json[Database dashboard JSON]
-
-If you are deploying an https://docs.redis.com/latest/rs/databases/active-active/[Active-Active cluster], you should also import the link:/datadog/dashboards/redis-enterprise-active-active-dashboard.json[Active-Active dashboard JSON].
+The integration installs three dashboards; an overview dashboard, a node dashboard, and a database dashboard
 
 Use the dropdowns at the top of each dashboard for filter by cluster and database.
 
-=== Verifying the certificate chain
-
-The Datadog agent connects to the Redis Cloud Prometheus endpoint over HTTPS. For additional security, you can *optionally* tell the Datadog agent to verify the certificate chain.
-
-In `conf.yml`, set `ssl_ca_cert` to the path of the file containing the certificate chain for your deployment.
-
-If you're running self-deployed Redis Enterprise, consult with your deployment team to obtain the required `.pem` file.
-
-For Redis Cloud subscriptions, you can download the certificate chain from the Redis Cloud console security settings page. Then ensure that Datadog agent can access this file. Specify the path to this file in `conf.yml`, like this:
-
-[source,yaml]
-----
-ssl_ca_cert: "/etc/ca-certificates/redis_ca.pem"
-----
-
 == Troubleshooting
 
-Review the Datadog UI for troubleshooting the Datadog agent. You can also consult the Datadog agent logs at `/var/log/datadog`.
+Review the Datadog UI for troubleshooting the Datadog agent. Locate the 'Infrastructure' heading in the menu and click on 'Host Map'.
+The host map will display all hosts; select the one onto which you installed the integration, there should be an 'rdse' section, or 'rdsc' if this is a cloud installation.
+
+You can also consult the Datadog agent logs at `/var/log/datadog`.
 
 == Support
 

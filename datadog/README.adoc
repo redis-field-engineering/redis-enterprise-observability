@@ -1,6 +1,6 @@
 = Redis Datadog Prometheus
 
-You can monitor your Redis Enteprise and Redis Cloud deployments using Datadog. This repository contains configuration and dashboards to get you up and running quickly.
+You can monitor your Redis Enteprise and Redis Cloud deployments using the https://docs.datadoghq.com/integrations/redis_enterprise/[Redis Enterprise Datadog Integration].
 
 == Table of Contents
 
@@ -17,6 +17,7 @@ To monitor your Redis Enterprise/Cloud deployments with Datadog, you will need:
 * A https://www.datadoghq.com/[Datadog account]
 * A Redis Cloud account with a https://docs.redis.com/latest/rc/subscriptions/create-flexible-subscription/[Flexible/Annual subscription] *or* a self-managed Redis Enterprise software deployment.
 * A https://docs.datadoghq.com/agent/[Datadog agent] running in an environment that can connect to your Redis cluster's Prometheus endpoint. For Redis Cloud deployments, this means that the environment running your Datadog agent must be https://docs.redis.com/latest/rc/security/vpc-peering/[VPC-peered with your Redis Cloud subscription].
+* The https://docs.datadoghq.com/integrations/redis_enterprise/[Redis Enterprise Datadog Integration]
 
 Additionally, you will need the following configuration details:
 

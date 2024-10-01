@@ -2514,8 +2514,8 @@ prometheus:
     featureSet: Cluster Metrics
     interval: 1m
     metrics:
-    - key: redis.redis_used_memory
-      value: metric:redis_used_memory
+    - key: redis.cluster_shards_limit
+      value: metric:cluster_shards_limit
       type: gauge
   - group: redis_database
     featureSet: Database Metrics

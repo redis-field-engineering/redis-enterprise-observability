@@ -3197,8 +3197,8 @@ prometheus:
     featureSet: Shard Metrics
     interval: 1m
     metrics:
-    - key: redis.cluster_shards_limit
-      value: metric:cluster_shards_limit
+    - key: redis.redis_used_memory
+      value: metric:redis_used_memory
       type: gauge
     - key: redis.redis_total_connections_received
       value: metric:redis_total_connections_received

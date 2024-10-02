@@ -1,5 +1,5 @@
 name: custom:com.redis.enterprise.experimental
-version: 1.0.1
+version: 1.1.1
 minDynatraceVersion: "1.245"
 author:
   name: Redis
@@ -2500,7 +2500,23 @@ metrics:
     - "Redis"
     - "EF2"
     - "redis-shard"
+- key: redis.cluster_shards_limit
+  metadata:
+    displayName: Cluster Shards Limit
+    description: Memory used by shard (in bigredis this includes flash) (bytes)
+    unit: Byte
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
 prometheus:
+  - group: redis_cluster
+    featureSet: Cluster Metrics
+    interval: 1m
+    metrics:
+    - key: redis.cluster_shards_limit
+      value: metric:cluster_shards_limit
+      type: gauge
   - group: redis_database
     featureSet: Database Metrics
     interval: 1m

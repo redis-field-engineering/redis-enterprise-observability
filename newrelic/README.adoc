@@ -61,7 +61,7 @@ Finally, find the "scrape_config" configuration directive where "job_name" is "r
 
 === Run a Prometheus Server using Docker
 
-If you don"t already have a Prometheus server, you can run Prometheus using a Docker container. This container will forward Prometheus metrics from Redis Enterprise to New Relic.
+If you don't already have a Prometheus server, you can run Prometheus using a Docker container. This container will forward Prometheus metrics from Redis Enterprise to New Relic.
 
 For Redis Enterprise Cloud deployments, ensure that the VM running your Prometheus container is https://docs.redis.com/latest/rc/security/vpc-peering/:[VPC-peered with your Redis cluster"s VPC].
 
@@ -72,7 +72,7 @@ Build and tag the image:
 [source,bash]
 docker build -t new-relic-redis-cloud-prometheus .
 
-Then run the image you just created: 
+Then run the image you just created:
 
 [source,bash]
 docker run \
@@ -87,15 +87,16 @@ docker run \
 
 Now you can test that metrics are flowing correctly to New Relic.
 
-Once the container has been running for five minutes, open the New Relic UI and click "Query Your Data" in the left-hand menu. In the "Metric" search bar, enter "bdb_up", which should then appear in the results. You can then click to launch a https://docs.newrelic.com/docs/query-your-data/nrql-new-relic-query-language/get-started/introduction-nrql-new-relics-query-language/[NRQL query], and this will return a value corresponding to the number of databases.
+Once the container has been running for five minutes, open the New Relic UI and click "Query Your Data" in the left-hand
+menu. In the "Metric" search bar, enter "bdb_up", which should then appear in the results. You can then click to launch a https://docs.newrelic.com/docs/query-your-data/nrql-new-relic-query-language/get-started/introduction-nrql-new-relics-query-language/[NRQL query], and this will return a value corresponding to the number of databases.
 
 == Dashboards
 
-This project includes link:/dashboards[sample New Relic dashboards] that you can install to get you up and running quickly. See the link:/dashboards[dashboards] folder.
+This project includes sample New Relic dashboards that you can install to get you up and running quickly. See the link:https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/newrelic/dashboards[dashboards] folder.
 
 To install the dashboards in the New Relic console, click on the ""Dashboards"" link in the left menu, and then click "Import Dashboard" in the top right. Then paste the contents of the JSON file.
 
-Once you"ve installed the dashboards, open the Cluster Dashboard and select a cluster using the "cluster" dropdown menu. If data is flowing correctly, you will see a set of charts with active data. If you cannot see any data, ensure that the time range for the dashboards is set to the last 10 minutes (you can find this settings at the upper right-hand corner of the UI).
+Once you've installed the dashboards, open the Cluster Dashboard and select a cluster using the "cluster" dropdown menu. If data is flowing correctly, you will see a set of charts with active data. If you cannot see any data, ensure that the time range for the dashboards is set to the last 10 minutes (you can find this setting at the upper right-hand corner of the UI).
 
 == Support
 

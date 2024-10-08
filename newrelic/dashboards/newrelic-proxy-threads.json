@@ -8,10 +8,55 @@
       "description": null,
       "widgets": [
         {
-          "title": "Worker Threads",
+          "title": "",
           "layout": {
             "column": 1,
             "row": 1,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "# Proxy Threads Dashboard\n\n### The various panels can be filtered by cluster by entering that term in the filter text area. \n\n#### - Click in the text area and wait until it loads the metadata\n#### - Scroll down and select the cluster with which you wish to filter\n#### - Next select a node or dashboard(bdb) to increase granularity\n\n\n### See the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions#proxy-metrics) for details of the available metrics. "
+          }
+        },
+        {
+          "title": "Databases",
+          "layout": {
+            "column": 7,
+            "row": 1,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.table"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(cluster), latest(bdb_name) as 'Database', if (latest(redis_up) = 1, 'Up', 'Down') as 'Status' FROM Metric"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Worker Threads",
+          "layout": {
+            "column": 1,
+            "row": 4,
             "width": 6,
             "height": 3
           },
@@ -31,7 +76,71 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET node WHERE cluster = {{cluster}} AND mode = 'system' AND threadname LIKE 'worker-%' SINCE 30 MINUTES AGO TIMESERIES"
+                "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET node WHERE mode = 'system' AND threadname LIKE 'worker-%' SINCE 30 MINUTES AGO TIMESERIES"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Resident Memory",
+          "layout": {
+            "column": 7,
+            "row": 4,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "redis_process_resident_memory_bytes",
+                "type": "humanized"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(redis_process_resident_memory_bytes) FROM Metric WHERE role='master' SINCE 30 MINUTES AGO"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Max FDs",
+          "layout": {
+            "column": 9,
+            "row": 4,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(redis_process_max_fds) FROM Metric SINCE 30 MINUTES AGO"
               }
             ],
             "platformOptions": {
@@ -42,8 +151,8 @@
         {
           "title": "Open FDs",
           "layout": {
-            "column": 7,
-            "row": 1,
+            "column": 11,
+            "row": 4,
             "width": 2,
             "height": 3
           },
@@ -69,112 +178,10 @@
           }
         },
         {
-          "title": "Max FDs",
-          "layout": {
-            "column": 9,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(redis_process_max_fds) FROM Metric WHERE cluster = {{cluster}} SINCE 30 MINUTES AGO"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            }
-          }
-        },
-        {
-          "title": "Resident Memory",
-          "layout": {
-            "column": 11,
-            "row": 1,
-            "width": 2,
-            "height": 3
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
-          "rawConfiguration": {
-            "dataFormatters": [
-              {
-                "name": "redis_process_resident_memory_bytes",
-                "type": "humanized"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(redis_process_resident_memory_bytes) FROM Metric WHERE cluster = {{cluster}} AND role='master' SINCE 30 MINUTES AGO"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            }
-          }
-        },
-        {
-          "title": "Listener Threads",
-          "layout": {
-            "column": 1,
-            "row": 4,
-            "width": 6,
-            "height": 3
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.stacked-bar"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET node WHERE cluster = {{cluster}} AND mode = 'system' and threadname LIKE 'listener%'  SINCE 30 MINUTES AGO TIMESERIES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET bdb_name WHERE cluster = {{cluster}} AND mode = 'user' and threadname LIKE 'listener.%' SINCE 30 MINUTES AGO TIMESERIES"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            }
-          }
-        },
-        {
           "title": "Core Threads",
           "layout": {
-            "column": 7,
-            "row": 4,
+            "column": 1,
+            "row": 7,
             "width": 6,
             "height": 3
           },
@@ -194,7 +201,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET node WHERE cluster = {{cluster}} AND mode ='system' AND threadname NOT LIKE 'listener%' AND threadname NOT LIKE 'worker-%' AND threadname NOT LIKE '%cli%'  SINCE 30 MINUTES AGO TIMESERIES"
+                "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET node WHERE mode ='system' AND threadname NOT LIKE 'listener%' AND threadname NOT LIKE 'worker-%' AND threadname NOT LIKE '%cli%'  SINCE 30 MINUTES AGO TIMESERIES"
               },
               {
                 "accountIds": [
@@ -207,89 +214,47 @@
               "ignoreTimeRange": false
             }
           }
+        },
+        {
+          "title": "Listener Threads",
+          "layout": {
+            "column": 7,
+            "row": 7,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.stacked-bar"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET node WHERE mode = 'system' and threadname LIKE 'listener%'  SINCE 30 MINUTES AGO TIMESERIES"
+              },
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET bdb_name WHERE cluster = {{cluster}} AND mode = 'user' and threadname LIKE 'listener.%' SINCE 30 MINUTES AGO TIMESERIES"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
         }
       ]
     }
   ],
-  "variables": [
-    {
-      "name": "cluster",
-      "items": null,
-      "defaultValues": [],
-      "nrqlQuery": {
-        "accountIds": [
-          3321735
-        ],
-        "query": "SELECT uniques(cluster) FROM Metric"
-      },
-      "options": {
-        "ignoreTimeRange": true,
-        "excluded": false
-      },
-      "title": "cluster",
-      "type": "NRQL",
-      "isMultiSelection": false,
-      "replacementStrategy": "STRING"
-    },
-    {
-      "name": "duration",
-      "items": [
-        {
-          "title": null,
-          "value": "1"
-        },
-        {
-          "title": null,
-          "value": "2"
-        },
-        {
-          "title": null,
-          "value": "5"
-        },
-        {
-          "title": null,
-          "value": "10"
-        },
-        {
-          "title": null,
-          "value": "15"
-        },
-        {
-          "title": null,
-          "value": "20"
-        },
-        {
-          "title": null,
-          "value": "25"
-        },
-        {
-          "title": null,
-          "value": "30"
-        },
-        {
-          "title": null,
-          "value": "45"
-        },
-        {
-          "title": null,
-          "value": "60"
-        }
-      ],
-      "defaultValues": [
-        {
-          "value": {
-            "string": "30"
-          }
-        }
-      ],
-      "nrqlQuery": null,
-      "options": {
-        "excluded": false
-      },
-      "title": "duration",
-      "type": "ENUM",
-      "isMultiSelection": false,
-      "replacementStrategy": "NUMBER"
-    }
-  ]
+  "variables": []
 }

@@ -1,10 +1,10 @@
 {
-  "name": "Redis Software Proxy",
+  "name": "Redis Software Cluster",
   "description": null,
   "permissions": "PUBLIC_READ_WRITE",
   "pages": [
     {
-      "name": "Redis Enterprise Proxy",
+      "name": "Redis Software Cluster",
       "description": null,
       "widgets": [
         {
@@ -13,23 +13,23 @@
             "column": 1,
             "row": 1,
             "width": 3,
-            "height": 3
+            "height": 4
           },
           "linkedEntityGuids": null,
           "visualization": {
             "id": "viz.markdown"
           },
           "rawConfiguration": {
-            "text": "# Proxy Dashboard\n\n### The various panels can be filtered by cluster by entering that term in the filter text area. \n\n#### - Click in the text area and wait until it loads the metadata\n#### - Scroll down and select the cluster with which you wish to filter\n#### - Next select a node or dashboard(bdb) to increase granularity\n\n\n### See the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions#proxy-metrics) for details of the available metrics. "
+            "text": "# Cluster Dashboard\n\n### The various panels can be filtered by cluster by entering that term in the filter text area. \n\n#### - Click in the text area and wait until it loads the metadata\n#### - Scroll down and select the cluster with which you wish to filter\n\n\n### See the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions) for details of the available metrics. "
           }
         },
         {
-          "title": "Node List",
+          "title": "Database List",
           "layout": {
             "column": 4,
             "row": 1,
             "width": 3,
-            "height": 3
+            "height": 4
           },
           "linkedEntityGuids": null,
           "visualization": {
@@ -44,7 +44,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(cluster), latest(node) as 'Node', if (latest(node_up) = 1, 'Up', 'Down') as 'Status' FROM Metric"
+                "query": "SELECT latest(bdb_up) as Status FROM Metric FACET bdb_name as Name, bdb as Id"
               }
             ],
             "platformOptions": {
@@ -53,18 +53,25 @@
           }
         },
         {
-          "title": "Endpoint Count",
+          "title": "Total Latency",
           "layout": {
             "column": 7,
             "row": 1,
             "width": 2,
-            "height": 3
+            "height": 2
           },
           "linkedEntityGuids": null,
           "visualization": {
             "id": "viz.billboard"
           },
           "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "bdb_avg_latency",
+                "precision": 0,
+                "type": "duration"
+              }
+            ],
             "facet": {
               "showOtherSeries": false
             },
@@ -73,7 +80,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT count(listener_conns) AS 'Connections' FROM Metric"
+                "query": "SELECT latest(bdb_avg_latency) * 1000000 AS 'milliseconds' FROM Metric "
               }
             ],
             "platformOptions": {
@@ -82,12 +89,12 @@
           }
         },
         {
-          "title": "Database Count",
+          "title": "Key Count",
           "layout": {
             "column": 9,
             "row": 1,
             "width": 2,
-            "height": 3
+            "height": 2
           },
           "linkedEntityGuids": null,
           "visualization": {
@@ -102,7 +109,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT uniqueCount(bdb_name) AS 'Databases' FROM Metric SINCE 30 MINUTES AGO"
+                "query": "SELECT average(redis_db0_keys) AS 'keys' FROM Metric "
               }
             ],
             "platformOptions": {
@@ -111,12 +118,12 @@
           }
         },
         {
-          "title": "Open File Descriptors",
+          "title": "Node Count",
           "layout": {
             "column": 11,
             "row": 1,
             "width": 2,
-            "height": 3
+            "height": 2
           },
           "linkedEntityGuids": null,
           "visualization": {
@@ -131,7 +138,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(dmcproxy_process_open_fds) AS 'File Descriptors' FROM Metric SINCE 30 MINUTES AGO"
+                "query": "SELECT latest(node_up) as 'running nodes' FROM Metric "
               }
             ],
             "platformOptions": {
@@ -140,62 +147,37 @@
           }
         },
         {
-          "title": "Proxy Memory Usage",
-          "layout": {
-            "column": 1,
-            "row": 4,
-            "width": 6,
-            "height": 3
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.stacked-bar"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(dmcproxy_process_resident_memory_bytes) FROM Metric FACET cluster, node SINCE 30 MINUTES AGO TIMESERIES 5 MINUTES"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            }
-          }
-        },
-        {
-          "title": "Proxy Client Connections",
+          "title": "Request Rate",
           "layout": {
             "column": 7,
-            "row": 4,
-            "width": 6,
-            "height": 3
+            "row": 3,
+            "width": 2,
+            "height": 2
           },
           "linkedEntityGuids": null,
           "visualization": {
-            "id": "viz.area"
+            "id": "viz.billboard"
           },
           "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "Avg node_total_req",
+                "type": null
+              },
+              {
+                "name": "bdb_avg_latency",
+                "type": "humanized"
+              }
+            ],
             "facet": {
               "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
             },
             "nrqlQueries": [
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(listener_conns) FROM Metric FACET cluster, node SINCE 30 MINUTES AGO TIMESERIES 5 MINUTES"
+                "query": "SELECT rate(latest(node_total_req), 5 minutes ) as 'requests/second' FROM Metric "
               }
             ],
             "platformOptions": {
@@ -204,43 +186,86 @@
           }
         },
         {
-          "title": "Endpoint Ingress/Egress",
+          "title": "Used Memory",
+          "layout": {
+            "column": 9,
+            "row": 3,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "Used Memory",
+                "type": null
+              },
+              {
+                "name": "bdb_used_memory",
+                "precision": 0,
+                "type": "humanized"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(bdb_used_memory)/1048576 AS 'megabytes' FROM Metric "
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Connections",
+          "layout": {
+            "column": 11,
+            "row": 3,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "bdb_used_memory",
+                "type": "humanized"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(bdb_conns) as 'connections' FROM Metric "
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Memory Usage (MB)",
           "layout": {
             "column": 1,
-            "row": 7,
-            "width": 6,
-            "height": 3
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.area"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(listener_ingress_bytes) FROM Metric FACET cluster, node SINCE 30 MINUTES AGO TIMESERIES 5 MINUTES"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            }
-          }
-        },
-        {
-          "title": "Node Ingress/Egress",
-          "layout": {
-            "column": 7,
-            "row": 7,
-            "width": 6,
+            "row": 5,
+            "width": 4,
             "height": 3
           },
           "linkedEntityGuids": null,
@@ -259,13 +284,130 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(node_ingress_bytes) FROM Metric FACET cluster, node SINCE 30 MINUTES AGO TIMESERIES 5 MINUTES"
-              },
+                "query": "SELECT latest(bdb_used_memory) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Average Latency",
+          "layout": {
+            "column": 5,
+            "row": 5,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(node_egress_bytes) * -1 FROM Metric FACET cluster, node SINCE 30 MINUTES AGO TIMESERIES 5 MINUTES"
+                "query": "SELECT latest(bdb_avg_latency) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Key Count",
+          "layout": {
+            "column": 9,
+            "row": 5,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(bdb_no_of_keys) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Connections",
+          "layout": {
+            "column": 1,
+            "row": 8,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(bdb_conns) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {
@@ -285,88 +427,9 @@
         {
           "title": "Total Requests",
           "layout": {
-            "column": 1,
-            "row": 10,
-            "width": 6,
-            "height": 3
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.area"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT average(listener_total_req) FROM Metric FACET cluster, node, string('request') SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(listener_total_res) FROM Metric FACET cluster, node, string('response') SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            }
-          }
-        },
-        {
-          "title": "Total Responses",
-          "layout": {
-            "column": 7,
-            "row": 10,
-            "width": 6,
-            "height": 3
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.area"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(listener_total_res) FROM Metric FACET cluster, node SINCE 30 MINUTES AGO TIMESERIES 5 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(node_egress_bytes) FROM Metric FACET cluster, node SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            },
-            "units": {
-              "unit": "BYTES"
-            }
-          }
-        },
-        {
-          "title": "Read Requests/Responses",
-          "layout": {
-            "column": 1,
-            "row": 13,
-            "width": 6,
+            "column": 5,
+            "row": 8,
+            "width": 4,
             "height": 3
           },
           "linkedEntityGuids": null,
@@ -385,13 +448,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(listener_read_req) FROM Metric FACET cluster, node, string('requests') SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(listener_read_res) * -1 FROM Metric FACET cluster, node, string('responses') SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+                "query": "SELECT latest(bdb_total_req) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {
@@ -409,16 +466,16 @@
           }
         },
         {
-          "title": "Write Requests/Responses",
+          "title": "Expired Keys",
           "layout": {
-            "column": 7,
-            "row": 13,
-            "width": 6,
+            "column": 9,
+            "row": 8,
+            "width": 4,
             "height": 3
           },
           "linkedEntityGuids": null,
           "visualization": {
-            "id": "viz.area"
+            "id": "viz.stacked-bar"
           },
           "rawConfiguration": {
             "facet": {
@@ -432,89 +489,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(listener_write_req) FROM Metric FACET node SINCE 30 MINUTES AGO TIMESERIES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(listener_write_res) FROM Metric FACET node WHERE cluster = {{cluster}} SINCE 30 MINUTES AGO TIMESERIES"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            }
-          }
-        },
-        {
-          "title": "GET",
-          "layout": {
-            "column": 1,
-            "row": 16,
-            "width": 6,
-            "height": 3
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.area"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(node_ingress_bytes) FROM Metric FACET cluster, node, string('ingress') SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(node_egress_bytes) * -1 FROM Metric FACET cluster, node, string('egress') SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            }
-          }
-        },
-        {
-          "title": "SET",
-          "layout": {
-            "column": 7,
-            "row": 16,
-            "width": 6,
-            "height": 3
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.area"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(node_ingress_bytes) FROM Metric FACET node SINCE 30 MINUTES AGO TIMESERIES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(node_egress_bytes) * -1 FROM Metric FACET node WHERE cluster = {{cluster}} SINCE 30 MINUTES AGO TIMESERIES"
+                "query": "SELECT latest(bdb_expired_objects) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {

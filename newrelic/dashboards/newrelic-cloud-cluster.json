@@ -1,5 +1,5 @@
 {
-  "name": "Redis Software Database",
+  "name": "Redis Cloud Cluster",
   "description": null,
   "permissions": "PUBLIC_READ_WRITE",
   "pages": [
@@ -12,23 +12,52 @@
           "layout": {
             "column": 1,
             "row": 1,
-            "width": 4,
-            "height": 3
+            "width": 6,
+            "height": 2
           },
           "linkedEntityGuids": null,
           "visualization": {
             "id": "viz.markdown"
           },
           "rawConfiguration": {
-            "text": "# Database Dashboard\n\n### The various panels can be filtered by both cluster and database by entering those terms in the filter text area. \n\n#### - Click in the text area and wait until it loads the metadata\n#### - Scroll down and select the attribute and value with which you wish to filter\n#### - Choose an individual database -- bdb_name is the attribute -- for the finest granularity\n\n\n### See the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions/#database-metrics) for the details of the available database metrics. "
+            "text": "# Cluster Dashboard\n\n### The various panels can be filtered by cluster by entering those terms in the filter text area. \n\n#### - Click in the text area and wait until it loads the metadata\n#### - Scroll down and select the attribute and value with which you wish to filter\n\n\n### See the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions) for details of the available node metrics. "
           }
         },
         {
-          "title": "Databases",
+          "title": "Database List",
           "layout": {
-            "column": 5,
+            "column": 7,
             "row": 1,
-            "width": 4,
+            "width": 6,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.table"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(bdb_name) as 'Database' FROM Metric FACET cluster"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Used Memory",
+          "layout": {
+            "column": 1,
+            "row": 3,
+            "width": 6,
             "height": 3
           },
           "linkedEntityGuids": null,
@@ -44,7 +73,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(cluster), latest(bdb_up) FROM Metric Facet bdb_name SINCE 30 MINUTES AGO"
+                "query": "SELECT latest(bdb_name) as 'Database', latest(bdb_used_memory) FROM Metric FACET cluster "
               }
             ],
             "platformOptions": {
@@ -53,115 +82,39 @@
           }
         },
         {
-          "title": "Average Latency",
+          "title": "Key Count",
           "layout": {
-            "column": 9,
-            "row": 1,
-            "width": 4,
+            "column": 7,
+            "row": 3,
+            "width": 6,
             "height": 3
           },
           "linkedEntityGuids": null,
           "visualization": {
-            "id": "viz.stacked-bar"
+            "id": "viz.table"
           },
           "rawConfiguration": {
             "facet": {
-              "showOtherSeries": true
-            },
-            "legend": {
-              "enabled": true
+              "showOtherSeries": false
             },
             "nrqlQueries": [
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_avg_latency) FROM Metric FACET bdb_name TIMESERIES 1 MINUTES"
+                "query": "SELECT latest(bdb_name) as 'Database', latest(bdb_no_of_keys) as 'Key Count' FROM Metric FACET cluster"
               }
             ],
             "platformOptions": {
               "ignoreTimeRange": false
-            },
-            "units": {
-              "unit": "SECONDS"
             }
           }
         },
         {
-          "title": "Used Memory",
+          "title": "Memory by Database",
           "layout": {
             "column": 1,
-            "row": 4,
-            "width": 4,
-            "height": 3
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.stacked-bar"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(bdb_used_memory) FROM Metric FACET bdb_name TIMESERIES 1 MINUTES"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            },
-            "units": {
-              "unit": "BYTES"
-            }
-          }
-        },
-        {
-          "title": "CPU Usage",
-          "layout": {
-            "column": 5,
-            "row": 4,
-            "width": 4,
-            "height": 3
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.stacked-bar"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(bdb_main_thread_cpu_user) + latest(bdb_main_thread_cpu_system) FROM Metric FACET bdb_name TIMESERIES 1 MINUTES"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            },
-            "units": {
-              "unit": "PERCENTAGE"
-            }
-          }
-        },
-        {
-          "title": "Connection Count",
-          "layout": {
-            "column": 9,
-            "row": 4,
+            "row": 6,
             "width": 4,
             "height": 3
           },
@@ -181,7 +134,13 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_conns) FROM Metric FACET bdb_name TIMESERIES 1 MINUTES"
+                "query": "SELECT average(bdb_used_memory) FROM Metric FACET bdb_name TIMESERIES 30 MINUTES"
+              },
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(node_egress_bytes) * -1 AS EGRESS FROM Metric TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {
@@ -199,10 +158,101 @@
           }
         },
         {
-          "title": "Total Requests",
+          "title": "Keys by Database",
+          "layout": {
+            "column": 5,
+            "row": 6,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT average(bdb_no_of_keys) FROM Metric FACET bdb_name TIMESERIES 30 MINUTES"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "units": {
+              "unit": "COUNT"
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Latency",
+          "layout": {
+            "column": 9,
+            "row": 6,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT average(bdb_avg_latency)  FROM Metric FACET bdb_name TIMESERIES 30 MINUTES"
+              },
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(node_cpu_user) as USER FROM Metric TIMESERIES 30 MINUTES"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Proxy Memory",
           "layout": {
             "column": 1,
-            "row": 7,
+            "row": 9,
             "width": 4,
             "height": 3
           },
@@ -222,7 +272,13 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_total_req) FROM Metric FACET bdb_name TIMESERIES 1 MINUTES"
+                "query": "SELECT average(dmcproxy_process_resident_memory_bytes) FROM Metric FACET cluster,string('resident memory') TIMESERIES 30 MINUTES"
+              },
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT average(dmcproxy_process_virtual_memory_bytes) FROM Metric FACET cluster,string('virtual memory') TIMESERIES 30 MINUTES"
               }
             ],
             "platformOptions": {
@@ -240,10 +296,10 @@
           }
         },
         {
-          "title": "Reads",
+          "title": "Requests",
           "layout": {
             "column": 5,
-            "row": 7,
+            "row": 9,
             "width": 4,
             "height": 3
           },
@@ -263,25 +319,19 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_read_hits) FROM Metric TIMESERIES 1 MINUTES"
+                "query": "SELECT average(bdb_read_req) FROM Metric FACET bdb_name, string('read') TIMESERIES 30 MINUTES"
               },
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_read_misses) FROM Metric TIMESERIES 5 MINUTES"
+                "query": "SELECT average(bdb_write_req) FROM Metric FACET bdb_name, string('write') TIMESERIES 30 MINUTES"
               },
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_read_req) FROM Metric TIMESERIES 5 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(bdb_read_res) FROM Metric TIMESERIES 5 MINUTES"
+                "query": "SELECT average(bdb_other_req) FROM Metric FACET bdb_name, string('other') TIMESERIES 30 MINUTES"
               }
             ],
             "platformOptions": {
@@ -289,6 +339,9 @@
             },
             "thresholds": {
               "isLabelVisible": true
+            },
+            "units": {
+              "unit": "COUNT"
             },
             "yAxisLeft": {
               "zero": true
@@ -299,10 +352,10 @@
           }
         },
         {
-          "title": "Writes",
+          "title": "Listener Latency",
           "layout": {
             "column": 9,
-            "row": 7,
+            "row": 9,
             "width": 4,
             "height": 3
           },
@@ -322,25 +375,19 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_write_hits) FROM Metric TIMESERIES 1 MINUTES"
+                "query": "SELECT average(listener_acc_read_latency) FROM Metric FACET cluster, string('read') TIMESERIES 30 MINUTES"
               },
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_write_misses) FROM Metric TIMESERIES 5 MINUTES"
+                "query": "SELECT average(listener_acc_write_latency) FROM Metric FACET cluster, string('write') TIMESERIES 30 MINUTES"
               },
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_write_req) FROM Metric TIMESERIES 5 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(bdb_write_res) FROM Metric TIMESERIES 5 MINUTES"
+                "query": "SELECT average(listener_acc_other_latency) FROM Metric FACET cluster, string('other') TIMESERIES 30 MINUTES"
               }
             ],
             "platformOptions": {

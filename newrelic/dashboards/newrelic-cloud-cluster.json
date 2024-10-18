@@ -44,7 +44,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_name) as 'Database' FROM Metric FACET cluster"
+                "query": "SELECT latest(bdb_name) as 'Database' FROM Metric FACET cluster as 'Cluster', bdb as 'DBID'"
               }
             ],
             "platformOptions": {
@@ -68,12 +68,15 @@
             "facet": {
               "showOtherSeries": false
             },
+            "initialSorting": {
+              "direction": "desc"
+            },
             "nrqlQueries": [
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_name) as 'Database', latest(bdb_used_memory) FROM Metric FACET cluster "
+                "query": "SELECT latest(bdb_name) as 'Database', latest(bdb_used_memory) as 'Used Memory' FROM Metric FACET cluster LIMIT 10 ORDER BY bdb_used_memory DESC"
               }
             ],
             "platformOptions": {
@@ -135,12 +138,6 @@
                   3321735
                 ],
                 "query": "SELECT average(bdb_used_memory) FROM Metric FACET bdb_name TIMESERIES 30 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(node_egress_bytes) * -1 AS EGRESS FROM Metric TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {
@@ -226,12 +223,6 @@
                   3321735
                 ],
                 "query": "SELECT average(bdb_avg_latency)  FROM Metric FACET bdb_name TIMESERIES 30 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(node_cpu_user) as USER FROM Metric TIMESERIES 30 MINUTES"
               }
             ],
             "platformOptions": {

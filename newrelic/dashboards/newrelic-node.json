@@ -1,5 +1,5 @@
 {
-  "name": "Redis Software Database",
+  "name": "Redis Software Node",
   "description": null,
   "permissions": "PUBLIC_READ_WRITE",
   "pages": [
@@ -20,11 +20,11 @@
             "id": "viz.markdown"
           },
           "rawConfiguration": {
-            "text": "# Database Dashboard\n\n### The various panels can be filtered by both cluster and database by entering those terms in the filter text area. \n\n#### - Click in the text area and wait until it loads the metadata\n#### - Scroll down and select the attribute and value with which you wish to filter\n#### - Choose an individual database -- bdb_name is the attribute -- for the finest granularity\n\n\n### See the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions/#database-metrics) for the details of the available database metrics. "
+            "text": "# Node Dashboard\n\n### The various panels can be filtered by both cluster and database by entering those terms in the filter text area. \n\n#### - Click in the text area and wait until it loads the metadata\n#### - Scroll down and select the attribute and value with which you wish to filter\n#### - Choose an individual database -- bdb_name is the attribute -- for the finest granularity\n\n\n### See the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions/#node-metrics) for the details of the available database metrics. "
           }
         },
         {
-          "title": "Databases",
+          "title": "Nodes",
           "layout": {
             "column": 5,
             "row": 1,
@@ -44,7 +44,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(cluster), latest(bdb_up) FROM Metric Facet bdb_name SINCE 30 MINUTES AGO"
+                "query": "SELECT latest(node), latest(cnm_version) as 'Version', if (latest(node_up) = 0, 'Down', 'Up') as 'Status' FROM Metric Facet cluster SINCE 30 MINUTES AGO"
               }
             ],
             "platformOptions": {

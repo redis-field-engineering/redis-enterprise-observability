@@ -1848,7 +1848,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_total_connections_received{bdb=\"$bdb\", cluster=\"$cluster\", redis=\"$shard\"}",
+          "expr": "redis_connected_clients{bdb=\"$bdb\", cluster=\"$cluster\", redis=\"$shard\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,

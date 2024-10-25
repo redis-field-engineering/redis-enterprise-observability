@@ -1,16 +1,61 @@
 {
-  "name": "Redis Enterprise Cloud Replication",
+  "name": "Redis Software Cluster",
   "description": null,
   "permissions": "PUBLIC_READ_WRITE",
   "pages": [
     {
-      "name": "Redis Enterprise Cloud Replication",
+      "name": "Redis Software Cluster",
       "description": null,
       "widgets": [
         {
-          "title": "CRDT Status",
+          "title": "",
           "layout": {
             "column": 1,
+            "row": 1,
+            "width": 3,
+            "height": 4
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "# Cluster Dashboard\n\n### The various panels can be filtered by cluster by entering that term in the filter text area. \n\n#### - Click in the text area and wait until it loads the metadata\n#### - Scroll down and select the cluster with which you wish to filter\n\n\n### See the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions) for details of the available metrics. "
+          }
+        },
+        {
+          "title": "Database List",
+          "layout": {
+            "column": 4,
+            "row": 1,
+            "width": 3,
+            "height": 4
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.table"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(bdb_up) as Status FROM Metric FACET cluster as Cluster, bdb_name as Database"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Total Latency",
+          "layout": {
+            "column": 7,
             "row": 1,
             "width": 2,
             "height": 2
@@ -22,8 +67,9 @@
           "rawConfiguration": {
             "dataFormatters": [
               {
-                "name": "Max bdb_crdt_syncer_status",
-                "type": "decimal"
+                "name": "bdb_avg_latency",
+                "precision": 0,
+                "type": "duration"
               }
             ],
             "facet": {
@@ -32,9 +78,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3462097
+                  3321735
                 ],
-                "query": "SELECT max(bdb_crdt_syncer_status) AS '0(Sync), 1(Syncing), 2(Out-of-Sync)' FROM Metric where bdb_name = {{database}}"
+                "query": "SELECT latest(bdb_avg_latency) * 1000000 AS 'milliseconds' FROM Metric "
               }
             ],
             "platformOptions": {
@@ -43,83 +89,36 @@
           }
         },
         {
-          "title": "CRDT Ingress",
+          "title": "Key Count",
           "layout": {
-            "column": 3,
+            "column": 9,
             "row": 1,
-            "width": 4,
+            "width": 2,
             "height": 2
           },
           "linkedEntityGuids": null,
           "visualization": {
-            "id": "viz.line"
+            "id": "viz.billboard"
           },
           "rawConfiguration": {
             "facet": {
               "showOtherSeries": false
             },
-            "legend": {
-              "enabled": true
-            },
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3462097
+                  3321735
                 ],
-                "query": "SELECT latest(bdb_crdt_syncer_ingress_bytes) FROM Metric WHERE bdb_name = {{database}} SINCE 60 MINUTES AGO UNTIL NOW FACET bdb_name LIMIT 100 TIMESERIES 30000"
+                "query": "SELECT average(redis_db0_keys) AS 'keys' FROM Metric "
               }
             ],
             "platformOptions": {
               "ignoreTimeRange": false
-            },
-            "units": {
-              "unit": "BYTES_PER_SECOND"
-            },
-            "yAxisLeft": {
-              "zero": true
             }
           }
         },
         {
-          "title": "CRDT Egress",
-          "layout": {
-            "column": 7,
-            "row": 1,
-            "width": 4,
-            "height": 2
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.line"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3462097
-                ],
-                "query": "SELECT latest(bdb_crdt_syncer_egress_bytes) FROM Metric WHERE bdb_name = {{database}} SINCE 60 MINUTES AGO UNTIL NOW FACET bdb_name LIMIT 100 TIMESERIES 30000"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            },
-            "units": {
-              "unit": "BYTES_PER_SECOND"
-            },
-            "yAxisLeft": {
-              "zero": true
-            }
-          }
-        },
-        {
-          "title": "CRDT Raw DB Size",
+          "title": "Node Count",
           "layout": {
             "column": 11,
             "row": 1,
@@ -131,22 +130,15 @@
             "id": "viz.billboard"
           },
           "rawConfiguration": {
-            "dataFormatters": [
-              {
-                "name": "Raw Database Size",
-                "precision": 0,
-                "type": "humanized"
-              }
-            ],
             "facet": {
-              "showOtherSeries": true
+              "showOtherSeries": false
             },
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3462097
+                  3321735
                 ],
-                "query": "SELECT latest(redis_crdt_raw_dbsize) AS 'Raw Database Size (kilobytes)' FROM Metric"
+                "query": "SELECT latest(node_up) as 'running nodes' FROM Metric "
               }
             ],
             "platformOptions": {
@@ -155,9 +147,9 @@
           }
         },
         {
-          "title": "CRDT Lag",
+          "title": "Request Rate",
           "layout": {
-            "column": 1,
+            "column": 7,
             "row": 3,
             "width": 2,
             "height": 2
@@ -169,7 +161,50 @@
           "rawConfiguration": {
             "dataFormatters": [
               {
-                "name": "bdb_crdt_syncer_local_ingress_lag_time",
+                "name": "Avg node_total_req",
+                "type": null
+              },
+              {
+                "name": "bdb_avg_latency",
+                "type": "humanized"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT rate(latest(node_total_req), 5 minutes ) as 'requests/second' FROM Metric "
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "title": "Used Memory",
+          "layout": {
+            "column": 9,
+            "row": 3,
+            "width": 2,
+            "height": 2
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "Used Memory",
+                "type": null
+              },
+              {
+                "name": "bdb_used_memory",
                 "precision": 0,
                 "type": "humanized"
               }
@@ -180,9 +215,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3462097
+                  3321735
                 ],
-                "query": "SELECT count(bdb_crdt_syncer_local_ingress_lag_time) AS 'Sync Ingress Lag Time (ms)' FROM Metric SINCE 60 MINUTES AGO UNTIL NOW"
+                "query": "SELECT latest(bdb_used_memory)/1048576 AS 'megabytes' FROM Metric "
               }
             ],
             "platformOptions": {
@@ -191,83 +226,7 @@
           }
         },
         {
-          "title": "CRDT Ingress (De-compressed)",
-          "layout": {
-            "column": 3,
-            "row": 3,
-            "width": 4,
-            "height": 2
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.line"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3462097
-                ],
-                "query": "SELECT latest(bdb_crdt_syncer_ingress_bytes_decompressed) FROM Metric WHERE bdb_name = {{database}} SINCE 60 MINUTES AGO UNTIL NOW FACET bdb_name LIMIT 100 TIMESERIES 30000"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            },
-            "units": {
-              "unit": "BYTES_PER_SECOND"
-            },
-            "yAxisLeft": {
-              "zero": true
-            }
-          }
-        },
-        {
-          "title": "CRDT Egress (De-compressed)",
-          "layout": {
-            "column": 7,
-            "row": 3,
-            "width": 4,
-            "height": 2
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.line"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3462097
-                ],
-                "query": "SELECT latest(bdb_crdt_syncer_egress_bytes_decompressed) FROM Metric WHERE bdb_name = {{database}} SINCE 60 MINUTES AGO UNTIL NOW FACET bdb_name LIMIT 100 TIMESERIES 30000"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            },
-            "units": {
-              "unit": "BYTES_PER_SECOND"
-            },
-            "yAxisLeft": {
-              "zero": true
-            }
-          }
-        },
-        {
-          "title": "CRDT Max Pending Writes",
+          "title": "Connections",
           "layout": {
             "column": 11,
             "row": 3,
@@ -281,8 +240,7 @@
           "rawConfiguration": {
             "dataFormatters": [
               {
-                "name": "Raw Database Size",
-                "precision": 0,
+                "name": "bdb_used_memory",
                 "type": "humanized"
               }
             ],
@@ -292,9 +250,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3462097
+                  3321735
                 ],
-                "query": "SELECT max(bdb_crdt_syncer_pending_local_writes_max) AS 'Max Pending Local Writes' FROM Metric WHERE bdb_name = {{database}}"
+                "query": "SELECT latest(bdb_conns) as 'connections' FROM Metric "
               }
             ],
             "platformOptions": {
@@ -303,47 +261,12 @@
           }
         },
         {
-          "title": "CRDT Backlog",
+          "title": "Memory Usage (MB)",
           "layout": {
             "column": 1,
             "row": 5,
-            "width": 2,
-            "height": 2
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.billboard"
-          },
-          "rawConfiguration": {
-            "dataFormatters": [
-              {
-                "name": "redis_crdt_backlog_size",
-                "type": "humanized"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3462097
-                ],
-                "query": "SELECT latest(redis_crdt_backlog_size) FROM Metric"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            }
-          }
-        },
-        {
-          "title": "Ingress Sync Lag Time",
-          "layout": {
-            "column": 3,
-            "row": 5,
             "width": 4,
-            "height": 2
+            "height": 3
           },
           "linkedEntityGuids": null,
           "visualization": {
@@ -359,69 +282,32 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3462097
+                  3321735
                 ],
-                "query": "SELECT latest(bdb_crdt_syncer_local_ingress_lag_time) FROM Metric WHERE bdb_name = {{database}} SINCE 60 MINUTES AGO UNTIL NOW FACET bdb_name LIMIT 100 TIMESERIES 30000"
+                "query": "SELECT latest(bdb_used_memory) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {
               "ignoreTimeRange": false
             },
-            "units": {
-              "unit": "MS"
+            "thresholds": {
+              "isLabelVisible": true
             },
             "yAxisLeft": {
-              "max": 2,
-              "min": 0,
-              "zero": false
-            }
-          }
-        },
-        {
-          "title": "CRDT Merge Requests",
-          "layout": {
-            "column": 7,
-            "row": 5,
-            "width": 4,
-            "height": 2
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
-            "id": "viz.line"
-          },
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
+              "zero": true
             },
-            "legend": {
-              "enabled": true
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3462097
-                ],
-                "query": "SELECT latest(redis_crdt_merge_reqs) AS 'Merge Requests' FROM Metric SINCE 60 MINUTES AGO UNTIL NOW LIMIT 100 TIMESERIES 30000"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            },
-            "units": {
-              "unit": "REQUESTS_PER_SECOND"
-            },
-            "yAxisLeft": {
+            "yAxisRight": {
               "zero": true
             }
           }
         },
         {
-          "title": "CRDT Pending GC",
+          "title": "Average Latency",
           "layout": {
-            "column": 11,
+            "column": 5,
             "row": 5,
-            "width": 2,
-            "height": 2
+            "width": 4,
+            "height": 3
           },
           "linkedEntityGuids": null,
           "visualization": {
@@ -437,37 +323,182 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3462097
+                  3321735
                 ],
-                "query": "SELECT latest(redis_crdt_gc_pending) AS 'Pending Garbage Collection' FROM Metric TIMESERIES"
+                "query": "SELECT latest(bdb_avg_latency) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {
               "ignoreTimeRange": false
             },
+            "thresholds": {
+              "isLabelVisible": true
+            },
             "yAxisLeft": {
               "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Key Count",
+          "layout": {
+            "column": 9,
+            "row": 5,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(bdb_no_of_keys) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Connections",
+          "layout": {
+            "column": 1,
+            "row": 8,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(bdb_conns) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Total Requests",
+          "layout": {
+            "column": 5,
+            "row": 8,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(bdb_total_req) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Expired Keys",
+          "layout": {
+            "column": 9,
+            "row": 8,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.stacked-bar"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  3321735
+                ],
+                "query": "SELECT latest(bdb_expired_objects) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
             }
           }
         }
       ]
     }
   ],
-  "variables": [
-    {
-      "name": "database",
-      "items": null,
-      "defaultValues": [],
-      "nrqlQuery": {
-        "accountIds": [
-          3462097
-        ],
-        "query": "FROM Metric SELECT uniques(bdb_name) WHERE metricName='bdb_up'"
-      },
-      "title": "Database",
-      "type": "NRQL",
-      "isMultiSelection": false,
-      "replacementStrategy": "STRING"
-    }
-  ]
+  "variables": []
 }

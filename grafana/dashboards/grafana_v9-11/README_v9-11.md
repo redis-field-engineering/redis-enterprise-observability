@@ -9,33 +9,14 @@ For Redis Cloud, which is fully managed, we provide two dashboards:
 * [Subscription status](cloud/basic/redis-cloud-subscription-dashboard_v9-11.json)
 * [Database status](cloud/basic/redis-cloud-database-dashboard_v9-11.json)
 
-Lastly, we also provide two sets of dashboards designed to be used in a drill-down fashion. These dashboards specifically cover 
-databases and nodes.
-
-The top-level dashboard (e.g., Databases or Nodes) displays all instances of that type. For example, the [databases dashboard](workflow/databases/redis-software-cluster-databases_v9-11.json) shows metrics for every database in the Redis cluster. The individual rows make it easy to access different types of 
-details about a particular instance.
-#### Databases
-* [Databases](workflow/databases/redis-software-cluster-databases_v9-11.json)
-* [Database-CPU](workflow/databases/redis-software-cluster-database-cpu_v9-11.json)
-* [Database-Latency](workflow/databases/redis-software-cluster-database-latency_v9-11.json)
-* [Database-Memory](workflow/databases/redis-software-cluster-database-memory_v9-11.json)
-* [Database-Requests](workflow/databases/redis-software-cluster-database-requests_v9-11.json)
-
-#### Nodes
-* [Nodes](workflow/nodes/redis-software-cluster-nodes_v9-11.json)
-* [Node-CPU](workflow/nodes/redis-software-cluster-node-cpu_v9-11.json)
-* [Node-Latency](workflow/nodes/redis-software-cluster-node-latency_v9-11.json)
-* [Node-Memory](workflow/nodes/redis-software-cluster-node-memory_v9-11.json)
-* [Node-Requests](workflow/nodes/redis-software-cluster-node-requests_v9-11.json)
-
-Note that these dashboards, and their associated display panes, all have links in the top-right for the dashboards, and in the top-left for the 
-panes, that make it easy to navigate from the main dashboard to the relevant detail information.
+Lastly, we also provide a set of dashboards designed to be used in a drill-down fashion, 
+referred to as [workflow](workflow/README-WORKFLOW.md) dashboards.
 
 ### Alerts
-This repository also contains [alert configuration files](prometheus/rules/alerts.yml) for Prometheus that can generate notifications when any of a number of 
-key metrics fall outside of their expected ranges.
+This repository also contains [alert configuration files](../../../prometheus/rules/alerts.yml) for Prometheus that can 
+generate notifications when any of a number of key metrics fall outside their expected ranges.
 
-Finally, we include a set of [metrics descriptions](metrics) for your reference.
+Finally, we include a set of [metrics descriptions](../../metrics) for your reference.
 
 ## Table of Contents
 
@@ -86,7 +67,8 @@ See the sections below for details.
 1. Configure your [Prometheus deployment's scraping config](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config) 
 so that it reads from your Redis Enterprise Prometheus endpoint.
 
-2. [Create a Prometheus data source](https://grafana.com/docs/grafana/v8.5/datasources/add-a-data-source/) in Grafana's administration console.
+2. [Create a Prometheus data source](https://grafana.com/docs/grafana/v8.5/datasources/add-a-data-source/) in the 
+Grafana administration console.
 
 See the official Redis Enterprise docs for a complete example of configuring both Prometheus and Grafana:
 
@@ -111,26 +93,17 @@ For Redis Cloud, which is fully managed, we provide two dashboards:
 
 ### Redis Workflow Dashboards
 
-These dashboards can be installed either in Redis Enterprise installations or in Redis Cloud installations. 
+Redis Workflow dashboards offer a different approach to monitoring system performance by using links to effect drill-down 
+operations, making it simpler to reach specific statistics for any category of metrics.
 
-* [Databases](workflow/databases/redis-software-cluster-databases_v9-11.json)
-* [Database-CPU](workflow/databases/redis-software-cluster-database-cpu_v9-11.json)
-* [Database-Latency](workflow/databases/redis-software-cluster-database-latency_v9-11.json)
-* [Database-Requests](workflow/databases/redis-software-cluster-database-requests_v9-11.json)
-* [Database-CPU](workflow/databases/redis-software-cluster-database-cpu_v9-11.json)
-####
-* [Nodes](workflow/nodes/redis-software-cluster-nodes_v9-11.json)
-* [Node-CPU](workflow/nodes/redis-software-cluster-node-cpu_v9-11.json)
-* [Node-Latency](workflow/nodes/redis-software-cluster-node-latency_v9-11.json)
-* [Node-Memory](workflow/nodes/redis-software-cluster-node-memory_v9-11.json)
-* [Node-Requests](workflow/nodes/redis-software-cluster-node-requests_v9-11.json)
+The workflow dashboards now have their own readme file, found here: [Workflow Dashboards](workflow/README-WORKFLOW.md).
 
 You can upload these dashboards directly though the Grafana UI. For additional installation instructions, see the [Redis Cloud dashboards 
-README](cloud/README-CLOUD.md).
+README](cloud/README-CLOUD.md#basic-dashboard-configuration).
 
 ## Extended dashboards
 
-We also provided an set of extended dashboards for both Redis Enterprise and Redis Cloud that provide additional metrics, including more information 
+We also provided a set of extended dashboards for both Redis Enterprise and Redis Cloud that provide additional metrics, including more information 
 about you cluster's configuration and the Redis slow log.
 
 These optional dashboards rely on one additional data source beyond Prometheus: the [Infinity Datasource for 
@@ -140,7 +113,8 @@ Grafana](https://grafana.com/grafana/plugins/yesoreyeram-infinity-datasource/).
 
 ### Running the alerting tests
 
-To run the alerting tests, you will need to copy the [prometheus/rules/](rules) and [prometheus/tests/](tests) folders to your Prometheus installation. Once they have been 
+To run the alerting tests, you will need to copy the [prometheus/rules/](../../../prometheus/rules) and 
+[prometheus/tests/](../../../prometheus/tests) folders to your Prometheus installation. Once they have been 
 copied,
 you can execute the tests as follows:
 

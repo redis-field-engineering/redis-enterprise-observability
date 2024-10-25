@@ -24,7 +24,7 @@
           }
         },
         {
-          "title": "Nodes",
+          "title": "Node Details",
           "layout": {
             "column": 5,
             "row": 1,
@@ -44,7 +44,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(node), latest(cnm_version) as 'Version', if (latest(node_up) = 0, 'Down', 'Up') as 'Status' FROM Metric Facet cluster SINCE 30 MINUTES AGO"
+                "query": "SELECT latest(node), latest(cnm_version) as 'Version', if (latest(node_up) = 0, 'Down', 'Up') as 'Status' FROM Metric Facet cluster SINCE 5 MINUTES AGO"
               }
             ],
             "platformOptions": {

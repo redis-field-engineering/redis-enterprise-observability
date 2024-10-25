@@ -44,7 +44,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_name) as 'Database' FROM Metric FACET cluster as 'Cluster', bdb as 'DBID'"
+                "query": "SELECT latest(bdb_name) as 'Database', if (latest(redis_up) = 1, 'Up', 'Down') as 'Status' FROM Metric FACET cluster as 'Cluster', bdb as 'DBID'"
               }
             ],
             "platformOptions": {
@@ -76,7 +76,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_name) as 'Database', latest(bdb_used_memory) as 'Used Memory' FROM Metric FACET cluster LIMIT 10 ORDER BY bdb_used_memory DESC"
+                "query": "SELECT latest(bdb_name) as 'Database', latest(bdb_used_memory) as 'Used Memory' FROM Metric FACET cluster LIMIT 10"
               }
             ],
             "platformOptions": {

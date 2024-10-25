@@ -44,7 +44,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_up) as Status FROM Metric FACET bdb_name as Name, bdb as Id"
+                "query": "SELECT latest(bdb_up) as Status FROM Metric FACET cluster as Cluster, bdb_name as Database"
               }
             ],
             "platformOptions": {

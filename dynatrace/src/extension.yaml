@@ -1,5 +1,5 @@
 name: custom:com.redis.enterprise.experimental
-version: 1.0.1
+version: 1.1.2
 minDynatraceVersion: "1.245"
 author:
   name: Redis

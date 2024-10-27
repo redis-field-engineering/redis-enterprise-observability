@@ -5,9 +5,13 @@ author:
   name: Redis
 
 dashboards:
-- path: "dashboards/metrics.json"
 - path: "dashboards/overview.json"
 - path: "dashboards/active-active.json"
+- path: "dashboards/nodes.json"
+- path: "dashboards/proxy.json"
+- path: "dashboards/proxy-threads.json"
+- path: "dashboards/shard.json"
+- path: "dashboards/database.json"
 
 metrics:
 # memory and connections at the top for dashboard generation
@@ -1589,6 +1593,16 @@ metrics:
     - "Redis"
     - "EF2"
     - "redis-proxy"
+- key: redis.namedprocess_namegroup_thread_cpu_seconds_total
+  metadata:
+    displayName: Process Thread CPU Seconds
+    description: Total number of seconds a process has used CPU
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-proxy"
+
 # REDIS REPLICATION
 - key: redis.bdb_replicaof_syncer_ingress_bytes
   metadata:
@@ -2500,6 +2514,15 @@ metrics:
     - "Redis"
     - "EF2"
     - "redis-shard"
+- key: redis.cluster_shards_limit
+  metadata:
+    displayName: Redis Cluster Shards Limit
+    description: Maximum number of shards that this cluster can contain
+    unit: Count
+    tags:
+    - "Redis"
+    - "EF2"
+    - "redis-shard"
 prometheus:
   - group: redis_database
     featureSet: Database Metrics
@@ -3032,6 +3055,9 @@ prometheus:
     - key: redis.listener_write_started_res_max
       value: metric:listener_write_started_res_max
       type: gauge
+    - key: redis.namedprocess_namegroup_thread_cpu_seconds_total
+      value: metric:namedprocess_namegroup_thread_cpu_seconds_total
+      type: count
   - group: redis_replication
     featureSet: Replication Metrics
     interval: 1m
@@ -3343,6 +3369,9 @@ prometheus:
     - key: redis.redis_total_net_output_bytes
       value: metric:redis_total_net_output_bytes
       type: gauge
+    - key: redis.cluster_shards_limit
+      value: metric:cluster_shards_limit
+      type: count
 
 # --- TOPOLOGY MAPPING ---
 # CLUSTER (redis) - cluster
@@ -3722,7 +3751,7 @@ screens:
         graphChartConfig:
           metrics:
             - metricSelector: redis.redis_used_memory:splitBy("dt.entity.prometheus:com_dynatrace_extension_redis_cluster")
-# REDIS DATABASE - autogen + breadcrum
+# REDIS DATABASE - autogen + breadcrumb
   - entityType: prometheus:com_dynatrace_extension_redis_database
     detailsSettings:
       staticContent:
@@ -3737,7 +3766,7 @@ screens:
         showAddTag: true
       layout:
         autoGenerate: true
-# REDIS NODE - autogen + breadcrum
+# REDIS NODE - autogen + breadcrumb
   - entityType: prometheus:com_dynatrace_extension_redis_node
     detailsSettings:
       staticContent:

@@ -51,7 +51,7 @@ Type "Prometheus" in the search bar and then select "Prometheus Remote Write Int
 
 Enter a name for the installation (e.g., "redis-server-prod") and click "generate". This will generate a remote write configuration with a bearer token.
 
-Open the sample link:/prometheus.yml[prometheus.yml] file and find the "remote_write" configuration directive.
+Open the sample link:./config/prometheus.yml[prometheus.yml] file and find the "remote_write" configuration directive.
 
 Under "url", replace "REDIS_ENTERPRISE_SERVER_NAME" with the installation name you just provided when generating your token (e.g., "redis-server-prod").
 

@@ -3,14 +3,14 @@
     "configurationVersions": [
       7
     ],
-    "clusterVersion": "1.302.53.20241017-021333"
+    "clusterVersion": "1.303.42.20241021-231645"
   },
   "id": "36067114-866e-431d-9330-3f54cfc15c9e",
   "dashboardMetadata": {
     "name": "Redis Enterprise - Node",
     "shared": false,
     "owner": "john.burke@redis.com",
-    "popularity": 10,
+    "popularity": 3,
     "dynamicFilters": {
       "filters": [
         "CUSTOM_DIMENSION:Redis Shard",

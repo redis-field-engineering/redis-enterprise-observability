@@ -3,14 +3,14 @@
     "configurationVersions": [
       7
     ],
-    "clusterVersion": "1.302.53.20241017-021333"
+    "clusterVersion": "1.303.42.20241021-231645"
   },
   "id": "a41249ac-232d-4a1d-ae70-bf2f9b1b2e48",
   "dashboardMetadata": {
     "name": "Redis Enterprise - Proxy",
     "shared": false,
     "owner": "john.burke@redis.com",
-    "popularity": 9,
+    "popularity": 10,
     "dynamicFilters": {
       "filters": [
         "CUSTOM_DIMENSION:Redis Cluster"
@@ -25,9 +25,9 @@
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 266,
+        "top": 532,
         "left": 0,
-        "width": 912,
+        "width": 798,
         "height": 266
       },
       "tileFilter": {},
@@ -192,7 +192,7 @@
       "bounds": {
         "top": 798,
         "left": 0,
-        "width": 760,
+        "width": 798,
         "height": 266
       },
       "tileFilter": {},
@@ -321,9 +321,9 @@
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 1368,
-        "left": 646,
-        "width": 760,
+        "top": 1330,
+        "left": 798,
+        "width": 798,
         "height": 266
       },
       "tileFilter": {},
@@ -454,7 +454,7 @@
       "bounds": {
         "top": 1064,
         "left": 0,
-        "width": 760,
+        "width": 798,
         "height": 266
       },
       "tileFilter": {},
@@ -560,8 +560,8 @@
       "configured": true,
       "bounds": {
         "top": 1064,
-        "left": 760,
-        "width": 760,
+        "left": 798,
+        "width": 798,
         "height": 266
       },
       "tileFilter": {},
@@ -700,9 +700,9 @@
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 0,
-        "left": 912,
-        "width": 304,
+        "top": 266,
+        "left": 0,
+        "width": 266,
         "height": 266
       },
       "tileFilter": {},
@@ -788,8 +788,8 @@
       "configured": true,
       "bounds": {
         "top": 798,
-        "left": 760,
-        "width": 760,
+        "left": 798,
+        "width": 798,
         "height": 266
       },
       "tileFilter": {},
@@ -918,9 +918,9 @@
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 1710,
-        "left": 38,
-        "width": 760,
+        "top": 1330,
+        "left": 0,
+        "width": 798,
         "height": 266
       },
       "tileFilter": {},
@@ -1050,8 +1050,8 @@
       "configured": true,
       "bounds": {
         "top": 532,
-        "left": 0,
-        "width": 760,
+        "left": 798,
+        "width": 798,
         "height": 266
       },
       "tileFilter": {},
@@ -1214,9 +1214,9 @@
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 532,
-        "left": 760,
-        "width": 380,
+        "top": 266,
+        "left": 1330,
+        "width": 266,
         "height": 266
       },
       "tileFilter": {},
@@ -1301,9 +1301,9 @@
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 532,
-        "left": 1140,
-        "width": 380,
+        "top": 266,
+        "left": 532,
+        "width": 266,
         "height": 266
       },
       "tileFilter": {},
@@ -1390,12 +1390,12 @@
       "bounds": {
         "top": 0,
         "left": 0,
-        "width": 456,
+        "width": 798,
         "height": 266
       },
       "tileFilter": {},
       "isAutoRefreshDisabled": false,
-      "markdown": "## This is a Markdown tile\n\nIt supports **rich text** and [links](https://dynatrace.com)"
+      "markdown": "## Proxy Dashboard\n\nThe various panels can be filtered by both cluster and node by using a filter category in the text input field.\n\n- Click in the field and select 'Custom Dimension'\n- Select 'Redis Cluster' and then choose one of the proposed clusters.\n- Repeat the process and choose 'Redis Node' to filter at the node level.\n\nSee the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions/) for a list of the Proxy metrics exported and their descriptions."
     },
     {
       "name": "Node List",
@@ -1403,8 +1403,8 @@
       "configured": true,
       "bounds": {
         "top": 0,
-        "left": 456,
-        "width": 456,
+        "left": 798,
+        "width": 798,
         "height": 266
       },
       "tileFilter": {},
@@ -1491,9 +1491,9 @@
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 0,
-        "left": 1216,
-        "width": 304,
+        "top": 266,
+        "left": 266,
+        "width": 266,
         "height": 266
       },
       "tileFilter": {},
@@ -1581,13 +1581,107 @@
       ]
     },
     {
-      "name": "File Descriptors",
+      "name": "Open File Descriptors",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 0,
-        "left": 1520,
-        "width": 304,
+        "top": 266,
+        "left": 798,
+        "width": 266,
+        "height": 266
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "Single value",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "redis.bdb_up",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "SINGLE_VALUE",
+        "global": {},
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE"
+        },
+        "singleValueSettings": {
+          "showTrend": true,
+          "showSparkLine": true,
+          "linkTileColorToThreshold": true
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=Inf&(redis.bdb_up:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names",
+        "resolution=null&(redis.bdb_up:splitBy():sort(value(auto,descending)):limit(20))"
+      ]
+    },
+    {
+      "name": "Max File Descriptors",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 266,
+        "left": 1064,
+        "width": 266,
         "height": 266
       },
       "tileFilter": {},

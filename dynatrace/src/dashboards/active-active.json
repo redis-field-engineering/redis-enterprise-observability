@@ -3,13 +3,14 @@
     "configurationVersions": [
       7
     ],
-    "clusterVersion": "1.272.109.20230809-133453"
+    "clusterVersion": "1.303.42.20241021-231645"
   },
-  "id": "ee67e4ea-6081-423d-b199-966e27c34d37",
+  "id": "ecab63a2-bbe3-4604-9f75-97fedb831dbf",
   "dashboardMetadata": {
-    "name": "Redis Active-Active Dashboard",
+    "name": "Redis Enterprise - Active-Active",
     "shared": false,
     "owner": "john.burke@redis.com",
+    "popularity": 1,
     "dynamicFilters": {
       "filters": [
         "CUSTOM_DIMENSION:Redis Cluster"
@@ -20,14 +21,14 @@
   },
   "tiles": [
     {
-      "name": "CRDT Max Pending Writes",
+      "name": "Pending Max Writes",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 228,
-        "left": 1216,
+        "top": 266,
+        "left": 1292,
         "width": 266,
-        "height": 228
+        "height": 266
       },
       "tileFilter": {},
       "isAutoRefreshDisabled": false,
@@ -114,14 +115,296 @@
       ]
     },
     {
-      "name": "CRDT Status",
+      "name": "Ingress - decompressed",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 266,
+        "left": 266,
+        "width": 494,
+        "height": 266
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "redis.bdb_crdt_syncer_ingress_bytes_decompressed",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": true
+        },
+        {
+          "id": "B",
+          "metric": "redis.bdb_shard_cpu_user",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": false
+        }
+      ],
+      "visualConfig": {
+        "type": "GRAPH_CHART",
+        "global": {},
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          },
+          {
+            "matcher": "B:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A"
+              ],
+              "defaultAxis": true
+            },
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "RIGHT",
+              "queryIds": [
+                "B"
+              ],
+              "defaultAxis": true
+            }
+          ]
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE",
+          "showLabels": false
+        },
+        "singleValueSettings": {
+          "showTrend": true,
+          "showSparkLine": true,
+          "linkTileColorToThreshold": true
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=null&(redis.bdb_crdt_syncer_ingress_bytes_decompressed:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
+      ]
+    },
+    {
+      "name": "Ingress",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
         "top": 0,
-        "left": 0,
+        "left": 266,
+        "width": 494,
+        "height": 266
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "redis.bdb_crdt_syncer_ingress_bytes",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": true
+        },
+        {
+          "id": "B",
+          "metric": "redis.bdb_avg_write_latency",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": false
+        }
+      ],
+      "visualConfig": {
+        "type": "GRAPH_CHART",
+        "global": {},
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          },
+          {
+            "matcher": "B:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A"
+              ],
+              "defaultAxis": true
+            },
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "RIGHT",
+              "queryIds": [
+                "B"
+              ],
+              "defaultAxis": true
+            }
+          ]
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE",
+          "showLabels": false
+        },
+        "singleValueSettings": {
+          "showTrend": true,
+          "showSparkLine": true,
+          "linkTileColorToThreshold": true
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=null&(redis.bdb_crdt_syncer_ingress_bytes:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
+      ]
+    },
+    {
+      "name": "Raw DB Size",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 0,
+        "left": 1292,
         "width": 266,
-        "height": 228
+        "height": 266
       },
       "tileFilter": {},
       "isAutoRefreshDisabled": false,
@@ -129,7 +412,7 @@
       "queries": [
         {
           "id": "A",
-          "metric": "redis.bdb_crdt_syncer_status",
+          "metric": "redis.redis_crdt_raw_dbsize",
           "spaceAggregation": "AUTO",
           "timeAggregation": "DEFAULT",
           "splitBy": [],
@@ -203,19 +486,113 @@
         "resolution": ""
       },
       "metricExpressions": [
-        "resolution=Inf&(redis.bdb_crdt_syncer_status:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names",
-        "resolution=null&(redis.bdb_crdt_syncer_status:splitBy():sort(value(auto,descending)):limit(20))"
+        "resolution=Inf&(redis.redis_crdt_raw_dbsize:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names",
+        "resolution=null&(redis.redis_crdt_raw_dbsize:splitBy():sort(value(auto,descending)):limit(20))"
       ]
     },
     {
-      "name": "CRDT Lag",
+      "name": "Pending Garbage Collection",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 228,
+        "top": 532,
+        "left": 1292,
+        "width": 266,
+        "height": 266
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "Single value",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "redis.redis_crdt_gc_pending.count",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "SINGLE_VALUE",
+        "global": {},
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE"
+        },
+        "singleValueSettings": {
+          "showTrend": true,
+          "showSparkLine": true,
+          "linkTileColorToThreshold": true
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=Inf&(redis.redis_crdt_gc_pending.count:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names",
+        "resolution=null&(redis.redis_crdt_gc_pending.count:splitBy():sort(value(auto,descending)):limit(20))"
+      ]
+    },
+    {
+      "name": "Sync Lag",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 266,
         "left": 0,
         "width": 266,
-        "height": 228
+        "height": 266
       },
       "tileFilter": {},
       "isAutoRefreshDisabled": false,
@@ -302,38 +679,31 @@
       ]
     },
     {
-      "name": "CRDT Ingress",
+      "name": "Sync Backlog",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 0,
-        "left": 266,
-        "width": 456,
-        "height": 228
+        "top": 532,
+        "left": 0,
+        "width": 266,
+        "height": 266
       },
       "tileFilter": {},
       "isAutoRefreshDisabled": false,
-      "customName": "Data explorer results",
+      "customName": "Single value",
       "queries": [
         {
           "id": "A",
-          "metric": "redis.bdb_crdt_syncer_ingress_bytes",
           "spaceAggregation": "AUTO",
           "timeAggregation": "DEFAULT",
           "splitBy": [],
-          "sortBy": "DESC",
-          "sortByDimension": "",
-          "filterBy": {
-            "nestedFilters": [],
-            "criteria": []
-          },
-          "limit": 20,
+          "metricSelector": "redis.redis_crdt_backlog_size.count",
           "rate": "NONE",
           "enabled": true
         }
       ],
       "visualConfig": {
-        "type": "GRAPH_CHART",
+        "type": "SINGLE_VALUE",
         "global": {},
         "rules": [
           {
@@ -346,26 +716,12 @@
         ],
         "axes": {
           "xAxis": {
-            "displayName": "",
             "visible": true
           },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A"
-              ],
-              "defaultAxis": true
-            }
-          ]
+          "yAxes": []
         },
         "heatmapSettings": {
-          "yAxis": "VALUE",
-          "showLabels": false
+          "yAxis": "VALUE"
         },
         "singleValueSettings": {
           "showTrend": true,
@@ -405,339 +761,19 @@
         "resolution": ""
       },
       "metricExpressions": [
-        "resolution=null&(redis.bdb_crdt_syncer_ingress_bytes:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
+        "resolution=Inf&(redis.redis_crdt_backlog_size.count):limit(100):names",
+        "resolution=null&(redis.redis_crdt_backlog_size.count)"
       ]
     },
     {
-      "name": "CRDT Ingress (de-compressed)",
+      "name": "Ingestion Sync Lag",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 228,
+        "top": 532,
         "left": 266,
-        "width": 456,
-        "height": 228
-      },
-      "tileFilter": {},
-      "isAutoRefreshDisabled": false,
-      "customName": "Data explorer results",
-      "queries": [
-        {
-          "id": "A",
-          "metric": "redis.bdb_crdt_syncer_ingress_bytes_decompressed",
-          "spaceAggregation": "AUTO",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [],
-          "sortBy": "DESC",
-          "sortByDimension": "",
-          "filterBy": {
-            "nestedFilters": [],
-            "criteria": []
-          },
-          "limit": 20,
-          "rate": "NONE",
-          "enabled": true
-        }
-      ],
-      "visualConfig": {
-        "type": "GRAPH_CHART",
-        "global": {},
-        "rules": [
-          {
-            "matcher": "A:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          }
-        ],
-        "axes": {
-          "xAxis": {
-            "displayName": "",
-            "visible": true
-          },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A"
-              ],
-              "defaultAxis": true
-            }
-          ]
-        },
-        "heatmapSettings": {
-          "yAxis": "VALUE",
-          "showLabels": false
-        },
-        "singleValueSettings": {
-          "showTrend": true,
-          "showSparkLine": true,
-          "linkTileColorToThreshold": true
-        },
-        "thresholds": [
-          {
-            "axisTarget": "LEFT",
-            "rules": [
-              {
-                "color": "#7dc540"
-              },
-              {
-                "color": "#f5d30f"
-              },
-              {
-                "color": "#dc172a"
-              }
-            ],
-            "visible": true
-          }
-        ],
-        "tableSettings": {
-          "hiddenColumns": []
-        },
-        "graphChartSettings": {
-          "connectNulls": false
-        },
-        "honeycombSettings": {
-          "showHive": true,
-          "showLegend": true,
-          "showLabels": false
-        }
-      },
-      "queriesSettings": {
-        "resolution": ""
-      },
-      "metricExpressions": [
-        "resolution=null&(redis.bdb_crdt_syncer_ingress_bytes_decompressed:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
-      ]
-    },
-    {
-      "name": "CRDT Egress",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 0,
-        "left": 722,
         "width": 494,
-        "height": 228
-      },
-      "tileFilter": {},
-      "isAutoRefreshDisabled": false,
-      "customName": "Data explorer results",
-      "queries": [
-        {
-          "id": "C",
-          "metric": "redis.bdb_crdt_syncer_egress_bytes",
-          "spaceAggregation": "AUTO",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [],
-          "sortBy": "DESC",
-          "sortByDimension": "",
-          "filterBy": {
-            "nestedFilters": [],
-            "criteria": []
-          },
-          "limit": 20,
-          "rate": "NONE",
-          "enabled": true
-        }
-      ],
-      "visualConfig": {
-        "type": "GRAPH_CHART",
-        "global": {},
-        "rules": [
-          {
-            "matcher": "C:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          }
-        ],
-        "axes": {
-          "xAxis": {
-            "displayName": "",
-            "visible": true
-          },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "C"
-              ],
-              "defaultAxis": true
-            }
-          ]
-        },
-        "heatmapSettings": {
-          "yAxis": "VALUE",
-          "showLabels": false
-        },
-        "singleValueSettings": {
-          "showTrend": true,
-          "showSparkLine": true,
-          "linkTileColorToThreshold": true
-        },
-        "thresholds": [
-          {
-            "axisTarget": "LEFT",
-            "rules": [
-              {
-                "color": "#7dc540"
-              },
-              {
-                "color": "#f5d30f"
-              },
-              {
-                "color": "#dc172a"
-              }
-            ],
-            "visible": true
-          }
-        ],
-        "tableSettings": {
-          "hiddenColumns": []
-        },
-        "graphChartSettings": {
-          "connectNulls": false
-        },
-        "honeycombSettings": {
-          "showHive": true,
-          "showLegend": true,
-          "showLabels": false
-        }
-      },
-      "queriesSettings": {
-        "resolution": ""
-      },
-      "metricExpressions": [
-        "resolution=null&(redis.bdb_crdt_syncer_egress_bytes:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
-      ]
-    },
-    {
-      "name": "CRDT Egress (de-compressed)",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 228,
-        "left": 722,
-        "width": 494,
-        "height": 228
-      },
-      "tileFilter": {},
-      "isAutoRefreshDisabled": false,
-      "customName": "Data explorer results",
-      "queries": [
-        {
-          "id": "A",
-          "metric": "redis.bdb_crdt_syncer_egress_bytes_decompressed",
-          "spaceAggregation": "AUTO",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [],
-          "sortBy": "DESC",
-          "sortByDimension": "",
-          "filterBy": {
-            "nestedFilters": [],
-            "criteria": []
-          },
-          "limit": 20,
-          "rate": "NONE",
-          "enabled": true
-        }
-      ],
-      "visualConfig": {
-        "type": "GRAPH_CHART",
-        "global": {},
-        "rules": [
-          {
-            "matcher": "A:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          }
-        ],
-        "axes": {
-          "xAxis": {
-            "displayName": "",
-            "visible": true
-          },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A"
-              ],
-              "defaultAxis": true
-            }
-          ]
-        },
-        "heatmapSettings": {
-          "yAxis": "VALUE",
-          "showLabels": false
-        },
-        "singleValueSettings": {
-          "showTrend": true,
-          "showSparkLine": true,
-          "linkTileColorToThreshold": true
-        },
-        "thresholds": [
-          {
-            "axisTarget": "LEFT",
-            "rules": [
-              {
-                "color": "#7dc540"
-              },
-              {
-                "color": "#f5d30f"
-              },
-              {
-                "color": "#dc172a"
-              }
-            ],
-            "visible": true
-          }
-        ],
-        "tableSettings": {
-          "hiddenColumns": []
-        },
-        "graphChartSettings": {
-          "connectNulls": false
-        },
-        "honeycombSettings": {
-          "showHive": true,
-          "showLegend": true,
-          "showLabels": false
-        }
-      },
-      "queriesSettings": {
-        "resolution": ""
-      },
-      "metricExpressions": [
-        "resolution=null&(redis.bdb_crdt_syncer_egress_bytes_decompressed:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
-      ]
-    },
-    {
-      "name": "Ingress Sync Lag Time",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 456,
-        "left": 266,
-        "width": 456,
-        "height": 228
+        "height": 266
       },
       "tileFilter": {},
       "isAutoRefreshDisabled": false,
@@ -837,22 +873,22 @@
       ]
     },
     {
-      "name": "CRDT Pending GC",
+      "name": "Egress - decompressed",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 456,
-        "left": 1216,
-        "width": 266,
-        "height": 228
+        "top": 266,
+        "left": 760,
+        "width": 532,
+        "height": 266
       },
       "tileFilter": {},
       "isAutoRefreshDisabled": false,
-      "customName": "Single value",
+      "customName": "Data explorer results",
       "queries": [
         {
           "id": "A",
-          "metric": "redis.redis_crdt_gc_pending.count",
+          "metric": "redis.bdb_crdt_syncer_egress_bytes_decompressed",
           "spaceAggregation": "AUTO",
           "timeAggregation": "DEFAULT",
           "splitBy": [],
@@ -868,7 +904,7 @@
         }
       ],
       "visualConfig": {
-        "type": "SINGLE_VALUE",
+        "type": "GRAPH_CHART",
         "global": {},
         "rules": [
           {
@@ -881,12 +917,26 @@
         ],
         "axes": {
           "xAxis": {
+            "displayName": "",
             "visible": true
           },
-          "yAxes": []
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A"
+              ],
+              "defaultAxis": true
+            }
+          ]
         },
         "heatmapSettings": {
-          "yAxis": "VALUE"
+          "yAxis": "VALUE",
+          "showLabels": false
         },
         "singleValueSettings": {
           "showTrend": true,
@@ -926,27 +976,26 @@
         "resolution": ""
       },
       "metricExpressions": [
-        "resolution=Inf&(redis.redis_crdt_gc_pending.count:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names",
-        "resolution=null&(redis.redis_crdt_gc_pending.count:splitBy():sort(value(auto,descending)):limit(20))"
+        "resolution=null&(redis.bdb_crdt_syncer_egress_bytes_decompressed:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
       ]
     },
     {
-      "name": "CRDT Backlog",
+      "name": "Egress",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 456,
-        "left": 0,
-        "width": 266,
-        "height": 228
+        "top": 0,
+        "left": 760,
+        "width": 532,
+        "height": 266
       },
       "tileFilter": {},
       "isAutoRefreshDisabled": false,
-      "customName": "Single value",
+      "customName": "Data explorer results",
       "queries": [
         {
-          "id": "A",
-          "metric": "redis.redis_crdt_backlog_size.count",
+          "id": "C",
+          "metric": "redis.bdb_crdt_syncer_egress_bytes",
           "spaceAggregation": "AUTO",
           "timeAggregation": "DEFAULT",
           "splitBy": [],
@@ -962,11 +1011,11 @@
         }
       ],
       "visualConfig": {
-        "type": "SINGLE_VALUE",
+        "type": "GRAPH_CHART",
         "global": {},
         "rules": [
           {
-            "matcher": "A:",
+            "matcher": "C:",
             "properties": {
               "color": "DEFAULT"
             },
@@ -975,12 +1024,26 @@
         ],
         "axes": {
           "xAxis": {
+            "displayName": "",
             "visible": true
           },
-          "yAxes": []
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "C"
+              ],
+              "defaultAxis": true
+            }
+          ]
         },
         "heatmapSettings": {
-          "yAxis": "VALUE"
+          "yAxis": "VALUE",
+          "showLabels": false
         },
         "singleValueSettings": {
           "showTrend": true,
@@ -1020,19 +1083,18 @@
         "resolution": ""
       },
       "metricExpressions": [
-        "resolution=Inf&(redis.redis_crdt_backlog_size.count:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names",
-        "resolution=null&(redis.redis_crdt_backlog_size.count:splitBy():sort(value(auto,descending)):limit(20))"
+        "resolution=null&(redis.bdb_crdt_syncer_egress_bytes:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
       ]
     },
     {
-      "name": "CRDT Merge Requests",
+      "name": "Merge Requests",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 456,
-        "left": 722,
-        "width": 494,
-        "height": 228
+        "top": 532,
+        "left": 760,
+        "width": 532,
+        "height": 266
       },
       "tileFilter": {},
       "isAutoRefreshDisabled": false,
@@ -1132,14 +1194,14 @@
       ]
     },
     {
-      "name": "CRDT Raw DB Size",
+      "name": "Sync Status",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
         "top": 0,
-        "left": 1216,
+        "left": 0,
         "width": 266,
-        "height": 228
+        "height": 266
       },
       "tileFilter": {},
       "isAutoRefreshDisabled": false,
@@ -1147,7 +1209,7 @@
       "queries": [
         {
           "id": "A",
-          "metric": "redis.redis_crdt_raw_dbsize.count",
+          "metric": "redis.bdb_crdt_syncer_status",
           "spaceAggregation": "AUTO",
           "timeAggregation": "DEFAULT",
           "splitBy": [],
@@ -1193,15 +1255,19 @@
             "axisTarget": "LEFT",
             "rules": [
               {
+                "value": 0,
                 "color": "#7dc540"
               },
               {
+                "value": 1,
                 "color": "#f5d30f"
               },
               {
+                "value": 2,
                 "color": "#dc172a"
               }
             ],
+            "queryId": "",
             "visible": true
           }
         ],
@@ -1221,8 +1287,8 @@
         "resolution": ""
       },
       "metricExpressions": [
-        "resolution=Inf&(redis.redis_crdt_raw_dbsize.count:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names",
-        "resolution=null&(redis.redis_crdt_raw_dbsize.count:splitBy():sort(value(auto,descending)):limit(20))"
+        "resolution=Inf&(redis.bdb_crdt_syncer_status:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names",
+        "resolution=null&(redis.bdb_crdt_syncer_status:splitBy():sort(value(auto,descending)):limit(20))"
       ]
     }
   ]

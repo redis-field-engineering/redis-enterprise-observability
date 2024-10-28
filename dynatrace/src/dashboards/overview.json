@@ -1,138 +1,83 @@
 {
-  "dashboardMetadata": {
-    "name": "Redis-Enterprise Overview",
-    "shared": true,
-    "owner": "Dynatrace",
-    "tags": [
-      "Overview",
-      "redis-enterprise",
-      "Redis"
+  "metadata": {
+    "configurationVersions": [
+      7
     ],
-    "preset": true
+    "clusterVersion": "1.303.42.20241021-231645"
+  },
+  "id": "3f10a8b5-30e8-4f2c-aad1-70cb6f6d265d",
+  "dashboardMetadata": {
+    "name": "Redis Enterprise - Overview",
+    "shared": false,
+    "owner": "john.burke@redis.com",
+    "popularity": 9,
+    "dynamicFilters": {
+      "filters": [
+        "CUSTOM_DEVICE_TAG_KEY:Custom device ID"
+      ],
+      "genericTagFilters": []
+    },
+    "hasConsistentColors": false
   },
   "tiles": [
     {
-      "name": "Markdown",
-      "tileType": "MARKDOWN",
-      "configured": true,
-      "bounds": {
-        "top": 0,
-        "left": 0,
-        "width": 304,
-        "height": 304
-      },
-      "tileFilter": {},
-      "markdown": "## 🔗 redis-enterprise entities\n---\n## [Redis Cluster](ui/entity/list/prometheus:com_redis_enterprise_experimental_redis_cluster)\n## [Redis Database](ui/entity/list/prometheus:com_redis_enterprise_experimental_redis_database)\n## [Redis Node](ui/entity/list/prometheus:com_redis_enterprise_experimental_redis_node)"
-    },
-    {
-      "name": "Markdown",
-      "tileType": "MARKDOWN",
-      "configured": true,
-      "bounds": {
-        "top": 0,
-        "left": 304,
-        "width": 456,
-        "height": 76
-      },
-      "tileFilter": {},
-      "markdown": "## Currently monitoring\n---"
-    },
-    {
-      "name": "Title Redis Cluster",
-      "tileType": "MARKDOWN",
-      "configured": true,
-      "bounds": {
-        "top": 304,
-        "left": 0,
-        "width": 570,
-        "height": 38
-      },
-      "tileFilter": {},
-      "markdown": "## Redis Cluster"
-    },
-    {
-      "name": "Title Redis Database",
-      "tileType": "MARKDOWN",
-      "configured": true,
-      "bounds": {
-        "top": 608,
-        "left": 0,
-        "width": 570,
-        "height": 38
-      },
-      "tileFilter": {},
-      "markdown": "## Redis Database"
-    },
-    {
-      "name": "Title Redis Node",
-      "tileType": "MARKDOWN",
-      "configured": true,
-      "bounds": {
-        "top": 912,
-        "left": 0,
-        "width": 570,
-        "height": 38
-      },
-      "tileFilter": {},
-      "markdown": "## Redis Node"
-    },
-    {
-      "name": "Clusters",
+      "name": "Keys",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 76,
-        "left": 304,
-        "width": 152,
-        "height": 152
+        "top": 0,
+        "left": 1254,
+        "width": 266,
+        "height": 190
       },
       "tileFilter": {},
-      "customName": "Single value",
+      "isAutoRefreshDisabled": false,
+      "customName": "Keys",
       "queries": [
         {
           "id": "A",
+          "metric": "redis.bdb_no_of_keys",
+          "spaceAggregation": "AUTO",
           "timeAggregation": "DEFAULT",
-          "metricSelector": "redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_cluster\"):auto:splitBy():count",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
           "enabled": true
         }
       ],
       "visualConfig": {
         "type": "SINGLE_VALUE",
-        "global": {},
+        "global": {
+          "hideLegend": false
+        },
         "rules": [
           {
             "matcher": "A:",
             "properties": {
-              "color": "DEFAULT",
-              "seriesType": "COLUMN"
+              "color": "DEFAULT"
             },
             "seriesOverrides": []
           }
         ],
         "axes": {
           "xAxis": {
-            "displayName": "",
             "visible": true
           },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A"
-              ],
-              "defaultAxis": true
-            }
-          ]
+          "yAxes": []
         },
         "heatmapSettings": {
           "yAxis": "VALUE"
         },
         "singleValueSettings": {
-          "showSparkLine": false
+          "showTrend": true,
+          "showSparkLine": true,
+          "linkTileColorToThreshold": true
         },
         "thresholds": [
           {
@@ -148,10 +93,14 @@
                 "color": "#dc172a"
               }
             ],
+            "queryId": "",
             "visible": true
           }
         ],
-        "tableSettings": {},
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false,
+          "hiddenColumns": []
+        },
         "graphChartSettings": {
           "connectNulls": false
         },
@@ -161,67 +110,72 @@
           "showLabels": false
         }
       },
+      "queriesSettings": {
+        "resolution": ""
+      },
       "metricExpressions": [
-        "resolution=Inf&(redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_cluster\"):auto:splitBy():count):limit(100):names"
+        "resolution=Inf&(redis.bdb_no_of_keys:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names",
+        "resolution=null&(redis.bdb_no_of_keys:splitBy():sort(value(auto,descending)):limit(20))"
       ]
     },
     {
-      "name": "Databases",
+      "name": "Connections",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 76,
-        "left": 456,
-        "width": 152,
-        "height": 152
+        "top": 190,
+        "left": 988,
+        "width": 266,
+        "height": 190
       },
       "tileFilter": {},
+      "isAutoRefreshDisabled": false,
       "customName": "Single value",
       "queries": [
         {
           "id": "A",
+          "metric": "redis.bdb_conns",
+          "spaceAggregation": "AUTO",
           "timeAggregation": "DEFAULT",
-          "metricSelector": "redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_database\"):auto:splitBy():count",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
           "enabled": true
         }
       ],
       "visualConfig": {
         "type": "SINGLE_VALUE",
-        "global": {},
+        "global": {
+          "hideLegend": false
+        },
         "rules": [
           {
             "matcher": "A:",
             "properties": {
-              "color": "DEFAULT",
-              "seriesType": "COLUMN"
+              "color": "DEFAULT"
             },
             "seriesOverrides": []
           }
         ],
         "axes": {
           "xAxis": {
-            "displayName": "",
             "visible": true
           },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A"
-              ],
-              "defaultAxis": true
-            }
-          ]
+          "yAxes": []
         },
         "heatmapSettings": {
           "yAxis": "VALUE"
         },
         "singleValueSettings": {
-          "showSparkLine": false
+          "showTrend": true,
+          "showSparkLine": true,
+          "linkTileColorToThreshold": true
         },
         "thresholds": [
           {
@@ -237,10 +191,14 @@
                 "color": "#dc172a"
               }
             ],
+            "queryId": "",
             "visible": true
           }
         ],
-        "tableSettings": {},
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false,
+          "hiddenColumns": []
+        },
         "graphChartSettings": {
           "connectNulls": false
         },
@@ -250,67 +208,184 @@
           "showLabels": false
         }
       },
+      "queriesSettings": {
+        "resolution": ""
+      },
       "metricExpressions": [
-        "resolution=Inf&(redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_database\"):auto:splitBy():count):limit(100):names"
+        "resolution=Inf&(redis.bdb_conns:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names",
+        "resolution=null&(redis.bdb_conns:splitBy():sort(value(auto,descending)):limit(20))"
       ]
+    },
+    {
+      "name": "Used Memory",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 0,
+        "left": 988,
+        "width": 266,
+        "height": 190
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "Single value",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "redis.bdb_used_memory",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "SINGLE_VALUE",
+        "global": {
+          "hideLegend": false
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "visible": true
+          },
+          "yAxes": []
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE"
+        },
+        "singleValueSettings": {
+          "showTrend": true,
+          "showSparkLine": true,
+          "linkTileColorToThreshold": true
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "queryId": "",
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false,
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=Inf&(redis.bdb_used_memory:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names",
+        "resolution=null&(redis.bdb_used_memory:splitBy():sort(value(auto,descending)):limit(20))"
+      ]
+    },
+    {
+      "name": "Markdown",
+      "tileType": "MARKDOWN",
+      "configured": true,
+      "bounds": {
+        "top": 0,
+        "left": 0,
+        "width": 494,
+        "height": 380
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "markdown": "# Cluster Dashboard\n\n### The various panels can be filtered by cluster by entering that term in the filter text area. \n\n- Click in the text area and wait until it loads the metadata\n- Scroll down and select the cluster with which you wish to filter\n\n\n### See the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions) for details of the available metrics. "
     },
     {
       "name": "Nodes",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 76,
-        "left": 608,
-        "width": 152,
-        "height": 152
+        "top": 190,
+        "left": 1254,
+        "width": 266,
+        "height": 190
       },
       "tileFilter": {},
-      "customName": "Single value",
+      "isAutoRefreshDisabled": false,
+      "customName": "Keys",
       "queries": [
         {
           "id": "A",
+          "metric": "redis.node_up",
+          "spaceAggregation": "AUTO",
           "timeAggregation": "DEFAULT",
-          "metricSelector": "redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_node\"):auto:splitBy():count",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
           "enabled": true
         }
       ],
       "visualConfig": {
         "type": "SINGLE_VALUE",
-        "global": {},
+        "global": {
+          "hideLegend": false
+        },
         "rules": [
           {
             "matcher": "A:",
             "properties": {
-              "color": "DEFAULT",
-              "seriesType": "COLUMN"
+              "color": "DEFAULT"
             },
             "seriesOverrides": []
           }
         ],
         "axes": {
           "xAxis": {
-            "displayName": "",
             "visible": true
           },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A"
-              ],
-              "defaultAxis": true
-            }
-          ]
+          "yAxes": []
         },
         "heatmapSettings": {
           "yAxis": "VALUE"
         },
         "singleValueSettings": {
-          "showSparkLine": false
+          "showTrend": true,
+          "showSparkLine": true,
+          "linkTileColorToThreshold": true
         },
         "thresholds": [
           {
@@ -326,10 +401,14 @@
                 "color": "#dc172a"
               }
             ],
+            "queryId": "",
             "visible": true
           }
         ],
-        "tableSettings": {},
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false,
+          "hiddenColumns": []
+        },
         "graphChartSettings": {
           "connectNulls": false
         },
@@ -339,39 +418,38 @@
           "showLabels": false
         }
       },
+      "queriesSettings": {
+        "resolution": ""
+      },
       "metricExpressions": [
-        "resolution=Inf&(redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_node\"):auto:splitBy():count):limit(100):names"
+        "resolution=Inf&(redis.node_up:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names",
+        "resolution=null&(redis.node_up:splitBy():sort(value(auto,descending)):limit(20))"
       ]
     },
     {
-      "name": "Redis Cluster",
+      "name": "Database List",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 342,
-        "left": 0,
-        "width": 570,
-        "height": 266
+        "top": 0,
+        "left": 494,
+        "width": 494,
+        "height": 380
       },
       "tileFilter": {},
+      "isAutoRefreshDisabled": false,
       "customName": "Table",
       "queries": [
         {
           "id": "A",
+          "spaceAggregation": "AUTO",
           "timeAggregation": "DEFAULT",
           "splitBy": [
-            "dt.entity.prometheus:com_redis_enterprise_experimental_redis_cluster"
+            "cluster",
+            "bdb_name"
           ],
-          "metricSelector": "redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_cluster\"):sum:auto:sort(value(avg,descending)):limit(10):last",
-          "enabled": true
-        },
-        {
-          "id": "B",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "dt.entity.prometheus:com_redis_enterprise_experimental_redis_cluster"
-          ],
-          "metricSelector": "redis.redis_total_connections_received:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_cluster\"):sum:auto:sort(value(avg,descending)):limit(10):last",
+          "metricSelector": "redis.bdb_up:splitBy(\"cluster\", \"bdb_name\"):sort(value(auto,descending)):limit(20)",
+          "rate": "NONE",
           "enabled": true
         }
       ],
@@ -381,13 +459,6 @@
         "rules": [
           {
             "matcher": "A:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          },
-          {
-            "matcher": "B:",
             "properties": {
               "color": "DEFAULT"
             },
@@ -406,7 +477,7 @@
         "thresholds": [
           {
             "axisTarget": "LEFT",
-            "columnId": "Redis Used Memory",
+            "columnId": "Database Status",
             "rules": [
               {
                 "color": "#7dc540"
@@ -422,7 +493,32 @@
             "visible": true
           }
         ],
-        "tableSettings": {},
+        "tableSettings": {
+          "hiddenColumns": [
+            "A:cluster.name",
+            "A:bdb_name.name",
+            "A:(if status != 1,\"Down\",\"Up\").name",
+            "A:if status != 1.name",
+            "A:Down.name",
+            "A:Up.name",
+            "A:valuesAdd(if status != 1,\"Down\",else:\"Up\").name",
+            "A:status.name",
+            "A:activation_endpoint.name",
+            "A:bdb.name",
+            "A:device.name",
+            "A:device.address.name",
+            "A:device.port.name",
+            "A:dt.entity.gcp_zone.name",
+            "A:dt.entity.host.name",
+            "A:dt.entity.prometheus:com_dynatrace_extension_redis_cluster.name",
+            "A:dt.entity.prometheus:com_dynatrace_extension_redis_database.name",
+            "A:dt.metrics.source.name",
+            "A:gcp.instance.id.name",
+            "A:gcp.project.id.name",
+            "A:gcp.region.name",
+            "A:gcp.zone.name"
+          ]
+        },
         "graphChartSettings": {
           "connectNulls": false
         },
@@ -436,43 +532,529 @@
         "resolution": ""
       },
       "metricExpressions": [
-        "resolution=null&(redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_cluster\"):sum:auto:sort(value(avg,descending)):limit(10):last):limit(100):names:fold(auto),(redis.redis_total_connections_received:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_cluster\"):sum:auto:sort(value(avg,descending)):limit(10):last):limit(100):names:fold(auto)"
+        "resolution=Inf&(redis.bdb_up:splitBy(cluster,bdb_name):sort(value(auto,descending)):limit(20)):names"
       ]
     },
     {
-      "name": "Redis Database",
+      "name": "Key Count",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 646,
-        "left": 0,
-        "width": 570,
-        "height": 266
+        "top": 380,
+        "left": 988,
+        "width": 532,
+        "height": 304
       },
       "tileFilter": {},
-      "customName": "Table",
+      "isAutoRefreshDisabled": false,
+      "customName": "Data explorer results",
       "queries": [
         {
           "id": "A",
+          "metric": "redis.bdb_no_of_keys",
+          "spaceAggregation": "AUTO",
           "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "dt.entity.prometheus:com_redis_enterprise_experimental_redis_database"
-          ],
-          "metricSelector": "redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_database\"):sum:auto:sort(value(avg,descending)):limit(10):last",
-          "enabled": true
-        },
-        {
-          "id": "B",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "dt.entity.prometheus:com_redis_enterprise_experimental_redis_database"
-          ],
-          "metricSelector": "redis.redis_total_connections_received:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_database\"):sum:auto:sort(value(avg,descending)):limit(10):last",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
           "enabled": true
         }
       ],
       "visualConfig": {
-        "type": "TABLE",
+        "type": "GRAPH_CHART",
+        "global": {
+          "hideLegend": false
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A"
+              ],
+              "defaultAxis": true
+            },
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "RIGHT",
+              "queryIds": [
+                "B"
+              ],
+              "defaultAxis": true
+            }
+          ]
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE",
+          "showLabels": false
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "queryId": "",
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false,
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=null&(redis.bdb_no_of_keys:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
+      ]
+    },
+    {
+      "name": "Memory Usage",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 380,
+        "left": 0,
+        "width": 494,
+        "height": 304
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "redis.bdb_used_memory",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "GRAPH_CHART",
+        "global": {
+          "hideLegend": false
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A"
+              ],
+              "defaultAxis": true
+            }
+          ]
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE",
+          "showLabels": false
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "queryId": "",
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false,
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=null&(redis.bdb_used_memory:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
+      ]
+    },
+    {
+      "name": "Latency",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 380,
+        "left": 494,
+        "width": 494,
+        "height": 304
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "redis.bdb_avg_read_latency",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": true
+        },
+        {
+          "id": "B",
+          "metric": "redis.bdb_avg_write_latency",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "GRAPH_CHART",
+        "global": {
+          "hideLegend": false
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "unitTransform": "MicroSecond",
+            "valueFormat": "0",
+            "properties": {
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": []
+          },
+          {
+            "matcher": "B:",
+            "unitTransform": "MicroSecond",
+            "valueFormat": "0",
+            "properties": {
+              "color": "DEFAULT",
+              "seriesType": "LINE"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A",
+                "B"
+              ],
+              "defaultAxis": true
+            },
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "RIGHT",
+              "queryIds": [
+                "B"
+              ],
+              "defaultAxis": false
+            }
+          ]
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE",
+          "showLabels": false
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "queryId": "",
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false,
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=null&(redis.bdb_avg_read_latency:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names,(redis.bdb_avg_write_latency:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
+      ]
+    },
+    {
+      "name": "Connectinos",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 684,
+        "left": 0,
+        "width": 494,
+        "height": 304
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "redis.bdb_conns",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "GRAPH_CHART",
+        "global": {
+          "hideLegend": false
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A"
+              ],
+              "defaultAxis": true
+            },
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "RIGHT",
+              "queryIds": [
+                "B"
+              ],
+              "defaultAxis": true
+            }
+          ]
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE",
+          "showLabels": false
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "queryId": "",
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false,
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=null&(redis.bdb_conns:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
+      ]
+    },
+    {
+      "name": "Total Requests",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 684,
+        "left": 494,
+        "width": 494,
+        "height": 304
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "redis.bdb_total_req",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [],
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "GRAPH_CHART",
         "global": {},
         "rules": [
           {
@@ -481,28 +1063,45 @@
               "color": "DEFAULT"
             },
             "seriesOverrides": []
-          },
-          {
-            "matcher": "B:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
           }
         ],
         "axes": {
           "xAxis": {
+            "displayName": "",
             "visible": true
           },
-          "yAxes": []
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A"
+              ],
+              "defaultAxis": true
+            },
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "RIGHT",
+              "queryIds": [
+                "B"
+              ],
+              "defaultAxis": true
+            }
+          ]
         },
         "heatmapSettings": {
-          "yAxis": "VALUE"
+          "yAxis": "VALUE",
+          "showLabels": false
         },
         "thresholds": [
           {
             "axisTarget": "LEFT",
-            "columnId": "Redis Used Memory",
             "rules": [
               {
                 "color": "#7dc540"
@@ -514,11 +1113,12 @@
                 "color": "#dc172a"
               }
             ],
-            "queryId": "A",
             "visible": true
           }
         ],
-        "tableSettings": {},
+        "tableSettings": {
+          "hiddenColumns": []
+        },
         "graphChartSettings": {
           "connectNulls": false
         },
@@ -532,43 +1132,44 @@
         "resolution": ""
       },
       "metricExpressions": [
-        "resolution=null&(redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_database\"):sum:auto:sort(value(avg,descending)):limit(10):last):limit(100):names:fold(auto),(redis.redis_total_connections_received:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_database\"):sum:auto:sort(value(avg,descending)):limit(10):last):limit(100):names:fold(auto)"
+        "resolution=null&(redis.bdb_total_req:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
       ]
     },
     {
-      "name": "Redis Node",
+      "name": "Expired Keys",
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 950,
-        "left": 0,
-        "width": 570,
-        "height": 266
+        "top": 684,
+        "left": 988,
+        "width": 532,
+        "height": 304
       },
       "tileFilter": {},
-      "customName": "Table",
+      "isAutoRefreshDisabled": false,
+      "customName": "Data explorer results",
       "queries": [
         {
           "id": "A",
+          "metric": "redis.redis_expired_keys",
+          "spaceAggregation": "AUTO",
           "timeAggregation": "DEFAULT",
           "splitBy": [
-            "dt.entity.prometheus:com_redis_enterprise_experimental_redis_node"
+            "bdb"
           ],
-          "metricSelector": "redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_node\"):sum:auto:sort(value(avg,descending)):limit(10):last",
-          "enabled": true
-        },
-        {
-          "id": "B",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "dt.entity.prometheus:com_redis_enterprise_experimental_redis_node"
-          ],
-          "metricSelector": "redis.redis_total_connections_received:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_node\"):sum:auto:sort(value(avg,descending)):limit(10):last",
+          "sortBy": "DESC",
+          "sortByDimension": "",
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          },
+          "limit": 20,
+          "rate": "NONE",
           "enabled": true
         }
       ],
       "visualConfig": {
-        "type": "TABLE",
+        "type": "GRAPH_CHART",
         "global": {},
         "rules": [
           {
@@ -577,96 +1178,6 @@
               "color": "DEFAULT"
             },
             "seriesOverrides": []
-          },
-          {
-            "matcher": "B:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          }
-        ],
-        "axes": {
-          "xAxis": {
-            "visible": true
-          },
-          "yAxes": []
-        },
-        "heatmapSettings": {
-          "yAxis": "VALUE"
-        },
-        "thresholds": [
-          {
-            "axisTarget": "LEFT",
-            "columnId": "Redis Used Memory",
-            "rules": [
-              {
-                "color": "#7dc540"
-              },
-              {
-                "color": "#f5d30f"
-              },
-              {
-                "color": "#dc172a"
-              }
-            ],
-            "queryId": "A",
-            "visible": true
-          }
-        ],
-        "tableSettings": {},
-        "graphChartSettings": {
-          "connectNulls": false
-        },
-        "honeycombSettings": {
-          "showHive": true,
-          "showLegend": true,
-          "showLabels": false
-        }
-      },
-      "queriesSettings": {
-        "resolution": ""
-      },
-      "metricExpressions": [
-        "resolution=null&(redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_node\"):sum:auto:sort(value(avg,descending)):limit(10):last):limit(100):names:fold(auto),(redis.redis_total_connections_received:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_node\"):sum:auto:sort(value(avg,descending)):limit(10):last):limit(100):names:fold(auto)"
-      ]
-    },
-    {
-      "name": "Redis Used Memory",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 342,
-        "left": 570,
-        "width": 418,
-        "height": 266
-      },
-      "tileFilter": {},
-      "customName": "Data explorer results",
-      "queries": [
-        {
-          "id": "A",
-          "metric": "redis.redis_used_memory",
-          "spaceAggregation": "SUM",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "dt.entity.prometheus:com_redis_enterprise_experimental_redis_cluster"
-          ],
-          "enabled": true
-        }
-      ],
-      "visualConfig": {
-        "type": "GRAPH_CHART",
-        "global": {
-          "hideLegend": false
-        },
-        "rules": [
-          {
-            "matcher": "A:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
           }
         ],
         "axes": {
@@ -705,12 +1216,11 @@
                 "color": "#dc172a"
               }
             ],
-            "queryId": "",
             "visible": true
           }
         ],
         "tableSettings": {
-          "isThresholdBackgroundAppliedToCell": false
+          "hiddenColumns": []
         },
         "graphChartSettings": {
           "connectNulls": false
@@ -725,492 +1235,7 @@
         "resolution": ""
       },
       "metricExpressions": [
-        "resolution=null&(redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_cluster\"):sum:auto:sort(value(sum,descending)):limit(10)):limit(100):names"
-      ]
-    },
-    {
-      "name": "Redis Total Commands Received",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 342,
-        "left": 988,
-        "width": 418,
-        "height": 266
-      },
-      "tileFilter": {},
-      "customName": "Data explorer results",
-      "queries": [
-        {
-          "id": "A",
-          "metric": "redis.redis_total_connections_received",
-          "spaceAggregation": "SUM",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "dt.entity.prometheus:com_redis_enterprise_experimental_redis_cluster"
-          ],
-          "enabled": true
-        }
-      ],
-      "visualConfig": {
-        "type": "GRAPH_CHART",
-        "global": {
-          "hideLegend": false
-        },
-        "rules": [
-          {
-            "matcher": "A:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          }
-        ],
-        "axes": {
-          "xAxis": {
-            "displayName": "",
-            "visible": true
-          },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A"
-              ],
-              "defaultAxis": true
-            }
-          ]
-        },
-        "heatmapSettings": {
-          "yAxis": "VALUE"
-        },
-        "thresholds": [
-          {
-            "axisTarget": "LEFT",
-            "rules": [
-              {
-                "color": "#7dc540"
-              },
-              {
-                "color": "#f5d30f"
-              },
-              {
-                "color": "#dc172a"
-              }
-            ],
-            "queryId": "",
-            "visible": true
-          }
-        ],
-        "tableSettings": {
-          "isThresholdBackgroundAppliedToCell": false
-        },
-        "graphChartSettings": {
-          "connectNulls": false
-        },
-        "honeycombSettings": {
-          "showHive": true,
-          "showLegend": true,
-          "showLabels": false
-        }
-      },
-      "queriesSettings": {
-        "resolution": ""
-      },
-      "metricExpressions": [
-        "resolution=null&(redis.redis_total_connections_received:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_cluster\"):sum:auto:sort(value(sum,descending)):limit(10)):limit(100):names"
-      ]
-    },
-    {
-      "name": "Redis Used Memory",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 646,
-        "left": 570,
-        "width": 418,
-        "height": 266
-      },
-      "tileFilter": {},
-      "customName": "Data explorer results",
-      "queries": [
-        {
-          "id": "A",
-          "metric": "redis.redis_used_memory",
-          "spaceAggregation": "SUM",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "dt.entity.prometheus:com_redis_enterprise_experimental_redis_database"
-          ],
-          "enabled": true
-        }
-      ],
-      "visualConfig": {
-        "type": "GRAPH_CHART",
-        "global": {
-          "hideLegend": false
-        },
-        "rules": [
-          {
-            "matcher": "A:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          }
-        ],
-        "axes": {
-          "xAxis": {
-            "displayName": "",
-            "visible": true
-          },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A"
-              ],
-              "defaultAxis": true
-            }
-          ]
-        },
-        "heatmapSettings": {
-          "yAxis": "VALUE"
-        },
-        "thresholds": [
-          {
-            "axisTarget": "LEFT",
-            "rules": [
-              {
-                "color": "#7dc540"
-              },
-              {
-                "color": "#f5d30f"
-              },
-              {
-                "color": "#dc172a"
-              }
-            ],
-            "queryId": "",
-            "visible": true
-          }
-        ],
-        "tableSettings": {
-          "isThresholdBackgroundAppliedToCell": false
-        },
-        "graphChartSettings": {
-          "connectNulls": false
-        },
-        "honeycombSettings": {
-          "showHive": true,
-          "showLegend": true,
-          "showLabels": false
-        }
-      },
-      "queriesSettings": {
-        "resolution": ""
-      },
-      "metricExpressions": [
-        "resolution=null&(redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_database\"):sum:auto:sort(value(sum,descending)):limit(10)):limit(100):names"
-      ]
-    },
-    {
-      "name": "Redis Total Commands Received",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 646,
-        "left": 988,
-        "width": 418,
-        "height": 266
-      },
-      "tileFilter": {},
-      "customName": "Data explorer results",
-      "queries": [
-        {
-          "id": "A",
-          "metric": "redis.redis_total_connections_received",
-          "spaceAggregation": "SUM",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "dt.entity.prometheus:com_redis_enterprise_experimental_redis_database"
-          ],
-          "enabled": true
-        }
-      ],
-      "visualConfig": {
-        "type": "GRAPH_CHART",
-        "global": {
-          "hideLegend": false
-        },
-        "rules": [
-          {
-            "matcher": "A:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          }
-        ],
-        "axes": {
-          "xAxis": {
-            "displayName": "",
-            "visible": true
-          },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A"
-              ],
-              "defaultAxis": true
-            }
-          ]
-        },
-        "heatmapSettings": {
-          "yAxis": "VALUE"
-        },
-        "thresholds": [
-          {
-            "axisTarget": "LEFT",
-            "rules": [
-              {
-                "color": "#7dc540"
-              },
-              {
-                "color": "#f5d30f"
-              },
-              {
-                "color": "#dc172a"
-              }
-            ],
-            "queryId": "",
-            "visible": true
-          }
-        ],
-        "tableSettings": {
-          "isThresholdBackgroundAppliedToCell": false
-        },
-        "graphChartSettings": {
-          "connectNulls": false
-        },
-        "honeycombSettings": {
-          "showHive": true,
-          "showLegend": true,
-          "showLabels": false
-        }
-      },
-      "queriesSettings": {
-        "resolution": ""
-      },
-      "metricExpressions": [
-        "resolution=null&(redis.redis_total_connections_received:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_database\"):sum:auto:sort(value(sum,descending)):limit(10)):limit(100):names"
-      ]
-    },
-    {
-      "name": "Redis Used Memory",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 950,
-        "left": 570,
-        "width": 418,
-        "height": 266
-      },
-      "tileFilter": {},
-      "customName": "Data explorer results",
-      "queries": [
-        {
-          "id": "A",
-          "metric": "redis.redis_used_memory",
-          "spaceAggregation": "SUM",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "dt.entity.prometheus:com_redis_enterprise_experimental_redis_node"
-          ],
-          "enabled": true
-        }
-      ],
-      "visualConfig": {
-        "type": "GRAPH_CHART",
-        "global": {
-          "hideLegend": false
-        },
-        "rules": [
-          {
-            "matcher": "A:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          }
-        ],
-        "axes": {
-          "xAxis": {
-            "displayName": "",
-            "visible": true
-          },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A"
-              ],
-              "defaultAxis": true
-            }
-          ]
-        },
-        "heatmapSettings": {
-          "yAxis": "VALUE"
-        },
-        "thresholds": [
-          {
-            "axisTarget": "LEFT",
-            "rules": [
-              {
-                "color": "#7dc540"
-              },
-              {
-                "color": "#f5d30f"
-              },
-              {
-                "color": "#dc172a"
-              }
-            ],
-            "queryId": "",
-            "visible": true
-          }
-        ],
-        "tableSettings": {
-          "isThresholdBackgroundAppliedToCell": false
-        },
-        "graphChartSettings": {
-          "connectNulls": false
-        },
-        "honeycombSettings": {
-          "showHive": true,
-          "showLegend": true,
-          "showLabels": false
-        }
-      },
-      "queriesSettings": {
-        "resolution": ""
-      },
-      "metricExpressions": [
-        "resolution=null&(redis.redis_used_memory:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_node\"):sum:auto:sort(value(sum,descending)):limit(10)):limit(100):names"
-      ]
-    },
-    {
-      "name": "Redis Total Commands Received",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 950,
-        "left": 988,
-        "width": 418,
-        "height": 266
-      },
-      "tileFilter": {},
-      "customName": "Data explorer results",
-      "queries": [
-        {
-          "id": "A",
-          "metric": "redis.redis_total_connections_received",
-          "spaceAggregation": "SUM",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "dt.entity.prometheus:com_redis_enterprise_experimental_redis_node"
-          ],
-          "enabled": true
-        }
-      ],
-      "visualConfig": {
-        "type": "GRAPH_CHART",
-        "global": {
-          "hideLegend": false
-        },
-        "rules": [
-          {
-            "matcher": "A:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          }
-        ],
-        "axes": {
-          "xAxis": {
-            "displayName": "",
-            "visible": true
-          },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A"
-              ],
-              "defaultAxis": true
-            }
-          ]
-        },
-        "heatmapSettings": {
-          "yAxis": "VALUE"
-        },
-        "thresholds": [
-          {
-            "axisTarget": "LEFT",
-            "rules": [
-              {
-                "color": "#7dc540"
-              },
-              {
-                "color": "#f5d30f"
-              },
-              {
-                "color": "#dc172a"
-              }
-            ],
-            "queryId": "",
-            "visible": true
-          }
-        ],
-        "tableSettings": {
-          "isThresholdBackgroundAppliedToCell": false
-        },
-        "graphChartSettings": {
-          "connectNulls": false
-        },
-        "honeycombSettings": {
-          "showHive": true,
-          "showLegend": true,
-          "showLabels": false
-        }
-      },
-      "queriesSettings": {
-        "resolution": ""
-      },
-      "metricExpressions": [
-        "resolution=null&(redis.redis_total_connections_received:splitBy(\"dt.entity.prometheus:com_redis_enterprise_experimental_redis_node\"):sum:auto:sort(value(sum,descending)):limit(10)):limit(100):names"
+        "resolution=null&(redis.redis_expired_keys:splitBy(bdb):sort(value(auto,descending)):limit(20)):limit(100):names"
       ]
     }
   ]

@@ -10,7 +10,7 @@
     "name": "Redis Enterprise - Database",
     "shared": false,
     "owner": "john.burke@redis.com",
-    "popularity": 1,
+    "popularity": 5,
     "dynamicFilters": {
       "filters": [
         "CUSTOM_DIMENSION:Redis Cluster"
@@ -26,8 +26,8 @@
       "configured": true,
       "bounds": {
         "top": 304,
-        "left": 912,
-        "width": 456,
+        "left": 1064,
+        "width": 532,
         "height": 304
       },
       "tileFilter": {},
@@ -191,8 +191,8 @@
       "configured": true,
       "bounds": {
         "top": 608,
-        "left": 456,
-        "width": 456,
+        "left": 532,
+        "width": 532,
         "height": 304
       },
       "tileFilter": {},
@@ -322,8 +322,8 @@
       "configured": true,
       "bounds": {
         "top": 0,
-        "left": 912,
-        "width": 456,
+        "left": 1064,
+        "width": 532,
         "height": 304
       },
       "tileFilter": {},
@@ -454,7 +454,7 @@
       "bounds": {
         "top": 304,
         "left": 0,
-        "width": 456,
+        "width": 532,
         "height": 304
       },
       "tileFilter": {},
@@ -560,8 +560,8 @@
       "configured": true,
       "bounds": {
         "top": 304,
-        "left": 456,
-        "width": 456,
+        "left": 532,
+        "width": 532,
         "height": 304
       },
       "tileFilter": {},
@@ -691,8 +691,8 @@
       "configured": true,
       "bounds": {
         "top": 0,
-        "left": 456,
-        "width": 456,
+        "left": 532,
+        "width": 532,
         "height": 304
       },
       "tileFilter": {},
@@ -781,8 +781,8 @@
       "configured": true,
       "bounds": {
         "top": 608,
-        "left": 912,
-        "width": 456,
+        "left": 1064,
+        "width": 532,
         "height": 304
       },
       "tileFilter": {},
@@ -923,7 +923,7 @@
       "bounds": {
         "top": 608,
         "left": 0,
-        "width": 456,
+        "width": 532,
         "height": 304
       },
       "tileFilter": {},
@@ -1031,7 +1031,7 @@
       "bounds": {
         "top": 0,
         "left": 0,
-        "width": 456,
+        "width": 532,
         "height": 304
       },
       "tileFilter": {},

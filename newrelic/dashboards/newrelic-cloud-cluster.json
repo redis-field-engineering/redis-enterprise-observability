@@ -42,7 +42,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_name) as 'Database', if (latest(redis_up) = 1, 'Up', 'Down') as 'Status' FROM Metric FACET cluster as 'Cluster', bdb as 'DBID'"
               }
@@ -74,7 +74,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_name) as 'Database', latest(bdb_used_memory) as 'Used Memory' FROM Metric FACET cluster LIMIT 10"
               }
@@ -103,7 +103,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_name) as 'Database', latest(bdb_no_of_keys) as 'Key Count' FROM Metric FACET cluster"
               }
@@ -135,7 +135,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(bdb_used_memory) FROM Metric FACET bdb_name TIMESERIES 30 MINUTES"
               }
@@ -176,7 +176,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(bdb_no_of_keys) FROM Metric FACET bdb_name TIMESERIES 30 MINUTES"
               }
@@ -220,7 +220,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(bdb_avg_latency)  FROM Metric FACET bdb_name TIMESERIES 30 MINUTES"
               }
@@ -261,13 +261,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(dmcproxy_process_resident_memory_bytes) FROM Metric FACET cluster,string('resident memory') TIMESERIES 30 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(dmcproxy_process_virtual_memory_bytes) FROM Metric FACET cluster,string('virtual memory') TIMESERIES 30 MINUTES"
               }
@@ -308,19 +308,19 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(bdb_read_req) FROM Metric FACET bdb_name, string('read') TIMESERIES 30 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(bdb_write_req) FROM Metric FACET bdb_name, string('write') TIMESERIES 30 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(bdb_other_req) FROM Metric FACET bdb_name, string('other') TIMESERIES 30 MINUTES"
               }
@@ -364,19 +364,19 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(listener_acc_read_latency) FROM Metric FACET cluster, string('read') TIMESERIES 30 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(listener_acc_write_latency) FROM Metric FACET cluster, string('write') TIMESERIES 30 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(listener_acc_other_latency) FROM Metric FACET cluster, string('other') TIMESERIES 30 MINUTES"
               }

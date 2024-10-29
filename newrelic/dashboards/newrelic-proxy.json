@@ -42,7 +42,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(cluster), latest(node) as 'Node', if (latest(node_up) = 1, 'Up', 'Down') as 'Status' FROM Metric"
               }
@@ -71,7 +71,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT count(listener_conns) AS 'Connections' FROM Metric"
               }
@@ -100,7 +100,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT uniqueCount(bdb_name) AS 'Databases' FROM Metric SINCE 30 MINUTES AGO"
               }
@@ -129,7 +129,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(dmcproxy_process_open_fds) AS 'File Descriptors' FROM Metric SINCE 30 MINUTES AGO"
               }
@@ -161,7 +161,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(dmcproxy_process_resident_memory_bytes) FROM Metric FACET cluster, node SINCE 30 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -193,7 +193,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(listener_conns) FROM Metric FACET cluster, node SINCE 30 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -225,7 +225,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(listener_ingress_bytes) FROM Metric FACET cluster, node SINCE 30 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -257,13 +257,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(node_ingress_bytes) FROM Metric FACET cluster, node SINCE 30 MINUTES AGO TIMESERIES 5 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(node_egress_bytes) * -1 FROM Metric FACET cluster, node SINCE 30 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -304,13 +304,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(listener_total_req) FROM Metric FACET cluster, node, string('request') SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(listener_total_res) FROM Metric FACET cluster, node, string('response') SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -342,13 +342,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(listener_total_res) FROM Metric FACET cluster, node SINCE 30 MINUTES AGO TIMESERIES 5 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(node_egress_bytes) FROM Metric FACET cluster, node SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -383,13 +383,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(listener_read_req) FROM Metric FACET cluster, node, string('requests') SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(listener_read_res) * -1 FROM Metric FACET cluster, node, string('responses') SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -430,13 +430,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(listener_write_req) FROM Metric FACET node SINCE 30 MINUTES AGO TIMESERIES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(listener_write_res) FROM Metric FACET node WHERE cluster = {{cluster}} SINCE 30 MINUTES AGO TIMESERIES"
               }
@@ -468,13 +468,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(node_ingress_bytes) FROM Metric FACET cluster, node, string('ingress') SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(node_egress_bytes) * -1 FROM Metric FACET cluster, node, string('egress') SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -506,13 +506,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(node_ingress_bytes) FROM Metric FACET node SINCE 30 MINUTES AGO TIMESERIES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(node_egress_bytes) * -1 FROM Metric FACET node WHERE cluster = {{cluster}} SINCE 30 MINUTES AGO TIMESERIES"
               }

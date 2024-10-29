@@ -42,7 +42,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(cluster), latest(node) as 'Node', if (latest(node_up) = 1, 'Up', 'Down') as 'Status' FROM Metric"
               }
@@ -71,7 +71,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(cluster), latest(bdb_name) as 'Database', if (latest(redis_up) = 1, 'Up', 'Down') as 'Status' FROM Metric"
               }
@@ -100,7 +100,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT if (latest(bdb_crdt_syncer_status) = 0, 'Sync', if (latest(bdb_crdt_syncer_status) = 1, 'Syncing', 'Out-of-sync')) as 'Status' FROM Metric FACET bdb_name as 'Database'"
               }
@@ -132,7 +132,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(bdb_crdt_syncer_ingress_bytes) FROM Metric FACET bdb_name SINCE 30 MINUTES AGO TIMESERIES"
               }
@@ -164,7 +164,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(bdb_crdt_syncer_egress_bytes) FROM Metric FACET bdb_name SINCE 30 MINUTES AGO TIMESERIES"
               }
@@ -193,7 +193,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_crdt_raw_dbsize) as 'Size' FROM Metric FACET bdb_name as 'Database' SINCE 30 MINUTES AGO"
               }
@@ -222,7 +222,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_crdt_syncer_local_ingress_lag_time) as 'Lag'  FROM Metric FACET bdb_name as 'Database'"
               }
@@ -254,7 +254,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(bdb_crdt_syncer_ingress_bytes_decompressed) FROM Metric FACET bdb_name SINCE 30 MINUTES AGO TIMESERIES"
               }
@@ -286,7 +286,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(bdb_crdt_syncer_egress_bytes_decompressed) FROM Metric FACET bdb_name SINCE 30 MINUTES AGO TIMESERIES"
               }
@@ -315,7 +315,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_crdt_syncer_pending_local_writes_max) as 'Max Writes' FROM Metric FACET bdb_name as 'Database' SINCE 30 MINUTES AGO"
               }
@@ -344,7 +344,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_crdt_backlog_histlen) as 'Backlog' FROM Metric FACET bdb_name"
               }
@@ -376,7 +376,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(bdb_crdt_syncer_local_ingress_lag_time) FROM Metric FACET bdb_name SINCE 30 MINUTES AGO TIMESERIES"
               }
@@ -408,7 +408,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(redis_crdt_merge_reqs) FROM Metric FACET bdb_name WHERE role='slave' SINCE 30 MINUTES AGO TIMESERIES"
               }
@@ -437,7 +437,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_crdt_gc_collected) as 'Garbage' FROM Metric FACET bdb_name as 'Database' WHERE role='master' SINCE 30 MINUTES AGO"
               }

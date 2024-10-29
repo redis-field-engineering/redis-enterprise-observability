@@ -42,7 +42,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(node), latest(cnm_version) as 'Version', if (latest(node_up) = 0, 'Down', 'Up') as 'Status' FROM Metric Facet cluster SINCE 5 MINUTES AGO"
               }
@@ -74,7 +74,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_avg_latency) FROM Metric FACET bdb_name TIMESERIES 1 MINUTES"
               }
@@ -109,7 +109,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_used_memory) FROM Metric FACET bdb_name TIMESERIES 1 MINUTES"
               }
@@ -144,7 +144,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_main_thread_cpu_user) + latest(bdb_main_thread_cpu_system) FROM Metric FACET bdb_name TIMESERIES 1 MINUTES"
               }
@@ -179,7 +179,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_conns) FROM Metric FACET bdb_name TIMESERIES 1 MINUTES"
               }
@@ -220,7 +220,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_total_req) FROM Metric FACET bdb_name TIMESERIES 1 MINUTES"
               }
@@ -261,25 +261,25 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_read_hits) FROM Metric TIMESERIES 1 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_read_misses) FROM Metric TIMESERIES 5 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_read_req) FROM Metric TIMESERIES 5 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_read_res) FROM Metric TIMESERIES 5 MINUTES"
               }
@@ -320,25 +320,25 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_write_hits) FROM Metric TIMESERIES 1 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_write_misses) FROM Metric TIMESERIES 5 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_write_req) FROM Metric TIMESERIES 5 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_write_res) FROM Metric TIMESERIES 5 MINUTES"
               }

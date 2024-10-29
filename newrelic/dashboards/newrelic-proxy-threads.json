@@ -48,7 +48,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_process_resident_memory_bytes) FROM Metric WHERE role='master' SINCE 30 MINUTES AGO"
               }
@@ -77,7 +77,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_process_max_fds) FROM Metric SINCE 30 MINUTES AGO"
               }
@@ -106,7 +106,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_process_open_fds) FROM Metric SINCE 30 MINUTES AGO"
               }
@@ -138,7 +138,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET threadname WHERE mode = 'system' AND threadname LIKE 'worker-%' SINCE 30 MINUTES AGO TIMESERIES"
               }
@@ -179,13 +179,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET threadname WHERE mode ='system' AND threadname NOT LIKE 'listener%' AND threadname NOT LIKE 'worker-%' AND threadname NOT LIKE '%cli%'  SINCE 30 MINUTES AGO TIMESERIES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET bdb_name WHERE cluster = {{cluster}} AND mode ='user' AND threadname NOT LIKE '\"cli.%' AND threadname NOT LIKE 'worker.%' AND threadname NOT LIKE 'listener.%' SINCE 30 MINUTES AGO TIMESERIES"
               }
@@ -226,13 +226,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET threadname WHERE mode = 'system' and threadname LIKE 'listener%'  SINCE 30 MINUTES AGO TIMESERIES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET bdb_name WHERE cluster = {{cluster}} AND mode = 'user' and threadname LIKE 'listener.%' SINCE 30 MINUTES AGO TIMESERIES"
               }
@@ -273,13 +273,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET threadname WHERE mode = 'system' AND threadname LIKE 'cli_session-%' SINCE 30 MINUTES AGO TIMESERIES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET bdb_name WHERE cluster = {{cluster}} AND mode ='user' AND threadname NOT LIKE '\"cli.%' AND threadname NOT LIKE 'worker.%' AND threadname NOT LIKE 'listener.%' SINCE 30 MINUTES AGO TIMESERIES"
               }

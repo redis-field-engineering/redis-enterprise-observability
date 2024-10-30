@@ -42,7 +42,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_up) as Status FROM Metric FACET cluster as Cluster, bdb_name as Database"
               }
@@ -78,7 +78,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_avg_latency) * 1000000 AS 'milliseconds' FROM Metric "
               }
@@ -107,7 +107,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT average(redis_db0_keys) AS 'keys' FROM Metric "
               }
@@ -136,7 +136,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(node_up) as 'running nodes' FROM Metric "
               }
@@ -175,7 +175,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT rate(latest(node_total_req), 5 minutes ) as 'requests/second' FROM Metric "
               }
@@ -215,7 +215,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_used_memory)/1048576 AS 'megabytes' FROM Metric "
               }
@@ -250,7 +250,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_conns) as 'connections' FROM Metric "
               }
@@ -282,7 +282,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_used_memory) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -323,7 +323,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_avg_latency) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -364,7 +364,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_no_of_keys) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -405,7 +405,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_conns) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -446,7 +446,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_total_req) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -487,7 +487,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(bdb_expired_objects) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }

@@ -42,7 +42,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT if(latest(redis_up) = 1, 'Up', 'Down') AS 'Status' FROM Metric LEFT JOIN(SELECT latest(bdb_up) FROM Metric FACET bdb as dbid, bdb_name) ON bdb = dbid FACET bdb_name  as Database, redis AS Shard "
               }
@@ -74,7 +74,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_db0_keys) FROM Metric FACET redis TIMESERIES 1 MINUTES"
               }
@@ -106,7 +106,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_used_memory) FROM Metric FACET redis TIMESERIES 1 MINUTES"
               }
@@ -150,7 +150,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_mem_fragmentation_ratio)/100 FROM Metric FACET redis TIMESERIES 1 MINUTES"
               }
@@ -200,13 +200,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_allocator_active) FROM Metric FACET redis, string('allocated') TIMESERIES 1 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_allocator_resident) FROM Metric FACET redis, string('resident') TIMESERIES 1 MINUTES"
               }
@@ -250,13 +250,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_total_net_input_bytes) FROM Metric FACET redis, string('input') TIMESERIES 1 MINUTES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_total_net_output_bytes) FROM Metric FACET redis, string('output') TIMESERIES 1 MINUTES"
               }
@@ -297,7 +297,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_total_commands_processed)/latest(redis_total_connections_received) FROM Metric FACET redis TIMESERIES 1 MINUTES"
               }
@@ -338,7 +338,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_connected_clients) FROM Metric FACET redis, string('clients') TIMESERIES 1 MINUTES"
               }
@@ -379,7 +379,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_process_cpu_usage_percent)/100 FROM Metric FACET redis TIMESERIES 1 MINUTES"
               }
@@ -423,7 +423,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latest(redis_instantaneous_ops_per_sec) FROM Metric FACET redis TIMESERIES 1 MINUTES"
               }
@@ -455,13 +455,13 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latestrate(redis_process_main_thread_cpu_system_seconds_total, 1 hour ) FROM Metric FACET redis, string('system') TIMESERIES"
               },
               {
                 "accountIds": [
-                  3321735
+                  1234567
                 ],
                 "query": "SELECT latestrate(redis_process_main_thread_cpu_user_seconds_total, 1 hour ) FROM Metric FACET redis, string('user') TIMESERIES"
               }

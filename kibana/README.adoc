@@ -31,13 +31,11 @@ This repository includes sample Kibana dashboards for monitoring your Redis depl
 
 Dashboards can be retrieved from an existing system by curl command:
 
-`curl -u <user>:<pass> -X GET <host>>:5601/api/kibana/dashboards/export?dashboard=<UUID>" -H 'kbn-xsrf: true' > dashboard.kibana.json`
+`curl -u <user>:<pass> -X GET "<host>:5601/api/kibana/dashboards/export?dashboard=<UUID>" -H "kbn-xsrf: true" > dashboard.kibana.json`
 
-They can be installed via PUT:
+They can be installed via curl command:
 
-`curl -u <user>:<pass> -X POST <host>>:5601/api/kibana/dashboards/export?dashboard=<UUID>" -H 'kbn-xsrf: true' -d dashboard.kibana.json`
-
-#### NB: The UUID has to match the value embedded in the file and must be unique in the system
+`curl -u <user>:<pass> -X POST "<host>:5601/api/kibana/dashboards/import" -H "kbn-xsrf: true" -H "Content-Type: application/json" -data-binary "@dashboard.kibana.json"`
 
 == Support
 

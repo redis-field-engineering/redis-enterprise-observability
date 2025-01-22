@@ -24,7 +24,20 @@ services:
   redis:
     cap_add:
      - sys_resource
-    image: redislabs/redis:latest
+
+    # Build local image based on public redislabs/redis:latest container
+    # with netstat wrapper to fix envoy reconfigure issues
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    # OR use internal image which has envoy fix
+    # image: redislabs/redis-internal:7.14.0-43.focal
+    # once 7.14 is release publically we can just go back to following line
+    # image redislabs/redis:latest
+    ulimits:
+      nofile:
+        soft: "65536"
+        hard: "65536"
     platform: linux/amd64
     ports:
      - "6379:6379"

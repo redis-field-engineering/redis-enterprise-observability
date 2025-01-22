@@ -87,8 +87,5 @@ echo "DISCLAIMER: This is best for local development or functional testing. Plea
 
 # Cleanup
 rm ./lastapioutput ./lastcode 2>/dev/null
-docker exec --user root "${container_name}" bash -c "rm /opt/list_modules.sh"
-docker exec --user root "${container_name}" bash -c "rm /opt/module_list.txt"
-docker exec --user root "${container_name}" bash -c "rm /opt/create_cluster.*"
 
 echo "done"

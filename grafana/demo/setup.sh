@@ -7,8 +7,28 @@ then
   exit 1
 fi
 
+if [ -n "$1" ]
+then
+   PROJECT=$1
+else
+   PROJECT="demo"
+fi
+
+NUM_CURRENT=$(docker compose ls -q | wc -l)
+if [[ $NUM_CURRENT -ge 1 ]]
+then
+   export DEMO_NUM=$(($NUM_CURRENT + 1))
+
+   # fix up prometheus and grafana configs
+   sed "s/172\.27\.1\.4/172\.27\.${DEMO_NUM}\.4/g" ./prometheus.yml > ./prometheus${DEMO_NUM}.yml
+
+   cp grafana/grafana{,$DEMO_NUM}.db
+   sqlite3 grafana/grafana${DEMO_NUM}.db "update data_source SET url='http://172.27.${DEMO_NUM}.2:9090'"
+else
+   unset DEMO_NUM
+fi
+
 function re_api () {
-    BASE_URL="https://localhost:9443"
     ACTION=$1
     PATHNAME=$2
     DATA=$3
@@ -28,7 +48,7 @@ function re_api () {
     echo $ACTION ...
     echo > ./lastapioutput
     echo > ./lastcode
-    while [[ $N -lt $RETRIES && "$(eval curl -o ./lastapioutput -w '%{http_code}' $EXTRA_ARGS -k https://localhost:9443${PATHNAME} 2>/dev/null | tee ./lastcode)" != "200" ]];
+    while [[ $N -lt $RETRIES && "$(eval curl -o ./lastapioutput -w '%{http_code}' $EXTRA_ARGS -k https://localhost:${DEMO_NUM}9443${PATHNAME} 2>/dev/null | tee ./lastcode)" != "200" ]];
     do
        N=$((N+1))
        echo "still trying to ${ACTION} $(cat ./lastcode) $(cat ./lastapioutput)"
@@ -43,9 +63,9 @@ function re_api () {
     echo ""
 }
 
-docker compose up -d
+docker compose -p ${PROJECT} up -d
 
-container_name="demo-redis-1"
+container_name="${PROJECT}-redis-1"
 
 
 re_api "create cluster" "/v1/bootstrap/create_cluster" '{"action":"create_cluster","cluster":{"name":"dashboard.local"},"node":{"paths":{"persistent_path":"/var/opt/redislabs/persist","ephemeral_path":"/var/opt/redislabs/tmp"}},"credentials":{"username":"demo@redis.com","password":"redislabs"}}'
@@ -82,7 +102,13 @@ docker exec -it "${container_name}" bash -c "/opt/redislabs/bin/supervisorctl re
 echo "------- RLADMIN status -------"
 docker exec "${container_name}" bash -c "rladmin status"
 echo ""
-echo "You can open a browser and access Redis Enterprise Admin UI at https://127.0.0.1:8443 (replace localhost with your ip/host) with username=demo@redis.com and password=redislabs."
+echo "You can open a browser and access Redis Enterprise Admin UI, Grafana, and Prometheus at:"
+echo "  Redis URL:  redis://dashboard:dashboard@localhost:${DEMO_NUM:-1}2000"
+echo "  Redis Enterprise: https://127.0.0.1:${DEMO_NUM}8443 (username=demo@redis.com and password=redislabs)"
+echo "  Grafana: http://localhost:${DEMO_NUM}3000 (username=admin and password=admin)"
+echo "  Prometheus: http://localhost:${DEMO_NUM}9090"
+echo ""
+echo ""
 echo "DISCLAIMER: This is best for local development or functional testing. Please see, https://docs.redis.com/latest/rs/installing-upgrading/quickstarts/docker-quickstart/"
 
 # Cleanup

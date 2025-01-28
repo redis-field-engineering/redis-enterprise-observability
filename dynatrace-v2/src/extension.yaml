@@ -4,13 +4,11 @@ minDynatraceVersion: "1.305"
 author:
   name: Redis
 
-#dashboards:
-#- path: "dashboards/metrics.json"
-#- path: "dashboards/overview.json"
-#- path: "dashboards/active-active.json"
-#- path: "dashboards/active-active.json"
-#- path: "dashboards/active-active.json"
-#- path: "dashboards/security-v2.json"
+dashboards:
+- path: "dashboards/overview-v2.json"
+- path: "dashboards/active-active-v2.json"
+- path: "dashboards/node-v2.json"
+- path: "dashboards/security-v2.json"
 
 metrics:
   # ACTIVE-ACTIVE

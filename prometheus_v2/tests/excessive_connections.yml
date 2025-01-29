@@ -1,0 +1,32 @@
+# This is the main input for unit testing.
+# Only this file is passed as command line argument.
+
+rule_files:
+  - ../rules/alerts.yml
+
+evaluation_interval: 30s
+
+tests:
+  # Test 1.
+  - interval: 30s
+    # Series data.
+    input_series:
+      - series: 'bdb_conns{job="redis", cluster="localhost", bdb="1"}'
+        values: '64000 96000 98000 90000 95000 90000 95000 98000 96000 97000 96000 95000 95000 65000 64000'
+
+    # Unit test for alerting rules.
+    alert_rule_test:
+      # Unit test 1.
+      - eval_time: 1m
+        alertname: Excessive Connections
+        exp_alerts:
+          # Alert 1.
+          - exp_labels:
+              severity: critical
+              job: redis            
+              cluster: localhost
+              bdb: 1
+            exp_annotations:
+              summary: "Too many connections"
+              description: "Too Many Connections - Cluster: localhost DB: 1 Connections: 98000"
+              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/connections.md#excessive-connections

@@ -1,0 +1,32 @@
+# This is the main input for unit testing.
+# Only this file is passed as command line argument.
+
+rule_files:
+  - ../rules/alerts.yml
+
+evaluation_interval: 30s
+
+tests:
+  # Test 1.
+  - interval: 30s
+    # Series data.
+    input_series:
+      - series: 'bdb_total_req{job="redis", cluster="localhost", bdb="1"}'
+        values: '999999 2000000 2000001 2000001 2000001 2000001 2000001 2000001 2000001 2000001 2000001 2000001 2000000 2000000 999999'
+
+    # Unit test for alerting rules.
+    alert_rule_test:
+      # Unit test 1.
+      - eval_time: 1m
+        alertname: Excessive Redis Requests
+        exp_alerts:
+          # Alert 1.
+          - exp_labels:
+              severity: notification
+              job: redis            
+              cluster: localhost
+              bdb: 1            
+            exp_annotations:
+              summary: Excessive Redis Requests
+              description: "Too Many Redis Operations - Cluster: localhost DB: 1 2.000001e+06 (ops/sec)"
+              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/throughput.md#excessive-redis-requests

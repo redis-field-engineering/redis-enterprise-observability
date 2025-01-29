@@ -1,0 +1,32 @@
+# This is the main input for unit testing.
+# Only this file is passed as command line argument.
+
+rule_files:
+  - ../rules/alerts.yml
+
+evaluation_interval: 30s
+
+tests:
+  # Test 1.
+  - interval: 30s
+    # Series data.
+    input_series:
+      - series: 'redis_process_cpu_usage_percent{job="redis", cluster="localhost", redis="1"}'
+        values: '70 80 90 90 90 90 90 90 90 90 90 90 90 80 70'
+
+    # Unit test for alerting rules.
+    alert_rule_test:
+      # Unit test 1.
+      - eval_time: 2m
+        alertname: Shard CPU Usage
+        exp_alerts:
+          # Alert 1.
+          - exp_labels:
+              severity: notification
+              job: redis            
+              cluster: localhost
+              redis: 1
+            exp_annotations:
+              summary: Shard CPU Usage
+              description: "Busy Shard - Cluster: localhost Shard: 1 Node:  CPU: 90%"
+              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#shard-cpu-usage-is-excessive

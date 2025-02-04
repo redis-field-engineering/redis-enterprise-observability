@@ -11,9 +11,9 @@ tests:
   - interval: 30s
     # Series data.
     input_series:
-      - series: 'node_persistent_storage_free{job="redis", cluster="localhost"}'
+      - series: 'node_persistent_storage_free_bytes{job="redis", cluster="localhost"}'
         values: '3 2 1 1 1 1 1 1 1 2 2 2 2 2 3'
-      - series: 'node_persistent_storage_avail{job="redis", cluster="localhost"}'
+      - series: 'node_persistent_storage_avail_bytes{job="redis", cluster="localhost"}'
         values: '500 500 500 500 500 500 500 500 500 500 500 500 500 500 500'
 
     # Unit test for alerting rules.
@@ -26,7 +26,8 @@ tests:
           - exp_labels:
               severity: critical
               job: redis   
-              cluster: localhost         
+              cluster: localhost
+              type: node
             exp_annotations:
               summary: Node Persistent Storage
               description: "Low on Persistent Storage - Cluster: localhost Space Free: 0%"

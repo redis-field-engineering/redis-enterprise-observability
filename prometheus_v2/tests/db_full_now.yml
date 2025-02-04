@@ -11,9 +11,9 @@ tests:
   - interval: 1m
     # Series data.
     input_series:
-      - series: 'bdb_used_memory{job="redis", instance="localhost:6379"}'
-        values: '96 97 98 99 99 99 99 99 99 99 99 99 99 98 97'
-      - series: 'bdb_memory_limit{job="redis", instance="localhost:6379"}'
+      - series: 'redis_server_used_memory{job="redis", cluster="localhost", db="1"}'
+        values: '96 97 98 99 99 99 99 99 99 99 99 99 99 99 99'
+      - series: 'redis_server_memory_limit{job="redis", cluster="localhost", db="1"}'
         values: '100 100 100 100 100 100 100 100 100 100 100 100 100 100 100'
 
     # Unit test for alerting rules.
@@ -24,9 +24,12 @@ tests:
         exp_alerts:
           # Alert 1.
           - exp_labels:
+              job: redis
               severity: critical
-              instance: localhost:6379
-              job: redis            
+              cluster: localhost
+              type: capacity
+              db: 1
             exp_annotations:
               summary: "DB is full"
-              description: "DB Usage - Cluster: {{ $labels.cluster }} DB: {{$labels.bdb}} Usage: {{$value}}% full "
+              description: "DB Usage - Cluster: localhost DB: 1 Usage: 97% full"
+              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/capacity.md#db-full

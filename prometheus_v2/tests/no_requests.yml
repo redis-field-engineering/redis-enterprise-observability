@@ -8,11 +8,13 @@ evaluation_interval: 1m
 
 tests:
   # Test 1.
-  - interval: 1m
+  - interval: 30s
     # Series data.
     input_series:
-      - series: 'bdb_total_req{job="redis", instance="localhost:6379"}'
-        values: '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'
+      - series: 'endpoint_read_requests{job="redis", instance="localhost"}'
+        values: '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'
+      - series: 'endpoint_write_requests{job="redis", instance="localhost"}'
+        values: '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'
 
     # Unit test for alerting rules.
     alert_rule_test:
@@ -23,8 +25,9 @@ tests:
           # Alert 1.
           - exp_labels:
               severity: critical
-              instance: localhost:6379
-              job: redis            
+              instance: localhost
+              job: redis
+              type: throughput
             exp_annotations:
               summary: No Redis Requests
               description: "Too few Redis operations - Cluster:  DB:   0 (ops/sec)"

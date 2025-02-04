@@ -11,7 +11,7 @@ tests:
   - interval: 1m
     # Series data.
     input_series:
-      - series: 'bdb_conns{job="redis", cluster="localhost", bdb="1"}'
+      - series: 'endpoint_client_connections{job="redis", cluster="localhost", db="1"}'
         values: '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'
 
 
@@ -26,7 +26,8 @@ tests:
               severity: notification
               job: redis            
               cluster: localhost
-              bdb: 1            
+              type: connection
+              db: 1
             exp_annotations:
               summary: "No Redis Connections"
               description: "No Connections - Cluster: localhost DB: 1 Connections: 0"

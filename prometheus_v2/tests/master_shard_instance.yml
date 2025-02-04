@@ -11,8 +11,8 @@ tests:
   - interval: 1m
     # Series data.
     input_series:
-      - series: 'redis_master_link_status{job="redis", role="slave", cluster="localhost"}'
-        values: '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'
+      - series: 'redis_server_master_link_status{role="slave", cluster="localhost", job="redis", node="1", redis="1"}'
+        values: '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'
 
     # Unit test for alerting rules.
     alert_rule_test:
@@ -25,7 +25,11 @@ tests:
               severity: notification
               job: redis            
               cluster: localhost
-              role: slave            
+              role: slave
+              type: shard
+              node: 1
+              redis: 1
             exp_annotations:
               summary: Master Shard Down
-              description: "Slave has no master - Cluster: {{ $labels.cluster }} Shard: {{$labels.redis}} Node: {{$labels.node}}"
+              description: "Slave has no master - Cluster: localhost Shard: 1 Node: 1"
+              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#master-shard-down

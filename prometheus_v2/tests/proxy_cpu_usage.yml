@@ -4,29 +4,32 @@
 rule_files:
   - ../rules/alerts.yml
 
-evaluation_interval: 30s
+evaluation_interval: 1m
 
 tests:
   # Test 1.
-  - interval: 30s
+  - interval: 1m
     # Series data. NB - the actual number is the total and must be divided by the number of threads
     input_series:
-      - series: 'dmcproxy_process_cpu_usage_percent{job="redis", cluster="localhost", node="1"}'
-        values: '70 80 90 90 90 90 90 90 90 90 90 90 90 80 70'
+      # - series: 'dmcproxy_process_cpu_usage_percent{job="redis", cluster="localhost", node="1"}'
+        # values: '70 80 90 90 90 90 90 90 90 90 90 90 90 80 70'
+      - series: 'namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", groupname="dmcproxy"}'
+        ### 10% increase/minute
+        values: '50000 55000 60500 66550 73205 80525 88578 97436 107180 117897 129687 142656 156920 172613'
 
     # Unit test for alerting rules.
     alert_rule_test:
       # Unit test 1.
-      - eval_time: 2m
+      - eval_time: 5m
         alertname: Proxy CPU Usage
         exp_alerts:
           # Alert 1.
           - exp_labels:
-              severity: notification
+              severity:  critical
               job: redis
               cluster: localhost
-              redis: 1
+              groupname: dmcproxy
             exp_annotations:
-              summary: Shard CPU Usage
-              description: "Busy Proxy - Cluster: localhost Node: 1 CPU: 90%"
+              summary: Proxy CPU Usage
+              description: "Busy Proxy - Cluster: localhost CPU: 90%"
               runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#shard-cpu-usage-is-excessive

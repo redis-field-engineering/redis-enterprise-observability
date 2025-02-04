@@ -11,7 +11,7 @@ tests:
   - interval: 30s
     # Series data.
     input_series:
-      - series: 'bdb_evicted_objects{job="redis", cluster="localhost", bdb="1"}'
+      - series: 'redis_server_evicted_keys{role="master", cluster="localhost", db="1"}'
         values: '1 1 2 3 4 5 6 7 6 5 4 3 2 1 1 2 4 3 5 2 5 7 8 9'
 
     # Unit test for alerting rules.
@@ -23,10 +23,12 @@ tests:
           # Alert 1.
           - exp_labels:
               severity: critical
-              job: redis            
+              job: redis
               cluster: localhost
-              bdb: 1
+              type: utilization
+              db: 1
+              role: master
             exp_annotations:
               summary: Unexpected Object Eviction
-              description: "Evictions Occuring: localhost DB: 1 EvictionsPerSecond: 6"
+              description: "Evictions Occurring: localhost DB: 1 EvictionsPerSecond: 6"
               runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/utilization.md#objects-being-evicted-from-database

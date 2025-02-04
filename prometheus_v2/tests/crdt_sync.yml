@@ -11,7 +11,7 @@ tests:
   - interval: 1m
     # Series data.
     input_series:
-      - series: 'bdb_crdt_syncer_status{job="redis", cluster="localhost"}'
+      - series: 'database_syncer_current_status{syncer_type="crdt", job="redis", cluster="localhost"}'
         values: '0 1 2 2 1 2 1 1 2 2 2 1 2 0 1'
 
     # Unit test for alerting rules.
@@ -25,6 +25,8 @@ tests:
               severity: warning
               job: redis
               cluster: localhost
+              syncer_type: crdt
+              type: synchronization
             exp_annotations:
               summary: Replication - Unsynchronized (CRDT)
               description: CRDT Replication on localhost not synchronized for 5 minutes

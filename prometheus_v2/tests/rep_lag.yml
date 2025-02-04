@@ -11,7 +11,7 @@ tests:
   - interval: 5m
     # Series data.
     input_series:
-      - series: 'bdb_replicaof_syncer_local_ingress_lag_time{job="redis", cluster="localhost"}'
+      - series: 'database_syncer_lag_ms{syncer_type="replicaof", job="redis", cluster="localhost"}'
         values: '420 580 520 540 560 580 600 520 510 520 530 550 580 400 500'
 
     # Unit test for alerting rules.
@@ -25,6 +25,8 @@ tests:
               severity: warning
               job: redis
               cluster: localhost
+              syncer_type: replicaof
+              type: synchronization
             exp_annotations:
               summary: Replication - High Latency (Status)
               description: Replication Latency localhost exceeded 500ms for 10 minutes

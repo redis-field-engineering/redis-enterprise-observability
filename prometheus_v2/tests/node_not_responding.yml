@@ -11,7 +11,7 @@ tests:
   - interval: 1m
     # Series data.
     input_series:
-      - series: 'node_up{job="redis", instance="localhost:6379"}'
+      - series: 'node_metrics_up{job="redis", instance="localhost:6379"}'
         values: '3 2 1 1 1 2 2 1 1 2 2 2 1 2 3'
 
     # Unit test for alerting rules.
@@ -23,7 +23,8 @@ tests:
           # Alert 1.
           - exp_labels:
               severity: critical
-              job: redis            
+              job: redis
+              type: node
             exp_annotations:
               summary: Node Not Responding
               description: "Node Down - Cluster:  Expected Nodes: 3 Actual: 1"

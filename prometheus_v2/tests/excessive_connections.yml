@@ -11,7 +11,7 @@ tests:
   - interval: 30s
     # Series data.
     input_series:
-      - series: 'bdb_conns{job="redis", cluster="localhost", bdb="1"}'
+      - series: 'endpoint_client_connections{job="redis", cluster="localhost", db="1"}'
         values: '64000 96000 98000 90000 95000 90000 95000 98000 96000 97000 96000 95000 95000 65000 64000'
 
     # Unit test for alerting rules.
@@ -25,7 +25,8 @@ tests:
               severity: critical
               job: redis            
               cluster: localhost
-              bdb: 1
+              type: connection
+              db: 1
             exp_annotations:
               summary: "Too many connections"
               description: "Too Many Connections - Cluster: localhost DB: 1 Connections: 98000"

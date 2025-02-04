@@ -4,20 +4,26 @@
 rule_files:
   - ../rules/alerts.yml
 
-evaluation_interval: 30s
+evaluation_interval: 1m
 
 tests:
   # Test 1.
-  - interval: 30s
+  - interval: 1m
     # Series data.
     input_series:
-      - series: 'redis_process_cpu_usage_percent{job="redis", cluster="localhost", redis="1"}'
-        values: '70 80 90 90 90 90 90 90 90 90 90 90 90 80 70'
+      - series: 'namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", node="1", redis="1"}'
+        # values: '70000 80000 90000 100000 110000 120000 130000 140000 150000 160000 170000 180000 190000 200000 210000'
+        ### 20% increase/minute
+        # values: '70000 84000 1008000 120960 145152 174182 209018 250822 300987 361184 433421 520106 624127 748952'
+        ### 10% increase/minute
+        values: '50000 55000 60500 66550 73205 80525 88578 97436 107180 117897 129687 142656 156920 172613'
+        ### 5% increase/minute
+        # values: '50000 52500 55125 57881 60775 63814 67004 70354 73872 77566 81444 85516 89792 94282'
 
     # Unit test for alerting rules.
     alert_rule_test:
       # Unit test 1.
-      - eval_time: 2m
+      - eval_time: 10m
         alertname: Shard CPU Usage
         exp_alerts:
           # Alert 1.
@@ -25,8 +31,10 @@ tests:
               severity: notification
               job: redis            
               cluster: localhost
+              type: shard
+              node: 1
               redis: 1
             exp_annotations:
               summary: Shard CPU Usage
-              description: "Busy Shard - Cluster: localhost Shard: 1 Node:  CPU: 90%"
+              description: "Busy Shard - Cluster: localhost Shard: 1 Node: 1 CPU: 196.5%"
               runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#shard-cpu-usage-is-excessive

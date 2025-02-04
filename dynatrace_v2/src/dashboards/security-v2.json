@@ -3,13 +3,14 @@
     "configurationVersions": [
       7
     ],
-    "clusterVersion": "1.306.65.20250123-155932"
+    "clusterVersion": "1.307.46.20250203-130049"
   },
   "id": "e987f764-6865-4e62-ad52-0ad9f4a1d15a",
   "dashboardMetadata": {
     "name": "Redis Enterprise - Security-V2",
     "shared": false,
     "owner": "john.burke@redis.com",
+    "popularity": 10,
     "hasConsistentColors": false
   },
   "tiles": [
@@ -106,32 +107,6 @@
         "resolution=Inf&(redis.redis_server_connected_clients:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names",
         "resolution=null&(redis.redis_server_connected_clients:splitBy():sort(value(auto,descending)):limit(20))"
       ]
-    },
-    {
-      "name": "ACL Access Denied - Key",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 532,
-        "left": 0,
-        "width": 684,
-        "height": 418
-      },
-      "tileFilter": {},
-      "isAutoRefreshDisabled": false
-    },
-    {
-      "name": "ACL Access Denied - Command",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 532,
-        "left": 684,
-        "width": 684,
-        "height": 418
-      },
-      "tileFilter": {},
-      "isAutoRefreshDisabled": false
     },
     {
       "name": "Expired Connections",
@@ -1172,7 +1147,7 @@
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 988,
+        "top": 532,
         "left": 684,
         "width": 684,
         "height": 418
@@ -1262,7 +1237,7 @@
       "tileType": "DATA_EXPLORER",
       "configured": true,
       "bounds": {
-        "top": 988,
+        "top": 532,
         "left": 0,
         "width": 684,
         "height": 418
@@ -1362,24 +1337,11 @@
       "isAutoRefreshDisabled": false
     },
     {
-      "name": "Access Control",
-      "tileType": "HEADER",
-      "configured": true,
-      "bounds": {
-        "top": 494,
-        "left": 0,
-        "width": 1368,
-        "height": 38
-      },
-      "tileFilter": {},
-      "isAutoRefreshDisabled": false
-    },
-    {
       "name": "Certificates and Hardware",
       "tileType": "HEADER",
       "configured": true,
       "bounds": {
-        "top": 950,
+        "top": 494,
         "left": 0,
         "width": 1368,
         "height": 38

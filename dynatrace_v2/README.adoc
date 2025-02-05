@@ -20,7 +20,7 @@ use the https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/ext
 The Dyntrace v2.0 Extensions support Prometheus metrics, and as such we have created the necessary extension file and
 dashboards so that this option is available. At this time Dynatrace are still testing their signing mechanism so that
 this extension is not available directly from them, but will have to be built and signed according to their instructions.
-They have indicated that they will sign 3rd party extensions starting in Q1 2025z., at which point this process will no
+They have indicated that they will sign 3rd party extensions starting in Q1 2025, at which point this process will no
 longer be necessary.
 
 Clone the repository and cd into its root folder ('redis-enterprise-dynatrace-observability'). The contents are already

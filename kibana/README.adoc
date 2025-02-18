@@ -1,0 +1,46 @@
+:linkattrs:
+:project-owner:      redis-field-engineering
+:project-name:       redis-enterprise-observability
+
+= Observe Redis Enterprise with Kibana
+
+To collect metrics in Kibana from Redis Enterprise Software or Redis Cloud, use https://www.elastic.co/beats/metricbeat[Metricbeat].
+
+== Table of Contents
+
+* link:#Installation[Installation]
+* link:#Dashboards[Dashboards]
+* link:#Dashboards[Alternative Redis Plugins]
+* link:#Support[Support]
+* link:#License[License]
+
+== Installation
+
+Metricbeat comes with internal modules that collect metrics from services like Apache, Jolokia, NGINX, MongoDB, MySQL,
+PostgreSQL, and Prometheus. The basic configuration guidelines can be found https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-installation-configuration.html#install[here].
+
+Once you have downloaded and extracted metricbeat https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-installation-configuration.html#enable-modules[enable] the Prometheus module:
+
+`metricbeat modules enable promtheus`
+
+Finally, https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-installation-configuration.html#setup-assets[configure] the assets.
+
+== Dashboards
+
+This repository includes sample Kibana dashboards for monitoring your Redis deployment. See the link:/kibana/dashboards[dashboards] folder for the available set of dashboards.
+
+Dashboards can be retrieved from an existing system by curl command:
+
+`curl -u <user>:<pass> -X GET "<host>:5601/api/kibana/dashboards/export?dashboard=<UUID>" -H "kbn-xsrf: true" > dashboard.kibana.json`
+
+They can be installed via curl command:
+
+`curl -u <user>:<pass> -X POST "<host>:5601/api/kibana/dashboards/import" -H "kbn-xsrf: true" -H "Content-Type: application/json" -data-binary "@dashboard.kibana.json"`
+
+== Support
+
+Support for metrics collection for Redis Enterprise with Kibana is provided on a good faith effort basis by Redis. Inc. To report bugs, request features, or receive assistance, please https://github.com/{project-owner}/{project-name}/issues[file an issue].
+
+== License
+
+This code in this repository is licensed under the MIT License. Copyright (C) 2025 Redis, Inc.

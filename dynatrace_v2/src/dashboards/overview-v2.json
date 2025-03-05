@@ -3,13 +3,14 @@
     "configurationVersions": [
       7
     ],
-    "clusterVersion": "1.306.65.20250123-155932"
+    "clusterVersion": "1.309.52.20250304-194736"
   },
   "id": "e511f8b5-ff66-486e-b671-2ac4cc73f100",
   "dashboardMetadata": {
     "name": "Redis Enterprise - Overview-V2",
     "shared": false,
     "owner": "john.burke@redis.com",
+    "popularity": 1,
     "dynamicFilters": {
       "filters": [
         "CUSTOM_DEVICE_TAG_KEY:Custom device ID"

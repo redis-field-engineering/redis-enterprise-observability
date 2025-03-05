@@ -3,14 +3,14 @@
     "configurationVersions": [
       7
     ],
-    "clusterVersion": "1.307.55.20250207-125704"
+    "clusterVersion": "1.309.52.20250304-194736"
   },
   "id": "e987f764-6865-4e62-ad52-0ad9f4a1d15a",
   "dashboardMetadata": {
     "name": "Redis Enterprise - Security-V2",
     "shared": false,
     "owner": "john.burke@redis.com",
-    "popularity": 10,
+    "popularity": 4,
     "hasConsistentColors": false
   },
   "tiles": [

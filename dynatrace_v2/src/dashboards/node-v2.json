@@ -3,7 +3,7 @@
     "configurationVersions": [
       7
     ],
-    "clusterVersion": "1.309.52.20250304-194736"
+    "clusterVersion": "1.309.54.20250305-171942"
   },
   "id": "efb27d51-9d90-47eb-9fa8-ab496f7dc050",
   "dashboardMetadata": {
@@ -544,7 +544,7 @@
             "cluster",
             "node"
           ],
-          "metricSelector": "redis.namedprocess_namegroup_cpu_seconds_total:filter(eq(\"mode\", \"user\")):splitBy(\"cluster\", \"node\"):avg:rate(m)",
+          "metricSelector": "redis.namedprocess_namegroup_cpu_seconds_total:filter(eq(\"mode\", \"user\")):splitBy(\"cluster\", \"node\"):avg:delta:rate(s)*100",
           "rate": "NONE",
           "enabled": true
         },
@@ -556,7 +556,7 @@
             "cluster",
             "node"
           ],
-          "metricSelector": "redis.namedprocess_namegroup_cpu_seconds_total:filter(eq(\"mode\", \"system\")):splitBy(\"cluster\", \"node\")",
+          "metricSelector": "redis.namedprocess_namegroup_cpu_seconds_total:filter(eq(\"mode\", \"system\")):splitBy(\"cluster\", \"node\"):avg:delta:rate(s)*100",
           "rate": "NONE",
           "enabled": true
         }
@@ -569,18 +569,23 @@
         "rules": [
           {
             "matcher": "A:",
-            "unitTransform": "Kilo",
+            "unitTransform": "none",
             "valueFormat": "auto",
             "properties": {
               "color": "DEFAULT",
-              "seriesType": "LINE"
+              "seriesType": "LINE",
+              "alias": "system"
             },
             "seriesOverrides": []
           },
           {
             "matcher": "B:",
+            "unitTransform": "auto",
+            "valueFormat": "auto",
             "properties": {
-              "color": "DEFAULT"
+              "color": "DEFAULT",
+              "seriesType": "LINE",
+              "alias": "user"
             },
             "seriesOverrides": []
           }
@@ -641,7 +646,7 @@
         "resolution": "1m"
       },
       "metricExpressions": [
-        "resolution=1m&(redis.namedprocess_namegroup_cpu_seconds_total:filter(eq(mode,user)):splitBy(cluster,node):avg:rate(1m)):limit(100):names,(redis.namedprocess_namegroup_cpu_seconds_total:filter(eq(mode,system)):splitBy(cluster,node)):limit(100):names"
+        "resolution=1m&(redis.namedprocess_namegroup_cpu_seconds_total:filter(eq(mode,user)):splitBy(cluster,node):avg:delta:rate(1s)*100):limit(100):names,(redis.namedprocess_namegroup_cpu_seconds_total:filter(eq(mode,system)):splitBy(cluster,node):avg:delta:rate(1s)*100):limit(100):names"
       ]
     }
   ]

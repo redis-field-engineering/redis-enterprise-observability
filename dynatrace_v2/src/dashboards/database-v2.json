@@ -3,14 +3,14 @@
     "configurationVersions": [
       7
     ],
-    "clusterVersion": "1.309.52.20250304-194736"
+    "clusterVersion": "1.309.54.20250305-171942"
   },
   "id": "c4d738a9-be72-4679-b3fe-5fb65075be31",
   "dashboardMetadata": {
     "name": "Redis Enterprise - Database-V2",
     "shared": false,
     "owner": "john.burke@redis.com",
-    "popularity": 6,
+    "popularity": 4,
     "dynamicFilters": {
       "filters": [
         "CUSTOM_DIMENSION:Redis Cluster"
@@ -122,127 +122,6 @@
       },
       "metricExpressions": [
         "resolution=Inf&(redis.endpoint_client_connections.count:splitBy(cluster,db):sort(value(auto,descending)):limit(20)):names"
-      ]
-    },
-    {
-      "name": "Read/Write  Misses",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 608,
-        "left": 1064,
-        "width": 532,
-        "height": 304
-      },
-      "tileFilter": {},
-      "isAutoRefreshDisabled": false,
-      "customName": "Data explorer results",
-      "queries": [
-        {
-          "id": "A",
-          "spaceAggregation": "AUTO",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "db"
-          ],
-          "metricSelector": "redis.redis_server_keyspace_read_misses:splitBy(\"db\"):sort(value(auto,descending)):limit(20)",
-          "rate": "NONE",
-          "enabled": true
-        },
-        {
-          "id": "B",
-          "spaceAggregation": "AUTO",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "db"
-          ],
-          "metricSelector": "redis.redis_server_keyspace_write_misses:splitBy(\"db\"):sort(value(auto,descending)):limit(20)",
-          "rate": "NONE",
-          "enabled": true
-        }
-      ],
-      "visualConfig": {
-        "type": "GRAPH_CHART",
-        "global": {},
-        "rules": [
-          {
-            "matcher": "A:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          },
-          {
-            "matcher": "B:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          }
-        ],
-        "axes": {
-          "xAxis": {
-            "displayName": "",
-            "visible": true
-          },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A",
-                "B"
-              ],
-              "defaultAxis": true
-            }
-          ]
-        },
-        "heatmapSettings": {
-          "yAxis": "VALUE",
-          "showLabels": false
-        },
-        "singleValueSettings": {
-          "showTrend": true,
-          "showSparkLine": true,
-          "linkTileColorToThreshold": true
-        },
-        "thresholds": [
-          {
-            "axisTarget": "LEFT",
-            "rules": [
-              {
-                "color": "#7dc540"
-              },
-              {
-                "color": "#f5d30f"
-              },
-              {
-                "color": "#dc172a"
-              }
-            ],
-            "visible": true
-          }
-        ],
-        "tableSettings": {
-          "hiddenColumns": []
-        },
-        "graphChartSettings": {
-          "connectNulls": false
-        },
-        "honeycombSettings": {
-          "showHive": true,
-          "showLegend": true,
-          "showLabels": false
-        }
-      },
-      "queriesSettings": {
-        "resolution": ""
-      },
-      "metricExpressions": [
-        "resolution=null&(redis.redis_server_keyspace_read_misses:splitBy(db):sort(value(auto,descending)):limit(20)):limit(100):names,(redis.redis_server_keyspace_write_misses:splitBy(db):sort(value(auto,descending)):limit(20)):limit(100):names"
       ]
     },
     {
@@ -367,108 +246,6 @@
       ]
     },
     {
-      "name": "Commands Processed",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 608,
-        "left": 0,
-        "width": 532,
-        "height": 304
-      },
-      "tileFilter": {},
-      "isAutoRefreshDisabled": false,
-      "customName": "Data explorer results",
-      "queries": [
-        {
-          "id": "A",
-          "spaceAggregation": "AUTO",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "db"
-          ],
-          "metricSelector": "redis.redis_server_total_commands_processed:splitBy(\"db\"):sort(value(auto,descending)):limit(20)",
-          "rate": "NONE",
-          "enabled": true
-        }
-      ],
-      "visualConfig": {
-        "type": "GRAPH_CHART",
-        "global": {},
-        "rules": [
-          {
-            "matcher": "A:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          }
-        ],
-        "axes": {
-          "xAxis": {
-            "displayName": "",
-            "visible": true
-          },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A"
-              ],
-              "defaultAxis": true
-            }
-          ]
-        },
-        "heatmapSettings": {
-          "yAxis": "VALUE",
-          "showLabels": false
-        },
-        "singleValueSettings": {
-          "showTrend": true,
-          "showSparkLine": true,
-          "linkTileColorToThreshold": true
-        },
-        "thresholds": [
-          {
-            "axisTarget": "LEFT",
-            "rules": [
-              {
-                "color": "#7dc540"
-              },
-              {
-                "color": "#f5d30f"
-              },
-              {
-                "color": "#dc172a"
-              }
-            ],
-            "visible": true
-          }
-        ],
-        "tableSettings": {
-          "hiddenColumns": []
-        },
-        "graphChartSettings": {
-          "connectNulls": false
-        },
-        "honeycombSettings": {
-          "showHive": true,
-          "showLegend": true,
-          "showLabels": false
-        }
-      },
-      "queriesSettings": {
-        "resolution": ""
-      },
-      "metricExpressions": [
-        "resolution=null&(redis.redis_server_total_commands_processed:splitBy(db):sort(value(auto,descending)):limit(20)):limit(100):names"
-      ]
-    },
-    {
       "name": "Memory Usage",
       "tileType": "DATA_EXPLORER",
       "configured": true,
@@ -568,119 +345,6 @@
       },
       "metricExpressions": [
         "resolution=null&(redis.redis_server_used_memory:splitBy(db):sort(value(auto,descending)):limit(20)):limit(100):names"
-      ]
-    },
-    {
-      "name": "CPU Usage",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 304,
-        "left": 532,
-        "width": 532,
-        "height": 304
-      },
-      "tileFilter": {},
-      "isAutoRefreshDisabled": false,
-      "customName": "Data explorer results",
-      "queries": [
-        {
-          "id": "A",
-          "spaceAggregation": "AUTO",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "db"
-          ],
-          "metricSelector": "redis.namedprocess_namegroup_cpu_seconds_total:splitBy(\"db\"):sort(value(auto,descending)):limit(20)",
-          "rate": "NONE",
-          "enabled": true
-        }
-      ],
-      "visualConfig": {
-        "type": "GRAPH_CHART",
-        "global": {},
-        "rules": [
-          {
-            "matcher": "A:",
-            "properties": {
-              "color": "DEFAULT"
-            },
-            "seriesOverrides": []
-          }
-        ],
-        "axes": {
-          "xAxis": {
-            "displayName": "",
-            "visible": true
-          },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A"
-              ],
-              "defaultAxis": true
-            },
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "RIGHT",
-              "queryIds": [
-                "B"
-              ],
-              "defaultAxis": true
-            }
-          ]
-        },
-        "heatmapSettings": {
-          "yAxis": "VALUE",
-          "showLabels": false
-        },
-        "singleValueSettings": {
-          "showTrend": true,
-          "showSparkLine": true,
-          "linkTileColorToThreshold": true
-        },
-        "thresholds": [
-          {
-            "axisTarget": "LEFT",
-            "rules": [
-              {
-                "color": "#7dc540"
-              },
-              {
-                "color": "#f5d30f"
-              },
-              {
-                "color": "#dc172a"
-              }
-            ],
-            "visible": true
-          }
-        ],
-        "tableSettings": {
-          "hiddenColumns": []
-        },
-        "graphChartSettings": {
-          "connectNulls": false
-        },
-        "honeycombSettings": {
-          "showHive": true,
-          "showLegend": true,
-          "showLabels": false
-        }
-      },
-      "queriesSettings": {
-        "resolution": ""
-      },
-      "metricExpressions": [
-        "resolution=null&(redis.namedprocess_namegroup_cpu_seconds_total:splitBy(db):sort(value(auto,descending)):limit(20)):limit(100):names"
       ]
     },
     {
@@ -926,6 +590,331 @@
       },
       "metricExpressions": [
         "resolution=null&(redis.endpoint_client_connections.count:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names,(redis.endpoint_internal_client_connections.count:splitBy():sort(value(auto,descending)):limit(20)):limit(100):names"
+      ]
+    },
+    {
+      "name": "CPU Usage",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 304,
+        "left": 532,
+        "width": 532,
+        "height": 304
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [
+            "db"
+          ],
+          "metricSelector": "redis.namedprocess_namegroup_cpu_seconds_total:splitBy(\"db\"):sort(value(auto,descending)):limit(20):avg:delta",
+          "rate": "NONE",
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "GRAPH_CHART",
+        "global": {},
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A"
+              ],
+              "defaultAxis": true
+            }
+          ]
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE",
+          "showLabels": false
+        },
+        "singleValueSettings": {
+          "showTrend": true,
+          "showSparkLine": true,
+          "linkTileColorToThreshold": true
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=null&(redis.namedprocess_namegroup_cpu_seconds_total:splitBy(db):sort(value(auto,descending)):limit(20):avg:delta):limit(100):names"
+      ]
+    },
+    {
+      "name": "Commands Processed",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 608,
+        "left": 0,
+        "width": 532,
+        "height": 304
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [
+            "db"
+          ],
+          "metricSelector": "redis.redis_server_total_commands_processed:splitBy(\"db\"):sort(value(auto,descending)):limit(20):avg:delta:rate(s)",
+          "rate": "NONE",
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "GRAPH_CHART",
+        "global": {},
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A"
+              ],
+              "defaultAxis": true
+            }
+          ]
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE",
+          "showLabels": false
+        },
+        "singleValueSettings": {
+          "showTrend": true,
+          "showSparkLine": true,
+          "linkTileColorToThreshold": true
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=null&(redis.redis_server_total_commands_processed:splitBy(db):sort(value(auto,descending)):limit(20):avg:delta:rate(1s)):limit(100):names"
+      ]
+    },
+    {
+      "name": "Read/Write  Misses",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 608,
+        "left": 1064,
+        "width": 532,
+        "height": 304
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [
+            "db"
+          ],
+          "metricSelector": "redis.redis_server_keyspace_read_misses:splitBy(\"db\"):sort(value(auto,descending)):limit(20):avg:delta:rate(s)",
+          "rate": "NONE",
+          "enabled": true
+        },
+        {
+          "id": "B",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [
+            "db"
+          ],
+          "metricSelector": "redis.redis_server_keyspace_write_misses:splitBy(\"db\"):sort(value(auto,descending)):limit(20):avg:delta:rate(s)",
+          "rate": "NONE",
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "GRAPH_CHART",
+        "global": {},
+        "rules": [
+          {
+            "matcher": "A:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          },
+          {
+            "matcher": "B:",
+            "properties": {
+              "color": "DEFAULT"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A",
+                "B"
+              ],
+              "defaultAxis": true
+            }
+          ]
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE",
+          "showLabels": false
+        },
+        "singleValueSettings": {
+          "showTrend": true,
+          "showSparkLine": true,
+          "linkTileColorToThreshold": true
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=null&(redis.redis_server_keyspace_read_misses:splitBy(db):sort(value(auto,descending)):limit(20):avg:delta:rate(1s)):limit(100):names,(redis.redis_server_keyspace_write_misses:splitBy(db):sort(value(auto,descending)):limit(20):avg:delta:rate(1s)):limit(100):names"
       ]
     }
   ]

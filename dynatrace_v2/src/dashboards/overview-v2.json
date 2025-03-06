@@ -3,13 +3,14 @@
     "configurationVersions": [
       7
     ],
-    "clusterVersion": "1.306.65.20250123-155932"
+    "clusterVersion": "1.309.54.20250305-171942"
   },
   "id": "e511f8b5-ff66-486e-b671-2ac4cc73f100",
   "dashboardMetadata": {
     "name": "Redis Enterprise - Overview-V2",
     "shared": false,
     "owner": "john.burke@redis.com",
+    "popularity": 1,
     "dynamicFilters": {
       "filters": [
         "CUSTOM_DEVICE_TAG_KEY:Custom device ID"
@@ -801,157 +802,6 @@
       ]
     },
     {
-      "name": "Latency",
-      "tileType": "DATA_EXPLORER",
-      "configured": true,
-      "bounds": {
-        "top": 380,
-        "left": 494,
-        "width": 494,
-        "height": 304
-      },
-      "tileFilter": {},
-      "isAutoRefreshDisabled": false,
-      "customName": "Data explorer results",
-      "queries": [
-        {
-          "id": "A",
-          "spaceAggregation": "AUTO",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "cluster",
-            "db"
-          ],
-          "metricSelector": "redis.endpoint_other_requests_latency_histogram_sum.count:splitBy(\"cluster\",\"db\"):value",
-          "rate": "NONE",
-          "enabled": true
-        },
-        {
-          "id": "B",
-          "spaceAggregation": "AUTO",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "cluster",
-            "db"
-          ],
-          "metricSelector": "redis.endpoint_read_requests_latency_histogram_sum.count:splitBy(\"cluster\",\"db\"):value",
-          "rate": "NONE",
-          "enabled": true
-        },
-        {
-          "id": "C",
-          "spaceAggregation": "AUTO",
-          "timeAggregation": "DEFAULT",
-          "splitBy": [
-            "cluster",
-            "db"
-          ],
-          "metricSelector": "redis.endpoint_write_requests_latency_histogram_sum.count:splitBy(\"cluster\",\"db\"):value",
-          "rate": "NONE",
-          "enabled": true
-        }
-      ],
-      "visualConfig": {
-        "type": "GRAPH_CHART",
-        "global": {
-          "hideLegend": false
-        },
-        "rules": [
-          {
-            "matcher": "A:",
-            "unitTransform": "Kilo",
-            "valueFormat": "0",
-            "properties": {
-              "color": "DEFAULT",
-              "seriesType": "LINE"
-            },
-            "seriesOverrides": []
-          },
-          {
-            "matcher": "B:",
-            "unitTransform": "Kilo",
-            "valueFormat": "0",
-            "properties": {
-              "color": "DEFAULT",
-              "seriesType": "LINE"
-            },
-            "seriesOverrides": []
-          },
-          {
-            "matcher": "C:",
-            "unitTransform": "Kilo",
-            "valueFormat": "auto",
-            "properties": {
-              "color": "DEFAULT",
-              "seriesType": "LINE"
-            },
-            "seriesOverrides": []
-          }
-        ],
-        "axes": {
-          "xAxis": {
-            "displayName": "",
-            "visible": true
-          },
-          "yAxes": [
-            {
-              "displayName": "",
-              "visible": true,
-              "min": "AUTO",
-              "max": "AUTO",
-              "position": "LEFT",
-              "queryIds": [
-                "A",
-                "B",
-                "C"
-              ],
-              "defaultAxis": true
-            }
-          ]
-        },
-        "heatmapSettings": {
-          "yAxis": "VALUE",
-          "showLabels": false
-        },
-        "thresholds": [
-          {
-            "axisTarget": "LEFT",
-            "rules": [
-              {
-                "color": "#7dc540"
-              },
-              {
-                "color": "#f5d30f"
-              },
-              {
-                "color": "#dc172a"
-              }
-            ],
-            "queryId": "",
-            "visible": true
-          }
-        ],
-        "tableSettings": {
-          "isThresholdBackgroundAppliedToCell": false,
-          "hiddenColumns": []
-        },
-        "graphChartSettings": {
-          "connectNulls": false
-        },
-        "honeycombSettings": {
-          "showHive": true,
-          "showLegend": true,
-          "showLabels": false
-        }
-      },
-      "queriesSettings": {
-        "resolution": ""
-      },
-      "metricExpressions": [
-        "resolution=null&(redis.endpoint_other_requests_latency_histogram_sum.count:splitBy(cluster,db):value):limit(100):names,(redis.endpoint_read_requests_latency_histogram_sum.count:splitBy(cluster,db):value):limit(100):names,(redis.endpoint_write_requests_latency_histogram_sum.count:splitBy(cluster,db):value):limit(100):names"
-      ]
-    },
-    {
       "name": "Expired Keys",
       "tileType": "DATA_EXPLORER",
       "configured": true,
@@ -1070,7 +920,7 @@
             "cluster",
             "db"
           ],
-          "metricSelector": "redis.endpoint_other_requests.count:splitBy(cluster, db)",
+          "metricSelector": "redis.endpoint_other_requests.count:splitBy(cluster, db):rate(s)",
           "rate": "NONE",
           "enabled": true
         },
@@ -1082,7 +932,7 @@
             "cluster",
             "db"
           ],
-          "metricSelector": "redis.endpoint_write_requests.count:splitBy(cluster, db)",
+          "metricSelector": "redis.endpoint_write_requests.count:splitBy(cluster, db):rate(s)",
           "rate": "NONE",
           "enabled": true
         },
@@ -1094,7 +944,7 @@
             "cluster",
             "db"
           ],
-          "metricSelector": "redis.endpoint_read_requests.count:splitBy(cluster, db)",
+          "metricSelector": "redis.endpoint_read_requests.count:splitBy(cluster, db):rate(s)",
           "rate": "NONE",
           "enabled": true
         }
@@ -1183,7 +1033,161 @@
         "resolution": ""
       },
       "metricExpressions": [
-        "resolution=null&(redis.endpoint_other_requests.count:splitBy(cluster,db)):limit(100):names,(redis.endpoint_write_requests.count:splitBy(cluster,db)):limit(100):names,(redis.endpoint_read_requests.count:splitBy(cluster,db)):limit(100):names"
+        "resolution=null&(redis.endpoint_other_requests.count:splitBy(cluster,db):rate(1s)):limit(100):names,(redis.endpoint_write_requests.count:splitBy(cluster,db):rate(1s)):limit(100):names,(redis.endpoint_read_requests.count:splitBy(cluster,db):rate(1s)):limit(100):names"
+      ]
+    },
+    {
+      "name": "Latency",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 380,
+        "left": 494,
+        "width": 494,
+        "height": 304
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false,
+      "customName": "Data explorer results",
+      "queries": [
+        {
+          "id": "A",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [
+            "cluster",
+            "node"
+          ],
+          "metricSelector": "(redis.endpoint_other_requests_latency_histogram_sum.count/redis.endpoint_other_requests_latency_histogram_count):splitBy(\"cluster\", \"node\")",
+          "rate": "NONE",
+          "enabled": true
+        },
+        {
+          "id": "B",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [
+            "cluster",
+            "node"
+          ],
+          "metricSelector": "(redis.endpoint_read_requests_latency_histogram_sum.count/redis.endpoint_read_requests_latency_histogram_count):splitBy(\"cluster\", \"node\")",
+          "rate": "NONE",
+          "enabled": true
+        },
+        {
+          "id": "C",
+          "spaceAggregation": "AUTO",
+          "timeAggregation": "DEFAULT",
+          "splitBy": [
+            "cluster",
+            "node"
+          ],
+          "metricSelector": "(redis.endpoint_write_requests_latency_histogram_sum.count/redis.endpoint_write_requests_latency_histogram_count):splitBy(\"cluster\", \"node\")",
+          "rate": "NONE",
+          "enabled": true
+        }
+      ],
+      "visualConfig": {
+        "type": "GRAPH_CHART",
+        "global": {
+          "hideLegend": false
+        },
+        "rules": [
+          {
+            "matcher": "A:",
+            "unitTransform": "none",
+            "valueFormat": "0",
+            "properties": {
+              "color": "DEFAULT",
+              "seriesType": "LINE",
+              "alias": "other"
+            },
+            "seriesOverrides": []
+          },
+          {
+            "matcher": "B:",
+            "unitTransform": "Kilo",
+            "valueFormat": "0",
+            "properties": {
+              "color": "DEFAULT",
+              "seriesType": "LINE",
+              "alias": "read"
+            },
+            "seriesOverrides": []
+          },
+          {
+            "matcher": "C:",
+            "unitTransform": "Kilo",
+            "valueFormat": "auto",
+            "properties": {
+              "color": "DEFAULT",
+              "seriesType": "LINE",
+              "alias": "write"
+            },
+            "seriesOverrides": []
+          }
+        ],
+        "axes": {
+          "xAxis": {
+            "displayName": "",
+            "visible": true
+          },
+          "yAxes": [
+            {
+              "displayName": "",
+              "visible": true,
+              "min": "AUTO",
+              "max": "AUTO",
+              "position": "LEFT",
+              "queryIds": [
+                "A",
+                "B",
+                "C"
+              ],
+              "defaultAxis": true
+            }
+          ]
+        },
+        "heatmapSettings": {
+          "yAxis": "VALUE",
+          "showLabels": false
+        },
+        "thresholds": [
+          {
+            "axisTarget": "LEFT",
+            "rules": [
+              {
+                "color": "#7dc540"
+              },
+              {
+                "color": "#f5d30f"
+              },
+              {
+                "color": "#dc172a"
+              }
+            ],
+            "queryId": "",
+            "visible": true
+          }
+        ],
+        "tableSettings": {
+          "isThresholdBackgroundAppliedToCell": false,
+          "hiddenColumns": []
+        },
+        "graphChartSettings": {
+          "connectNulls": false
+        },
+        "honeycombSettings": {
+          "showHive": true,
+          "showLegend": true,
+          "showLabels": false
+        }
+      },
+      "queriesSettings": {
+        "resolution": ""
+      },
+      "metricExpressions": [
+        "resolution=null&((redis.endpoint_other_requests_latency_histogram_sum.count/redis.endpoint_other_requests_latency_histogram_count):splitBy(cluster,node)):limit(100):names,((redis.endpoint_read_requests_latency_histogram_sum.count/redis.endpoint_read_requests_latency_histogram_count):splitBy(cluster,node)):limit(100):names,((redis.endpoint_write_requests_latency_histogram_sum.count/redis.endpoint_write_requests_latency_histogram_count):splitBy(cluster,node)):limit(100):names"
       ]
     }
   ]

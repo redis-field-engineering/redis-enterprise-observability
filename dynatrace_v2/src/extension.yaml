@@ -6,8 +6,10 @@ author:
 
 dashboards:
 - path: "dashboards/overview-v2.json"
-- path: "dashboards/active-active-v2.json"
 - path: "dashboards/node-v2.json"
+- path: "dashboards/database-v2.json"
+- path: "dashboards/shard-v2.json"
+- path: "dashboards/active-active-v2.json"
 - path: "dashboards/security-v2.json"
 
 metrics:
@@ -232,7 +234,7 @@ metrics:
       - "redis-cluster"
   - key: redis.total_live_nodes_count
     metadata:
-      displayName: Live Node Count
+      displayName: Live Node count
       description: Total number of live nodes
       unit: gauge
       tags:
@@ -241,7 +243,7 @@ metrics:
       - "redis-cluster"
   - key: redis.total_node_count
     metadata:
-      displayName: Total Node Count
+      displayName: Total Node count
       description: Total number of nodes
       unit: gauge
       tags:
@@ -636,7 +638,7 @@ metrics:
       tags:
       - "RedisV2"
       - "EF2"
-      - "redis-active"
+      - "redis-endpoint"
   - key: redis.endpoint_successful_cba_authentication
     metadata:
       displayName: Total CBA Clients Authenticated
@@ -867,7 +869,6 @@ metrics:
       - "EF2"
       - "redis-node"
 
-
   # NETWORK
   - key: redis.node_network_receive_bytes_total
     metadata:
@@ -1022,7 +1023,325 @@ metrics:
       - "RedisV2"
       - "EF2"
       - "redis-network"
-  # SHARD
+
+# SHARD REPLICATION
+  - key: redis.redis_server_crdt_stale_replica
+    metadata:
+      displayName: CRDT Stale Replica
+      description: Replication stale replica
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_oom_latch
+    metadata:
+      displayName: CRDT OoM Latch
+      description: Replication out-of-memory latch
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_clock
+    metadata:
+      displayName: CRDT Clock
+      description: Replication clock
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_peer_id
+    metadata:
+      displayName: CRDT Peer Id
+      description: Peer Id
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_peer_peer_state
+    metadata:
+      displayName: CRDT Peer-to-Peer State
+      description: Peer-to-peer state
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_peer_offset
+    metadata:
+      displayName: CRDT Peer-to-Peer Offset
+      description: Peer offset
+      unit: MilliSecond
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_peer_lag
+    metadata:
+      displayName: CRDT Peer Lag
+      description: Peer lag
+      unit: MilliSecond
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_peer_dst_id
+    metadata:
+      displayName: CRDT Peer Dest Id
+      description: Peer destination Id
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_backlog_size
+    metadata:
+      displayName: CRDT Backlog Size
+      description: Replication backlog size
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_backlog_idx
+    metadata:
+      displayName: CRDT Backlog Index
+      description: Current backlog index
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_backlog_histlen
+    metadata:
+      displayName: CRDT Backlog History Length
+      description: Replication backlog history length
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_backlog_offset
+    metadata:
+      displayName: CRDT Backlog Offset
+      description: Replication backlog offset
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_backlog_master_offset
+    metadata:
+      displayName: CRDT Backlog Master Offset
+      description: Replication backlog master offset
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_backlog_refs
+    metadata:
+      displayName: CRDT Backlog Refs
+      description: Replication backlog references
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_merge_reqs
+    metadata:
+      displayName: CRDT Merge Requests
+      description: Replication merge requests
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_effect_reqs
+    metadata:
+      displayName: CRDT Effect Requests
+      description: Replication effective requests
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_ovc_filtered_effect_reqs
+    metadata:
+      displayName: CRDT OVC Filtered Effect Requests
+      description: OVC filtered effect requests
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_gc_pending
+    metadata:
+      displayName: CRDT Pending Garbage Collection
+      description: Garbage collection pending
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_gc_attempted
+    metadata:
+      displayName: CRDT Attempted Garbage Collection
+      description: Garbage collection attempted
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_gc_collected
+    metadata:
+      displayName: CRDT Collected Garbage
+      description: Garbage collection elements collected
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_gc_skipped
+    metadata:
+      displayName: CRDT Skipped Garbage
+      description: Garbage collection skipped
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_gc_elements_attempted
+    metadata:
+      displayName: CRDT Garbage Attempted Elements
+      description: Not Available
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_gc_elements_collected
+    metadata:
+      displayName: CRDT Garbage Collected Elements
+      description: Not Available
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_list_trimmed_vertices
+    metadata:
+      displayName: CRDT Trimmed Vertices
+      description: Replication trimmed vertices
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_pending_list_trimmed_vertices
+    metadata:
+      displayName: CRDT Vertices Pending Trimming
+      description: Pending trimmed vertice list
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_replica_config_version
+    metadata:
+      displayName: CRDT Replica Config Version
+      description: Replica config version
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_replica_shards
+    metadata:
+      displayName: CRDT Replica Shards
+      description: Replica shards
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_replica_slots
+    metadata:
+      displayName: CRDT Replica Slots
+      description: Replication slots
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_replica_slot_coverage_by_any_ovc
+    metadata:
+      displayName: CRDT Replica Slot Coverage By Any OVC
+      description: Slots covered by any OVC
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_replica_slot_coverage_by_only_ovc
+    metadata:
+      displayName: CRDT Replica Slot Coverage By Only OVC
+      description: Slots covered by only OVC
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_replica_max_ops_lag
+    metadata:
+      displayName: CRDT Replica Max Operations Lag
+      description: Replica maximum operations lag
+      unit: MilliSecond
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_replica_min_ops_lag
+    metadata:
+      displayName: CRDT Replica Min Operations Lag
+      description: Replica minimum operations lag
+      unit: MilliSecond
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_raw_dbsize
+    metadata:
+      displayName: CRDT Raw DB Size
+      description: Replication raw database size
+      unit: Byte
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_key_headers
+    metadata:
+      displayName: CRDT Key Headers
+      description: Replication key headers
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+  - key: redis.redis_server_crdt_ts_key_headers
+    metadata:
+      displayName: CRDT Key Headers Timestamp
+      description: Key timestamp headers
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-replication"
+
+# SHARD
   - key: redis.redis_server_active_defrag_running
     metadata:
       displayName: Memory Defragmentation Aggressiveness
@@ -1097,8 +1416,8 @@ metrics:
       - "redis-shard"
   - key: redis.redis_server_blocked_clients
     metadata:
-      displayName: Blocked Client Count
-      description: Count the clients waiting on a blocking call
+      displayName: Blocked Client count
+      description: count the clients waiting on a blocking call
       unit: gauge
       tags:
       - "RedisV2"
@@ -1106,7 +1425,7 @@ metrics:
       - "redis-shard"
   - key: redis.redis_server_connected_clients
     metadata:
-      displayName: Connected Client Count
+      displayName: Connected Client count
       description: Number of client connections to the specific shard
       unit: gauge
       tags:
@@ -1115,7 +1434,7 @@ metrics:
       - "redis-shard"
   - key: redis.redis_server_connected_slaves
     metadata:
-      displayName: Connected Replica Count
+      displayName: Connected Replica count
       description: The number of time AoF FSync caused delays
       unit: gauge
       tags:
@@ -1133,7 +1452,7 @@ metrics:
       - "redis-shard"
   - key: redis.redis_server_expired_keys
     metadata:
-      displayName: Volatile Key Count
+      displayName: Volatile Key count
       description: Total count of volatile keys
       unit: gauge
       tags:
@@ -1142,7 +1461,7 @@ metrics:
       - "redis-shard"
   - key: redis.redis_server_db0_keys
     metadata:
-      displayName: Total Key Count
+      displayName: Total Key count
       description: Total key count
       unit: gauge
       tags:
@@ -1151,7 +1470,7 @@ metrics:
       - "redis-shard"
   - key: redis.redis_server_evicted_keys
     metadata:
-      displayName: Evicted Key Count
+      displayName: Evicted Key count
       description: Keys evicted so far (since restart)
       unit: gauge
       tags:
@@ -1187,7 +1506,7 @@ metrics:
       - "redis-shard"
   - key: redis.redis_server_keyspace_read_hits
     metadata:
-      displayName: Read Hit Count
+      displayName: Read Hit count
       description: The number of read operations accessing an existing keyspace
       unit: gauge
       tags:
@@ -1196,7 +1515,7 @@ metrics:
         - "redis-shard"
   - key: redis.redis_server_keyspace_read_misses
     metadata:
-      displayName: Read Miss Count
+      displayName: Read Miss count
       description: The number of read operations accessing a non-existing keyspace
       unit: gauge
       tags:
@@ -1205,7 +1524,7 @@ metrics:
         - "redis-shard"
   - key: redis.redis_server_keyspace_write_hits
     metadata:
-      displayName: Write Hit Count
+      displayName: Write Hit count
       description: The number of write operations accessing an existing keyspace
       unit: gauge
       tags:
@@ -1214,7 +1533,7 @@ metrics:
       - "redis-shard"
   - key: redis.redis_server_keyspace_write_misses
     metadata:
-      displayName: Write Miss Count
+      displayName: Write Miss count
       description: The number of write operations accessing a non-existing keyspace
       unit: gauge
       tags:
@@ -1349,7 +1668,7 @@ metrics:
       - "redis-shard"
   - key: namedprocess_namegroup_open_filedesc
     metadata:
-      displayName: Open FD Count
+      displayName: Open FD count
       description: Shard number of open file descriptors
       unit: gauge
       tags:
@@ -1464,6 +1783,16 @@ metrics:
       - "RedisV2"
       - "EF2"
       - "redis-shard"
+  - key: redis.redis_server_used_memory_rss
+    metadata:
+      displayName: Shard Used Memory RSS
+      description: Memory used by shard (in BigRedis this includes flash) (bytes)
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-shard"
+
   # x509
   # x509_exporter_build_info lives in info
   - key: redis.x509_cert_expired
@@ -1521,8 +1850,6 @@ metrics:
       - "EF2"
       - "redis-x509"
 
-
-
 prometheus:
   - group: redis enterprise v2 metrics
     interval:
@@ -1532,7 +1859,6 @@ prometheus:
       - key: redis_v2
         value: const:redis_v2
     subgroups:
-
       - subgroup: redis_v2 global active
         dimensions:
           - key: global_active
@@ -1902,10 +2228,10 @@ prometheus:
             value: metric:node_network_transmit_packets_total
             type: count
 
-      - subgroup: redis_v2 global x509
+      - subgroup: redis_v2 global shard
         dimensions:
-          - key: global_x509
-            value: const:global_x509
+          - key: global_shard
+            value: const:global_shard
         metrics:
           - key: redis.redis_server_active_defrag_running
             value: metric:redis_server_active_defrag_running
@@ -2056,6 +2382,120 @@ prometheus:
             type: gauge
           - key: redis.redis_server_used_memory
             value: metric:redis_server_used_memory
+            type: gauge
+          - key: redis.redis_server_used_memory_rss
+            value: metric:redis_server_used_memory_rss
+            type: gauge
+
+      - subgroup: redis_v2 global replication
+        dimensions:
+          - key: global_replication
+            value: const:global_replication
+        metrics:
+          - key: redis.redis_server_crdt_backlog_histlen
+            value: metric:redis_server_crdt_backlog_histlen
+            type: gauge
+          - key: redis.redis_server_crdt_backlog_idx
+            value: metric:redis_server_crdt_backlog_idx
+            type: gauge
+          - key: redis.redis_server_crdt_backlog_master_offset
+            value: metric:redis_server_crdt_backlog_master_offset
+            type: gauge
+          - key: redis.redis_server_crdt_backlog_offset
+            value: metric:redis_server_crdt_backlog_offset
+            type: gauge
+          - key: redis.redis_server_crdt_backlog_refs
+            value: metric:redis_server_crdt_backlog_refs
+            type: gauge
+          - key: redis.redis_server_crdt_backlog_size
+            value: metric:redis_server_crdt_backlog_size
+            type: gauge
+          - key: redis.redis_server_crdt_clock
+            value: metric:redis_server_crdt_clock
+            type: gauge
+          - key: redis.redis_server_crdt_effect_reqs
+            value: metric:redis_server_crdt_effect_reqs
+            type: gauge
+          - key: redis.redis_server_crdt_gc_attempted
+            value: metric:redis_server_crdt_gc_attempted
+            type: gauge
+          - key: redis.redis_server_crdt_gc_collected
+            value: metric:redis_server_crdt_gc_collected
+            type: gauge
+          - key: redis.redis_server_crdt_gc_elements_attempted
+            value: metric:redis_server_crdt_gc_elements_attempted
+            type: gauge
+          - key: redis.redis_server_crdt_gc_elements_collected
+            value: metric:redis_server_crdt_gc_elements_collected
+            type: gauge
+          - key: redis.redis_server_crdt_gc_pending
+            value: metric:redis_server_crdt_gc_pending
+            type: gauge
+          - key: redis.redis_server_crdt_gc_skipped
+            value: metric:redis_server_crdt_gc_skipped
+            type: gauge
+          - key: redis.redis_server_crdt_key_headers
+            value: metric:redis_server_crdt_key_headers
+            type: gauge
+          - key: redis.redis_server_crdt_list_trimmed_vertices
+            value: metric:redis_server_crdt_list_trimmed_vertices
+            type: gauge
+          - key: redis.redis_server_crdt_merge_reqs
+            value: metric:redis_server_crdt_merge_reqs
+            type: gauge
+          - key: redis.redis_server_crdt_oom_latch
+            value: metric:redis_server_crdt_oom_latch
+            type: gauge
+          - key: redis.redis_server_crdt_ovc_filtered_effect_reqs
+            value: metric:redis_server_crdt_ovc_filtered_effect_reqs
+            type: gauge
+          - key: redis.redis_server_crdt_peer_dst_id
+            value: metric:redis_server_crdt_peer_dst_id
+            type: gauge
+          - key: redis.redis_server_crdt_peer_id
+            value: metric:redis_server_crdt_peer_id
+            type: gauge
+          - key: redis.redis_server_crdt_peer_lag
+            value: metric:redis_server_crdt_peer_lag
+            type: gauge
+          - key: redis.redis_server_crdt_peer_offset
+            value: metric:redis_server_crdt_peer_offset
+            type: gauge
+          - key: redis.redis_server_crdt_peer_peer_state
+            value: metric:redis_server_crdt_peer_peer_state
+            type: gauge
+          - key: redis.redis_server_crdt_pending_list_trimmed_vertices
+            value: metric:redis_server_crdt_pending_list_trimmed_vertices
+            type: gauge
+          - key: redis.redis_server_crdt_raw_dbsize
+            value: metric:redis_server_crdt_raw_dbsize
+            type: gauge
+          - key: redis.redis_server_crdt_replica_config_version
+            value: metric:redis_server_crdt_replica_config_version
+            type: gauge
+          - key: redis.redis_server_crdt_replica_max_ops_lag
+            value: metric:redis_server_crdt_replica_max_ops_lag
+            type: gauge
+          - key: redis.redis_server_crdt_replica_min_ops_lag
+            value: metric:redis_server_crdt_replica_min_ops_lag
+            type: gauge
+          - key: redis.redis_server_crdt_replica_shards
+            value: metric:redis_server_crdt_replica_shards
+            type: gauge
+          - key: redis.redis_server_crdt_replica_slot_coverage_by_any_ovc
+            value: metric:redis_server_crdt_replica_slot_coverage_by_any_ovc
+            type: gauge
+          - key: redis.redis_server_crdt_replica_slot_coverage_by_only_ovc
+            value: metric:redis_server_crdt_replica_slot_coverage_by_only_ovc
+            type: gauge
+          - key: redis.redis_server_crdt_replica_slots
+            value: metric:redis_server_crdt_replica_slots
+            type: gauge
+          - key: redis.redis_server_crdt_stale_replica
+            value: metric:redis_server_crdt_stale_replica
+            type: gauge
+          - key: redis.redis_server_crdt_ts_key_headers
+            value: metric:redis_server_crdt_ts_key_headers
             type: gauge
 
       - subgroup: redis_v2 global x509

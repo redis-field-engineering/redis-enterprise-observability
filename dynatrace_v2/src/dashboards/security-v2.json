@@ -3,14 +3,14 @@
     "configurationVersions": [
       7
     ],
-    "clusterVersion": "1.307.46.20250203-130049"
+    "clusterVersion": "1.309.54.20250305-171942"
   },
   "id": "e987f764-6865-4e62-ad52-0ad9f4a1d15a",
   "dashboardMetadata": {
     "name": "Redis Enterprise - Security-V2",
     "shared": false,
     "owner": "john.burke@redis.com",
-    "popularity": 10,
+    "popularity": 2,
     "hasConsistentColors": false
   },
   "tiles": [
@@ -1143,6 +1143,32 @@
       ]
     },
     {
+      "name": "Statistics",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 0,
+        "left": 0,
+        "width": 1368,
+        "height": 38
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false
+    },
+    {
+      "name": "Certificates and Hardware",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 494,
+        "left": 0,
+        "width": 1368,
+        "height": 38
+      },
+      "tileFilter": {},
+      "isAutoRefreshDisabled": false
+    },
+    {
       "name": "Node Hardware Info",
       "tileType": "DATA_EXPLORER",
       "configured": true,
@@ -1158,17 +1184,16 @@
       "queries": [
         {
           "id": "A",
-          "metric": "redis.node_dmi_info.count",
           "spaceAggregation": "AUTO",
           "timeAggregation": "DEFAULT",
-          "splitBy": [],
-          "sortBy": "DESC",
-          "sortByDimension": "",
-          "filterBy": {
-            "nestedFilters": [],
-            "criteria": []
-          },
-          "limit": 20,
+          "splitBy": [
+            "system_vendor",
+            "bios_version",
+            "bios_release",
+            "product_name",
+            "node"
+          ],
+          "metricSelector": "redis.node_dmi_info.count:splitBy(\"system_vendor\",\"bios_version\",\"bios_release\",\"product_name\",\"node\"):sort(value(auto,descending)):limit(20)",
           "rate": "NONE",
           "enabled": true
         }
@@ -1214,7 +1239,13 @@
           }
         ],
         "tableSettings": {
-          "hiddenColumns": []
+          "hiddenColumns": [
+            "A:bios_version.name",
+            "A:bios_release.name",
+            "A:product_name.name",
+            "A:system_vendor.name",
+            "A:node.name"
+          ]
         },
         "graphChartSettings": {
           "connectNulls": false
@@ -1229,7 +1260,7 @@
         "resolution": ""
       },
       "metricExpressions": [
-        "resolution=Inf&(redis.node_dmi_info.count:splitBy():sort(value(auto,descending)):limit(20)):names"
+        "resolution=Inf&(redis.node_dmi_info.count:splitBy(system_vendor,bios_version,bios_release,product_name,node):sort(value(auto,descending)):limit(20)):names"
       ]
     },
     {
@@ -1248,17 +1279,14 @@
       "queries": [
         {
           "id": "A",
-          "metric": "redis.node_cert_expires_in_seconds",
           "spaceAggregation": "AUTO",
           "timeAggregation": "DEFAULT",
-          "splitBy": [],
-          "sortBy": "DESC",
-          "sortByDimension": "",
-          "filterBy": {
-            "nestedFilters": [],
-            "criteria": []
-          },
-          "limit": 20,
+          "splitBy": [
+            "node",
+            "filepath",
+            "filename"
+          ],
+          "metricSelector": "redis.node_cert_expires_in_seconds:splitBy(\"node\",\"filepath\",\"filename\"):setUnit(Second):sort(value(auto,descending)):limit(20)",
           "rate": "NONE",
           "enabled": true
         }
@@ -1304,7 +1332,11 @@
           }
         ],
         "tableSettings": {
-          "hiddenColumns": []
+          "hiddenColumns": [
+            "A:node.name",
+            "A:filepath.name",
+            "A:filename.name"
+          ]
         },
         "graphChartSettings": {
           "connectNulls": false
@@ -1320,34 +1352,8 @@
         "foldTransformation": "LAST_VALUE"
       },
       "metricExpressions": [
-        "resolution=null&(redis.node_cert_expires_in_seconds:splitBy():sort(value(auto,descending)):limit(20)):names:last"
+        "resolution=null&(redis.node_cert_expires_in_seconds:splitBy(node,filepath,filename):setUnit(Second):sort(value(auto,descending)):limit(20)):names:last"
       ]
-    },
-    {
-      "name": "Statistics",
-      "tileType": "HEADER",
-      "configured": true,
-      "bounds": {
-        "top": 0,
-        "left": 0,
-        "width": 1368,
-        "height": 38
-      },
-      "tileFilter": {},
-      "isAutoRefreshDisabled": false
-    },
-    {
-      "name": "Certificates and Hardware",
-      "tileType": "HEADER",
-      "configured": true,
-      "bounds": {
-        "top": 494,
-        "left": 0,
-        "width": 1368,
-        "height": 38
-      },
-      "tileFilter": {},
-      "isAutoRefreshDisabled": false
     }
   ]
 }

@@ -1,12 +1,13 @@
 :linkattrs:
 :project-owner:      redis-field-engineering
-:project-name:       redis-enterprise-new-relic-dashboards-prometheus
+:project-name:       redis-enterprise-observability
 :name:               Redis Enterprise New Relic Prometheus Exporter
 
 = Redis Enterprise New Relic Prometheus Exporter
 
 This repository contains a set of New Relic dashboards configured to display Redis Enterprise v2 metrics exported through
-Prometheus.
+Prometheus. For more details about the two versions as well as a guide to migrating between please see the following
+link and, more specifically, its subsections: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/[Prometheus with Redis Enterprise]
 
 == Table of Contents
 
@@ -129,4 +130,4 @@ assistance, please https://github.com/{project-owner}/{project-name}/issues[file
 
 == License
 
-This code in this repository is licensed under the MIT License. Copyright (C) 2023 Redis, Inc.
+This code in this repository is licensed under the MIT License. Copyright (C) 2025 Redis, Inc.

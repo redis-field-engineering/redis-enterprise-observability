@@ -1,20 +1,24 @@
-= Redis Enterprise Developer Observability - Demonstration
+= Redis Enterprise Developer Observability - Kickstarter
 :revnumber: 1.0
 :docinfo1:
 
-== About the demo
+== About the kickstarter
 
-The demo was created so that it would encapsulate all the elements necessary to demonstrate dashboards using Redis.
-It consists of a docker compose file, in addition to a grafana configuration and base grafana database as well as a prometheus configuration file.
+The kickstarter was created so that it would encapsulate all the elements necessary to demonstrate dashboards using Redis.
+It consists of a docker compose file, in addition to a grafana configuration and dashboards as well as a
+prometheus configuration file.
 
-The setup script 'setup.sh' will install containers for the different elements and configure their networking, after which it cleans up any temporary files.
-Once the script has executed successfully the Grafana instance will be available at localhost:3000 and Prometheus at localhost:9090.
-These are the default ports so it is important that neither Grafana nor Prometheus is already running on the machine.
+The setup script 'setup.sh' will install containers for the different elements and configure their networking, after
+which it cleans up any temporary files. Note that it must be passed the specific Redis endpoint that you wish to monitor
+when executing this script. Once the script has executed successfully the Grafana instance will be available at
+localhost:3000 and Prometheus at localhost:9090. As these are the default ports it is important that neither Grafana nor
+Prometheus are already running on the machine.
 
 === Viewing the demo
 
-Grafana's default credentials are admin/admin. You will be asked to change the password after you have logged in successfully.
-If you are planning on keeping this environment for any ongoing testing it is recommended that you change the password.
+Grafana's default credentials are admin/admin. You will be asked to change the password after you have logged in
+successfully. If you are planning on keeping this environment for any ongoing testing it is recommended that you change
+the password.
 
 === Loading some data
 

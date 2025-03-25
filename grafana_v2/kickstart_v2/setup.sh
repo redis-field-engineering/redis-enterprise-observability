@@ -11,15 +11,14 @@ PROJECT="demo"
 # get the cli variable and use it as the network endpoint for prometheus
 # sed 's/- targets: \[\"172.27.1.4\:8070\"\]/- targets: \[\"$1\:8070\"\]/' >> prometheus.yml
 
-#    metrics_path: /v2
-#    scheme: https
-#    tls_config:
-#      insecure_skip_verify: true
-#    static_configs:
-#      # the default port is 8070, the url is that of the cluster leader
-#      - targets: ["172.27.1.4:8070"]
+sed -i "s/172.27.1.4:8070/${1}/g" ./prometheus.yml
 
 docker compose -p ${PROJECT} up -d
+
+until curl --output /dev/null --silent --head --fail curl http://localhost:3000; do
+    printf '.'
+    sleep 1
+done
 
 # create prometheus datasource
 echo ""

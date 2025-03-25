@@ -1,0 +1,30 @@
+version: '3'
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus${DEMO_NUM}.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      dashboard:
+        ipv4_address: "172.27.1.2"
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      dashboard:
+        ipv4_address: "172.27.1.3"
+networks:
+  dashboard:
+    driver: bridge
+    enable_ipv6: false
+    ipam:
+      config:
+       -
+        subnet: 172.27.1.0/24
+        gateway: 172.27.1.1
+

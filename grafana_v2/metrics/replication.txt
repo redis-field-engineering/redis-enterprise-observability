@@ -1,0 +1,20 @@
+database_syncer_config: Used as a placeholder for configuration labels
+database_syncer_current_status: Syncer status for traffic; 0 = in-sync, 2 = out of sync
+database_syncer_dst_connectivity_state: Destination connectivity state
+database_syncer_dst_connectivity_state_ms: Destination connectivity state duration
+database_syncer_dst_lag: Lag in milliseconds between the syncer and the destination
+database_syncer_dst_repl_offset: Offset of the last command acknowledged
+database_syncer_flush_counter: Number of destination flushes
+database_syncer_ingress_bytes: Number of bytes read from source shard
+database_syncer_ingress_bytes_decompressed: Number of bytes read from source shard
+database_syncer_internal_state: Internal state of the syncer
+database_syncer_lag_ms: Lag time between the source and the destination for traffic in milliseconds
+database_syncer_rdb_size: The source's RDB size in bytes to be transferred during the syncing phase
+database_syncer_rdb_transferred: Number of bytes transferred from the source's RDB during the syncing phase
+database_syncer_src_connectivity_state: Source connectivity state
+database_syncer_src_connectivity_state_ms: Source connectivity state duration
+database_syncer_src_repl_offset: Last known source offset
+database_syncer_state: Internal state of the shard syncer
+database_syncer_syncer_repl_offset: Offset of the last command handled by the syncer
+database_syncer_total_requests: Number of destination writes
+database_syncer_total_responses: Number of destination writes acknowledged

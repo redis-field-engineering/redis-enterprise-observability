@@ -1,0 +1,35 @@
+db_config: Configuration of the database
+db_memory_limit_bytes: Configured memory limit for the database
+db_status: The status of the DB
+endpoint_client_connection_expired: Total number of client connections ttl that expired
+endpoint_client_connections: Number of client connection establishment events
+endpoint_client_disconnections: Number of client disconnections initiated by the client
+endpoint_client_establishment_failures: Number of client connections that failed to establish properly
+endpoint_client_tracking_off_requests: Total number of CLIENT TRACKING OFF requests
+endpoint_client_tracking_on_requests: Total number of CLIENT TRACKING ON requests
+endpoint_dedicated_sconn_connections: Number of dedicated server connections establishment events
+endpoint_dedicated_sconn_proxy_disconnections: Number of dedicated server connections closed by proxy
+endpoint_dedicated_sconn_shard_disconnections: Number of dedicated server connections closed by shard
+endpoint_disposed_commands_after_client_caching: Total number of client caching commands that were disposed due to misuse
+endpoint_egress: Number of egress bytes
+endpoint_egress_pending: Number of send-pending bytes
+endpoint_egress_pending_discarded: Number of send-pending bytes that were discarded due to disconnection
+endpoint_ingress: Number of ingress bytes
+endpoint_internal_client_connections: Number of internal client connection establishment events
+endpoint_internal_client_disconnections: Number of internal client disconnections initiated by the client
+endpoint_internal_proxy_disconnections: Number of internal client disconnections initiated by the proxy
+endpoint_other_requests: Number of other requests
+endpoint_other_requests_latency_histogram: Latency (in us) histogram of other commands
+endpoint_other_responses: Number of other responses
+endpoint_proxy_disconnections: Number of client disconnections initiated by the proxy
+endpoint_read_requests: Number of read requests
+endpoint_read_requests_latency_histogram: Latency (in us) histogram of read commands
+endpoint_read_responses: Number of read responses
+endpoint_sconn_application_handshake_failure: Number of server connections that failed during application handshake
+endpoint_sconn_establishment_failure: Number of server connections that failed to establish properly
+endpoint_shared_sconn_connections: Number of shared server connections establishment events
+endpoint_shared_sconn_proxy_disconnections: Number of shared server connections closed by proxy
+endpoint_shared_sconn_shard_disconnections: Number of shared server connections closed by shard
+endpoint_write_requests: Number of write requests
+endpoint_write_requests_latency_histogram: Latency (in us) histogram of write commands
+endpoint_write_responses: Number of write responses

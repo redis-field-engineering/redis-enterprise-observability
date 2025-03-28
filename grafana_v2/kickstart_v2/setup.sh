@@ -84,3 +84,12 @@ EOF
          rm dashboard2.json
     fi
 done
+
+echo ""
+echo "You can open a browser and access Grafana, and Prometheus at:"
+echo "  Grafana: http://localhost:${DEMO_NUM}3000 (username=admin and password=admin)"
+echo "  Prometheus: http://localhost:${DEMO_NUM}9090"
+echo ""
+echo ""
+echo "DISCLAIMER: This is best for local development or functional testing. Please see, https://docs.redis.com/latest/rs/installing-upgrading/quickstarts/docker-quickstart/"
+

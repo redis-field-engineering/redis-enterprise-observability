@@ -20,16 +20,17 @@ tests:
     # Unit test for alerting rules.
     alert_rule_test:
       # Unit test 1.
-      - eval_time: 5m
+      - eval_time: 10m
         alertname: Proxy CPU Usage
         exp_alerts:
           # Alert 1.
           - exp_labels:
               severity:  critical
+              type: proxy
               job: redis
               cluster: localhost
               groupname: dmcproxy
             exp_annotations:
               summary: Proxy CPU Usage
-              description: "Busy Proxy - Cluster: localhost CPU: 90%"
+              description: "Proxy CPU usage has exceeded 171.2875% for more than 60 seconds"
               runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#shard-cpu-usage-is-excessive

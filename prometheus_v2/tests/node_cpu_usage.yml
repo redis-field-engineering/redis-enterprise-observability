@@ -41,5 +41,5 @@ tests:
               node: 1
             exp_annotations:
               summary: Node CPU Usage
-              description: "High CPU Usage - Cluster: localhost Usage: 196.5%"
+              description: "High CPU Usage - Cluster: localhost Usage: 171.2875%"
               runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/nodes.md#node-cpu-usage

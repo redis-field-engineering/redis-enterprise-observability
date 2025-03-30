@@ -12,7 +12,6 @@ tests:
     # Series data.
     input_series:
       - series: 'namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", node="1", redis="1"}'
-        # values: '70000 80000 90000 100000 110000 120000 130000 140000 150000 160000 170000 180000 190000 200000 210000'
         ### 20% increase/minute
         # values: '70000 84000 1008000 120960 145152 174182 209018 250822 300987 361184 433421 520106 624127 748952'
         ### 10% increase/minute
@@ -36,5 +35,5 @@ tests:
               redis: 1
             exp_annotations:
               summary: Shard CPU Usage
-              description: "Busy Shard - Cluster: localhost Shard: 1 Node: 1 CPU: 196.5%"
+              description: "Busy Shard - Cluster: localhost Shard: 1 Node: 1 CPU: 171.2875%"
               runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#shard-cpu-usage-is-excessive

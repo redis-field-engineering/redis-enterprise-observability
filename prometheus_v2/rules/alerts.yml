@@ -272,7 +272,7 @@ groups:
        runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/nodes.md#node-free-memory
    - alert: Node CPU Usage
      # expr: round((1 - (irate(node_cpu_seconds_total{job="redis", cluster="localhost", node="1"}[1m]))) * 100) >= 0
-     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", node="1"}[1m]) >= 0
+     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", node="1"}[5m]) >= 0
      for: 5m
      labels:
        severity: critical
@@ -306,7 +306,7 @@ groups:
        description: "Slave has no master - Cluster: {{$labels.cluster}} Shard: {{$labels.redis}} Node: {{$labels.node}}"
        runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#master-shard-down
    - alert: Shard CPU Usage
-     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", node="1", redis="1"}[1m]) >= 0
+     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", node="1", redis="1"}[5m]) >= 0
      for: 5m
      labels:
        severity: notification
@@ -316,8 +316,9 @@ groups:
        description: "Busy Shard - Cluster: {{$labels.cluster}} Shard: {{$labels.redis}} Node: {{$labels.node}} CPU: {{$value}}%"
        runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#shard-cpu-usage-is-excessive
    - alert: Hot Master Shard
-     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", role="master", node="1", redis="1"}[1m]) >= 0
-     for: 5m
+     # expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", role="master", node="1", redis="1"}[5m]) >= 0
+     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", role="master", node="1", redis="1"}[5m]) >= 0
+     for: 1m
      labels:
        severity: critical
        type: shard
@@ -328,14 +329,17 @@ groups:
        runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#hot-master-shard
    - alert: Proxy CPU Usage
      # expr: dmcproxy_process_cpu_usage_percent{cluster="$cluster"} / count(namedprocess_namegroup_thread_cpu_seconds_total{groupname="dmcproxy", threadname=~"worker-.*", mode="system"}) > 0.80
-     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", groupname="dmcproxy"}[1m]) / count(namedprocess_namegroup_thread_cpu_seconds_total{job="redis", cluster="localhost", groupname="dmcproxy"}) > 0.80
+     # expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", groupname="dmcproxy"}[5m]) / count(namedprocess_namegroup_thread_cpu_seconds_total{job="redis", cluster="localhost", groupname="dmcproxy"}) > 0.80
+     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", groupname="dmcproxy"}[5m]) > 0.0
+     # expr: count(namedprocess_namegroup_thread_cpu_seconds_total{job="redis", cluster="localhost", node="1"}) > 0.80
      for: 5m
      labels:
        severity: critical
        type: proxy
      annotations:
        summary: Proxy CPU Usage
-       description: "Proxy worker thread CPU usage has exceeded 80% for more than 30 seconds"
+       description: "Proxy CPU usage has exceeded {{$value}}% for more than 60 seconds"
+       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#shard-cpu-usage-is-excessive
 
 #  - alert: ShardConnectionCount
 #    expr: redis_connected_clients > 500

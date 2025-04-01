@@ -11,8 +11,6 @@ PROJECT="demo"
 # get the cli variable and use it as the network endpoint for prometheus
 # sed 's/- targets: \[\"172.27.1.4\:8070\"\]/- targets: \[\"$1\:8070\"\]/' >> prometheus.yml
 
-sed -i "s/172.27.1.4:8070/${1}/g" ./prometheus.yml
-
 docker compose -p ${PROJECT} up -d
 
 until curl --output /dev/null --silent --head --fail curl http://localhost:3000; do
@@ -55,33 +53,13 @@ fi
 echo ""
 echo "create grafana dashboards"
 # loop over files in folder
-for file in dashboards/*; do
+for file in ../dashboards/kickstart/*; do
     if [ -f "$file" ]; then
-        # echo "$file"
-        cat <<EOF > dashboard.json
-        {
-              "dashboard":
-EOF
-
-         cat $file >> dashboard.json
-
-         cat <<EOF >> dashboard.json
-             ,
-             "folderId": 0,
-             "message": "Setup created demonstration dashboards",
-             "overwrite": false
-         }
-EOF
-
-        # sed replace "${DS_PROMETHEUS}" with ${prometheus-demo}
-        cat dashboard.json | sed -e 's/"uid": "eeasgufdm8q2oa"/"uid": "'$uid'"/g' > dashboard2.json
-
-         curl -s 'http://admin:admin@localhost:3000/api/dashboards/db' \
+        echo "$file"
+        curl -s 'http://admin:admin@localhost:3000/api/dashboards/db' \
            --header 'Accept: application/json' \
            --header 'Content-Type: application/json' \
-           --data-binary @./dashboard2.json
-         rm dashboard.json
-         rm dashboard2.json
+           --data-binary @$file
     fi
 done
 

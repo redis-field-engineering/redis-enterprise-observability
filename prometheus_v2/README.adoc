@@ -15,27 +15,28 @@ alerting:
           - alertmanager:9093
 ----
 
-The Rule file section of the config file instructs Alertmanager to read specific rules files.
-If you pasted the 'alerts.yml' file into '/etc/prometheus' then the following configuration would be required.
+The Rule file section of the config file instructs Alertmanager to read specific rules files. In order to use the alerts
+it is necessary to add each section's alerts file to the configuration.
+
+The following alert categories are available:
+
+ - latency
+ - connections
+ - throughput
+ - capacity
+ - utilization
+ - synchronization
+ - nodes
+ - shards
+
+An example is given below with the latency file
+added to the base Prometheus error_rules file.
 
 [subs="+quotes"]
 ----
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'. With the release of Redis
 v2 metrics we have re-organized the alerting configuration. Alerts are now organized by group, with latency rules found in
 the latency-alerts.yml file, etc.
-
-The following alert categories are available:
- * latency
- * connections
- * throughput
- * capacity
- * utilization
- * synchronization
- * nodes
- * shards
-
-In order to use the alerts it is necessary to add each section's alerts file to the configuration. An example is given
-below with the latency file added to the base Prometheus error_rules file.
 
 rule_files:
   - "error_rules.yml"

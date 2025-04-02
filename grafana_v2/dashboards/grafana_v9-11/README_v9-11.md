@@ -117,7 +117,6 @@ These dashboards can be installed either in Redis Enterprise installations or in
 * [Database-CPU](workflow/databases/redis-software-cluster-database-cpu_v9-11.json)
 * [Database-Latency](workflow/databases/redis-software-cluster-database-latency_v9-11.json)
 * [Database-Requests](workflow/databases/redis-software-cluster-database-requests_v9-11.json)
-* [Database-CPU](workflow/databases/redis-software-cluster-database-cpu_v9-11.json)
 ####
 * [Nodes](workflow/nodes/redis-software-cluster-nodes_v9-11.json)
 * [Node-CPU](workflow/nodes/redis-software-cluster-node-cpu_v9-11.json)

@@ -25,5 +25,10 @@ the password.
 The demo includes a small script which can create data and load it into Redis in order to drive activity.
 It is a python script, 'import/import.py', and as such it would require the Redis python client to be installed.
 
+== Configuring alerts
+
+Redis provides Prometheus alerting rules, and their respective tests, for use with Grafana/Prometheus monitoring. These
+can be found in the prometheus_v2 folder, along with instructions for how to configure Prometheus' Alert Manager.
+
 
 

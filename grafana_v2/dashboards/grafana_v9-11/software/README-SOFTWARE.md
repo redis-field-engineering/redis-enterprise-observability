@@ -18,11 +18,11 @@ Once you've configured Prometheus to scrape the [Redis Software Prometheus endpo
 
 ## Extended dashboard configuration
 
-If you want to to use the [extended dashboard JSON files](extended/), you'll need to make some additional configuration changes.
+If you want to use the [extended dashboard JSON files](extended/), you'll need to make some additional configuration changes.
 
 For the [extended database status dashboard](extended/redis-cloud-database-dashboard.json), you'll need to configure both the Redis Datasource plugin and the Infinity data source plugin, which supports the _Modules_ and _Configuration_ panes.
 
-The Reds Datasource requires only that you configure an account for accessing the Redis cluster. When you install the datasource plugin you will need to enter the redis cluster address, eg. redis://REDIS_SOFTWARE_HOSTNAME:<REDIS_SOFTWARE_PORT>, then enable the ACL switch and enter a username and password. We recommend creating a user with the 'Cluster View' role that is used only for this purpose.
+The Redis Datasource requires only that you configure an account for accessing the Redis cluster. When you install the datasource plugin you will need to enter the redis cluster address, eg. redis://REDIS_SOFTWARE_HOSTNAME:<REDIS_SOFTWARE_PORT>, then enable the ACL switch and enter a username and password. We recommend creating a user with the 'Cluster View' role that is used only for this purpose.
 
 The Database Status Dashboard has two panels that need to be configured; Modules, and Configuration. They should use the Infinity datasource with the following settings:
 

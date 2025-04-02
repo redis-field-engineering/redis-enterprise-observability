@@ -28,4 +28,3 @@ tests:
             exp_annotations:
               summary: Node Not Responding
               description: "Node Down - Cluster:  Expected Nodes: 3 Actual: 1"
-              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/nodes.md#node-not-responding

@@ -1,59 +1,4 @@
 
-# NB: there are no listener alerts, if you feel they would be helpful open a ticket
-# NB: some of these might be expected in some environments - in other words change the duration not the metric
-# NB: synchronization have no runback documentation
-
-### DATABASE, eg. all begin with bdb_ ###
-#* latency are average - should they be switched with read and write? *#
-# Average Latency Warning : round(bdb_avg_latency * 1000) > 1 (30s)
-# Average Latency Critical : round(bdb_avg_latency * 1000) > 4 (30s)
-
-# No Redis Connections : bdb_conns < 1 (30s)
-# Excessive Redis Requests : bdb_total_req > 1000000 (30s)
-# No Redis Requests : bdb_total_req < 1 (30s)
-# Excessive Redis Requests : bdb_total_req > 1000000 (30s)
-
-#* is this valid? this is too high at the shard level per kurt mueller; could be switched to redis_used_memory and move to SHARD *#
-# DB full : round((bdb_used_memory/bdb_memory_limit) * 100) > 98 (30s)
-
-#* is this valid? this needs evaluation and testing *#
-# DB full in 2 hours : round((bdb_used_memory/bdb_memory_limit) * 100) < 98 and (predict_linear(bdb_used_memory[15m], 2 * 3600) / bdb_memory_limit) > 0.3 and \
-# round(predict_linear(bdb_used_memory[15m], 2 * 3600)/bdb_memory_limit) > 0.98 (30s)
-
-# Low Hit Ratio : (100 * bdb_read_hits)/(bdb_read_hits + bdb_read_misses) < 50 (1m)
-
-#* validate these time durations *#
-# ReplicaSync Status : bdb_replicaof_syncer_status != 0 (5m)
-# CRDTSync Status : bdb_crdt_syncer_status > 0 (5m)
-# ReplicaLag Status : bdb_replicaof_syncer_local_ingress_lag_time > 500 (10m)
-# CRDTLag Status : bdb_crdt_syncer_local_ingress_lag_time > 500 (10m)
-
-
-### NODE, eg. all begin with node_ ###
-
-#* with mulitple clusters you probably want to change this per cluster, eg: count(node_up{cluster="redis-prod.com"}) *#
-# Node Not Responding : count(node_up) != 3 (5m)
-# Node Persistent Storage : round((node_persistent_storage_free/node_persistent_storage_avail) * 100) <= 5 (2m)
-# Node Free Memory : round((node_ephemeral_storage_free/node_ephemeral_storage_avail) * 100) <= 5 (2m)
-# Node Free Memory : round((1 - node_cpu_idle) * 100) >= 80 (2m)
-# Node CPU Usage : expr: round((1 - node_cpu_idle) * 100) >= 80 (2m)
-
-
-### SHARD, eg. all begin with redis_ ###
-
-# Shard CPU Usage : redis_process_cpu_usage_percent >= 80 (1m)
-
-#* is this valid? this needs evaluation and testing *#
-# Hot Master Shard : redis_process_cpu_usage_percent{role="master"} > 0.75 and \
-# redis_process_cpu_usage_percent{role="master"} > on (db) group_left() \
-# (avg by (db)(redis_process_cpu_usage_percent{role="master"}) + on(db) 1.2 * stddev by (db) (redis_process_cpu_usage_percent{role="master"})) (1m)
-
-#* is this valid? this duration seems high. this needs evaluation and testing *#
-# Master Shard Down : floor(redis_master_link_status{role="slave"}) < 1 (2m)
-
-#* is this valid? if this is an issue wouldn't it have shown up as a memory issue first? this needs evaluation and testing *#
-# Unexpected Object Eviction : bdb_evicted_objects > 1 (3m)
-
 #################################################        ALERTS        #################################################
 
 ### DATABASE, eg. all begin with bdb_ ###
@@ -61,8 +6,6 @@ groups:
  - name: latency
    rules:
    - alert: Average Latency Warning
-     # expr: 'sum by (bdb) (irate(endpoint_acc_latency{job="redis", cluster="localhost", db="1"}[1m])) / sum by (bdb) (irate(endpoint_total_started_res{job="redis", cluster="localhost", db="1"}[1m])) / 1000000'
-     # expr: '(irate(endpoint_acc_latency{job="redis", cluster="localhost", db="1"}[1m])) / (irate(endpoint_total_started_res{job="redis", cluster="localhost", db="1"}[1m])) / 1000000'
      expr: '(irate(endpoint_acc_latency{job="redis", cluster="localhost", db="1"}[1m])) / (irate(endpoint_total_started_res{job="redis", cluster="localhost", db="1"}[1m]))'
      for: 30s
      labels:
@@ -74,10 +17,8 @@ groups:
      annotations:
        summary: Average Latency Warning
        description: "High Latency - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Latency: {{$value}} ms"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/latency.md#average-latency
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency
    - alert: Average Latency Critical
-     # expr: round(bdb_avg_latency * 1000) > 4
-     # expr: '(irate(endpoint_acc_latency{job="redis", cluster="localhost", db="1"}[1m])) / (irate(endpoint_total_started_res{job="redis", cluster="localhost", db="1"}[1m])) / 1000000'
      expr: '(irate(endpoint_acc_latency{job="redis", cluster="localhost", db="1"}[1m])) / (irate(endpoint_total_started_res{job="redis", cluster="localhost", db="1"}[1m]))'
      for: 30s
      labels:
@@ -89,7 +30,7 @@ groups:
      annotations:
        summary: Average Latency Critical
        description: "High Latency - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Latency: {{$value}} ms"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/latency.md#average-latency
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency
 
  - name: connections
    rules:
@@ -103,7 +44,7 @@ groups:
      annotations:
        summary: "No Redis Connections"
        description: "No Connections - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Connections: {{$value}}"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/connections.md#no-redis-connections
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections
    - alert: Excessive Connections
      expr: endpoint_client_connections > 64000
      for: 30s
@@ -114,7 +55,7 @@ groups:
      annotations:
        summary: "Too many connections"
        description: "Too Many Connections - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Connections: {{$value}}"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/connections.md#excessive-connections
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections
 
  - name: throughput
    rules:
@@ -127,7 +68,7 @@ groups:
      annotations:
        summary: No Redis Requests
        description: "Too few Redis operations - Cluster: {{$labels.cluster}} DB: {{$labels.db}}  {{$value}} (ops/sec)"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/throughput.md#no-redis-requests
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections
    - alert: Excessive Redis Requests
      expr: (endpoint_read_requests + endpoint_write_requests)/2 > 1000000
      for: 30s
@@ -137,7 +78,7 @@ groups:
      annotations:
        summary: Excessive Redis Requests
        description: "Too Many Redis Operations - Cluster: {{$labels.cluster}} DB: {{$labels.db}} {{$value}} (ops/sec)"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/throughput.md#excessive-redis-requests
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections
 
  - name: capacity
    rules:
@@ -150,7 +91,7 @@ groups:
      annotations:
        summary: DB is full
        description: "DB Usage - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Usage: {{$value}}% full"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/capacity.md#db-full
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory
    - alert: DB full in 2 hours
      expr: round((redis_server_used_memory{job="redis", cluster="localhost"}/redis_server_memory_limit{job="redis", cluster="localhost"}) * 100) < 95 and (predict_linear(redis_server_used_memory{job="redis", cluster="localhost"}[15m], 2 * 3600) / redis_server_memory_limit{job="redis", cluster="localhost"}) > 0.3 and round(predict_linear(redis_server_used_memory{job="redis", cluster="localhost"}[15m], 2 * 3600)/redis_server_memory_limit{job="redis", cluster="localhost"}) > 0.95
      for: 30s
@@ -160,7 +101,7 @@ groups:
      annotations:
        summary: DB will be full in two hours
        description: "DB Usage - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Usage: {{$value}}% in 2 hours"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/capacity.md#db-full-in-2-hours
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory
 
  - name: utilization
    rules:
@@ -173,7 +114,7 @@ groups:
      annotations:
        summary: Low Hit Ratio
        description: "Low Hit Ratio: {{$labels.cluster}} DB: {{$labels.db}} Hit Ratio: {{$value}}%"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/utilization.md#hit-ratio-is-low
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cache-hit-ratio-and-eviction
    - alert: Unexpected Object Eviction
      expr: redis_server_evicted_keys{role="master"} > 1
      for: 3m
@@ -184,7 +125,7 @@ groups:
      annotations:
        summary: Unexpected Object Eviction
        description: "Evictions Occurring: {{$labels.cluster}} DB: {{$labels.db}} EvictionsPerSecond: {{$value}}"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/utilization.md#objects-being-evicted-from-database
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cache-hit-ratio-and-eviction
 
  - name: synchronization
    rules:
@@ -197,6 +138,7 @@ groups:
      annotations:
        summary: Replication - Resynchronization Requests (Status)
        description: Replication on {{$labels.cluster}} not synchronized in 10 minutes
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization
    - alert: CRDTSync Status
      expr: database_syncer_current_status{syncer_type="crdt"} > 0
      for: 5m
@@ -206,6 +148,7 @@ groups:
      annotations:
        summary: Replication - Unsynchronized (CRDT)
        description: CRDT Replication on {{$labels.cluster}} not synchronized for 5 minutes
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization
    - alert: ReplicaLag Status
      expr: database_syncer_lag_ms{syncer_type="replicaof"} > 500
      for: 5m
@@ -215,6 +158,7 @@ groups:
      annotations:
        summary: Replication - High Latency (Status)
        description: Replication Latency {{$labels.cluster}} exceeded 500ms for 10 minutes
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization
    - alert: CRDTLag Status
      expr: database_syncer_lag_ms{syncer_type="crdt", job="redis", cluster="localhost"} > 500
      for: 5m
@@ -224,8 +168,8 @@ groups:
      annotations:
        summary: Replication - High Latency (CRDT)
        description: CRDT Replication Latency on {{$labels.cluster}} exceeded 500ms for 10 minutes
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization
 
-### NODE, eg. all begin with node_ ###
  - name: nodes
    rules:
    - alert: Node Not Responding
@@ -238,7 +182,6 @@ groups:
      annotations:
        summary: Node Not Responding
        description: "Node Down - Cluster: {{$labels.cluster}} Expected Nodes: 3 Actual: {{$value}}"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/nodes.md#node-not-responding
    - alert: Node Persistent Storage
      expr: round((node_persistent_storage_free_bytes/node_persistent_storage_avail_bytes) * 100) <= 5
      for: 2m
@@ -249,7 +192,6 @@ groups:
      annotations:
        summary: Node Persistent Storage
        description: "Low on Persistent Storage - Cluster: {{$labels.cluster}} Space Free: {{$value}}%"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/nodes.md#node-persistent-storage
    - alert: Node Ephemeral Storage
      expr: round((node_ephemeral_storage_free_bytes/node_ephemeral_storage_avail_bytes) * 100) <= 5
      for: 2m
@@ -259,7 +201,6 @@ groups:
      annotations:
        summary: Node Ephemeral Storage
        description: "Low on Ephemeral Storage - Cluster: {{$labels.cluster}} Space Free: {{$value}}%"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/nodes.md#node-ephemeral-storage
    - alert: Node Free Memory
      expr: round((node_available_memory_bytes/node_memory_MemFree_bytes) * 100) <= 15
      for: 2m
@@ -269,9 +210,8 @@ groups:
      annotations:
        summary: Node Free Memory
        description: "Low on Memory - Cluster: {{$labels.cluster}} Memory Free: {{$value}}%"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/nodes.md#node-free-memory
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory
    - alert: Node CPU Usage
-     # expr: round((1 - (irate(node_cpu_seconds_total{job="redis", cluster="localhost", node="1"}[1m]))) * 100) >= 0
      expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", node="1"}[5m]) >= 0
      for: 5m
      labels:
@@ -280,10 +220,8 @@ groups:
      annotations:
        summary: Node CPU Usage
        description: "High CPU Usage - Cluster: {{$labels.cluster}} Usage: {{$value}}%"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/nodes.md#node-cpu-usage
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
 
-
-### SHARD, eg. all begin with redis_ ###
  - name: shards
    rules:
    - alert: Shard Down
@@ -304,7 +242,7 @@ groups:
      annotations:
        summary: Master Shard Down
        description: "Slave has no master - Cluster: {{$labels.cluster}} Shard: {{$labels.redis}} Node: {{$labels.node}}"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#master-shard-down
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
    - alert: Shard CPU Usage
      expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", node="1", redis="1"}[5m]) >= 0
      for: 5m
@@ -314,9 +252,8 @@ groups:
      annotations:
        summary: Shard CPU Usage
        description: "Busy Shard - Cluster: {{$labels.cluster}} Shard: {{$labels.redis}} Node: {{$labels.node}} CPU: {{$value}}%"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#shard-cpu-usage-is-excessive
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
    - alert: Hot Master Shard
-     # expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", role="master", node="1", redis="1"}[5m]) >= 0
      expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", role="master", node="1", redis="1"}[5m]) >= 0
      for: 1m
      labels:
@@ -326,12 +263,9 @@ groups:
      annotations:
        summary: Hot Master Shard
        description: "Hot Shard - Cluster: {{$labels.cluster}} Shard: {{$labels.redis}} Node: {{$labels.node}} CPU: {{$value}}%"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#hot-master-shard
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
    - alert: Proxy CPU Usage
-     # expr: dmcproxy_process_cpu_usage_percent{cluster="$cluster"} / count(namedprocess_namegroup_thread_cpu_seconds_total{groupname="dmcproxy", threadname=~"worker-.*", mode="system"}) > 0.80
-     # expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", groupname="dmcproxy"}[5m]) / count(namedprocess_namegroup_thread_cpu_seconds_total{job="redis", cluster="localhost", groupname="dmcproxy"}) > 0.80
      expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", groupname="dmcproxy"}[5m]) > 0.0
-     # expr: count(namedprocess_namegroup_thread_cpu_seconds_total{job="redis", cluster="localhost", node="1"}) > 0.80
      for: 5m
      labels:
        severity: critical
@@ -339,13 +273,5 @@ groups:
      annotations:
        summary: Proxy CPU Usage
        description: "Proxy CPU usage has exceeded {{$value}}% for more than 60 seconds"
-       runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#shard-cpu-usage-is-excessive
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
 
-#  - alert: ShardConnectionCount
-#    expr: redis_connected_clients > 500
-#    for: 5m
-#    labels:
-#      severity: warning
-#    annotations:
-#      summary: Shards - Excessive Connection Count
-#      description: Shard {{$labels.instance}} exceeded 500 connections for 5 minutes

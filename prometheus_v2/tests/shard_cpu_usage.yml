@@ -12,12 +12,8 @@ tests:
     # Series data.
     input_series:
       - series: 'namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", node="1", redis="1"}'
-        ### 20% increase/minute
-        # values: '70000 84000 1008000 120960 145152 174182 209018 250822 300987 361184 433421 520106 624127 748952'
         ### 10% increase/minute
         values: '50000 55000 60500 66550 73205 80525 88578 97436 107180 117897 129687 142656 156920 172613'
-        ### 5% increase/minute
-        # values: '50000 52500 55125 57881 60775 63814 67004 70354 73872 77566 81444 85516 89792 94282'
 
     # Unit test for alerting rules.
     alert_rule_test:
@@ -36,4 +32,4 @@ tests:
             exp_annotations:
               summary: Shard CPU Usage
               description: "Busy Shard - Cluster: localhost Shard: 1 Node: 1 CPU: 171.2875%"
-              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#shard-cpu-usage-is-excessive
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu

@@ -32,4 +32,5 @@ tests:
             exp_annotations:
               summary: Master Shard Down
               description: "Slave has no master - Cluster: localhost Shard: 1 Node: 1"
-              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#master-shard-down
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
+

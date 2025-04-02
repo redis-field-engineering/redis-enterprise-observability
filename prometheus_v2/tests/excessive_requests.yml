@@ -32,4 +32,4 @@ tests:
             exp_annotations:
               summary: Excessive Redis Requests
               description: "Too Many Redis Operations - Cluster: localhost DB: 1 2.000001e+06 (ops/sec)"
-              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/throughput.md#excessive-redis-requests
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections

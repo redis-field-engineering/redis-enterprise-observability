@@ -30,3 +30,4 @@ tests:
             exp_annotations:
               summary: Replication - High Latency (Status)
               description: Replication Latency localhost exceeded 500ms for 10 minutes
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization

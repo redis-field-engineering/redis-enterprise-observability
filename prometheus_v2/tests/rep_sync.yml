@@ -30,3 +30,4 @@ tests:
             exp_annotations:
               summary: Replication - Resynchronization Requests (Status)
               description: Replication on localhost not synchronized in 10 minutes
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization

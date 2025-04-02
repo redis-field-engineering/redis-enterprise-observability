@@ -11,8 +11,6 @@ tests:
   - interval: 1m
     # Series data. NB - the actual number is the total and must be divided by the number of threads
     input_series:
-      # - series: 'dmcproxy_process_cpu_usage_percent{job="redis", cluster="localhost", node="1"}'
-        # values: '70 80 90 90 90 90 90 90 90 90 90 90 90 80 70'
       - series: 'namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", groupname="dmcproxy"}'
         ### 10% increase/minute
         values: '50000 55000 60500 66550 73205 80525 88578 97436 107180 117897 129687 142656 156920 172613'
@@ -33,4 +31,4 @@ tests:
             exp_annotations:
               summary: Proxy CPU Usage
               description: "Proxy CPU usage has exceeded 171.2875% for more than 60 seconds"
-              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#shard-cpu-usage-is-excessive
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu

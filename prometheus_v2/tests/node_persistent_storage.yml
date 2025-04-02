@@ -31,4 +31,4 @@ tests:
             exp_annotations:
               summary: Node Persistent Storage
               description: "Low on Persistent Storage - Cluster: localhost Space Free: 0%"
-              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/nodes.md#node-persistent-storage
+

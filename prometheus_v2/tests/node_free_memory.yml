@@ -31,4 +31,4 @@ tests:
             exp_annotations:
               summary:  Node Free Memory
               description: "Low on Memory - Cluster: localhost Memory Free: 10%"
-              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/nodes.md#node-free-memory
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory

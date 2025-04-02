@@ -32,4 +32,4 @@ tests:
             exp_annotations:
               summary: "DB is full"
               description: "DB Usage - Cluster: localhost DB: 1 Usage: 97% full"
-              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/capacity.md#db-full
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory

@@ -31,4 +31,4 @@ tests:
             exp_annotations:
               summary: No Redis Requests
               description: "Too few Redis operations - Cluster:  DB:   0 (ops/sec)"
-              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/throughput.md#no-redis-requests
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections

@@ -14,21 +14,6 @@ tests:
       - series: 'database_syncer_lag_ms{syncer_type="crdt", job="redis", cluster="localhost"}'
         values: '420 580 520 540 560 580 600 520 510 520 530 550 580 400 500'
 
-#    promql_expr_test:
-#      - expr: histogram_quantile(0.95, sum by(le) (rate(some_bucket{service_name="some-service"}[15m])))
-#        eval_time: 15m
-#        exp_samples:
-#          - value: 10000
-#      - expr: some_bucket
-#        eval_time: 16m
-#        exp_samples:
-#          - labels: 'some_bucket{service_name="some-service",le="1000"}'
-#            value: 6
-#          - labels: 'some_bucket{service_name="some-service",le="10000"}'
-#            value: 11
-#          - labels: 'some_bucket{service_name="some-service",le="+Inf"}'
-#            value: 100
-
     # Unit test for alerting rules.
     alert_rule_test:
       # Unit test 1.
@@ -45,3 +30,4 @@ tests:
             exp_annotations:
               summary: Replication - High Latency (CRDT)
               description: CRDT Replication Latency on localhost exceeded 500ms for 10 minutes
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization

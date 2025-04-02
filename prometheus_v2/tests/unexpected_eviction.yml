@@ -31,4 +31,4 @@ tests:
             exp_annotations:
               summary: Unexpected Object Eviction
               description: "Evictions Occurring: localhost DB: 1 EvictionsPerSecond: 6"
-              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/utilization.md#objects-being-evicted-from-database
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cache-hit-ratio-and-eviction

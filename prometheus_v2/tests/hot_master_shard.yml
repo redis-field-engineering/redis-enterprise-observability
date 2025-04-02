@@ -34,4 +34,4 @@ tests:
               summary: Hot Master Shard
               # description: "Hot Shard - Cluster: {{ $labels.cluster }} Shard: {{$labels.redis}} Node: {{$labels.node}} CPU: {{$value}}%"
               description: "Hot Shard - Cluster: localhost Shard: 1 Node: 1 CPU: 51.97083333333333%"
-              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/shards.md#hot-master-shard
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu

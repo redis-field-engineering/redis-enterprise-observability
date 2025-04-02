@@ -14,7 +14,6 @@ tests:
       - series: 'endpoint_client_connections{job="redis", cluster="localhost", db="1"}'
         values: '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'
 
-
     # Unit test for alerting rules.
     alert_rule_test:
       # Unit test 1.
@@ -31,4 +30,4 @@ tests:
             exp_annotations:
               summary: "No Redis Connections"
               description: "No Connections - Cluster: localhost DB: 1 Connections: 0"
-              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/connections.md#no-redis-connections
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections

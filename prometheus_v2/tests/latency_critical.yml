@@ -33,4 +33,4 @@ tests:
             exp_annotations:
               summary: Average Latency Critical
               description: "High Latency - Cluster: localhost DB: 1 Latency: 10.000000000000002 ms"
-              runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/latency.md#average-latency
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency

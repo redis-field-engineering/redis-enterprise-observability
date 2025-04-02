@@ -1,0 +1,34 @@
+# This is the main input for unit testing.
+# Only this file is passed as command line argument.
+
+rule_files:
+  - ../rules/throughput-alerts.yml
+
+evaluation_interval: 1m
+
+tests:
+  # Test 1.
+  - interval: 30s
+    # Series data.
+    input_series:
+      - series: 'endpoint_read_requests{job="redis", instance="localhost"}'
+        values: '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'
+      - series: 'endpoint_write_requests{job="redis", instance="localhost"}'
+        values: '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'
+
+    # Unit test for alerting rules.
+    alert_rule_test:
+      # Unit test 1.
+      - eval_time: 1m
+        alertname: No Redis Requests
+        exp_alerts:
+          # Alert 1.
+          - exp_labels:
+              severity: critical
+              instance: localhost
+              job: redis
+              type: throughput
+            exp_annotations:
+              summary: No Redis Requests
+              description: "Too few Redis operations - Cluster:  DB:   0 (ops/sec)"
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections

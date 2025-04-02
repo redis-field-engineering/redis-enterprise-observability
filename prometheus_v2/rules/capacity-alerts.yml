@@ -1,0 +1,23 @@
+groups:
+  - name: capacity
+    rules:
+      - alert: DB full
+        expr: round((redis_server_used_memory{job="redis", cluster="localhost"}/redis_server_memory_limit{job="redis", cluster="localhost"}) * 100) > 95
+        for: 30s
+        labels:
+          severity: critical
+          type: capacity
+        annotations:
+          summary: DB is full
+          description: "DB Usage - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Usage: {{$value}}% full"
+          runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory
+      - alert: DB full in 2 hours
+        expr: round((redis_server_used_memory{job="redis", cluster="localhost"}/redis_server_memory_limit{job="redis", cluster="localhost"}) * 100) < 95 and (predict_linear(redis_server_used_memory{job="redis", cluster="localhost"}[15m], 2 * 3600) / redis_server_memory_limit{job="redis", cluster="localhost"}) > 0.3 and round(predict_linear(redis_server_used_memory{job="redis", cluster="localhost"}[15m], 2 * 3600)/redis_server_memory_limit{job="redis", cluster="localhost"}) > 0.95
+        for: 30s
+        labels:
+          severity: notification
+          type: capacity
+        annotations:
+          summary: DB will be full in two hours
+          description: "DB Usage - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Usage: {{$value}}% in 2 hours"
+          runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory

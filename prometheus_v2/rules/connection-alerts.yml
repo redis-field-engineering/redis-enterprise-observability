@@ -1,0 +1,25 @@
+groups:
+  - name: connections
+    rules:
+      - alert: No Redis Connections
+        expr: endpoint_client_connections < 1
+        for: 30s
+        labels:
+          severity: notification
+          job: redis
+          type: connection
+        annotations:
+          summary: "No Redis Connections"
+          description: "No Connections - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Connections: {{$value}}"
+          runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections
+      - alert: Excessive Connections
+        expr: endpoint_client_connections > 64000
+        for: 30s
+        labels:
+          severity: critical
+          job: redis
+          type: connection
+        annotations:
+          summary: "Too many connections"
+          description: "Too Many Connections - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Connections: {{$value}}"
+          runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections

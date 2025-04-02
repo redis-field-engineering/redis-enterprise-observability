@@ -1,0 +1,35 @@
+# This is the main input for unit testing.
+# Only this file is passed as command line argument.
+
+rule_files:
+  - ../rules/capacity-alerts.yml
+
+evaluation_interval: 1m
+
+tests:
+  # Test 1.
+  - interval: 1m
+    # Series data.
+    input_series:
+      - series: 'redis_server_used_memory{job="redis", cluster="localhost", db="1"}'
+        values: '96 97 98 99 99 99 99 99 99 99 99 99 99 99 99'
+      - series: 'redis_server_memory_limit{job="redis", cluster="localhost", db="1"}'
+        values: '100 100 100 100 100 100 100 100 100 100 100 100 100 100 100'
+
+    # Unit test for alerting rules.
+    alert_rule_test:
+      # Unit test 1.
+      - eval_time: 1m
+        alertname: DB full
+        exp_alerts:
+          # Alert 1.
+          - exp_labels:
+              job: redis
+              severity: critical
+              cluster: localhost
+              type: capacity
+              db: 1
+            exp_annotations:
+              summary: "DB is full"
+              description: "DB Usage - Cluster: localhost DB: 1 Usage: 97% full"
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory

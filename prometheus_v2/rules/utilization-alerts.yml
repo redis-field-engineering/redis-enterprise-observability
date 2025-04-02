@@ -1,0 +1,24 @@
+groups:
+  - name: utilization
+    rules:
+      - alert: Low Hit Ratio
+        expr: (redis_server_keyspace_read_hits{role="master"}/(redis_server_keyspace_read_hits{role="master"} + redis_server_keyspace_read_misses{role="master"})) < 1
+        for: 30s
+        labels:
+          severity: notification
+          type: utilization
+        annotations:
+          summary: Low Hit Ratio
+          description: "Low Hit Ratio: {{$labels.cluster}} DB: {{$labels.db}} Hit Ratio: {{$value}}%"
+          runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cache-hit-ratio-and-eviction
+      - alert: Unexpected Object Eviction
+        expr: redis_server_evicted_keys{role="master"} > 1
+        for: 3m
+        labels:
+          job: redis
+          severity: critical
+          type: utilization
+        annotations:
+          summary: Unexpected Object Eviction
+          description: "Evictions Occurring: {{$labels.cluster}} DB: {{$labels.db}} EvictionsPerSecond: {{$value}}"
+          runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cache-hit-ratio-and-eviction

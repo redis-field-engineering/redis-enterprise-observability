@@ -1,0 +1,277 @@
+
+#################################################        ALERTS        #################################################
+
+### DATABASE, eg. all begin with bdb_ ###
+groups:
+ - name: latency
+   rules:
+   - alert: Average Latency Warning
+     expr: '(irate(endpoint_acc_latency{job="redis", cluster="localhost", db="1"}[1m])) / (irate(endpoint_total_started_res{job="redis", cluster="localhost", db="1"}[1m]))'
+     for: 30s
+     labels:
+       severity: notification
+       type: latency
+       job: redis
+       cluster: localhost
+       db: 1
+     annotations:
+       summary: Average Latency Warning
+       description: "High Latency - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Latency: {{$value}} ms"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency
+   - alert: Average Latency Critical
+     expr: '(irate(endpoint_acc_latency{job="redis", cluster="localhost", db="1"}[1m])) / (irate(endpoint_total_started_res{job="redis", cluster="localhost", db="1"}[1m]))'
+     for: 30s
+     labels:
+       severity: critical
+       type: latency
+       job: redis
+       cluster: localhost
+       db: 1
+     annotations:
+       summary: Average Latency Critical
+       description: "High Latency - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Latency: {{$value}} ms"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency
+
+ - name: connections
+   rules:
+   - alert: No Redis Connections
+     expr: endpoint_client_connections < 1
+     for: 30s
+     labels:
+       severity: notification
+       job: redis
+       type: connection
+     annotations:
+       summary: "No Redis Connections"
+       description: "No Connections - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Connections: {{$value}}"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections
+   - alert: Excessive Connections
+     expr: endpoint_client_connections > 64000
+     for: 30s
+     labels:
+       severity: critical
+       job: redis
+       type: connection
+     annotations:
+       summary: "Too many connections"
+       description: "Too Many Connections - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Connections: {{$value}}"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections
+
+ - name: throughput
+   rules:
+   - alert: No Redis Requests
+     expr: endpoint_read_requests < 1 and endpoint_write_requests < 1
+     for: 30s
+     labels:
+       severity: critical
+       type: throughput
+     annotations:
+       summary: No Redis Requests
+       description: "Too few Redis operations - Cluster: {{$labels.cluster}} DB: {{$labels.db}}  {{$value}} (ops/sec)"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections
+   - alert: Excessive Redis Requests
+     expr: (endpoint_read_requests + endpoint_write_requests)/2 > 1000000
+     for: 30s
+     labels:
+       severity: critical
+       type: throughput
+     annotations:
+       summary: Excessive Redis Requests
+       description: "Too Many Redis Operations - Cluster: {{$labels.cluster}} DB: {{$labels.db}} {{$value}} (ops/sec)"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections
+
+ - name: capacity
+   rules:
+   - alert: DB full
+     expr: round((redis_server_used_memory{job="redis", cluster="localhost"}/redis_server_memory_limit{job="redis", cluster="localhost"}) * 100) > 95
+     for: 30s
+     labels:
+       severity: critical
+       type: capacity
+     annotations:
+       summary: DB is full
+       description: "DB Usage - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Usage: {{$value}}% full"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory
+   - alert: DB full in 2 hours
+     expr: round((redis_server_used_memory{job="redis", cluster="localhost"}/redis_server_memory_limit{job="redis", cluster="localhost"}) * 100) < 95 and (predict_linear(redis_server_used_memory{job="redis", cluster="localhost"}[15m], 2 * 3600) / redis_server_memory_limit{job="redis", cluster="localhost"}) > 0.3 and round(predict_linear(redis_server_used_memory{job="redis", cluster="localhost"}[15m], 2 * 3600)/redis_server_memory_limit{job="redis", cluster="localhost"}) > 0.95
+     for: 30s
+     labels:
+       severity: notification
+       type: capacity
+     annotations:
+       summary: DB will be full in two hours
+       description: "DB Usage - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Usage: {{$value}}% in 2 hours"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory
+
+ - name: utilization
+   rules:
+   - alert: Low Hit Ratio
+     expr: (redis_server_keyspace_read_hits{role="master"}/(redis_server_keyspace_read_hits{role="master"} + redis_server_keyspace_read_misses{role="master"})) < 1
+     for: 30s
+     labels:
+       severity: notification
+       type: utilization
+     annotations:
+       summary: Low Hit Ratio
+       description: "Low Hit Ratio: {{$labels.cluster}} DB: {{$labels.db}} Hit Ratio: {{$value}}%"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cache-hit-ratio-and-eviction
+   - alert: Unexpected Object Eviction
+     expr: redis_server_evicted_keys{role="master"} > 1
+     for: 3m
+     labels:
+       job: redis
+       severity: critical
+       type: utilization
+     annotations:
+       summary: Unexpected Object Eviction
+       description: "Evictions Occurring: {{$labels.cluster}} DB: {{$labels.db}} EvictionsPerSecond: {{$value}}"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cache-hit-ratio-and-eviction
+
+ - name: synchronization
+   rules:
+   - alert: ReplicaSync Status
+     expr: database_syncer_current_status{syncer_type="replicaof"} > 0
+     for: 5m
+     labels:
+       severity: warning
+       type: synchronization
+     annotations:
+       summary: Replication - Resynchronization Requests (Status)
+       description: Replication on {{$labels.cluster}} not synchronized in 10 minutes
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization
+   - alert: CRDTSync Status
+     expr: database_syncer_current_status{syncer_type="crdt"} > 0
+     for: 5m
+     labels:
+       severity: warning
+       type: synchronization
+     annotations:
+       summary: Replication - Unsynchronized (CRDT)
+       description: CRDT Replication on {{$labels.cluster}} not synchronized for 5 minutes
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization
+   - alert: ReplicaLag Status
+     expr: database_syncer_lag_ms{syncer_type="replicaof"} > 500
+     for: 5m
+     labels:
+       severity: warning
+       type: synchronization
+     annotations:
+       summary: Replication - High Latency (Status)
+       description: Replication Latency {{$labels.cluster}} exceeded 500ms for 10 minutes
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization
+   - alert: CRDTLag Status
+     expr: database_syncer_lag_ms{syncer_type="crdt", job="redis", cluster="localhost"} > 500
+     for: 5m
+     labels:
+       severity: warning
+       type: synchronization
+     annotations:
+       summary: Replication - High Latency (CRDT)
+       description: CRDT Replication Latency on {{$labels.cluster}} exceeded 500ms for 10 minutes
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization
+
+ - name: nodes
+   rules:
+   - alert: Node Not Responding
+     expr: count(node_metrics_up) != 3
+     for: 5m
+     labels:
+       severity: critical
+       job: redis
+       type: node
+     annotations:
+       summary: Node Not Responding
+       description: "Node Down - Cluster: {{$labels.cluster}} Expected Nodes: 3 Actual: {{$value}}"
+   - alert: Node Persistent Storage
+     expr: round((node_persistent_storage_free_bytes/node_persistent_storage_avail_bytes) * 100) <= 5
+     for: 2m
+     labels:
+       severity: critical
+       job: redis
+       type: node
+     annotations:
+       summary: Node Persistent Storage
+       description: "Low on Persistent Storage - Cluster: {{$labels.cluster}} Space Free: {{$value}}%"
+   - alert: Node Ephemeral Storage
+     expr: round((node_ephemeral_storage_free_bytes/node_ephemeral_storage_avail_bytes) * 100) <= 5
+     for: 2m
+     labels:
+       severity: critical
+       type: node
+     annotations:
+       summary: Node Ephemeral Storage
+       description: "Low on Ephemeral Storage - Cluster: {{$labels.cluster}} Space Free: {{$value}}%"
+   - alert: Node Free Memory
+     expr: round((node_available_memory_bytes/node_memory_MemFree_bytes) * 100) <= 15
+     for: 2m
+     labels:
+       severity: critical
+       type: node
+     annotations:
+       summary: Node Free Memory
+       description: "Low on Memory - Cluster: {{$labels.cluster}} Memory Free: {{$value}}%"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory
+   - alert: Node CPU Usage
+     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", node="1"}[5m]) >= 0
+     for: 5m
+     labels:
+       severity: critical
+       type: node
+     annotations:
+       summary: Node CPU Usage
+       description: "High CPU Usage - Cluster: {{$labels.cluster}} Usage: {{$value}}%"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
+
+ - name: shards
+   rules:
+   - alert: Shard Down
+     expr: redis_server_up == 0
+     for: 1m
+     labels:
+       severity: page
+       type: shard
+     annotations:
+       summary: Redis Shard instance is down
+       description: Redis Shard instance {{$labels.cluster}} is down
+   - alert: Master Shard Down
+     expr: floor(redis_server_master_link_status{role="slave"}) < 1
+     for: 1m
+     labels:
+       severity: notification
+       type: shard
+     annotations:
+       summary: Master Shard Down
+       description: "Slave has no master - Cluster: {{$labels.cluster}} Shard: {{$labels.redis}} Node: {{$labels.node}}"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
+   - alert: Shard CPU Usage
+     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", node="1", redis="1"}[5m]) >= 0
+     for: 5m
+     labels:
+       severity: notification
+       type: shard
+     annotations:
+       summary: Shard CPU Usage
+       description: "Busy Shard - Cluster: {{$labels.cluster}} Shard: {{$labels.redis}} Node: {{$labels.node}} CPU: {{$value}}%"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
+   - alert: Hot Master Shard
+     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", role="master", node="1", redis="1"}[5m]) >= 0
+     for: 1m
+     labels:
+       severity: critical
+       type: shard
+       role: master
+     annotations:
+       summary: Hot Master Shard
+       description: "Hot Shard - Cluster: {{$labels.cluster}} Shard: {{$labels.redis}} Node: {{$labels.node}} CPU: {{$value}}%"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
+   - alert: Proxy CPU Usage
+     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", groupname="dmcproxy"}[5m]) > 0.0
+     for: 5m
+     labels:
+       severity: critical
+       type: proxy
+     annotations:
+       summary: Proxy CPU Usage
+       description: "Proxy CPU usage has exceeded {{$value}}% for more than 60 seconds"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
+

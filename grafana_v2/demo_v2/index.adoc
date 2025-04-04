@@ -1,0 +1,27 @@
+= Redis Enterprise Developer Observability - Demonstrator
+:revnumber: 1.0
+:docinfo1:
+
+== About the demonstrator
+
+The demo was created so that it would encapsulate all the elements necessary to demonstrate a working Redis cluster, in
+addition to a simple observability solution consisting of a Prometheus time-series database and a Grafana visualization
+server accompanied by a set of standard dashboards.
+
+The setup script 'setup.sh' will install containers for the different elements and configure their networking, after
+which it cleans up any temporary files. Once the script has executed successfully the Grafana instance will be available
+at localhost:3000 and Prometheus at localhost:9090, while the Redis console will be at localhost:8443. As these are the
+default ports it is important that neither Redis nor Grafana nor Prometheus are already running on the machine.
+
+=== Viewing the demo
+
+Grafana's default credentials are admin/admin. You will be asked to change the password after you have logged in
+successfully. If you are planning on keeping this environment for any ongoing testing it is recommended that you change
+the password. Prometheus has its own console that can be used to check the health of its source, in this case the Redis
+cluster.
+
+=== Loading some data
+
+The demo includes a small script which can create data and load it into Redis in order to drive activity.
+It is a python script, 'import/import.py', and as such it would require the Redis python client to be installed.
+

@@ -1,0 +1,45 @@
+:linkattrs:
+:project-owner:      redis-field-engineering
+:project-name:       redis-enterprise-observability
+
+= Observe Redis Enterprise with Dynatrace
+
+To collect metrics in Dynatrace from Redis Enterprise Software or Redis Cloud,
+use the https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/extensions-concepts[Dynatrace Extensions 2.0 Framework].
+
+== Table of Contents
+
+* link:#Installation[Installation]
+* link:#Dashboards[Dashboards]
+* link:#Support[Support]
+* link:#License[License]
+
+== Installation
+
+The Dyntrace v2.0 Extensions support Prometheus metrics, and as such we have created the necessary extension file and
+dashboards so that this option is available. At this time Dynatrace are still testing their signing mechanism so that
+this extension is not available directly from them, but will have to be built and signed according to their instructions.
+They have indicated that they will sign 3rd party extensions starting in Q2 2025, at which point this process will no
+longer be necessary.
+
+Clone the repository and cd into its root folder ('redis-enterprise-dynatrace-observability'). The contents are already
+in the required format; a 'src' directory containing a .yml file and a folder containing .json dashboard files.
+
+Follow the instructions here:
+
+https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/sign-extension
+
+== Dashboards
+
+This respository includes sample Dynatrace dashboards for monitoring your Redis deplyoment. See the
+link:/dynatrace/dashboards[dashboards] folder for the available set of dashboards.
+
+== Support
+
+Support for metrics collection for Redis Enterprise with Dynatrace is provided on a good faith effort basis by Redis,
+Inc. To report bugs, request features, or receive assistance,
+please https://github.com/{project-owner}/{project-name}/issues[file an issue].
+
+== License
+
+This code in this repository is licensed under the MIT License. Copyright (C) 2023 Redis, Inc.

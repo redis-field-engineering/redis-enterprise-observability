@@ -3753,7 +3753,7 @@ screens:
         showAddTag: true
       layout:
         autoGenerate: true
-# REDIS NODE - autogen + breadcrum
+# REDIS NODE - autogen + breadcrumb
   - entityType: prometheus:com_dynatrace_extension_redis_node
     detailsSettings:
       staticContent:

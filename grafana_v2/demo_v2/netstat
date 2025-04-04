@@ -1,0 +1,23 @@
+#!/bin/bash
+
+/usr/bin/netstat $* \
+| awk '
+{
+  for(i=1; i<=NF; i++){
+    if($i~/rosetta/){
+      split($i,p,"/");
+      if(p[1] in psmap){
+        psout=psmap[p[1]];
+      }else{
+        c="ps --no-headers -o args p "p[1];
+        c | getline psout;
+        psmap[p[1]] = psout;
+      }
+      split(psout, procArgs, " ");
+      argPartsLen=split(procArgs[2], argParts, "/");
+      proc=argParts[argPartsLen];
+      gsub("rosetta", proc, $i);
+    }
+  }
+  print $0
+}'

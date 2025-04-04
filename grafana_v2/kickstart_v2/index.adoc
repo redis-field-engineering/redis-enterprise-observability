@@ -1,0 +1,34 @@
+= Redis Enterprise Developer Observability - Kickstarter
+:revnumber: 1.0
+:docinfo1:
+
+== About the kickstarter
+
+The kickstarter was created so that it would encapsulate all the elements necessary to demonstrate dashboards using Redis.
+It consists of a docker compose file, in addition to a grafana configuration and dashboards as well as a
+prometheus configuration file.
+
+The setup script 'setup.sh' will install containers for the different elements and configure their networking, after
+which it cleans up any temporary files. Note that it must be passed the specific Redis endpoint that you wish to monitor
+when executing this script. Once the script has executed successfully the Grafana instance will be available at
+localhost:3000 and Prometheus at localhost:9090. As these are the default ports it is important that neither Grafana nor
+Prometheus are already running on the machine.
+
+=== Viewing the demo
+
+Grafana's default credentials are admin/admin. You will be asked to change the password after you have logged in
+successfully. If you are planning on keeping this environment for any ongoing testing it is recommended that you change
+the password.
+
+=== Loading some data
+
+The demo includes a small script which can create data and load it into Redis in order to drive activity.
+It is a python script, 'import/import.py', and as such it would require the Redis python client to be installed.
+
+== Configuring alerts
+
+Redis provides Prometheus alerting rules, and their respective tests, for use with Grafana/Prometheus monitoring. These
+can be found in the prometheus_v2 folder, along with instructions for how to configure Prometheus' Alert Manager.
+
+
+

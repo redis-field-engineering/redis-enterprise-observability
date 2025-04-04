@@ -1,0 +1,16 @@
+node_available_flash_bytes*: Available flash in the node (bytes)
+node_available_flash_no_overbooking_bytes*: Available flash in the node (bytes), without taking into account overbooking
+node_available_memory_bytes: Amount of free memory in the node (bytes) that is available for database provisioning
+node_available_memory_no_overbooking_bytes: Available RAM in the node (bytes) without taking into account overbooking
+node_bigstore_free_bytes: Sum of free space of back-end flash (used by flash database's [BigRedis]) on all cluster nodes (bytes); returned only when BigRedis is enabled
+node_cert_expires_in_seconds: Certificate expiration (in seconds) per given node; read more about certificates in Redis Enterprise and monitoring certificates
+node_ephemeral_storage_avail_bytes: Disk space available to RLEC processes on configured ephemeral disk (bytes)
+node_ephemeral_storage_free_bytes: Free disk space on configured ephemeral disk (bytes)
+node_memory_MemFree_bytes: Free memory in the node (bytes)
+node_persistent_storage_avail_bytes: Disk space available to RLEC processes on configured persistent disk (bytes)
+node_persistent_storage_free_bytes: Free disk space on configured persistent disk (bytes)
+node_provisional_flash_bytes: Amount of flash available for new shards on this node, taking into account overbooking, max Redis servers, reserved flash, and provision and migration thresholds (bytes)
+node_provisional_flash_no_overbooking_bytes: Amount of flash available for new shards on this node, without taking into account overbooking, max Redis servers, reserved flash, and provision and migration thresholds (bytes)
+node_provisional_memory_bytes: Amount of RAM that is available for provisioning to databases out of the total RAM allocated for databases
+node_provisional_memory_no_overbooking_bytes: Amount of RAM that is available for provisioning to databases out of the total RAM allocated for databases, without taking into account overbooking
+node_metrics_up: Node is part of the cluster and is connected

@@ -1,0 +1,37 @@
+# This is the main input for unit testing.
+# Only this file is passed as command line argument.
+
+rule_files:
+  - ../rules/alerts.yml
+
+evaluation_interval: 1m
+
+tests:
+  # Test 1.
+  - interval: 1m
+    # Series data.
+    input_series:
+      - series: 'namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", role="master", node="1", redis="1"}'
+        ### 5% increase/minute
+        values: '50000 52500 55125 57881 60775 63814 67004 70354 73872 77566 81444 85516 89792 94282'
+
+    # Unit test for alerting rules.
+    alert_rule_test:
+      # Unit test 1.
+      - eval_time: 7m
+        alertname: Hot Master Shard
+        exp_alerts:
+          # Alert 1.
+          - exp_labels:
+              severity: critical
+              job: redis            
+              cluster: localhost
+              type: shard
+              role: master
+              node: 1
+              redis: 1            
+            exp_annotations:
+              summary: Hot Master Shard
+              # description: "Hot Shard - Cluster: {{ $labels.cluster }} Shard: {{$labels.redis}} Node: {{$labels.node}} CPU: {{$value}}%"
+              description: "Hot Shard - Cluster: localhost Shard: 1 Node: 1 CPU: 51.97083333333333%"
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu

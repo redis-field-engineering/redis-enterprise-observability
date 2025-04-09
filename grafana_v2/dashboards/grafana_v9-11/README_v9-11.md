@@ -4,15 +4,16 @@ For Redis Enterprise, we provide the following dashboards:
 * [Database status](software/basic/redis-software-database-dashboard_v9-11.json)
 * [Node metrics](software/basic/redis-software-node-dashboard_v9-11.json)
 * [Shard metrics](software/basic/redis-software-shard-dashboard_v9-11.json)
+* [Search metrics](software/basic/redis-software-search-dashboard_v9-11.json)
 
 For Redis Cloud, which is fully managed, we provide two dashboards:
 * [Subscription status](cloud/basic/redis-cloud-subscription-dashboard_v9-11.json)
 * [Database status](cloud/basic/redis-cloud-database-dashboard_v9-11.json)
 
-Lastly, we also provide two sets of dashboards designed to be used in a drill-down fashion. These dashboards specifically cover 
+Lastly, we also provide two sets of dashboards designed to be used in a drill-down fashion. These dashboards specifically cover
 databases and nodes.
 
-The top-level dashboard (e.g., Databases or Nodes) displays all instances of that type. For example, the [databases dashboard](workflow/databases/redis-software-cluster-databases_v9-11.json) shows metrics for every database in the Redis cluster. The individual rows make it easy to access different types of 
+The top-level dashboard (e.g., Databases or Nodes) displays all instances of that type. For example, the [databases dashboard](workflow/databases/redis-software-cluster-databases_v9-11.json) shows metrics for every database in the Redis cluster. The individual rows make it easy to access different types of
 details about a particular instance.
 #### Databases
 * [Databases](workflow/databases/redis-software-cluster-databases_v9-11.json)
@@ -28,11 +29,11 @@ details about a particular instance.
 * [Node-Memory](workflow/nodes/redis-software-cluster-node-memory_v9-11.json)
 * [Node-Requests](workflow/nodes/redis-software-cluster-node-requests_v9-11.json)
 
-Note that these dashboards, and their associated display panes, all have links in the top-right for the dashboards, and in the top-left for the 
+Note that these dashboards, and their associated display panes, all have links in the top-right for the dashboards, and in the top-left for the
 panes, that make it easy to navigate from the main dashboard to the relevant detail information.
 
 ### Alerts
-This repository also contains [alert configuration files](prometheus/rules/alerts.yml) for Prometheus that can generate notifications when any of a number of 
+This repository also contains [alert configuration files](prometheus/rules/alerts.yml) for Prometheus that can generate notifications when any of a number of
 key metrics fall outside of their expected ranges.
 
 Finally, we include a set of [metrics descriptions](metrics) for your reference.
@@ -83,7 +84,7 @@ See the sections below for details.
 
 ### Prometheus and Grafana
 
-1. Configure your [Prometheus deployment's scraping config](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config) 
+1. Configure your [Prometheus deployment's scraping config](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config)
 so that it reads from your Redis Enterprise Prometheus endpoint.
 
 2. [Create a Prometheus data source](https://grafana.com/docs/grafana/v8.5/datasources/add-a-data-source/) in Grafana's administration console.
@@ -100,7 +101,7 @@ For Redis Enterprise, we provide the following dashboards:
 * [Node metrics](software/basic/redis-software-node-dashboard_v9-11.json)
 * [Shard metrics](software/basic/redis-software-shard-dashboard_v9-11.json)
 
-You can upload these dashboards directly though the Grafana UI. For additional installation instructions, see the [Redis Enterprise dashboards 
+You can upload these dashboards directly though the Grafana UI. For additional installation instructions, see the [Redis Enterprise dashboards
 README](software/README-SOFTWARE.md).
 
 ### Redis Cloud dashboards
@@ -111,7 +112,7 @@ For Redis Cloud, which is fully managed, we provide two dashboards:
 
 ### Redis Workflow Dashboards
 
-These dashboards can be installed either in Redis Enterprise installations or in Redis Cloud installations. 
+These dashboards can be installed either in Redis Enterprise installations or in Redis Cloud installations.
 
 * [Databases](workflow/databases/redis-software-cluster-databases_v9-11.json)
 * [Database-CPU](workflow/databases/redis-software-cluster-database-cpu_v9-11.json)
@@ -124,22 +125,22 @@ These dashboards can be installed either in Redis Enterprise installations or in
 * [Node-Memory](workflow/nodes/redis-software-cluster-node-memory_v9-11.json)
 * [Node-Requests](workflow/nodes/redis-software-cluster-node-requests_v9-11.json)
 
-You can upload these dashboards directly though the Grafana UI. For additional installation instructions, see the [Redis Cloud dashboards 
+You can upload these dashboards directly though the Grafana UI. For additional installation instructions, see the [Redis Cloud dashboards
 README](cloud/README-CLOUD.md).
 
 ## Extended dashboards
 
-We also provided an set of extended dashboards for both Redis Enterprise and Redis Cloud that provide additional metrics, including more information 
+We also provided an set of extended dashboards for both Redis Enterprise and Redis Cloud that provide additional metrics, including more information
 about you cluster's configuration and the Redis slow log.
 
-These optional dashboards rely on one additional data source beyond Prometheus: the [Infinity Datasource for 
+These optional dashboards rely on one additional data source beyond Prometheus: the [Infinity Datasource for
 Grafana](https://grafana.com/grafana/plugins/yesoreyeram-infinity-datasource/).
 
 ## Alerts
 
 ### Running the alerting tests
 
-To run the alerting tests, you will need to copy the [prometheus/rules/](rules) and [prometheus/tests/](tests) folders to your Prometheus installation. Once they have been 
+To run the alerting tests, you will need to copy the [prometheus/rules/](rules) and [prometheus/tests/](tests) folders to your Prometheus installation. Once they have been
 copied,
 you can execute the tests as follows:
 
@@ -149,16 +150,16 @@ promtool test rules tests/*
 
 ### Modifying the alerts
 
-You can customize the included alerts to the need of your Redis deployment environment and configuration. You can also create additional alerts 
-following Prometheus' alerting guidelines. We strongly recommend that you create unit tests for each of your alerts to ensure that they perform as 
+You can customize the included alerts to the need of your Redis deployment environment and configuration. You can also create additional alerts
+following Prometheus' alerting guidelines. We strongly recommend that you create unit tests for each of your alerts to ensure that they perform as
 expected.
 
-To learn more about testing alerts, see the [Prometheus documentation for unit testing 
+To learn more about testing alerts, see the [Prometheus documentation for unit testing
 rules](https://prometheus.io/docs/prometheus/latest/configuration/unit_testing_rules/).
 
 ## Support
 
-The Redis Enterprise Grafana dashboards are supported by Redis, Inc. on a good faith effort basis. To report bugs, request features, or receive 
+The Redis Enterprise Grafana dashboards are supported by Redis, Inc. on a good faith effort basis. To report bugs, request features, or receive
 assistance, please file an [issue](https://github.com/redis-field-engineering/redis-enterprise-grafana-issues).
 
 ## License

@@ -1,0 +1,52 @@
+groups:
+  - name: nodes
+    rules:
+    - alert: Node Not Responding
+      expr: count(node_metrics_up) != 3
+      for: 5m
+      labels:
+        severity: critical
+        job: redis
+        type: node
+      annotations:
+        summary: Node Not Responding
+        description: "Node Down - Cluster: {{$labels.cluster}} Expected Nodes: 3 Actual: {{$value}}"
+    - alert: Node Persistent Storage
+      expr: round((node_persistent_storage_free_bytes/node_persistent_storage_avail_bytes) * 100) <= 5
+      for: 2m
+      labels:
+        severity: critical
+        job: redis
+        type: node
+      annotations:
+        summary: Node Persistent Storage
+        description: "Low on Persistent Storage - Cluster: {{$labels.cluster}} Space Free: {{$value}}%"
+    - alert: Node Ephemeral Storage
+      expr: round((node_ephemeral_storage_free_bytes/node_ephemeral_storage_avail_bytes) * 100) <= 5
+      for: 2m
+      labels:
+        severity: critical
+        type: node
+      annotations:
+        summary: Node Ephemeral Storage
+        description: "Low on Ephemeral Storage - Cluster: {{$labels.cluster}} Space Free: {{$value}}%"
+    - alert: Node Free Memory
+      expr: round((node_available_memory_bytes/node_memory_MemFree_bytes) * 100) <= 15
+      for: 2m
+      labels:
+        severity: critical
+        type: node
+      annotations:
+        summary: Node Free Memory
+        description: "Low on Memory - Cluster: {{$labels.cluster}} Memory Free: {{$value}}%"
+        runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory
+    - alert: Node CPU Usage
+      expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", node="1"}[5m]) >= 0
+      for: 5m
+      labels:
+        severity: critical
+        type: node
+      annotations:
+        summary: Node CPU Usage
+        description: "High CPU Usage - Cluster: {{$labels.cluster}} Usage: {{$value}}%"
+        runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu

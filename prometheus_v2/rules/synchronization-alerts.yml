@@ -1,0 +1,43 @@
+groups:
+  - name: synchronization
+    rules:
+      - alert: ReplicaSync Status
+        expr: database_syncer_current_status{syncer_type="replicaof"} > 0
+        for: 5m
+        labels:
+          severity: warning
+          type: synchronization
+        annotations:
+          summary: Replication - Resynchronization Requests (Status)
+          description: Replication on {{$labels.cluster}} not synchronized in 10 minutes
+          runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization
+      - alert: CRDTSync Status
+        expr: database_syncer_current_status{syncer_type="crdt"} > 0
+        for: 5m
+        labels:
+          severity: warning
+          type: synchronization
+        annotations:
+          summary: Replication - Unsynchronized (CRDT)
+          description: CRDT Replication on {{$labels.cluster}} not synchronized for 5 minutes
+          runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization
+      - alert: ReplicaLag Status
+        expr: database_syncer_lag_ms{syncer_type="replicaof"} > 500
+        for: 5m
+        labels:
+          severity: warning
+          type: synchronization
+        annotations:
+          summary: Replication - High Latency (Status)
+          description: Replication Latency {{$labels.cluster}} exceeded 500ms for 10 minutes
+          runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization
+      - alert: CRDTLag Status
+        expr: database_syncer_lag_ms{syncer_type="crdt", job="redis", cluster="localhost"} > 500
+        for: 5m
+        labels:
+          severity: warning
+          type: synchronization
+        annotations:
+          summary: Replication - High Latency (CRDT)
+          description: CRDT Replication Latency on {{$labels.cluster}} exceeded 500ms for 10 minutes
+          runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#synchronization

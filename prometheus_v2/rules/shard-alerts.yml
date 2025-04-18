@@ -1,0 +1,53 @@
+groups:
+ - name: shards
+   rules:
+   - alert: Shard Down
+     expr: redis_server_up == 0
+     for: 1m
+     labels:
+       severity: page
+       type: shard
+     annotations:
+       summary: Redis Shard instance is down
+       description: Redis Shard instance {{$labels.cluster}} is down
+   - alert: Master Shard Down
+     expr: floor(redis_server_master_link_status{role="slave"}) < 1
+     for: 1m
+     labels:
+       severity: notification
+       type: shard
+     annotations:
+       summary: Master Shard Down
+       description: "Slave has no master - Cluster: {{$labels.cluster}} Shard: {{$labels.redis}} Node: {{$labels.node}}"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
+   - alert: Shard CPU Usage
+     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", node="1", redis="1"}[5m]) >= 0
+     for: 5m
+     labels:
+       severity: notification
+       type: shard
+     annotations:
+       summary: Shard CPU Usage
+       description: "Busy Shard - Cluster: {{$labels.cluster}} Shard: {{$labels.redis}} Node: {{$labels.node}} CPU: {{$value}}%"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
+   - alert: Hot Master Shard
+     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", role="master", node="1", redis="1"}[5m]) >= 0
+     for: 1m
+     labels:
+       severity: critical
+       type: shard
+       role: master
+     annotations:
+       summary: Hot Master Shard
+       description: "Hot Shard - Cluster: {{$labels.cluster}} Shard: {{$labels.redis}} Node: {{$labels.node}} CPU: {{$value}}%"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu
+   - alert: Proxy CPU Usage
+     expr: rate(namedprocess_namegroup_cpu_seconds_total{job="redis", cluster="localhost", groupname="dmcproxy"}[5m]) > 0.0
+     for: 5m
+     labels:
+       severity: critical
+       type: proxy
+     annotations:
+       summary: Proxy CPU Usage
+       description: "Proxy CPU usage has exceeded {{$value}}% for more than 60 seconds"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cpu

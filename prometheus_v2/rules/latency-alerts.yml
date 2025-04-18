@@ -1,0 +1,29 @@
+groups:
+ - name: latency
+   rules:
+   - alert: Average Latency Warning
+     expr: '(irate(endpoint_acc_latency{job="redis", cluster="localhost", db="1"}[1m])) / (irate(endpoint_total_started_res{job="redis", cluster="localhost", db="1"}[1m]))'
+     for: 30s
+     labels:
+       severity: notification
+       type: latency
+       job: redis
+       cluster: localhost
+       db: 1
+     annotations:
+       summary: Average Latency Warning
+       description: "High Latency - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Latency: {{$value}} ms"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency
+   - alert: Average Latency Critical
+     expr: '(irate(endpoint_acc_latency{job="redis", cluster="localhost", db="1"}[1m])) / (irate(endpoint_total_started_res{job="redis", cluster="localhost", db="1"}[1m]))'
+     for: 30s
+     labels:
+       severity: critical
+       type: latency
+       job: redis
+       cluster: localhost
+       db: 1
+     annotations:
+       summary: Average Latency Critical
+       description: "High Latency - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Latency: {{$value}} ms"
+       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency

@@ -1,5 +1,5 @@
 {
-  "name": "Redis Software Database - v2",
+  "name": "Redis Software Database - v2*",
   "description": null,
   "permissions": "PUBLIC_READ_WRITE",
   "pages": [
@@ -20,7 +20,7 @@
             "id": "viz.markdown"
           },
           "rawConfiguration": {
-            "text": "# Database Dashboard\n\n### The various panels can be filtered by both cluster and database by entering those terms in the filter text area. \n\n#### - Click in the text area and wait until it loads the metadata\n#### - Scroll down and select the attribute and value with which you wish to filter\n#### - Choose an individual database -- bdb_name is the attribute -- for the finest granularity\n\n\n### See the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions/#database-metrics) for the details of the available database metrics. "
+            "text": "# Database Dashboard\n\n### The various panels can be filtered by both cluster and database by entering those terms in the filter text area. \n\n#### - Click in the text area and wait until it loads the metadata\n#### - Scroll down and select the attribute and value with which you wish to filter\n#### - Choose an individual database -- db_name is the attribute -- for the finest granularity\n\n\n### See the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions/#database-metrics) for the details of the available database metrics. "
           }
         },
         {
@@ -44,7 +44,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(db_config) as Up FROM Metric FACET cluster as Cluster, db_name as Name, db as Id"
+                "query": "SELECT if(latest(db_config) = 1, 'Up', 'Down') as Status FROM Metric FACET substring(cluster, 0, 15) as Cluster, db_name as Name, db as Id"
               }
             ],
             "platformOptions": {
@@ -80,7 +80,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "FROM Metric SELECT percentage(rate(count(*), 1 minute)/100, WHERE metricName = 'namedprocess_namegroup_cpu_seconds_total') SINCE 6 hours ago"
+                "query": "SELECT percentage(rate(count(*), 1 minute)/100, WHERE metricName = 'namedprocess_namegroup_cpu_seconds_total') FROM Metric SINCE 1 hour ago"
               }
             ],
             "platformOptions": {
@@ -98,7 +98,7 @@
           },
           "linkedEntityGuids": null,
           "visualization": {
-            "id": "viz.stacked-bar"
+            "id": "viz.line"
           },
           "rawConfiguration": {
             "facet": {
@@ -126,8 +126,14 @@
             "platformOptions": {
               "ignoreTimeRange": false
             },
-            "units": {
-              "unit": "BYTES"
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
             }
           }
         },
@@ -141,7 +147,7 @@
           },
           "linkedEntityGuids": null,
           "visualization": {
-            "id": "viz.stacked-bar"
+            "id": "viz.line"
           },
           "rawConfiguration": {
             "facet": {
@@ -150,19 +156,36 @@
             "legend": {
               "enabled": true
             },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
             "nrqlQueries": [
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_main_thread_cpu_user) + latest(bdb_main_thread_cpu_system) FROM Metric FACET bdb_name TIMESERIES 1 MINUTES"
+                "query": "SELECT rate(average(namedprocess_namegroup_thread_cpu_seconds_total), 1 minute) FROM Metric WHERE (mode = 'user' OR mode = 'system') AND threadname like 'redis-server%' TIMESERIES 1 MINUTES"
               }
             ],
             "platformOptions": {
               "ignoreTimeRange": false
             },
+            "thresholds": {
+              "isLabelVisible": true
+            },
             "units": {
               "unit": "PERCENTAGE"
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
             }
           }
         },
@@ -198,7 +221,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(endpoint_client_connections) FROM Metric FACET db TIMESERIES 1 MINUTES"
+                "query": "SELECT rate(latest(endpoint_client_connections), 5 minutes) FROM Metric FACET db TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {
@@ -247,7 +270,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(endpoint_write_requests) FROM Metric FACET db TIMESERIES 1 MINUTES"
+                "query": "SELECT rate(latest(endpoint_read_requests), 1 minute) + rate(latest(endpoint_write_requests), 1 minute) + rate(latest(endpoint_other_requests), 1 minute) FROM Metric FACET db TIMESERIES 1 MINUTES"
               }
             ],
             "platformOptions": {
@@ -277,14 +300,40 @@
             "id": "viz.line"
           },
           "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
             "nrqlQueries": [
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(endpoint_read_requests) FROM Metric TIMESERIES 1 MINUTES"
+                "query": "SELECT rate(latest(endpoint_read_requests), 1 minutes) AS 'reads/sec' FROM Metric FACET db TIMESERIES 1 MINUTES"
               }
-            ]
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
           }
         },
         {
@@ -300,14 +349,40 @@
             "id": "viz.line"
           },
           "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
             "nrqlQueries": [
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(endpoint_write_requests) FROM Metric TIMESERIES 1 MINUTES"
+                "query": "SELECT rate(latest(endpoint_write_requests), 1 minute) AS 'writes/sec' FROM Metric FACET db TIMESERIES 1 MINUTES"
               }
-            ]
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
           }
         }
       ]

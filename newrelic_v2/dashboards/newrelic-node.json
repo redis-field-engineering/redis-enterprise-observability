@@ -1,5 +1,5 @@
 {
-  "name": "Redis Software Node v2",
+  "name": "Redis Software Node v2*",
   "description": null,
   "permissions": "PUBLIC_READ_WRITE",
   "pages": [
@@ -20,7 +20,7 @@
             "id": "viz.markdown"
           },
           "rawConfiguration": {
-            "text": "# Node Dashboard\n\n### The various panels can be filtered by both cluster and database by entering those terms in the filter text area. \n\n#### - Click in the text area and wait until it loads the metadata\n#### - Scroll down and select the attribute and value with which you wish to filter\n#### - Choose an individual database -- bdb_name is the attribute -- for the finest granularity\n\n\n### See the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions/#node-metrics) for the details of the available database metrics. "
+            "text": "# Node Dashboard\n\n### The various panels can be filtered by both cluster and database by entering those terms in the filter text area. \n\n#### - Click in the text area and wait until it loads the metadata\n#### - Scroll down and select the attribute and value with which you wish to filter\n#### - Choose an individual database -- db_name is the attribute -- for the finest granularity\n\n\n### See the following [page](https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/prometheus-metrics-definitions/#node-metrics) for the details of the available database metrics. "
           }
         },
         {
@@ -49,7 +49,19 @@
             ],
             "platformOptions": {
               "ignoreTimeRange": false
-            }
+            },
+            "thresholds": [
+              {
+                "from": 1,
+                "severity": "success",
+                "to": 10
+              },
+              {
+                "from": 0,
+                "severity": "warning",
+                "to": 1
+              }
+            ]
           }
         },
         {
@@ -62,11 +74,11 @@
           },
           "linkedEntityGuids": null,
           "visualization": {
-            "id": "viz.stacked-bar"
+            "id": "viz.line"
           },
           "rawConfiguration": {
             "facet": {
-              "showOtherSeries": true
+              "showOtherSeries": false
             },
             "legend": {
               "enabled": true
@@ -84,14 +96,23 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(endpoint_read_requests_latency_histogram_bucket)/latest(endpoint_read_requests_latency_histogram_count) as 'Read', latest(endpoint_read_requests_latency_histogram_bucket)/latest(endpoint_read_requests_latency_histogram_count) as 'Write' FROM Metric FACET cluster, node TIMESERIES 1 MINUTES\n"
+                "query": "SELECT latest(endpoint_read_requests_latency_histogram_bucket)/latest(endpoint_read_requests_latency_histogram_count) as 'Read', latest(endpoint_read_requests_latency_histogram_bucket)/latest(endpoint_read_requests_latency_histogram_count) as 'Write' FROM Metric FACET cluster TIMESERIES 10 MINUTES\n"
               }
             ],
             "platformOptions": {
               "ignoreTimeRange": false
             },
+            "thresholds": {
+              "isLabelVisible": true
+            },
             "units": {
-              "unit": "SECONDS"
+              "unit": "MS"
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
             }
           }
         },
@@ -105,7 +126,7 @@
           },
           "linkedEntityGuids": null,
           "visualization": {
-            "id": "viz.stacked-bar"
+            "id": "viz.line"
           },
           "rawConfiguration": {
             "facet": {
@@ -133,8 +154,14 @@
             "platformOptions": {
               "ignoreTimeRange": false
             },
-            "units": {
-              "unit": "BYTES"
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
             }
           }
         },
@@ -148,7 +175,7 @@
           },
           "linkedEntityGuids": null,
           "visualization": {
-            "id": "viz.stacked-bar"
+            "id": "viz.line"
           },
           "rawConfiguration": {
             "facet": {
@@ -170,14 +197,20 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(namedprocess_namegroup_cpu_seconds_total) FROM Metric WHERE mode = 'system' or mode = 'system' FACET cluster, node, mode TIMESERIES 1 MINUTES"
+                "query": "SELECT rate(latest(namedprocess_namegroup_cpu_seconds_total), 5 minutes) FROM Metric WHERE mode = 'system' or mode = 'system' FACET cluster, node, mode TIMESERIES 1 MINUTES"
               }
             ],
             "platformOptions": {
               "ignoreTimeRange": false
             },
-            "units": {
-              "unit": "PERCENTAGE"
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
             }
           }
         },
@@ -249,12 +282,20 @@
             "legend": {
               "enabled": true
             },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
             "nrqlQueries": [
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_total_req) FROM Metric FACET bdb_name TIMESERIES 1 MINUTES"
+                "query": "SELECT rate(average(endpoint_read_requests), 5 minutes) + rate(average(endpoint_write_requests), 5 minutes) + rate(average(endpoint_other_requests), 5 minutes) FROM Metric FACET node TIMESERIES 1 minute"
               }
             ],
             "platformOptions": {
@@ -284,50 +325,14 @@
             "id": "viz.line"
           },
           "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
             "nrqlQueries": [
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_read_hits) FROM Metric TIMESERIES 1 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(bdb_read_misses) FROM Metric TIMESERIES 5 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(bdb_read_req) FROM Metric TIMESERIES 5 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(bdb_read_res) FROM Metric TIMESERIES 5 MINUTES"
+                "query": "SELECT rate(latest(endpoint_read_requests), 5 minutes ) FROM Metric TIMESERIES 1 MINUTES"
               }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            },
-            "thresholds": {
-              "isLabelVisible": true
-            },
-            "yAxisLeft": {
-              "zero": true
-            },
-            "yAxisRight": {
-              "zero": true
-            }
+            ]
           }
         },
         {
@@ -343,50 +348,14 @@
             "id": "viz.line"
           },
           "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
             "nrqlQueries": [
               {
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(bdb_write_hits) FROM Metric TIMESERIES 1 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(bdb_write_misses) FROM Metric TIMESERIES 5 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(bdb_write_req) FROM Metric TIMESERIES 5 MINUTES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT latest(bdb_write_res) FROM Metric TIMESERIES 5 MINUTES"
+                "query": "SELECT rate(latest(endpoint_write_requests), 5 minutes ) FROM Metric TIMESERIES 1 MINUTES"
               }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            },
-            "thresholds": {
-              "isLabelVisible": true
-            },
-            "yAxisLeft": {
-              "zero": true
-            },
-            "yAxisRight": {
-              "zero": true
-            }
+            ]
           }
         }
       ]

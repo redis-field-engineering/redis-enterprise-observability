@@ -1,5 +1,5 @@
 {
-  "name": "Redis Software Shard v2",
+  "name": "Redis Software Shard v2*",
   "description": null,
   "permissions": "PUBLIC_READ_WRITE",
   "pages": [
@@ -292,7 +292,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(redis_server_total_net_input_bytes), latest(redis_server_total_net_output_bytes) FROM Metric FACET cluster, node, redis TIMESERIES 1 MINUTES"
+                "query": "SELECT rate(latest(redis_server_total_net_input_bytes), 10 minutes), rate(latest(redis_server_total_net_output_bytes), 10 minutes) FROM Metric FACET cluster, node, redis TIMESERIES 10 MINUTES"
               },
               {
                 "accountIds": [
@@ -347,7 +347,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(redis_server_total_commands_processed)/latest(redis_server_total_connections_received) FROM Metric FACET cluster, node, redis TIMESERIES 1 MINUTES"
+                "query": "SELECT rate(latest(redis_server_total_commands_processed), 1 minute)/rate(latest(redis_server_total_connections_received), 1 minute) FROM Metric FACET cluster, node, redis TIMESERIES 1 MINUTES"
               }
             ],
             "platformOptions": {
@@ -445,7 +445,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "FROM Metric SELECT percentage(rate(count(*), 1 minute)/100, WHERE metricName = 'namedprocess_namegroup_cpu_seconds_total') FACET cluster, node, redis TIMESERIES SINCE 6 hours ago"
+                "query": "SELECT percentage(rate(count(*), 1 minute)/100, WHERE metricName = 'namedprocess_namegroup_cpu_seconds_total') FROM Metric FACET cluster, node, redis TIMESERIES SINCE 1 hour ago"
               }
             ],
             "platformOptions": {
@@ -534,7 +534,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET cluster, node, redis WHERE threadname='redis-server-7.' TIMESERIES"
+                "query": "SELECT rate(latest(namedprocess_namegroup_thread_cpu_seconds_total), 1 minute) FROM Metric FACET cluster, node, redis WHERE threadname like 'redis-server-%' TIMESERIES"
               },
               {
                 "accountIds": [

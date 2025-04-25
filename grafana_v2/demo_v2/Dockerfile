@@ -1,5 +1,4 @@
-# FROM redislabs/redis:latest
-FROM redislabs/redis-internal:7.8.6-13.focal
+FROM redislabs/redis:latest
 ADD ./netstat /usr/local/bin/netstat
 
 USER root

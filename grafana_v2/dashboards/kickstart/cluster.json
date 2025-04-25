@@ -259,7 +259,7 @@
         "collapsed": false,
         "datasource": {
           "type": "prometheus",
-          "uid": "feGGxtJVz"
+          "name": "prometheus-demo"
         },
         "gridPos": {
           "h": 1,
@@ -275,7 +275,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "feGGxtJVz"
+              "name": "prometheus-demo"
             },
             "refId": "A"
           }

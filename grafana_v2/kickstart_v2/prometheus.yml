@@ -27,7 +27,7 @@ scrape_configs:
     metrics_path: /metrics
     scheme: http
     static_configs:
-      - targets: ["172.27.2.2:9090"]
+      - targets: ["host.docker.internal:9090"]
 
   # use an appropriate name
   - job_name: "redis-v1"

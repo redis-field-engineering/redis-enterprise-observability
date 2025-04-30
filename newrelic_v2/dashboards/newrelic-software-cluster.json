@@ -42,7 +42,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
                 "query": "SELECT latest(db_config) as Status FROM Metric FACET cluster as Cluster, db_name as Database"
               }
@@ -82,7 +82,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
                 "query": "SELECT average(endpoint_read_requests_latency_histogram_sum)/average(endpoint_read_requests_latency_histogram_count) + average(endpoint_write_requests_latency_histogram_sum)/average(endpoint_write_requests_latency_histogram_count) AS 'Total Latecny' FROM Metric TIMESERIES 1 hour"
               }
@@ -120,7 +120,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
                 "query": "SELECT average(redis_server_db0_keys) AS 'keys' FROM Metric "
               }
@@ -149,7 +149,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
                 "query": "SELECT latest(node_metrics_up) as 'running nodes' FROM Metric "
               }
@@ -188,7 +188,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
                 "query": "SELECT rate(latest(endpoint_read_requests), 1 minute) + rate(latest(endpoint_write_requests), 1 minute) + rate(latest(endpoint_other_requests), 1 minute) as 'requests/second' FROM Metric "
               }
@@ -228,7 +228,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
                 "query": "SELECT latest(redis_server_used_memory)/1048576 AS 'megabytes' FROM Metric "
               }
@@ -263,7 +263,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
                 "query": "SELECT latest(endpoint_client_connections) as 'connections' FROM Metric "
               }
@@ -303,7 +303,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
                 "query": "SELECT latest(redis_server_used_memory)/latest(redis_server_maxmemory) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -355,9 +355,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT latest(redis_server_used_memory)/latest(redis_server_maxmemory) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+                "query": "SELECT percentile(endpoint_read_requests_latency_histogram_bucket, 95), percentile(endpoint_write_requests_latency_histogram_bucket, 95) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {
@@ -367,7 +367,7 @@
               "isLabelVisible": true
             },
             "units": {
-              "unit": "PERCENTAGE"
+              "unit": "MS"
             },
             "yAxisLeft": {
               "zero": true
@@ -407,7 +407,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
                 "query": "SELECT latest(redis_server_db0_keys) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -456,7 +456,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
                 "query": "SELECT latest(endpoint_client_connections) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
@@ -505,7 +505,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
                 "query": "SELECT rate(latest(endpoint_read_requests), 1 minute) + rate(latest(endpoint_write_requests), 1 minute) + rate(latest(endpoint_other_requests), 1 minute) FROM Metric FACET cluster SINCE 10 MINUTES AGO TIMESERIES 1 MINUTE"
               }
@@ -554,7 +554,7 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
                 "query": "SELECT latest(redis_server_expired_keys) FROM Metric WHERE role = 'master' FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }

@@ -93,6 +93,7 @@ curl -s 'http://admin:admin@localhost:3000/api/datasources' \
 
 # get the datasource by name to find its uid
 echo ""
+echo ""
 echo "perform datasource health check"
 data=`curl -s 'http://admin:admin@localhost:3000/api/datasources/name/prometheus-demo'`
 
@@ -105,7 +106,6 @@ data=`curl -s 'http://admin:admin@localhost:3000/api/datasources/uid/'$uid'/heal
 str=${data#*\"status\"\:\"*}
 status=${str%%\"*}
 
-echo ""
 if [[ "$status" == "OK" ]]; then
   echo "> grafana connected to prometheus-demo"
 else
@@ -116,7 +116,7 @@ echo ""
 echo "create grafana dashboards"
 
 if [ $# -eq 0 ]; then
-  folder="../dashboards/kickstart/*"
+  folder="../dashboards/grafana_v9-11/software/basic/*"
 elif [ -d "$1" ]; then
   folder="$1/*"
 else
@@ -129,14 +129,16 @@ echo "folder: $folder"
 # loop over files in folder
 for file in $folder; do
     if [ -f "$file" ]; then
-        db=`curl -s 'http://admin:admin@localhost:3000/api/dashboards/db' \
-           --header 'Accept: application/json' \
-           --header 'Content-Type: application/json' \
-           --data-binary @$file`
-        echo "result: $db"
-
+        echo "$file"
+        d=`cat "$file"`
+        echo "{  \"dashboard\": $d,\"folderId\": 0,  \"message\": \"Created by Redis demo setup script\",  \"overwrite\": false}" \
+        | sed s/\"uid\"\:\ \"\$\{DS_PROMETHEUS\}\"/\"name\"\:\ \"prometheus-demo\"/g | curl -s 'http://admin:admin@localhost:3000/api/dashboards/db' \
+               --header 'Accept: application/json' \
+               --header 'Content-Type: application/json' \
+               --data-binary @-
     fi
 done
+
 echo ""
 echo "------- RLADMIN status -------"
 docker exec "${container_name}" bash -c "rladmin status"

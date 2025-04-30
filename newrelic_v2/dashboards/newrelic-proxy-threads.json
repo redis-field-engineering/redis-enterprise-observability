@@ -39,7 +39,7 @@
             "dataFormatters": [
               {
                 "name": "redis_process_resident_memory_bytes",
-                "type": "decimal"
+                "type": "humanized"
               }
             ],
             "facet": {
@@ -50,7 +50,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(redis_server_allocator_resident) FROM Metric WHERE role='master' SINCE 30 MINUTES AGO"
+                "query": "SELECT latest(redis_server_allocator_resident)/(1024*1024) AS 'megabytes' FROM Metric WHERE role='master' SINCE 30 MINUTES AGO"
               }
             ],
             "platformOptions": {
@@ -85,7 +85,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(node_filefd_maximum) FROM Metric SINCE 30 MINUTES AGO"
+                "query": "SELECT min(node_filefd_maximum) AS 'maximum file descriptors' FROM Metric SINCE 30 MINUTES AGO "
               }
             ],
             "platformOptions": {
@@ -114,7 +114,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT latest(node_filefd_allocated) FROM Metric SINCE 30 MINUTES AGO"
+                "query": "SELECT latest(node_filefd_allocated) AS 'open file descriptors' FROM Metric SINCE 30 MINUTES AGO"
               }
             ],
             "platformOptions": {
@@ -176,38 +176,14 @@
             "id": "viz.line"
           },
           "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
             "nrqlQueries": [
               {
                 "accountIds": [
                   3321735
                 ],
                 "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET threadname WHERE mode ='system' AND threadname NOT LIKE 'listener%' AND threadname NOT LIKE 'worker-%' AND threadname NOT LIKE '%cli%'  SINCE 30 MINUTES AGO TIMESERIES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET bdb_name WHERE cluster = {{cluster}} AND mode ='user' AND threadname NOT LIKE '\"cli.%' AND threadname NOT LIKE 'worker.%' AND threadname NOT LIKE 'listener.%' SINCE 30 MINUTES AGO TIMESERIES"
               }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            },
-            "thresholds": {
-              "isLabelVisible": true
-            },
-            "yAxisLeft": {
-              "zero": true
-            },
-            "yAxisRight": {
-              "zero": true
-            }
+            ]
           }
         },
         {
@@ -223,38 +199,14 @@
             "id": "viz.line"
           },
           "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
             "nrqlQueries": [
               {
                 "accountIds": [
                   3321735
                 ],
                 "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET threadname WHERE mode = 'system' and threadname LIKE 'listener%'  SINCE 30 MINUTES AGO TIMESERIES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET bdb_name WHERE cluster = {{cluster}} AND mode = 'user' and threadname LIKE 'listener.%' SINCE 30 MINUTES AGO TIMESERIES"
               }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            },
-            "thresholds": {
-              "isLabelVisible": true
-            },
-            "yAxisLeft": {
-              "zero": true
-            },
-            "yAxisRight": {
-              "zero": true
-            }
+            ]
           }
         },
         {
@@ -270,38 +222,14 @@
             "id": "viz.line"
           },
           "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "legend": {
-              "enabled": true
-            },
             "nrqlQueries": [
               {
                 "accountIds": [
                   3321735
                 ],
                 "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET threadname WHERE mode = 'system' AND threadname LIKE 'cli_session-%' SINCE 30 MINUTES AGO TIMESERIES"
-              },
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT average(namedprocess_namegroup_thread_cpu_seconds_total) FROM Metric FACET bdb_name WHERE cluster = {{cluster}} AND mode ='user' AND threadname NOT LIKE '\"cli.%' AND threadname NOT LIKE 'worker.%' AND threadname NOT LIKE 'listener.%' SINCE 30 MINUTES AGO TIMESERIES"
               }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            },
-            "thresholds": {
-              "isLabelVisible": true
-            },
-            "yAxisLeft": {
-              "zero": true
-            },
-            "yAxisRight": {
-              "zero": true
-            }
+            ]
           }
         }
       ]

@@ -221,7 +221,7 @@
                 "accountIds": [
                   3321735
                 ],
-                "query": "SELECT rate(latest(endpoint_client_connections), 5 minutes) FROM Metric FACET db TIMESERIES 5 MINUTES"
+                "query": "SELECT rate(max(endpoint_client_connections) - max(endpoint_client_disconnections), 5 minutes) FROM Metric FACET db, cluster TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {

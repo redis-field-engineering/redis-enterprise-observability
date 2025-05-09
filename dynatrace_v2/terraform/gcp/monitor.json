@@ -1,0 +1,34 @@
+       
+[
+    {
+      "value": {
+        "enabled": true,
+        "description": "Redis Enterprise Scraping",
+        "version": "2.0.1",
+        "featureSets": [
+          "all"
+        ],
+        "activationContext": "REMOTE",
+        "prometheusRemote": {
+          "endpoints": [
+            {
+              "url": "<PRIMARY_ENDPOINT>",
+              "authentication": {
+                "scheme": "none",
+                "skipVerifyHttps": true
+              }
+            },
+            {
+              "url": "<SECONDARY_ENDPOINT>",
+              "authentication": {
+                "scheme": "none",
+                "skipVerifyHttps": true
+              }
+            }
+          ]
+        }
+      },
+      "scope": "ag_group-default"
+    }
+  ]
+    

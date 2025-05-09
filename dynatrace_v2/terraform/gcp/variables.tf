@@ -38,7 +38,7 @@ variable "ssh_private_key" {
 variable "dynatrace_api_token" {
   description = "API token with extensions.* and metrics.ingest scopes"
   type        = string
-  # sensitive   = true
+  sensitive   = true
 }
 
 variable "custom_ca_pem" {

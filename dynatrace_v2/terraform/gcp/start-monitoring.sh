@@ -2,7 +2,6 @@
 
 # Start remote monitoring configuration in dynatrace
 
-#!/bin/bash
 
 PRIMARY_ENDPOINT="$1"
 SECONDARY_ENDPOINT="$2"

@@ -11,6 +11,9 @@ PROJECT="demo"
 # get the cli variable and use it as the network endpoint for prometheus
 # sed 's/- targets: \[\"172.27.1.4\:8070\"\]/- targets: \[\"$1\:8070\"\]/' >> prometheus.yml
 
+sed "s/- targets: \[\"172.27.1.4:8070\"\]/- targets: \[\"$1:8070\"\]/" prometheus.yml > prometheus.yml.tmp
+mv prometheus.yml.tmp prometheus.yml
+
 docker compose -p ${PROJECT} up -d
 
 until curl --output /dev/null --silent --head --fail curl http://localhost:3000; do
@@ -26,7 +29,7 @@ curl -s 'http://admin:admin@localhost:3000/api/datasources' \
 --header 'Content-Type: application/json' \
 --data '{   "name": "prometheus-demo",
     "type": "prometheus",
-    "url": "http://host.docker.internal:9090",
+    "url": "http://prometheus:9090",
     "title": "Demonstration",
     "access": "proxy",
     "basicAuth": false}'

@@ -1210,7 +1210,7 @@
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "dehmbrezos5q8c"
+            "name": "prometheus-demo"
           },
           "definition": "label_values(endpoint_client_connections,cluster)",
           "hide": 0,

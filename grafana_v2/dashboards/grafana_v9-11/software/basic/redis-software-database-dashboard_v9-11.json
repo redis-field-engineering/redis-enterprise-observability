@@ -889,7 +889,7 @@
         "definition": "label_values(endpoint_client_connections{cluster=\"$cluster\"},db)",
         "description": "endpoint_client_connections{cluster=\"$cluster\"}",
         "label": "db",
-        "name": "database",
+        "name": "db",
         "options": [],
         "query": {
           "qryType": 1,

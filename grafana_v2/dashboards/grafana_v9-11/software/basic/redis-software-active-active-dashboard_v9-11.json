@@ -986,7 +986,7 @@
           "refId": "A"
         }
       ],
-      "title": "Ingress Sync Lag Time",
+      "title": "Merge Requests",
       "type": "timeseries"
     },
     {

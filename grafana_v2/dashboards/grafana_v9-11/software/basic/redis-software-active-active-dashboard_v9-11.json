@@ -133,7 +133,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "database_syncer_current_status{cluster=\"$cluster\"}",
+          "expr": "sum by (cluster) (database_syncer_current_status{cluster=\"$cluster\"})",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"

@@ -320,7 +320,7 @@
           },
           "editorMode": "builder",
           "expr": "bdb_crdt_syncer_egress_bytes",
-          "legendFormat": "{{bdb_name}}",
+          "legendFormat": "{{cluster}}",
           "range": true,
           "refId": "A"
         }
@@ -385,7 +385,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "redis_crdt_raw_dbsize{role=\"master\"}",
+          "expr": "redis_server_crdt_raw_dbsize{role=\"master\", cluster=\"$cluster\"}",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -451,7 +451,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "redis_crdt_peer_lag",
+          "expr": "redis_server_crdt_peer_lag{cluster=\"$cluster\"}",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -638,7 +638,7 @@
           },
           "editorMode": "builder",
           "expr": "bdb_crdt_syncer_egress_bytes_decompressed",
-          "legendFormat": "{{bdb_name}}",
+          "legendFormat": "{{cluster}}",
           "range": true,
           "refId": "A"
         }
@@ -769,7 +769,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "redis_crdt_backlog_histlen{role=\"master\"}",
+          "expr": "redis_server_crdt_backlog_histlen{role=\"master\", cluster=\"$cluster\"}",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -980,8 +980,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "redis_crdt_merge_reqs{role=\"slave\"}",
-          "legendFormat": "{{bdb_name}}",
+          "expr": "redis_server_crdt_merge_reqs{role=\"slave\", cluster=\"$cluster\"}",
+          "legendFormat": "{{cluster}}",
           "range": true,
           "refId": "A"
         }
@@ -1046,7 +1046,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "redis_crdt_gc_collected{role=\"master\"}",
+          "expr": "redis_server_crdt_gc_collected{role=\"master\", cluster=\"$cluster\"}",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"

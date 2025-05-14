@@ -327,7 +327,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "sum by (db, cluster) (irate(endpoint_read_requests{db=\"$db\", cluster=\"$cluster\"}[1m]) + irate(endpoint_write_requests{db=\"$db\", cluster=\"$cluster\"}[1m]) + irate(endpoint_other_requests{db=\"db\", cluster=\"$cluster\"}[1m]))",
+          "expr": "sum by (db, cluster) (irate(endpoint_read_requests{db=\"$db\", cluster=\"$cluster\"}[1m]) + irate(endpoint_write_requests{db=\"$db\", cluster=\"$cluster\"}[1m]) + irate(endpoint_other_requests{db=\"$db\", cluster=\"$cluster\"}[1m]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"

@@ -198,7 +198,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "dmcproxy_process_cpu_usage_percent{cluster=\"$cluster\", node=\"$node\"}",
+          "expr": "avg by(node)(irate(dmcproxy_process_cpu_user_seconds_total{cluster=\"$cluster\", node=\"$node\"}[1m])) * 100",
           "hide": true,
           "instant": false,
           "legendFormat": "__auto",
@@ -214,17 +214,6 @@
           "hide": false,
           "refId": "C",
           "type": "math"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "expr": "",
-          "hide": false,
-          "instant": false,
-          "range": true,
-          "refId": "D"
         }
       ],
       "title": "Proxy CPU Usage (avg)",
@@ -359,7 +348,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "dmcproxy_process_open_fds{cluster=\"$cluster\",node=\"$node\"}",
+          "expr": "sum by (node)(namedprocess_namegroup_open_filedesc{cluster=\"$cluster\",node=\"$node\"})",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -643,7 +632,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(cluster)",
+        "definition": "label_values(namedprocess_namegroup_cpu_seconds_total, cluster)",
         "hide": 0,
         "includeAll": false,
         "label": "",
@@ -652,7 +641,7 @@
         "options": [],
         "query": {
           "qryType": 1,
-          "query": "label_values(cluster)",
+          "query": "label_values(namedprocess_namegroup_cpu_seconds_total, cluster)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -668,7 +657,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(node_up,node)",
+        "definition": "label_values(namedprocess_namegroup_cpu_seconds_total{cluster=\"cluster\"},node)",
         "hide": 0,
         "includeAll": true,
         "multi": true,
@@ -676,7 +665,7 @@
         "options": [],
         "query": {
           "qryType": 1,
-          "query": "label_values(node_up,node)",
+          "query": "label_values(namedprocess_namegroup_cpu_seconds_total{cluster=\"cluster\"},node)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,

@@ -290,7 +290,7 @@
       },
       "id": 59,
       "panels": [],
-      "repeat": "bdb",
+      "repeat": "db",
       "repeatDirection": "h",
       "targets": [
         {

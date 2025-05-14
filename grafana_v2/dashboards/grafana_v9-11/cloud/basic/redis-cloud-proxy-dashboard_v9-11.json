@@ -657,7 +657,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(namedprocess_namegroup_cpu_seconds_total{cluster=\"cluster\"},node)",
+        "definition": "label_values(namedprocess_namegroup_cpu_seconds_total{cluster=\"$cluster\"},node)",
         "hide": 0,
         "includeAll": true,
         "multi": true,
@@ -665,7 +665,7 @@
         "options": [],
         "query": {
           "qryType": 1,
-          "query": "label_values(namedprocess_namegroup_cpu_seconds_total{cluster=\"cluster\"},node)",
+          "query": "label_values(namedprocess_namegroup_cpu_seconds_total{cluster=\"$cluster\"},node)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,

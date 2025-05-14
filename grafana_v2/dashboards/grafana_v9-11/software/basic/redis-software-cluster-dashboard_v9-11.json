@@ -839,6 +839,8 @@
       },
       {
         "current": {},
+        "allValue":".*",
+        "includeAll": true,
         "definition": "label_values(endpoint_client_connections{cluster=\"$cluster\"},db)",
         "description": "endpoint_client_connections{cluster=\"$cluster\"}",
         "label": "db",

@@ -436,7 +436,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "scalar(scalar(redis_server_connected_clients{db=\"$db\", cluster=\"$cluster\", redis=\"$shard\"}))",
+          "expr": "scalar(redis_server_connected_clients{db=\"$db\", cluster=\"$cluster\", redis=\"$shard\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",

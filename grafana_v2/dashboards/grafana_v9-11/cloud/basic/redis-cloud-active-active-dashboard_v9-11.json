@@ -133,7 +133,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_crdt_syncer_status",
+          "expr": "sum by (cluster) (database_syncer_current_status{cluster=\"$cluster\"})",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -226,8 +226,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_crdt_syncer_ingress_bytes",
-          "legendFormat": "{{bdb_name}}",
+          "expr": "sum by (cluster) (rate(database_syncer_ingress_bytes{syncer_type=\"crdt\", cluster=\"$cluster\"}[1m]))",
+          "legendFormat": "{{db}}",
           "range": true,
           "refId": "A"
         }
@@ -385,7 +385,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "redis_crdt_raw_dbsize{role=\"master\"}",
+          "expr": "redis_server_crdt_raw_dbsize{role=\"master\", cluster=\"$cluster\"}",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -451,7 +451,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "redis_crdt_peer_lag",
+          "expr": "redis_server_crdt_peer_lag{cluster=\"$cluster\"}",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -544,8 +544,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_crdt_syncer_ingress_bytes_decompressed{crdt_replica_id=\"1\"}",
-          "legendFormat": "{{bdb_name}}",
+          "expr": "rate(database_syncer_ingress_bytes_decompressed{cluster=\"$cluster\"}[1m])",
+          "legendFormat": "{{db}}",
           "range": true,
           "refId": "A"
         }
@@ -769,7 +769,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "redis_crdt_backlog_histlen{role=\"master\"}",
+          "expr": "redis_server_crdt_backlog_histlen{role=\"master\", cluster=\"$cluster\"}",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -832,7 +832,7 @@
               }
             ]
           },
-          "unit": "s"
+          "unit": "ms"
         },
         "overrides": []
       },
@@ -862,8 +862,8 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_crdt_syncer_local_ingress_lag_time",
-          "legendFormat": "{{bdb_name}}",
+          "expr": "avg by(cluster) (database_syncer_lag_ms{syncer_type=\"crdt\", cluster=\"$cluster\"})",
+          "legendFormat": "{{db}}",
           "range": true,
           "refId": "A"
         }
@@ -980,13 +980,13 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "redis_crdt_merge_reqs{role=\"slave\"}",
-          "legendFormat": "{{bdb_name}}",
+          "expr": "redis_server_crdt_merge_reqs{role=\"slave\", cluster=\"$cluster\"}",
+          "legendFormat": "{{db}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Ingress Sync Lag Time",
+      "title": "Merge Requests",
       "type": "timeseries"
     },
     {
@@ -1046,7 +1046,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "redis_crdt_gc_collected{role=\"master\"}",
+          "expr": "redis_server_crdt_gc_collected{role=\"master\", cluster=\"$cluster\"}",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -1064,7 +1064,7 @@
     "list": [
       {
         "current": {},
-        "definition": "label_values(bdb_up,cluster)",
+        "definition": "label_values(redis_up,cluster)",
         "description": "The name of the deployed cluster",
         "hide": 0,
         "includeAll": false,
@@ -1073,7 +1073,7 @@
         "name": "cluster",
         "options": [],
         "query": {
-          "query": "label_values(bdb_up,cluster)",
+          "query": "label_values(redis_up,cluster)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,

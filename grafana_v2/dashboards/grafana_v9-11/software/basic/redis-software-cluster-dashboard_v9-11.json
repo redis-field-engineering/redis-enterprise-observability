@@ -135,7 +135,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "count(bdb_up{cluster=\"$cluster\"})",
+          "expr": "count(redis_up{cluster=\"$cluster\"})",
           "legendFormat": "count",
           "range": true,
           "refId": "A"
@@ -201,7 +201,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "sum(bdb_used_memory{cluster=\"$cluster\"})",
+          "expr": "sum(redis_server_used_memory{cluster=\"$cluster\"})",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -267,7 +267,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "sum(bdb_total_req{cluster=\"$cluster\"})",
+          "expr": "(sum by (cluster) (irate (endpoint_read_requests{cluster=\"$cluster\"}[1m]))) + (sum by (cluster) (irate(endpoint_write_requests{cluster=\"$cluster\"}[1m]))) + (sum by(cluster) (irate (endpoint_other_requests{cluster=\"$cluster\"}[1m])))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -301,7 +301,7 @@
           "refId": "A"
         }
       ],
-      "title": "$bdb",
+      "title": "$db",
       "type": "row"
     },
     {
@@ -377,7 +377,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "(bdb_used_memory{cluster=\"$cluster\",bdb=\"$bdb\"}/bdb_memory_limit{cluster=\"$cluster\",bdb=\"$bdb\"})",
+          "expr": "sum by(cluster, db)(redis_server_used_memory{cluster=\"$cluster\", db=\"$db\"}) / sum by(cluster)(redis_server_maxmemory{cluster=\"$cluster\", db=\"$db\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -413,7 +413,7 @@
               }
             ]
           },
-          "unit": "s"
+          "unit": "ms"
         },
         "overrides": []
       },
@@ -447,7 +447,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_avg_latency{cluster=\"$cluster\", bdb=\"$bdb\"}",
+          "expr": "(sum by (cluster, db)(irate(endpoint_read_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[1m]))  + sum by(cluster) (irate(endpoint_write_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[1m]) ) + sum by (cluster) (irate(endpoint_other_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[1m]))) / ((sum by (cluster) (irate(endpoint_read_requests{cluster=\"$cluster\", db=\"$db\"}[1m]))) + (sum by(cluster)(irate(endpoint_write_requests{cluster=\"$cluster\", db=\"$db\"}[1m]))) + (sum by(cluster)(irate(endpoint_other_requests{cluster=\"$cluster\", db=\"$db\"}[1m])))) / 1000",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -512,7 +512,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "bdb_total_req{cluster=\"$cluster\",bdb=\"$bdb\"}",
+          "expr": "sum by(cluster, db)(irate(endpoint_read_requests{cluster=\"$cluster\", db=\"$db\"}[1m]) + irate(endpoint_write_requests{cluster=\"$cluster\", db=\"$db\"}[1m]) + irate(endpoint_other_requests{cluster=\"$cluster\", db=\"$db\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -580,7 +580,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "bdb_expired_objects{cluster=\"$cluster\", bdb=\"$bdb\"}",
+          "expr": "sum by(cluster) (irate(redis_server_expired_keys{role=\"master\", cluster=\"$cluster\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -651,7 +651,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "scalar(bdb_no_of_keys{bdb=\"$bdb\", cluster=\"$cluster\"})",
+          "expr": "scalar(sum by(cluster, db)(redis_server_db_keys{role=\"master\", cluster=\"$cluster\", db=\"$db\"}))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -719,7 +719,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "scalar(bdb_conns{bdb=\"$bdb\", cluster=\"$cluster\"})",
+          "expr": "scalar(sum by(cluster, db)(endpoint_client_connections{cluster=\"$cluster\", db=\"$db\"} - endpoint_client_disconnections{cluster=\"$cluster\", db=\"$db\"}))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -759,52 +759,6 @@
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "label_values(bdb_status{bdb=\"$bdb\", cluster=\"$cluster\"}, status)",
-        "hide": 2,
-        "includeAll": false,
-        "multi": false,
-        "name": "status",
-        "options": [],
-        "query": {
-          "query": "label_values(bdb_status{bdb=\"$bdb\", cluster=\"$cluster\"}, status)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "",
-        "hide": 2,
-        "includeAll": false,
-        "multi": false,
-        "name": "newStatus",
-        "options": [],
-        "query": {
-          "query": "label_values(bdb_up{bdb=\"$bdb\", cluster=\"$cluster\"}, status)",
-          "refId": "Redis-Enterprise-newStatus-Variable-Query"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query",
         "useTags": false
       },
@@ -884,26 +838,20 @@
         "type": "interval"
       },
       {
-        "allValue": ".*",
         "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "bdb_up{cluster=\"$cluster\"}",
-        "hide": 2,
-        "includeAll": true,
-        "multi": false,
-        "name": "bdb",
+        "definition": "label_values(endpoint_client_connections{cluster=\"$cluster\"},db)",
+        "description": "endpoint_client_connections{cluster=\"$cluster\"}",
+        "label": "db",
+        "name": "db",
         "options": [],
         "query": {
-          "query": "bdb_up{cluster=\"$cluster\"}",
-          "refId": "StandardVariableQuery"
+          "qryType": 1,
+          "query": "label_values(endpoint_client_connections{cluster=\"$cluster\"},db)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
-        "regex": "/bdb=\"(?<value>[^\"]+)|bdb_name=\"(?<text>[^\"]+)/g",
-        "skipUrlSync": false,
-        "sort": 0,
+        "regex": "",
+        "sort": 1,
         "type": "query"
       }
     ]

@@ -841,6 +841,7 @@
         "current": {},
         "allValue":".*",
         "includeAll": true,
+        "hide": 2,
         "definition": "label_values(endpoint_client_connections{cluster=\"$cluster\"},db)",
         "description": "endpoint_client_connections{cluster=\"$cluster\"}",
         "label": "db",
@@ -853,7 +854,7 @@
         },
         "refresh": 1,
         "regex": "",
-        "sort": 1,
+        "sort": 0,
         "type": "query"
       }
     ]

@@ -377,7 +377,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum by(cluster, db)(redis_server_used_memory{cluster=\"$cluster\", db=\"$db\"}) / sum by(cluster)(redis_server_maxmemory{cluster=\"$cluster\", db=\"$db\"})",
+          "expr": "sum by(cluster, db)(redis_server_used_memory{cluster=\"$cluster\", db=\"$db\"}) / sum by(cluster, db)(redis_server_maxmemory{cluster=\"$cluster\", db=\"$db\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -447,7 +447,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "(sum by (cluster, db)(irate(endpoint_read_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[1m]))  + sum by(cluster) (irate(endpoint_write_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[1m]) ) + sum by (cluster) (irate(endpoint_other_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[1m]))) / ((sum by (cluster) (irate(endpoint_read_requests{cluster=\"$cluster\", db=\"$db\"}[1m]))) + (sum by(cluster)(irate(endpoint_write_requests{cluster=\"$cluster\", db=\"$db\"}[1m]))) + (sum by(cluster)(irate(endpoint_other_requests{cluster=\"$cluster\", db=\"$db\"}[1m])))) / 1000",
+          "expr": "(sum by (cluster, db)(irate(endpoint_read_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[1m]))  + sum by(cluster, db) (irate(endpoint_write_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[1m]) ) + sum by (cluster, db) (irate(endpoint_other_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[1m]))) / ((sum by (cluster, db) (irate(endpoint_read_requests{cluster=\"$cluster\", db=\"$db\"}[1m]))) + (sum by(cluster, db)(irate(endpoint_write_requests{cluster=\"$cluster\", db=\"$db\"}[1m]))) + (sum by(cluster, db)(irate(endpoint_other_requests{cluster=\"$cluster\", db=\"$db\"}[1m])))) / 1000",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"

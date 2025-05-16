@@ -179,7 +179,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "bdb_avg_read_latency{bdb=\"$bdb\",cluster=\"$cluster\"}",
+          "expr": "(sum(irate(endpoint_read_requests_latency_histogram_sum{db=\"$db\"}[1m]))/sum(irate(endpoint_read_requests{db=\"$db\"}[1m])))/1000000",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Read",
@@ -193,7 +193,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "bdb_avg_write_latency{bdb=\"$bdb\",cluster=\"$cluster\"}",
+          "expr": "(sum(irate(endpoint_write_requests_latency_histogram_sum{db=\"$db\"}[1m]))/sum(irate(endpoint_write_requests{db=\"$db\"}[1m])))/1000000",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Write",
@@ -265,7 +265,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_used_memory{cluster=\"$cluster\", bdb=\"$bdb\"}/bdb_memory_limit{cluster=\"$cluster\",bdb=\"$bdb\"}",
+          "expr": "sum by (db,cluster) (redis_server_used_memory{db=\"$db\", cluster=\"$cluster\"}) / sum by (db,cluster) (redis_server_maxmemory{db=\"$db\", cluster=\"$cluster\"})",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -334,7 +334,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_total_req{cluster=\"$cluster\", bdb=\"$bdb\"}",
+          "expr": "sum by (db, cluster) (irate(endpoint_read_requests{db=\"$db\", cluster=\"$cluster\"}[1m]) + irate(endpoint_write_requests{db=\"$db\", cluster=\"$cluster\"}[1m]) + irate(endpoint_other_requests{db=\"$db\", cluster=\"$cluster\"}[1m]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -428,7 +428,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_read_req{cluster=\"$cluster\", bdb=\"$bdb\"}",
+          "expr": "sum by (db, cluster) (irate(endpoint_read_requests{db=\"$db\", cluster=\"$cluster\"}[1m]))",
           "hide": false,
           "legendFormat": "read",
           "range": true,
@@ -440,7 +440,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_write_req{cluster=\"$cluster\", bdb=\"$bdb\"}",
+          "expr": "sum by (db, cluster) (irate(endpoint_write_requests{db=\"$db\", cluster=\"$cluster\"}[1m]))",
           "hide": false,
           "legendFormat": "write",
           "range": true,
@@ -452,7 +452,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_other_req{cluster=\"$cluster\", bdb=\"$bdb\"}",
+          "expr": "sum by(db, cluster) (irate(endpoint_other_requests{db=\"$db\", cluster=\"$cluster\"}[1m]))",
           "legendFormat": "other",
           "range": true,
           "refId": "A"
@@ -522,7 +522,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "scalar(bdb_no_of_keys{bdb=\"$bdb\", cluster=\"$cluster\"})",
+          "expr": "scalar(sum by (db, cluster) (redis_server_db_keys{role=\"master\", db=\"$db\", cluster=\"$cluster\"}))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -591,7 +591,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_expired_objects{cluster=\"$cluster\", bdb=\"$bdb\"}",
+          "expr": "sum by (db, cluster) (irate(redis_server_expired_keys{role=\"master\", cluster=\"$cluster\", db=\"$db\"}[1m]))",
           "legendFormat": "Expired Keys",
           "range": true,
           "refId": "A"
@@ -658,7 +658,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "scalar(bdb_conns{bdb=\"$bdb\", cluster=\"$cluster\"})",
+          "expr": "scalar(sum by (db, cluster) (endpoint_client_connections{cluster=\"$cluster\", db=\"$db\"} - endpoint_client_disconnections{cluster=\"$cluster\", db=\"$db\"}))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -730,7 +730,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_read_misses + bdb_write_misses{cluster=\"$cluster\", bdb=\"$bdb\"}",
+          "expr": "(sum by (db, cluster) (irate(redis_server_keyspace_read_misses{role=\"master\", cluster=\"$cluster\", db=\"$db\"}[1m]))) + (sum by (db, cluster) (irate(redis_server_keyspace_write_misses{role=\"master\", cluster=\"$cluster\", db=\"$db\"}[1m])))",
           "hide": false,
           "legendFormat": "__auto",
           "range": true,
@@ -800,7 +800,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_main_thread_cpu_system{cluster=\"$cluster\", bdb=\"$bdb\"}",
+          "expr": "sum by(db, cluster) (irate(namedprocess_namegroup_thread_cpu_seconds_total{mode=\"system\", threadname=~\"redis-server.*\", cluster=\"$cluster\", db=\"$db\"}[1m]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -869,7 +869,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "bdb_main_thread_cpu_user{cluster=\"$cluster\", bdb=\"$bdb\"}",
+          "expr": "sum by(db, cluster) (irate(namedprocess_namegroup_thread_cpu_seconds_total{mode=\"user\", threadname=~\"redis-server.*\", db=\"$db\", cluster=\"$cluster\"}[1m]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -898,7 +898,7 @@
         "name": "cluster",
         "options": [],
         "query": {
-          "query": "label_values(node_up,cluster)",
+          "query": "label_values(endpoint_client_connections,cluster)",
           "refId": "Redis-Enterprise-cluster-Variable-Query"
         },
         "refresh": 1,
@@ -910,73 +910,20 @@
       },
       {
         "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "bdb_conns{cluster=\"$cluster\"}",
-        "hide": 0,
-        "includeAll": false,
-        "label": "database",
-        "multi": false,
-        "name": "bdb",
+        "definition": "label_values(endpoint_client_connections{cluster=\"$cluster\"},db)",
+        "description": "endpoint_client_connections{cluster=\"$cluster\"}",
+        "label": "db",
+        "name": "db",
         "options": [],
         "query": {
-          "query": "bdb_conns{cluster=\"$cluster\"}",
-          "refId": "StandardVariableQuery"
+          "qryType": 1,
+          "query": "label_values(endpoint_client_connections{cluster=\"$cluster\"},db)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
-        "regex": "/bdb_name=\"(?<text>[^\"]+)|bdb=\"(?<value>[^\"]+)/g",
-        "skipUrlSync": false,
+        "regex": "",
         "sort": 1,
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "",
-        "hide": 2,
-        "includeAll": false,
-        "multi": false,
-        "name": "status",
-        "options": [],
-        "query": {
-          "query": "label_values(bdb_status{bdb=\"$bdb\", cluster=\"$cluster\"}, status)",
-          "refId": "Redis-Enterprise-status-Variable-Query"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "",
-        "hide": 2,
-        "includeAll": false,
-        "multi": false,
-        "name": "newStatus",
-        "options": [],
-        "query": {
-          "query": "label_values(bdb_up{bdb=\"$bdb\", cluster=\"$cluster\"}, status)",
-          "refId": "Redis-Enterprise-newStatus-Variable-Query"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query",
-        "useTags": false
+        "type": "query"
       },
       {
         "auto": true,

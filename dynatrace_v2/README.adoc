@@ -11,29 +11,95 @@ use the https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/ext
 
 * link:#Installation[Installation]
 * link:#Dashboards[Dashboards]
-* link:#Dashboards[Alternative Redis Plugins]
+* link:#Alternative-Redis-Plugins[Alternative Redis Plugins]
 * link:#Support[Support]
 * link:#License[License]
 
 == Installation
 
-The Dyntrace v2.0 Extensions support Prometheus metrics, and as such we have created the necessary extension file and
-dashboards so that this option is available. At this time Dynatrace are still testing their signing mechanism so that
-this extension is not available directly from them, but will have to be built and signed according to their instructions.
+The Dynatrace v2.0 Extensions Framework supports Prometheus metrics, and as such we have created the necessary extension file and
+dashboards so that this option is available. At this time Dynatrace are still testing their signing mechanism, so this
+extension is not available directly from them but will have to be built and signed according to their instructions.
 They have indicated that they will sign 3rd party extensions starting in Q1 2025, at which point this process will no
 longer be necessary.
 
-Clone the repository and cd into its root folder ('redis-enterprise-dynatrace-observability'). The contents are already
-in the required format; a 'src' directory containing a .yml file and a folder containing .json dashboard files.
+=== Setting Up the Dynatrace Extension
 
-Follow the instructions here:
+==== Prerequisites
 
-https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/sign-extension
+* Python 3.7+ installed on your system
+* A Dynatrace tenant
+* An API token with permissions: `extensions.read`, `extensions.write`, `extensions.manage`, and `metrics.ingest`
+* Redis Enterprise Software or Redis Cloud with metrics exporter enabled on port 8070
+
+==== Step-by-Step Installation
+
+1. Set up a Python virtual environment and install dt-cli:
++
+[source,bash]
+----
+python -m venv dt-venv
+source dt-venv/bin/activate  # On Windows: dt-venv\Scripts\activate
+pip install dt-cli
+----
+
+2. Create certificates required for signing the extension:
++
+[source,bash]
+----
+# Create a directory for certificates
+mkdir -p secrets
+
+# Generate a CA certificate
+dt extension genca --no-ca-passphrase
+
+# Generate a CA key
+dt extension generate-developer-pem -o developer.pem --ca-crt ca.pem --ca-key ca.key  --name "Redis Developer"
+
+# Move certificates to the secrets directory
+mv ca.pem ca.key developer.pem developer.key secrets/
+----
+
+3. Assemble, sign, and upload the extension:
++
+[source,bash]
+----
+# Assemble the extension
+dt extension assemble
+
+# Sign the extension with your developer certificate
+dt extension sign --key secrets/developer.pem
+
+# Upload the extension to your Dynatrace tenant
+dt extension upload --tenant-url https://YOUR_TENANT_ID.live.dynatrace.com --api-token YOUR_API_TOKEN bundle.zip
+----
+
+4. *Important:* For remote monitoring, you need an ActiveGate or OneAgent. Install it by following the https://docs.dynatrace.com/docs/ingest-from/dynatrace-activegate/installation/linux[Dynatrace ActiveGate installation instructions].
+
+5. Install your CA certificate on the ActiveGate:
++
+[source,bash]
+----
+# Copy the CA certificate to ActiveGate
+sudo cp secrets/ca.pem /var/lib/dynatrace/remotepluginmodule/agent/conf/certificates/
+
+# Restart ActiveGate to apply changes
+sudo systemctl restart dynatracegateway
+----
+
+6. In your Dynatrace tenant:
+   * Go to "Settings" → "Extensions"
+   * Find "Redis Enterprise Extension" and click "Activate"
+   * Configure remote monitoring with your Redis endpoint: `https://YOUR_REDIS_SOFTWARE_ENDPOINT:8070/v2`
+
+=== Terraform Automation for GCP
+
+If you have an Active-Active Redis Enterprise deployment in GCP, you can use our Terraform scripts to automate the entire process. See the `terraform/gcp` directory for configuration details.
 
 == Dashboards
 
-This respository includes sample Dynatrace dashboards for monitoring your Redis deplyoment. See the
-link:/dynatrace/dashboards[dashboards] folder for the available set of dashboards.
+This repository includes sample Dynatrace dashboards for monitoring your Redis deployment. See the
+link:/src/dashboards[dashboards] folder for the available set of dashboards.
 
 == Support
 

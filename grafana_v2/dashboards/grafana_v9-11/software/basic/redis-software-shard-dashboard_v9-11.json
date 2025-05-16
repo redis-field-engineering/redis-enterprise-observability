@@ -3373,11 +3373,11 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_used_ram{bdb=\"$bdb\", cluster=\"$cluster\"}",
+              "expr": "redis_server_used_ram{db=\"$db\", cluster=\"$cluster\", role=\"master\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "bdb_used_ram",
+              "legendFormat": "Used RAM",
               "metric": "",
               "refId": "A",
               "step": 1200
@@ -3387,7 +3387,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_ram_limit{bdb=\"$bdb\", cluster=\"$cluster\"}",
+              "expr": "redis_server_max_ram{db=\"$db\", cluster=\"$cluster\", role=\"master\"}",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "limit (when low, near used)",
@@ -3395,7 +3395,7 @@
               "step": 1200
             }
           ],
-          "title": "Used Memory(ROF) for $bdb",
+          "title": "Used Memory(ROF) for db",
           "type": "timeseries"
         },
         {
@@ -3555,7 +3555,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "(bdb_big_fetch_ram{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_write_ram{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_del_ram{bdb=\"$bdb\", cluster=\"$cluster\"}) / (bdb_big_fetch_flash{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_write_flash{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_del_flash{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_fetch_ram{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_write_ram{bdb=\"$bdb\", cluster=\"$cluster\"} + bdb_big_del_ram{bdb=\"$bdb\", cluster=\"$cluster\"}) > 0",
+              "expr": "avg by(db)((redis_server_ram_fetch_hit_ratio_ram{db=\"$db\", cluster=\"$cluster\"} + redis_server_ram_write_hit_ratio_ram{db=\"$db\", cluster=\"$cluster\"} + redis_server_ram_del_hit_ratio_ram{db=\"$db\", cluster=\"$cluster\"}) / (redis_server_ram_fetch_hit_ratio_flash{db=\"$db\", cluster=\"$cluster\"} + redis_server_ram_write_hit_ratio_flash{db=\"$db\", cluster=\"$cluster\"} + redis_server_ram_del_hit_ratio_flash{db=\"$db\", cluster=\"$cluster\"} + redis_server_ram_fetch_hit_ratio_ram{db=\"$db\", cluster=\"$cluster\"} + redis_server_ram_write_hit_ratio_ram{db=\"$db\", cluster=\"$cluster\"} + redis_server_ram_del_hit_ratio_ram{db=\"$db\", cluster=\"$cluster\"})) > 0",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "DB ram hit ratio",
@@ -3567,7 +3567,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_fetch_ram{bdb=\"$bdb\", cluster=\"$cluster\"}  / (bdb_big_fetch_flash{bdb=\"$bdb\", cluster=\"$cluster\"}  + bdb_big_fetch_ram{bdb=\"$bdb\", cluster=\"$cluster\"} ) > 0",
+              "expr": "(avg by (db)(redis_server_ram_fetch_hit_ratio_ram{cluster=\"$cluster\", db=\"$db\"} / (redis_server_ram_fetch_hit_ratio_flash{cluster=\"$cluster\", db=\"$db\"} + redis_server_ram_fetch_hit_ratio_ram{cluster=\"$cluster\", db=\"$db\"}))) > 0",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "read hit ratio",
@@ -3579,7 +3579,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_write_ram{bdb=\"$bdb\", cluster=\"$cluster\"}  / (bdb_big_write_flash{bdb=\"$bdb\", cluster=\"$cluster\"}  + bdb_big_write_ram{bdb=\"$bdb\", cluster=\"$cluster\"} ) > 0",
+              "expr": "avg by(db) (redis_server_ram_write_hit_ratio_ram{cluster=\"$cluster\", db=\"$db\"}/(redis_server_ram_write_hit_ratio_flash{cluster=\"$cluster\", db=\"$db\"}+redis_server_ram_write_hit_ratio_ram{cluster=\"$cluster\", db=\"$db\"})) > 0",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "write hit ratio",
@@ -3591,7 +3591,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_del_ram{bdb=\"$bdb\", cluster=\"$cluster\"}  / (bdb_big_del_flash{bdb=\"$bdb\", cluster=\"$cluster\"}  + bdb_big_del_ram{bdb=\"$bdb\", cluster=\"$cluster\"} ) > 0",
+              "expr": "avg by(db) (redis_server_ram_del_hit_ratio_ram{cluster=\"$cluster\", db=\"$db\"}/(redis_server_ram_del_hit_ratio_flash{cluster=\"$cluster\", db=\"$db\"}+redis_server_ram_del_hit_ratio_ram{cluster=\"$cluster\", db=\"$db\"})) > 0",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "del hit ratio",
@@ -3712,7 +3712,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg(delta(redis_big_io_ratio_redis{cluster=\"$cluster\",bdb=\"$bdb\",role=\"master\"}[1m]))/60",
+              "expr": "avg(delta(redis_server_big_io_ratio_redis{cluster=\"$cluster\",db=\"$db\",role=\"master\"}[1m]))/60",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "RAM Ops for Redis",
@@ -3724,7 +3724,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg(delta(redis_big_io_ratio_flash{cluster=\"$cluster\",bdb=\"$bdb\",role=\"master\"}[1m]) * -1)/60",
+              "expr": "avg(delta(redis_server_big_io_ratio_flash{cluster=\"$cluster\",db=\"$db\",role=\"master\"}[1m]) * -1)/60",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -3737,7 +3737,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg(delta(redis_big_user_io_ratio_redis{cluster=\"$cluster\",bdb=\"$bdb\",role=\"master\"}[1m]))/60",
+              "expr": "avg(delta(redis_server_big_user_io_ratio_redis{cluster=\"$cluster\",db=\"$db\",role=\"master\"}[1m]))/60",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "User RAM Ops for Redis",
@@ -3749,7 +3749,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg(delta(redis_big_user_io_ratio_flash{cluster=\"$cluster\",bdb=\"$bdb\",role=\"master\"}[1m]) * -1)/60",
+              "expr": "avg(delta(redis_server_big_user_io_ratio_flash{cluster=\"$cluster\",db=\"$db\",role=\"master\"}[1m]) * -1)/60",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -3852,7 +3852,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "delta(redis_big_io_ratio_redis{cluster=\"$cluster\",bdb=\"$bdb\"}[1m])/60",
+              "expr": "delta(redis_server_big_io_ratio_redis{cluster=\"$cluster\",db=\"$db\"}[1m])/60",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "RAM Ops for Redis {{redis}}",
@@ -3864,7 +3864,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "delta(redis_big_io_ratio_flash{cluster=\"$cluster\",bdb=\"$bdb\"}[1m]) / -60",
+              "expr": "delta(redis_server_big_io_ratio_flash{cluster=\"$cluster\",db=\"$db\"}[1m]) / -60",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -3966,7 +3966,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_io_read_bytes{bdb=\"$bdb\", cluster=\"$cluster\"}",
+              "expr": "avg by(db)(redis_server_big_io_reads{db=\"$db\", cluster=\"$cluster\"})",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "Reads",
@@ -3978,7 +3978,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_io_write_bytes{bdb=\"$bdb\", cluster=\"$cluster\"}",
+              "expr": "avg by(db)(redis_server_big_io_writes{db=\"$db\", cluster=\"$cluster\"})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -4080,7 +4080,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_io_reads{bdb=\"$bdb\", cluster=\"$cluster\"}",
+              "expr": "sum by (db)(redis_server_big_io_reads{db=\"$db\", cluster=\"$cluster\"})",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "Reads",
@@ -4092,7 +4092,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_io_writes{bdb=\"$bdb\", cluster=\"$cluster\"}",
+              "expr": "sum by (db)(redis_server_big_io_writes{db=\"$db\", cluster=\"$cluster\"})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -4105,7 +4105,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_io_dels{bdb=\"$bdb\", cluster=\"$cluster\"}",
+              "expr": "sum by (db)(redis_server_big_io_dels{db=\"$db\", cluster=\"$cluster\"})",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "Deletes",
@@ -4201,15 +4201,15 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum(delta(redis_wait_busy_key{bdb=\"$bdb\",cluster=\"$cluster\"}[$aggregation]))",
+              "expr": "sum(delta(redis_server_wait_busy_key{db=\"$db\",cluster=\"$cluster\"}[$aggregation]))",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "bdb:{{$bdb}}",
+              "legendFormat": "db:{{$db}}",
               "refId": "A",
               "step": 1200
             }
           ],
-          "title": "BDB sum redis wait busy key / $aggregation",
+          "title": "DB sum redis wait busy key / $aggregation",
           "type": "timeseries"
         },
         {
@@ -4297,15 +4297,15 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum(delta(redis_blocking_reads{bdb=\"$bdb\",cluster=\"$cluster\"}[$aggregation]))",
+              "expr": "sum(delta(redis_server_blocking_reads{db=\"$db\",cluster=\"$cluster\"}[$aggregation]))",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "bdb:{{$bdb}}",
+              "legendFormat": "db:{{$db}}",
               "refId": "A",
               "step": 1200
             }
           ],
-          "title": "BDB sum redis blocking reads / $aggregation",
+          "title": "DB sum redis blocking reads / $aggregation",
           "type": "timeseries"
         },
         {
@@ -4406,7 +4406,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_used_bigstore{bdb=\"$bdb\",cluster=\"$cluster\"}",
+              "expr": "sum by (db)(redis_server_used_disk{db=\"$db\",cluster=\"$cluster\"})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -4420,7 +4420,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_used_bigstore{bdb=\"$bdb\",cluster=\"$cluster\"} * bdb_disk_frag_ratio{bdb=\"$bdb\",cluster=\"$cluster\"}",
+              "expr": "sum by(db)(redis_server_used_disk{db=\"$db\",cluster=\"$cluster\"}) * avg by(db) (redis_server_disk_fragmentation_ratio{db=\"$db\",cluster=\"$cluster\"})",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "actual",
@@ -4432,7 +4432,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_disk_frag_ratio{bdb=\"$bdb\",cluster=\"$cluster\"}",
+              "expr": "avg by (db)(redis_server_disk_fragmentation_ratio{db=\"$db\",cluster=\"$cluster\"})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -4441,7 +4441,7 @@
               "step": 1200
             }
           ],
-          "title": "BDB used flash",
+          "title": "DB used flash",
           "type": "timeseries"
         },
         {
@@ -4529,15 +4529,15 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_postponed_clients{cluster=\"$cluster\",bdb=\"$bdb\"}",
+              "expr": "sum by (db)(redis_server_big_inst_avg_io_postponed_clients{cluster=\"$cluster\",db=\"$db\"})",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "bdb:{{$bdb}}",
+              "legendFormat": "db:{{$db}}",
               "refId": "A",
               "step": 1200
             }
           ],
-          "title": "BDB postponed clients",
+          "title": "DB postponed clients",
           "type": "timeseries"
         },
         {
@@ -4627,16 +4627,16 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_blocked_clients{bdb=\"$bdb\",cluster=\"$cluster\"}",
+              "expr": "sum by (db)(redis_server_big_inst_avg_io_blocked_clients{db=\"$db\",cluster=\"$cluster\"})",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "Number of blocked clients",
-              "metric": "bdb_big_blocked_clients",
+              "metric": "redis_server_big_inst_avg_io_blocked_clients",
               "refId": "A",
               "step": 1200
             }
           ],
-          "title": "BDB blocked clients",
+          "title": "DB blocked clients",
           "type": "timeseries"
         },
         {
@@ -4751,7 +4751,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_ram_overhead{cluster=\"$cluster\",bdb=\"$bdb\"} ",
+              "expr": "sum by (db)(redis_server_ram_overhead{cluster=\"$cluster\",db=\"$db\", role=\"master\"})  / sum by(db) (redis_server_used_ram{cluster=\"$cluster\",db=\"$db\",role=\"master\"})",
               "format": "time_series",
               "hide": true,
               "intervalFactor": 2,
@@ -4764,7 +4764,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_ram_overhead{cluster=\"$cluster\",bdb=\"$bdb\"}  / bdb_ram_limit{cluster=\"$cluster\",bdb=\"$bdb\"}",
+              "expr": "sum by (db)(redis_server_ram_overhead{cluster=\"$cluster\",db=\"$db\", role=\"master\"})  / sum by(db) (redis_server_used_ram{cluster=\"$cluster\",db=\"$db\",role=\"master\"})",
               "format": "time_series",
               "hide": false,
               "intervalFactor": 2,
@@ -4777,16 +4777,16 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "redis_ram_overhead{cluster=\"$cluster\",bdb=\"$bdb\"} / redis_max_ram{cluster=\"$cluster\",bdb=\"$bdb\"}",
+              "expr": "sum by (db, role)(redis_server_ram_overhead{cluster=\"$cluster\",db=\"$db\"})  / sum by(db,role) (redis_server_max_ram{cluster=\"$cluster\",db=\"$db\"})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "redis: {{redis}} role:{{role}}",
+              "legendFormat": "db: {{db}} role:{{role}}",
               "refId": "C",
               "step": 1200
             }
           ],
-          "title": "BDB ram overhead",
+          "title": "DB ram overhead",
           "type": "timeseries"
         },
         {
@@ -4874,15 +4874,15 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum(rate(redis_blocking_writes{bdb=\"$bdb\",cluster=\"$cluster\"}[1m]))",
+              "expr": "sum by(db)(rate(redis_server_blocking_writes{db=\"$db\",cluster=\"$cluster\"}[1m]))",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "bdb:{{$bdb}}",
+              "legendFormat": "db:{{db}}",
               "refId": "A",
               "step": 1200
             }
           ],
-          "title": "BDB sum redis blocking writes",
+          "title": "DB sum redis blocking writes",
           "type": "timeseries"
         },
         {
@@ -4970,15 +4970,15 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum(redis_big_inst_avg_read_io_queue{bdb=\"$bdb\",cluster=\"$cluster\"})",
+              "expr": "sum by (db)(redis_server_big_inst_avg_read_io_queue{db=\"$db\",cluster=\"$cluster\"})",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "bdb:{{$bdb}}",
+              "legendFormat": "db:{{db}}",
               "refId": "A",
               "step": 1200
             }
           ],
-          "title": "BDB sum redis big inst avg read io queue",
+          "title": "DB sum redis big inst avg read io queue",
           "type": "timeseries"
         },
         {
@@ -5066,15 +5066,15 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum(redis_big_inst_avg_write_io_queue{bdb=\"$bdb\",cluster=\"$cluster\"})",
+              "expr": "sum by (db)(redis_server_big_inst_avg_write_io_queue{db=\"$db\",cluster=\"$cluster\"})",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "bdb:{{$bdb}}",
+              "legendFormat": "db:{{db}}",
               "refId": "A",
               "step": 1200
             }
           ],
-          "title": "BDB sum redis big inst avg write io queue",
+          "title": "DB sum redis big inst avg write io queue",
           "type": "timeseries"
         },
         {
@@ -5162,7 +5162,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_objs_flash{bdb=\"$bdb\",cluster=\"$cluster\"}",
+              "expr": "sum by(db)(redis_server_bigdb_disk{db=\"$db\",cluster=\"$cluster\", role=\"master\"})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -5176,7 +5176,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_objs_ram{bdb=\"$bdb\",cluster=\"$cluster\"}",
+              "expr": "sum by (db)(redis_server_bigdb_ram{db=\"$db\",cluster=\"$cluster\", role=\"master\"})",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "objects in ram (sum of all master shards)",
@@ -5184,7 +5184,7 @@
               "step": 1200
             }
           ],
-          "title": "BDB objects(values) in FLASH",
+          "title": "DB objects(values) in FLASH",
           "type": "timeseries"
         },
         {
@@ -5248,7 +5248,7 @@
               {
                 "matcher": {
                   "id": "byRegexp",
-                  "options": "/BDB.*/"
+                  "options": "/DB.*/"
                 },
                 "properties": [
                   {
@@ -5321,12 +5321,12 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_objs_ram{bdb=\"$bdb\",cluster=\"$cluster\"} / bdb_no_of_keys{bdb=\"$bdb\",cluster=\"$cluster\"} ",
+              "expr": "sum by(db,cluster)(redis_server_bigdb_ram{db=\"$db\",cluster=\"$cluster\", role=\"master\"}) / sum by (db,cluster)(redis_server_db_keys{db=\"$db\",cluster=\"$cluster\",role=\"master\"})",
               "format": "time_series",
               "hide": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "BDB % values in RAM (masters)",
+              "legendFormat": "DB % values in RAM (masters)",
               "metric": "",
               "refId": "A",
               "step": 1200
@@ -5336,7 +5336,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg((max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster)) / on (redis,bdb,cluster) redis_db0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"})",
+              "expr": "avg((max(redis_server_bigdb_ram{db=\"$db\",cluster=\"$cluster\",role=\"master\"}) by (redis,db,cluster)) / on (redis,db,cluster) redis_server_db_keys{db=\"$db\",cluster=\"$cluster\",role=\"master\"})",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -5350,7 +5350,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg((max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"}) by (redis,bdb,cluster)) / on (redis,bdb,cluster) redis_db0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"})",
+              "expr": "avg((max(redis_server_bigdb_ram{db=\"$db\",cluster=\"$cluster\",role=\"slave\"}) by (redis,db,cluster)) / on (redis,db,cluster) redis_server_db_keys{db=\"$db\",cluster=\"$cluster\",role=\"slave\"})",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -5364,12 +5364,12 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "topk(1, min((max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster)) / on (redis,bdb,cluster) redis_db0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (redis) * -1) *-1",
+              "expr": "topk(1, min((max(redis_server_bigdb_ram{db=\"$db\",cluster=\"$cluster\",role=\"master\"}) by (redis,db,cluster)) / on (redis,db,cluster) redis_server_db_keys{db=\"$db\",cluster=\"$cluster\",role=\"master\"}) by (redis) * -1) *-1",
               "format": "time_series",
               "hide": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "lowest master shard % values in RAM - redsi:{{redis}}",
+              "legendFormat": "lowest master shard % values in RAM - redis:{{redis}}",
               "refId": "F",
               "step": 1200
             },
@@ -5378,10 +5378,10 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "topk(1, min((max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"}) by (redis,bdb,cluster)) / on (redis,bdb,cluster) redis_db0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"}) by (redis) * -1) *-1",
+              "expr": "topk(1, min((max(redis_server_bigdb_ram{db=\"$db\",cluster=\"$cluster\",role=\"slave\"}) by (redis,db,cluster)) / on (redis,db,cluster) redis_server_db_keys{db=\"$db\",cluster=\"$cluster\",role=\"slave\"}) by (redis) * -1) *-1",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "lowest slave shard % values in RAM - redsi:{{redis}}",
+              "legendFormat": "lowest slave shard % values in RAM - redis:{{redis}}",
               "refId": "G",
               "step": 1200
             },
@@ -5390,7 +5390,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "min(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"} / redis_bigdb0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"})",
+              "expr": "min(redis_server_bigdb_ram{db=\"$db\",cluster=\"$cluster\",role=\"master\"} / redis_server_db_keys{db=\"$db\",cluster=\"$cluster\",role=\"master\"})",
               "format": "time_series",
               "hide": true,
               "intervalFactor": 2,
@@ -5403,7 +5403,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "min(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} / redis_bigdb0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"})",
+              "expr": "min(redis_server_bigdb_ram{db=\"$db\",cluster=\"$cluster\",role=\"slave\"} / redis_server_db_keys{db=\"$db\",cluster=\"$cluster\",role=\"slave\"})",
               "format": "time_series",
               "hide": true,
               "intervalFactor": 2,
@@ -5412,7 +5412,7 @@
               "step": 10
             }
           ],
-          "title": "BDB % values in RAM",
+          "title": "DB % values in RAM",
           "type": "timeseries"
         },
         {
@@ -5531,12 +5531,12 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_bigstore_objs_ram{bdb=\"$bdb\",cluster=\"$cluster\"}",
+              "expr": "sum by (cluster,db,redis) (redis_server_bigdb_ram{db=\"$db\",cluster=\"$cluster\",role=\"master\"})",
               "format": "time_series",
               "hide": true,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "bdb:{{$bdb}} (sum of masters)",
+              "legendFormat": "db:{{db}} (sum of masters)",
               "metric": "",
               "refId": "A",
               "step": 10
@@ -5546,7 +5546,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg(max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"}) by (redis,bdb,cluster))",
+              "expr": "avg(max(redis_server_bigdb_ram{db=\"$db\",cluster=\"$cluster\",role=\"slave\"}))",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -5560,7 +5560,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "avg(max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster))",
+              "expr": "avg(max(redis_server_bigdb_ram{db=\"$db\",cluster=\"$cluster\",role=\"master\"}))",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -5574,7 +5574,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "min(max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"}) by (redis,bdb,cluster))",
+              "expr": "avg(max(redis_server_bigdb_ram{db=\"$db\",cluster=\"$cluster\",role=\"slave\"}))",
               "format": "time_series",
               "hide": true,
               "interval": "",
@@ -5588,7 +5588,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "min(max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster))",
+              "expr": "avg(max(redis_server_bigdb_ram{db=\"$db\",cluster=\"$cluster\",role=\"master\"}))",
               "format": "time_series",
               "hide": true,
               "interval": "",
@@ -5602,7 +5602,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "topk(1, min(max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"}) by (redis,bdb,cluster) < on(cluster,bdb,redis) redis_db0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"slave\"} ) by (bdb, redis) * -1) * -1",
+              "expr": "min by(redis)(redis_server_bigdb_ram{role=\"slave\", cluster=\"$cluster\", db=\"$db\"})",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -5616,7 +5616,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "topk(1, min(max(redis_bigdb0_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"} or redis_bigdb_ram{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (redis,bdb,cluster) < on(cluster,bdb,redis) redis_db0_keys{bdb=\"$bdb\",cluster=\"$cluster\",role=\"master\"}) by (bdb, redis) * -1) * -1",
+              "expr": "min by(redis)(redis_server_bigdb_ram{role=\"master\", cluster=\"$cluster\", db=\"$db\"})",
               "format": "time_series",
               "hide": false,
               "interval": "",
@@ -5714,16 +5714,16 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_ram_dirty_evictions{bdb=\"$bdb\",cluster=\"$cluster\"}",
+              "expr": "redis_server_ram_dirty_evictions{db=\"$db\",cluster=\"$cluster\", role=\"master\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "bdb:{{$bdb}}",
+              "legendFormat": "db:{{db}}",
               "metric": "",
               "refId": "A",
               "step": 1200
             }
           ],
-          "title": "BDB dirty RAM evictions",
+          "title": "DB dirty RAM evictions",
           "type": "timeseries"
         },
         {
@@ -5811,16 +5811,16 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "bdb_big_ram_clean_evictions{bdb=\"$bdb\",cluster=\"$cluster\"}",
+              "expr": "redis_server_ram_clean_evictions{db=\"$db\",cluster=\"$cluster\", role=\"master\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "bdb:{{$bdb}}",
+              "legendFormat": "db:{{db}}",
               "metric": "",
               "refId": "A",
               "step": 1200
             }
           ],
-          "title": "BDB clean RAM evictions",
+          "title": "DB clean RAM evictions",
           "type": "timeseries"
         },
         {
@@ -5934,7 +5934,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum(delta(redis_rocks_comp_started{bdb=\"$bdb\", cluster=\"$cluster\"}[1m]))",
+              "expr": "sum(delta(redis_server_rocks_comp_started{db=\"$db\", cluster=\"$cluster\", role=\"master\"}[1m]))",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "compactions",
@@ -5947,7 +5947,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum(delta(redis_rocks_flush_started{bdb=\"$bdb\", cluster=\"$cluster\"}[1m]))",
+              "expr": "sum(delta(redis_server_rocks_flush_started{db=\"$db\", cluster=\"$cluster\"}[1m]))",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -5960,7 +5960,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum(delta(redis_rocks_flush_writes_slowdown{bdb=\"$bdb\", cluster=\"$cluster\"}[$aggregation]))",
+              "expr": "sum(delta(redis_server_rocks_flush_writes_slowdown{db=\"$db\", cluster=\"$cluster\"}[$aggregation]))",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -5974,7 +5974,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum(delta(redis_rocks_flush_writes_stop{bdb=\"$bdb\", cluster=\"$cluster\"}[$aggregation]))",
+              "expr": "sum(delta(redis_server_rocks_flush_writes_stop{db=\"$db\", cluster=\"$cluster\"}[$aggregation]))",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -5997,7 +5997,7 @@
           "refId": "A"
         }
       ],
-      "title": "$bdb : shard $shard : ROF Metrics",
+      "title": "$db : shard $shard : ROF Metrics",
       "type": "row"
     }
   ],
@@ -6036,53 +6036,6 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "bdb_conns{cluster=\"$cluster\"}",
-        "hide": 0,
-        "includeAll": false,
-        "label": "bdb_database",
-        "multi": false,
-        "name": "bdb",
-        "options": [],
-        "query": {
-          "query": "bdb_conns{cluster=\"$cluster\"}",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "/bdb_name=\"(?<text>[^\"]+)|bdb=\"(?<value>[^\"]+)/g",
-        "skipUrlSync": false,
-        "sort": 1,
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "label_values(redis_up{bdb=\"$bdb\", cluster=\"$cluster\", redis=\"$shard\"}, status)",
-        "hide": 2,
-        "includeAll": false,
-        "multi": false,
-        "name": "status",
-        "options": [],
-        "query": {
-          "query": "label_values(redis_up{bdb=\"$bdb\", cluster=\"$cluster\", redis=\"$shard\"}, status)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
         "definition": "",
         "hide": 2,
         "includeAll": false,
@@ -6090,7 +6043,7 @@
         "name": "newStatus",
         "options": [],
         "query": {
-          "query": "label_values(bdb_up{bdb=\"$bdb\", cluster=\"$cluster\"}, status)",
+          "query": "label_values(redis_server_connected_clients{db=\"$db\", cluster=\"$cluster\"}, status)",
           "refId": "Redis-Enterprise-newStatus-Variable-Query"
         },
         "refresh": 1,

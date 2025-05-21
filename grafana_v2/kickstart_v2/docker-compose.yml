@@ -1,8 +1,11 @@
 services:
   prometheus:
     image: prom/prometheus:latest
+    links:
+      - alertmanager
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ../../prometheus_v2/rules/alerts.yml
     ports:
       - "9090:9090"
     networks:
@@ -16,6 +19,14 @@ services:
       - prometheus
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    networks:
+      kickstart:
+        ipv4_address: "172.27.2.3"
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    ports:
+      - 9093:9093  
     networks:
       kickstart:
         ipv4_address: "172.27.2.3"

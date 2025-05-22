@@ -5,7 +5,7 @@ services:
       - alertmanager
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - ../../prometheus_v2/rules/alerts.yml
+      - ../../prometheus_v2/rules/alerts.yml:/etc/prometheus/rules/alerts.yml
     ports:
       - "9090:9090"
     networks:

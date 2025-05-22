@@ -656,7 +656,7 @@ metrics:
   metadata:
     displayName: Node Average Latency
     description: Average latency of requests handled by endpoints on node (seconds); returned only when there is traffic
-    unit: Second
+    unit: Millisecond
     tags:
     - "Redis"
     - "EF2"

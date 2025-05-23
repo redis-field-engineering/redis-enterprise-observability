@@ -29,7 +29,7 @@ longer be necessary.
 
 * Python 3.7+ installed on your system
 * A Dynatrace tenant
-* An API token with permissions: `extensions.read`, `extensions.write`, `extensions.manage`, and `metrics.ingest`
+* An API token with permissions: `PaaS integration - Installer download`, `Write extension environment configurations`, `Read extension environment configurations`, `Write extension monitoring configurations`, `Read extension monitoring configurations`, `Write extensions`, `Read extensions`
 * Redis Enterprise Software or Redis Cloud with metrics exporter enabled on port 8070
 
 ==== Step-by-Step Installation

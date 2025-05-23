@@ -60,6 +60,8 @@ dt extension generate-developer-pem -o developer.pem --ca-crt ca.pem --ca-key ca
 mv ca.pem ca.key developer.pem developer.key secrets/
 ----
 
+When You finish creating the ca.pem, ensure you upload it to your Dynatrace credentials vault by following these link:https://docs.dynatrace.com/docs/ingest-from/extensions20/sign-extension#add-cert[instructions]
+
 3. Assemble, sign, and upload the extension:
 +
 [source,bash]

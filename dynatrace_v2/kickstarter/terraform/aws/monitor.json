@@ -17,13 +17,6 @@
                 "scheme": "none",
                 "skipVerifyHttps": true
               }
-            },
-            {
-              "url": "<SECONDARY_ENDPOINT>",
-              "authentication": {
-                "scheme": "none",
-                "skipVerifyHttps": true
-              }
             }
           ]
         }

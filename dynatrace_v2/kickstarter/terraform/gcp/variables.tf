@@ -72,14 +72,9 @@ variable "developer_pem" {
 #   type        = string
 # }
 
-variable "primary_endpoint" {
-  description = "Primary endpoint to monitor"
-  type        = string  
-}
-
-variable "secondary_endpoint" {
-  description = "Secondary endpoint to monitor"
-  type        = string  
+variable "redis_fqdn" {
+  description = "The fully qualified domain name (FQDN) of the Redis cluster"
+  type        = string
 }
 
 variable "extension_version" {

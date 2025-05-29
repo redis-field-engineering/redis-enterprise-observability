@@ -1,0 +1,23 @@
+# AWS Configuration
+aws_region = "us-east-1"
+aws_ami_id = "ami-xxxxxxxxxxxxxxxxx"  # Ubuntu 20.04 LTS AMI ID for your region
+aws_key_name = "your-ec2-key-name"
+
+# Network Configuration
+vpc_name = "your-vpc-name"
+subnet_name = "your-subnet-name"
+aws_security_group_name = "your-security-group-name"
+
+# DNS Configuration (optional)
+dns_zone_id = ""  # Route53 hosted zone ID
+subdomain = ""    # Domain for Prometheus instance
+
+# Redis Configuration
+redis_fqdn = "your-redis-cluster.fqdn.com"
+
+# New Relic Configuration
+newrelic_bearer_token = "your-newrelic-ingest-api-token"
+newrelic_service_name = "your-service-name"
+
+# SSH Configuration
+ssh_private_key = "~/path/to/your/private-key.pem"

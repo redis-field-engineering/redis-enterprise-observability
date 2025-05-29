@@ -1,0 +1,23 @@
+# GCP Configuration
+project = ""
+region = "us-central1"
+zone = "us-central1-a"
+
+# Network Configuration
+network = "your-vpc-network-name"
+subnet = "your-subnet-name"
+
+# DNS Configuration (optional)
+dns_zone_name = ""     # Cloud DNS managed zone name
+dns_subdomain = ""     # Domain for Prometheus instance
+
+# Redis Configuration
+redis_fqdn = "your-redis-cluster.fqdn.com"
+
+# New Relic Configuration
+newrelic_bearer_token = "your-newrelic-ingest-api-token"
+newrelic_service_name = "your-service-name"
+
+# SSH Configuration
+gcp_user_name = "your-gcp-username"
+ssh_private_key = "~/path/to/your/private-key"

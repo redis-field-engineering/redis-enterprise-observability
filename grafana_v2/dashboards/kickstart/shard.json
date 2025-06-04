@@ -6026,14 +6026,14 @@
             "type": "prometheus",
             "name": "prometheus-demo"
           },
-          "definition": "label_values(redis_up{bdb=\"$bdb\", cluster=\"$cluster\", redis=\"$shard\"}, status)",
+          "definition": "label_values(redis_server_up{bdb=\"$bdb\", cluster=\"$cluster\", redis=\"$shard\"}, status)",
           "hide": 2,
           "includeAll": false,
           "multi": false,
           "name": "status",
           "options": [],
           "query": {
-            "query": "label_values(redis_up{bdb=\"$bdb\", cluster=\"$cluster\", redis=\"$shard\"}, status)",
+            "query": "label_values(redis_server_up{bdb=\"$bdb\", cluster=\"$cluster\", redis=\"$shard\"}, status)",
             "refId": "StandardVariableQuery"
           },
           "refresh": 1,

@@ -135,7 +135,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "count(redis_up{cluster=\"$cluster\"})",
+          "expr": "count(redis_server_up{cluster=\"$cluster\"})",
           "legendFormat": "count",
           "range": true,
           "refId": "A"

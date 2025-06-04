@@ -6076,7 +6076,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(redis_up{cluster=\"$cluster\", db=\"$db\"}, redis)",
+        "definition": "label_values(redis_server_up{cluster=\"$cluster\", db=\"$db\"}, redis)",
         "hide": 0,
         "includeAll": false,
         "label": "shard",
@@ -6084,7 +6084,7 @@
         "name": "shard",
         "options": [],
         "query": {
-          "query": "label_values(redis_up{cluster=\"$cluster\", db=\"$db\"}, redis)",
+          "query": "label_values(redis_server_up{cluster=\"$cluster\", db=\"$db\"}, redis)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,

@@ -72,7 +72,7 @@ resource "null_resource" "upload_extension" {
       source .dt_venv/bin/activate
       pip install dt-cli
       base_dir=$(pwd)
-      cd ../..
+      cd ../../..
       dt extension assemble
       dt extension sign --key $base_dir/${var.developer_pem}
       dt extension upload --tenant-url ${local.dynatrace_tenant_url} --api-token ${var.dynatrace_api_token} bundle.zip
@@ -88,7 +88,7 @@ resource "null_resource" "upload_extension" {
     
   }
   triggers = {
-    extension_hash = filesha256("../../src/extension.yaml")
+    extension_hash = filesha256("../../../src/extension.yaml")
     dynatrace_api_token = var.dynatrace_api_token
     dynatrace_tenant_url = local.dynatrace_tenant_url
   }
@@ -116,15 +116,19 @@ resource "null_resource" "install_ca_pem" {
 }
 
 
+locals {
+  primary_endpoint = "https://${var.redis_fqdn}:8070/v2"
+}
+
 resource "null_resource" "create_monitoring_configuration" {
   depends_on = [ google_compute_instance.activegate, null_resource.upload_extension, null_resource.install_ca_pem, null_resource.install_activegate ]
   provisioner "local-exec" {
-    command = "./start-monitoring.sh ${var.primary_endpoint} ${var.secondary_endpoint} ${var.extension_version} ${var.dynatrace_api_token} ${var.tenant_id}"
+    command = "../scripts/start-monitoring.sh ${local.primary_endpoint} ${var.extension_version} ${var.dynatrace_api_token} ${var.tenant_id}"
   } 
 
   provisioner "local-exec" {
     when = destroy    
-    command = "./stop-monitoring.sh ${self.triggers.token} ${self.triggers.tenant_id}"
+    command = "../scripts/stop-monitoring.sh ${self.triggers.token} ${self.triggers.tenant_id}"
   }
 
   triggers = {

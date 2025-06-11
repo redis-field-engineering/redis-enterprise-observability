@@ -1,0 +1,20 @@
+# GCP Configuration
+project = "your-gcp-project-id"
+region  = "us-central1"
+zone    = "us-central1-a"
+network = "your-vpc-network"
+subnet  = "your-subnet"
+
+# SSH Configuration
+ssh_private_key = "/path/to/your/ssh/private/key"
+gcp_user_name   = "your-gcp-username"
+
+# Datadog Configuration
+datadog_site    = "datadoghq.com"
+datadog_api_key = "your-datadog-api-key"
+
+# Redis Configuration
+redis_fqdn = "your-redis-cluster.example.com"
+
+# Optional: Override default integration name
+datadog_integration_name = "redis_enterprise_prometheus"

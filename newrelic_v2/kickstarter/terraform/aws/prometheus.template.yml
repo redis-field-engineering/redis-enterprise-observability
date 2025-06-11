@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 30s
+
+scrape_configs:
+  - job_name: 'redis-enterprise'
+    scrape_interval: 30s
+    scrape_timeout: 30s
+    metrics_path: /v2
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+    static_configs:
+      - targets: ['${redis_fqdn}:8070']
+
+remote_write:
+  - url: https://metric-api.newrelic.com/prometheus/v1/write?prometheus_server=${newrelic_service_name}
+    authorization:
+      credentials: ${newrelic_bearer_token}

@@ -1,0 +1,8 @@
+init_config:
+
+instances:
+
+  - openmetrics_endpoint: https://${REDIS_FQDN}:8070/v2
+    tls_verify: false
+    type_overrides:
+      endpoint_client_connections: gauge

@@ -6033,7 +6033,7 @@
           "name": "status",
           "options": [],
           "query": {
-            "query": "label_values(redis_server_up{bdb=\"$bdb\", cluster=\"$cluster\", redis=\"$shard\"}, status)",
+            "query": "label_values(redis_server_up{db=\"$db\", cluster=\"$cluster\", redis=\"$shard\"}, status)",
             "refId": "StandardVariableQuery"
           },
           "refresh": 1,

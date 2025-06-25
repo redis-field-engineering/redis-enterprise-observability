@@ -121,6 +121,7 @@ resource "google_compute_firewall" "redispeer_allow_egress" {
 
 
 resource "rediscloud_subscription_peering" "redispeer-sub-vpc-peering" {
+    count   = var.existing_vpc_id == null ? 1 : 0
     subscription_id = var.subscription_id
     provider_name="GCP"
     gcp_project_id = var.gcp_project
@@ -128,9 +129,10 @@ resource "rediscloud_subscription_peering" "redispeer-sub-vpc-peering" {
 }
 
 resource "google_compute_network_peering" "redispeer-gcp-vpc-peering" {
+    count   = var.existing_vpc_id == null ? 1 : 0
     name = "redispeer-gcp-vpc-peering"
     network = local.vpc_id
-    peer_network = "https://www.googleapis.com/compute/v1/projects/${rediscloud_subscription_peering.redispeer-sub-vpc-peering.gcp_redis_project_id}/global/networks/${rediscloud_subscription_peering.redispeer-sub-vpc-peering.gcp_redis_network_name}"
+    peer_network = "https://www.googleapis.com/compute/v1/projects/${rediscloud_subscription_peering.redispeer-sub-vpc-peering[0].gcp_redis_project_id}/global/networks/${rediscloud_subscription_peering.redispeer-sub-vpc-peering[0].gcp_redis_network_name}"
 }
 
 resource "google_compute_instance" "redispeerr-vm"{

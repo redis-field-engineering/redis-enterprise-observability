@@ -28,11 +28,6 @@ variable "redis_cloud_api_key" {
   description = "The Redis Cloud API key"
 }
 
-variable "sub_name" {
-    type      = string
-    description = "The name of the subscription"
-}
-
 variable "db_name" {
     type      = string
     description = "The name of the database"

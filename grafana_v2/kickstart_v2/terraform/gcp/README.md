@@ -5,7 +5,7 @@ The Redis Cloud Grafana Kickstarter automates the deployment of a complete obser
 ## What This Kickstarter Does
 
 - **Network Infrastructure**: Creates a new VPC and subnet in GCP (or uses existing ones if provided)
-- **VPC Peering**: Establishes secure peering between your GCP VPC and Redis Cloud Pro subscription
+- **VPC Peering**: Establishes secure peering between your GCP VPC and Redis Cloud Pro subscription (If you bring your own VCP it's assumed it's already peered)
 - **Monitoring Stack**: Deploys a VM with Prometheus and Grafana pre-configured for Redis monitoring
 - **Dashboard Integration**: Automatically installs Redis Cloud dashboards from this repository
 - **SSL & Domain Setup**: Configures nginx reverse proxy with Let's Encrypt SSL certificates

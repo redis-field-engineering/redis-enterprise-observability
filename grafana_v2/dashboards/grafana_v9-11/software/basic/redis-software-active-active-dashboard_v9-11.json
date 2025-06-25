@@ -1064,7 +1064,7 @@
     "list": [
       {
         "current": {},
-        "definition": "label_values(redis_up,cluster)",
+        "definition": "label_values(redis_server_up,cluster)",
         "description": "The name of the deployed cluster",
         "hide": 0,
         "includeAll": false,
@@ -1073,7 +1073,7 @@
         "name": "cluster",
         "options": [],
         "query": {
-          "query": "label_values(redis_up,cluster)",
+          "query": "label_values(redis_server_up,cluster)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,

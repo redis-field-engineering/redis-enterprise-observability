@@ -1,6 +1,14 @@
 services:
   prometheus:
     image: prom/prometheus:latest
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=7d'
+      - '--storage.tsdb.retention.size=10GB'
+      - '--web.enable-lifecycle'
     links:
       - alertmanager
     volumes:
@@ -26,7 +34,7 @@ services:
     image: prom/alertmanager:latest
     container_name: alertmanager
     ports:
-      - 9093:9093  
+      - 9093:9093
     networks:
       kickstart:
         ipv4_address: "172.27.2.4"

@@ -16,13 +16,126 @@ To collect metrics in Dynatrace from Redis Enterprise Software or Redis Cloud, u
 
 == Installation
 
-The Dyntrace v2.0 Extensions support Prometheus metrics, and as such we have created the necessary extension file and dashboards so that this option is available. At this time Dynatrace are still testing their signing mechanism so that this extension is not available directly from them, but will have to be built and signed according to their instructions. They have indicated that they will sign 3rd party extensions starting in Q1 2024, at which point this process will no longer be necessary.
+The Dynatrace v2.0 Extensions support Prometheus metrics, and as such we have created the necessary extension file and dashboards so that this option is available. At this time Dynatrace are still testing their signing mechanism so that this extension is not available directly from them, but will have to be built and signed according to their instructions. They have indicated that they will sign 3rd party extensions starting in Q1 2024, at which point this process will no longer be necessary.
 
 Clone the repository and cd into its root folder ('redis-enterprise-dynatrace-observability'). The contents are already in the required format; a 'src' directory containing a .yml file and a folder containing .json dashboard files.
 
 Follow the instructions here:
 
 https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/sign-extension
+
+=== Kubernetes Deployments
+
+**Important:** The Dynatrace Kubernetes operator is not compatible with the Extensions V2 framework. If you're running Redis Enterprise in Kubernetes, you have two alternative options:
+
+==== Option 1: Kubernetes Service with Dynatrace Annotations
+
+This approach creates a new service within your Kubernetes cluster with Dynatrace annotations for Prometheus scraping.
+
+===== Prerequisites
+* Dynatrace Kubernetes operator installed in your cluster
+* Prometheus scraping enabled in Dynatrace Kubernetes settings
+
+===== Steps
+
+1. **Install Dynatrace Operator**
++
+Follow the official Dynatrace operator installation guide:
++
+[source,bash]
+----
+# Install Dynatrace operator according to Dynatrace documentation
+kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/latest/download/kubernetes.yaml
+----
+
+2. **Enable Prometheus Scraping in Dynatrace**
++
+Configure Prometheus metric ingestion in your Dynatrace Kubernetes settings according to the official documentation:
+https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/container-platform-monitoring/kubernetes-monitoring/monitor-prometheus-metrics
+
+3. **Create Annotated Service for Redis Metrics**
++
+Apply the following service configuration:
++
+[source,yaml]
+----
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-metrics
+  namespace: redis-enterprise
+  annotations:
+    metrics.dynatrace.com/scrape: "true"
+    metrics.dynatrace.com/port: "8070"
+    metrics.dynatrace.com/path: "/metrics"
+    metrics.dynatrace.com/secure: "true"
+    metrics.dynatrace.com/insecure_skip_verify: "true"
+spec:
+  type: ClusterIP
+  selector:
+    app: redis-enterprise
+    redis.io/role-master: "1" # Point only at master node
+  ports:
+    - name: metrics
+      port: 8070
+      targetPort: 8070
+----
+
+4. **Verify Metrics Collection**
++
+Check that Dynatrace is successfully scraping metrics from your Redis Enterprise deployment through the Kubernetes operator.
+
+==== Option 2: External VM with ActiveGate
+
+This approach involves deploying ActiveGate on a VM outside your Kubernetes cluster and exposing the Redis Enterprise metrics endpoint.
+
+===== Prerequisites
+* A VM outside your Kubernetes cluster with network access to the cluster
+* ActiveGate installed on the VM
+* Network connectivity between the ActiveGate VM and your Kubernetes cluster
+
+===== Steps
+
+1. **Deploy ActiveGate on External VM**
++
+Follow the standard ActiveGate installation process on your VM:
++
+[source,bash]
+----
+# Download and install ActiveGate according to Dynatrace documentation
+# https://docs.dynatrace.com/docs/ingest-from/dynatrace-activegate/installation
+----
+
+2. **Expose Redis Enterprise Metrics Service**
++
+Create a NodePort service to expose the redis-enterprise-cluster-prom service:
++
+[source,yaml]
+----
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-metrics-external
+  namespace: redis-enterprise
+spec:
+  type: NodePort
+  selector:
+    app: redis-enterprise
+    redis.io/role-master: "1"
+  ports:
+    - name: metrics
+      port: 8070
+      targetPort: 8070
+      nodePort: 30070  # Choose an available port in the NodePort range
+----
+
+3. **Configure ActiveGate**
++
+Configure your ActiveGate to scrape metrics from the exposed NodePort service using the external IP of your Kubernetes nodes and the NodePort (e.g., `https://KUBERNETES_NODE_IP:30070/metrics`).
+
+4. **Setup Extension**
++
+Follow the standard extension setup process using the External VM's ActiveGate.
 
 == Dashboards
 

@@ -43,10 +43,10 @@ locals {
   vpc_name   = var.existing_vpc_name != null ? var.existing_vpc_name : google_compute_network.redispeer_test_vpc[0].name
   subnet_id  = var.existing_subnet_id != null ? var.existing_subnet_id : google_compute_subnetwork.redispeer_test_subnet[0].id
 
-  # Extract FQDN from Redis Cloud database public_endpoint
-  # Format: redis-18738.c41372.us-central1-mz.gcp.cloud.rlrcp.com:18738
-  # Extract: c41372.us-central1-mz.gcp.cloud.rlrcp.com
-  redis_db_primary_fqdn = regex("^[^.]+\\.(.+):\\d+$", data.rediscloud_database.redis_db.public_endpoint)[0]
+  # Extract FQDN from Redis Cloud database private_endpoint
+  # Format: redis-18738.internal.c41372.us-central1-mz.gcp.cloud.rlrcp.com:18738
+  # Extract: internal.c41372.us-central1-mz.gcp.cloud.rlrcp.com
+  redis_db_primary_fqdn = regex("^[^.]+\\.(.+):\\d+$", data.rediscloud_database.redis_db.private_endpoint)[0]
 }
 
 # Conditionally create VPC only if not using existing one

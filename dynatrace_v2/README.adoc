@@ -148,6 +148,8 @@ spec:
   type: ClusterIP
   selector:
     app: redis-enterprise
+    redis.io/role: node
+    redis.io/cluster: redis-enterprise-cluster     # or whatever REC name in use
     redis.io/role-master: "1" # Point only at master node
   ports:
     - name: metrics

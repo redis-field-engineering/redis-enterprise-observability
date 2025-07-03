@@ -1,0 +1,140 @@
+name: Release Observability Artifacts
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set release version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Package Grafana artifacts
+        run: |
+          mkdir -p release-artifacts
+          
+          # Package Grafana v1 dashboards
+          cd grafana
+          tar -czf ../release-artifacts/grafana-dashboards-v1.tar.gz dashboards/ alerts/
+          zip -r ../release-artifacts/grafana-dashboards-v1.zip dashboards/ alerts/
+          cd ..
+          
+          # Package Grafana v2 dashboards
+          cd grafana_v2
+          tar -czf ../release-artifacts/grafana-dashboards-v2.tar.gz dashboards/ alerts/
+          zip -r ../release-artifacts/grafana-dashboards-v2.zip dashboards/ alerts/
+          cd ..
+          
+      - name: Package Dynatrace artifacts
+        run: |
+          # Package Dynatrace v1
+          cd dynatrace
+          tar -czf ../release-artifacts/dynatrace-extension-v1.tar.gz src/
+          zip -r ../release-artifacts/dynatrace-extension-v1.zip src/
+          cd ..
+          
+          # Package Dynatrace v2
+          cd dynatrace_v2
+          tar -czf ../release-artifacts/dynatrace-extension-v2.tar.gz src/
+          zip -r ../release-artifacts/dynatrace-extension-v2.zip src/
+          cd ..
+          
+      - name: Package Prometheus artifacts
+        run: |
+          # Package Prometheus v1 rules
+          cd prometheus
+          tar -czf ../release-artifacts/prometheus-rules-v1.tar.gz rules/
+          zip -r ../release-artifacts/prometheus-rules-v1.zip rules/
+          cd ..
+          
+          # Package Prometheus v2 rules
+          cd prometheus_v2
+          tar -czf ../release-artifacts/prometheus-rules-v2.tar.gz rules/
+          zip -r ../release-artifacts/prometheus-rules-v2.zip rules/
+          cd ..
+          
+      - name: Package NewRelic artifacts
+        run: |
+          # Package NewRelic v1
+          cd newrelic
+          tar -czf ../release-artifacts/newrelic-dashboards-v1.tar.gz dashboards/ config/
+          zip -r ../release-artifacts/newrelic-dashboards-v1.zip dashboards/ config/
+          cd ..
+          
+          # Package NewRelic v2
+          cd newrelic_v2
+          tar -czf ../release-artifacts/newrelic-dashboards-v2.tar.gz dashboards/ config/
+          zip -r ../release-artifacts/newrelic-dashboards-v2.zip dashboards/ config/
+          cd ..
+          
+      - name: Package Kibana artifacts
+        run: |
+          cd kibana
+          tar -czf ../release-artifacts/kibana-dashboards.tar.gz dashboards/
+          zip -r ../release-artifacts/kibana-dashboards.zip dashboards/
+          cd ..
+          
+      - name: Package Splunk artifacts
+        run: |
+          cd splunk
+          tar -czf ../release-artifacts/splunk-dashboards.tar.gz dashboards/ config/
+          zip -r ../release-artifacts/splunk-dashboards.zip dashboards/ config/
+          cd ..
+          
+      - name: Generate checksums
+        run: |
+          cd release-artifacts
+          sha256sum * > checksums.txt
+          
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.VERSION }}
+          name: Redis Enterprise Observability ${{ steps.version.outputs.VERSION }}
+          body: |
+            ## Redis Enterprise Observability Release ${{ steps.version.outputs.VERSION }}
+            
+            This release contains dashboards and configuration files for various observability platforms:
+            
+            ### =Ê Dashboards & Configurations
+            - **Grafana v1 & v2**: Complete dashboard collections for Redis Enterprise monitoring
+            - **Dynatrace v1 & v2**: Extensions and dashboards for Dynatrace monitoring
+            - **Prometheus v1 & v2**: Alerting rules and configurations
+            - **NewRelic v1 & v2**: Dashboard collections and configurations
+            - **Kibana**: Dashboard configurations for Elasticsearch/Kibana
+            - **Splunk**: Dashboard and configuration files
+            
+            ### =æ Available Formats
+            Each artifact is available in both `.tar.gz` and `.zip` formats.
+            
+            ### = Security
+            All artifacts include SHA256 checksums for verification.
+            
+            For detailed setup instructions, please refer to the README files in each platform directory.
+          files: |
+            release-artifacts/*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

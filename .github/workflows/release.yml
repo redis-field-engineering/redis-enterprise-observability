@@ -1,9 +1,6 @@
 name: Release Observability Artifacts
 
 on:
-  push:
-    branches:
-      - ci-release
   workflow_dispatch:
     inputs:
       version:
@@ -20,21 +17,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Extract version from commit message
-        id: extract
+      - name: Set release version
+        id: version
         run: |
-          COMMIT_MSG="${{ github.event.head_commit.message }}"
-          VERSION=$(echo "$COMMIT_MSG" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+')
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-        
-      # - name: Set release version
-      #   id: version
-      #   run: |
-      #     if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-      #       echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
-      #     else
-      #       echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-      #     fi
+          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
           
       - name: Package Grafana artifacts
         run: |
@@ -113,40 +99,28 @@ jobs:
           cd release-artifacts
           sha256sum * > checksums.txt
           
-      # - name: Create release
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #     tag_name: ${{ steps.version.outputs.VERSION }}
-      #     name: Redis Enterprise Observability ${{ steps.version.outputs.VERSION }}
-      #     body: |
-      #       ## Redis Enterprise Observability Release ${{ steps.version.outputs.VERSION }}
-      #       
-      #       This release contains dashboards and configuration files for various observability platforms:
-      #       
-      #       ### 📊 Dashboards & Configurations
-      #       - **Grafana v1 & v2**: Complete dashboard collections for Redis Enterprise monitoring
-      #       - **Dynatrace v1 & v2**: Extensions and dashboards for Dynatrace monitoring
-      #       - **Prometheus v1 & v2**: Alerting rules and configurations
-      #       - **NewRelic v1 & v2**: Dashboard collections and configurations
-      #       - **Kibana**: Dashboard configurations for Elasticsearch/Kibana
-      #       - **Splunk**: Dashboard and configuration files
-      #       
-      #       ### 📦 Available Formats
-      #       Each artifact is available in both `.tar.gz` and `.zip` formats.
-      #       
-      #       ### 🔑 Security
-      #       All artifacts include SHA256 checksums for verification.
-      #       
-      #       For detailed setup instructions, please refer to the README files in each platform directory.
-      #     files: |
-      #       release-artifacts/*
-      #     draft: false
-      #     prerelease: false
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload release artifacts
-        uses: actions/upload-artifact@v4
+      - name: Create release
+        uses: softprops/action-gh-release@v1
         with:
-          name: redis-enterprise-observability-artifacts
-          path: release-artifacts/
-          retention-days: 30
+          tag_name: ${{ steps.version.outputs.VERSION }}
+          name: Redis Enterprise Observability ${{ steps.version.outputs.VERSION }}
+          body: |
+            ## Redis Enterprise Observability Release ${{ steps.version.outputs.VERSION }}
+            
+            This release contains dashboards and configuration files for various observability platforms:
+            
+            ### 📊 Dashboards & Configurations
+            - **Grafana v1 & v2**: Complete dashboard collections for Redis Enterprise monitoring
+            - **Dynatrace v1 & v2**: Extensions and dashboards for Dynatrace monitoring
+            - **Prometheus v1 & v2**: Alerting rules and configurations
+            - **NewRelic v1 & v2**: Dashboard collections and configurations
+            - **Kibana**: Dashboard configurations for Elasticsearch/Kibana
+            - **Splunk**: Dashboard and configuration files
+            
+            For detailed setup instructions, please refer to the README files in each platform directory.
+          files: |
+            release-artifacts/*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

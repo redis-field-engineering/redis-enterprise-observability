@@ -44,7 +44,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "Number of indexes in each shard. Expected to be equal across all shards",
         "fieldConfig": {
@@ -96,7 +96,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_number_of_indexes{cluster=\"$cluster\", db=\"$db\"}",
@@ -111,7 +111,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The total number of <field> across all indexes in the db.",
         "fieldConfig": {
@@ -188,7 +188,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_text_Text{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -200,7 +200,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_tag_Tag{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -212,7 +212,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_numeric_Numeric{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -224,7 +224,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_geo_Geo{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -236,7 +236,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_geoshape_Geoshape{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -248,7 +248,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_vector_Vector{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -277,7 +277,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The total number of indexes running a background indexing and/or background query processing operation.",
         "fieldConfig": {
@@ -352,7 +352,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_number_of_active_indexes{cluster=\"$cluster\", db=\"$db\"}",
@@ -367,7 +367,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "Total count of indexes currently running a background query process. ",
         "fieldConfig": {
@@ -442,7 +442,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_number_of_active_indexes_running_queries{cluster=\"$cluster\", db=\"$db\"}",
@@ -457,7 +457,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "Total count of indexes currently undergoing a background indexing process.",
         "fieldConfig": {
@@ -532,7 +532,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_number_of_active_indexes_indexing{cluster=\"$cluster\", db=\"$db\"}",
@@ -560,7 +560,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The memory allocated by all indexes in the bdb",
         "fieldConfig": {
@@ -636,7 +636,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "(sum by(db) (redis_server_search_used_memory_indexes{cluster=\"$cluster\", db=\"$db\"})) / (1024 * 1024)",
@@ -647,7 +647,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_used_memory_indexes{cluster=\"$cluster\", db=\"$db\"} / (1024 * 1024)",
@@ -663,7 +663,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The memory usage of the index with the largest memory usage in the shard",
         "fieldConfig": {
@@ -739,7 +739,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_largest_memory_index{cluster=\"$cluster\", db=\"$db\"} / (1024 * 1024)",
@@ -754,7 +754,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The average memory usage of the indexes in the db",
         "fieldConfig": {
@@ -830,7 +830,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "(redis_server_search_used_memory_indexes{cluster=\"$cluster\", db=\"$db\"} / redis_server_search_number_of_indexes{cluster=\"$cluster\", db=\"$db\"}) / (1024 * 1024)",
@@ -858,7 +858,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "fieldConfig": {
           "defaults": {
@@ -933,7 +933,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_total_indexing_time{cluster=\"$cluster\", db=\"$db\"}",
@@ -948,7 +948,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "fieldConfig": {
           "defaults": {
@@ -1023,7 +1023,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "rate(redis_server_search_total_indexing_time{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])",
@@ -1051,7 +1051,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The total number of background queries currently being executed.",
         "fieldConfig": {
@@ -1126,7 +1126,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (redis_server_search_total_active_queries{cluster=\"$cluster\", db=\"$db\"})",
@@ -1137,7 +1137,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "(redis_server_search_total_active_queries{cluster=\"$cluster\", db=\"$db\"})",
@@ -1153,7 +1153,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "Processed Queries Latency (When using cursors, not counting reading from existing cursors)",
         "fieldConfig": {
@@ -1230,7 +1230,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "(sum by(db) (rate(redis_server_search_total_query_execution_time_ms{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])) / sum by(db) (rate(redis_server_search_total_queries_processed{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])))",
@@ -1242,7 +1242,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "((rate(redis_server_search_total_query_execution_time_ms{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])) / (rate(redis_server_search_total_queries_processed{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])))",
@@ -1258,7 +1258,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "Query Commands Latency (including FT.SEARCH, FT.AGGREGATE, and FT.CURSOR READ).",
         "fieldConfig": {
@@ -1336,7 +1336,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "(sum by(db) (rate(redis_server_search_total_query_execution_time_ms{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])) / sum by(db) (rate(redis_server_search_total_query_commands{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])))",
@@ -1348,7 +1348,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "((rate(redis_server_search_total_query_execution_time_ms{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])) /(rate(redis_server_search_total_query_commands{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])))",
@@ -1364,7 +1364,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "server throughput for processed query (When using cursors, not counting reading from existing cursors)",
         "fieldConfig": {
@@ -1440,7 +1440,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (rate(redis_server_search_total_queries_processed{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]))",
@@ -1452,7 +1452,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "(rate(redis_server_search_total_queries_processed{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]))",
@@ -1468,7 +1468,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "server throughput for all query commands (including FT.SEARCH, FT.AGGREGATE, and FT.CURSOR READ).",
         "fieldConfig": {
@@ -1544,7 +1544,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (rate(redis_server_search_total_query_commands{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]))",
@@ -1556,7 +1556,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "(rate(redis_server_search_total_query_commands{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]))",
@@ -1585,7 +1585,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The total number of user and internal cursors, either holding pending results or actively executing FT.CURSOR READ.",
         "fieldConfig": {
@@ -1662,7 +1662,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (redis_server_search_global_total{cluster=\"$cluster\", db=\"$db\"})",
@@ -1674,7 +1674,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_global_total{cluster=\"$cluster\", db=\"$db\"}",
@@ -1689,7 +1689,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The total number of user and internal cursors currently holding pending results.",
         "fieldConfig": {
@@ -1766,7 +1766,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_global_idle{cluster=\"$cluster\", db=\"$db\"}",
@@ -1777,7 +1777,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (redis_server_search_global_total{cluster=\"$cluster\", db=\"$db\"})",
@@ -1806,7 +1806,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The total number of indexing failures recorded across all indexes.",
         "fieldConfig": {
@@ -1881,7 +1881,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_errors_indexing_failures{cluster=\"$cluster\", db=\"$db\"}",
@@ -1892,7 +1892,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (redis_server_search_errors_indexing_failures{cluster=\"$cluster\", db=\"$db\"})",
@@ -1908,7 +1908,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The number of failures in the index with the maximum number of failures per shard.",
         "fieldConfig": {
@@ -1983,7 +1983,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_errors_for_index_with_max_failures{cluster=\"$cluster\", db=\"$db\"}",
@@ -1998,7 +1998,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The total number of indexing failures caused by attempts to index a <field> field in the db.",
         "fieldConfig": {
@@ -2074,7 +2074,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (redis_server_search_fields_text_IndexErrors{cluster=\"$cluster\", db=\"$db\"})",
@@ -2086,7 +2086,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (redis_server_search_fields_tag_IndexErrors{cluster=\"$cluster\", db=\"$db\"})",
@@ -2098,7 +2098,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (redis_server_search_fields_numeric_IndexErrors{cluster=\"$cluster\", db=\"$db\"})",
@@ -2110,7 +2110,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (redis_server_search_fields_geo_IndexErrors{cluster=\"$cluster\", db=\"$db\"})",
@@ -2122,7 +2122,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (redis_server_search_fields_geoshape_IndexErrors{cluster=\"$cluster\", db=\"$db\"})",
@@ -2134,7 +2134,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (redis_server_search_fields_vector_IndexErrors{cluster=\"$cluster\", db=\"$db\"})",
@@ -2163,7 +2163,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The total amount of memory freed by the garbage collectors from indexes.",
         "fieldConfig": {
@@ -2239,7 +2239,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_bytes_collected{cluster=\"$cluster\", db=\"$db\"} / (1024*1024)",
@@ -2250,7 +2250,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "(sum by(db) (redis_server_search_bytes_collected{cluster=\"$cluster\", db=\"$db\"}))/ (1024*1024)",
@@ -2266,7 +2266,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The average amount of memory reclaimed by the garbage collector during each cycle.",
         "fieldConfig": {
@@ -2343,7 +2343,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "rate(redis_server_search_bytes_collected{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) / rate(redis_server_search_total_cycles{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])\n",
@@ -2358,7 +2358,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The average cycle duration of all GC's in each shard",
         "fieldConfig": {
@@ -2435,7 +2435,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "rate(redis_server_search_total_ms_run{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) / rate(redis_server_search_total_cycles{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])\n",
@@ -2450,7 +2450,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The number of documents marked as deleted whose memory has not yet been freed by the garbage collector.",
         "fieldConfig": {
@@ -2526,7 +2526,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_total_docs_not_collected_by_gc{cluster=\"$cluster\", db=\"$db\"}",
@@ -2537,7 +2537,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (redis_server_search_total_docs_not_collected_by_gc{cluster=\"$cluster\", db=\"$db\"})",
@@ -2553,7 +2553,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The number of vectors marked as deleted in the vector indexes that have not yet been cleaned.",
         "fieldConfig": {
@@ -2629,7 +2629,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "redis_server_search_marked_deleted_vectors{cluster=\"$cluster\", db=\"$db\"}",
@@ -2640,7 +2640,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "sum by(db) (redis_server_search_marked_deleted_vectors{cluster=\"$cluster\", db=\"$db\"})",
@@ -2669,7 +2669,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The total number of <field> with sortable attributes across all indexes in the db.",
         "fieldConfig": {
@@ -2746,7 +2746,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_text_Sortable{cluster=\"$cluster\", db=\"$db\"}) or vector(0)\n",
@@ -2758,7 +2758,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_tag_Sortable{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -2770,7 +2770,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_numeric_Sortable{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -2782,7 +2782,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_geo_Sortable{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -2794,7 +2794,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_geoshape_Sortable{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -2810,7 +2810,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The total number of <field> with NoIndex attribute, i.e used for sorting only but not indexed, across all indexes in the db.",
         "fieldConfig": {
@@ -2887,7 +2887,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_text_NoIndex{cluster=\"$cluster\", db=\"$db\"}) or vector(0)\n",
@@ -2899,7 +2899,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_tag_NoIndex{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -2911,7 +2911,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_numeric_NoIndex{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -2923,7 +2923,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_geo_NoIndex{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -2935,7 +2935,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_geoshape_NoIndex{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -2951,7 +2951,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The total number of vector indexes of each algorithm across all indexes in the db.",
         "fieldConfig": {
@@ -3028,7 +3028,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_vector_HNSW{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -3040,7 +3040,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_vector_Flat{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -3056,7 +3056,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "P9E3C2526B28249DF"
+          "uid": "${DS_PROMETHEUS}"
         },
         "description": "The total number of <field> with CASESENSITIVE attribute. Currently, only applicable for TAG fields.",
         "fieldConfig": {
@@ -3133,7 +3133,7 @@
           {
             "datasource": {
               "type": "prometheus",
-              "uid": "P9E3C2526B28249DF"
+              "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
             "expr": "max(redis_server_search_fields_tag_NoIndex{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
@@ -3161,7 +3161,7 @@
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "P9E3C2526B28249DF"
+            "uid": "${DS_PROMETHEUS}"
           },
           "definition": "label_values(cluster)",
           "hide": 0,
@@ -3187,7 +3187,7 @@
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "P9E3C2526B28249DF"
+            "uid": "${DS_PROMETHEUS}"
           },
           "definition": "label_values({cluster=\"$cluster\"}, db)",
           "hide": 0,

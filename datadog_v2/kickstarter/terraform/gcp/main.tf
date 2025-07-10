@@ -18,7 +18,7 @@ resource "google_compute_instance" "datadog-agent-vm"{
     zone = var.zone
     boot_disk {
         initialize_params {
-            image = "ubuntu-os-cloud/ubuntu-2004-lts"
+            image = "ubuntu-2004-focal-v20240731"
         }
     }
 
@@ -41,7 +41,7 @@ resource "null_resource" "install_datadog_agent" {
 
         inline = [
                 "DD_API_KEY=${var.datadog_api_key} DD_SITE=\"${var.datadog_site}\" bash -c \"$(curl -L https://install.datadoghq.com/scripts/install_script_agent7.sh)\"",
-                "git clone https://github.com/redis-field-engineering/datadog-integrations-extras",
+                "git clone ${var.repo}",
                 # install python 3.12
                 "sudo apt update",
                 "sudo apt install -y software-properties-common",
@@ -53,7 +53,7 @@ resource "null_resource" "install_datadog_agent" {
                 "pip install build",
                 "cd datadog-integrations-extras",
                 # "git checkout redis_enterprise_prometheus",
-                "git checkout v2-metrics-extended",
+                "git checkout ${var.branch}",
                 "cd ${var.datadog_integration_name}",
                 "python3.12 -m build --wheel",
                 "sudo datadog-agent integration install -r -w  ./dist/datadog_redis_enterprise_prometheus-2.0.1-py3-none-any.whl",

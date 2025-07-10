@@ -6020,7 +6020,7 @@
         "name": "cluster",
         "options": [],
         "query": {
-          "query": "label_values(node_up,cluster)",
+          "query": "label_values(redis_server_up,cluster)",
           "refId": "Redis-Enterprise-cluster-Variable-Query"
         },
         "refresh": 1,

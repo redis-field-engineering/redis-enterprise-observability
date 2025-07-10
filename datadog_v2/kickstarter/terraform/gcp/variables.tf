@@ -56,3 +56,15 @@ variable "redis_fqdn" {
   description = "The fully qualified domain name (FQDN) of the Redis cluster"
   type        = string
 }
+
+variable "repo" {
+  description = "Git repository URL for the Datadog integration"
+  type        = string
+  default     = "https://github.com/DataDog/integrations-extras"  
+}
+
+variable "branch" {
+  description = "Git branch to checkout for the Datadog integration"
+  type        = string
+  default     = "master"  
+}

@@ -1,6 +1,8 @@
 name: Release Observability Artifacts
 
 on:
+  branches:
+      - ci-release
   workflow_dispatch:
     inputs:
       version:
@@ -17,110 +19,148 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set release version
-        id: version
+      - name: Extract version from commit message
+        id: extract
         run: |
-          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          VERSION=$(echo "$COMMIT_MSG" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+        
+      # - name: Set release version
+      #   id: version
+      #   run: |
+      #     echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
           
       - name: Package Grafana artifacts
         run: |
           mkdir -p release-artifacts
           
-          # Package Grafana v1 dashboards
-          cd grafana
-          tar -czf ../release-artifacts/grafana-dashboards-v1.tar.gz dashboards/ alerts/
-          zip -r ../release-artifacts/grafana-dashboards-v1.zip dashboards/ alerts/
-          cd ..
+          # Create combined Grafana package with both v1 and v2
+          mkdir -p temp-grafana/v1 temp-grafana/v2
+          cp -r grafana/dashboards grafana/alerts temp-grafana/v1/
+          cp -r grafana_v2/dashboards grafana_v2/alerts temp-grafana/v2/
           
-          # Package Grafana v2 dashboards
-          cd grafana_v2
-          tar -czf ../release-artifacts/grafana-dashboards-v2.tar.gz dashboards/ alerts/
-          zip -r ../release-artifacts/grafana-dashboards-v2.zip dashboards/ alerts/
+          cd temp-grafana
+          tar -czf ../release-artifacts/redis-grafana-${{ steps.version.outputs.VERSION }}.tar.gz v1/ v2/
+          zip -r ../release-artifacts/redis-grafana-${{ steps.version.outputs.VERSION }}.zip v1/ v2/
           cd ..
+          rm -rf temp-grafana
           
       - name: Package Dynatrace artifacts
         run: |
-          # Package Dynatrace v1
-          cd dynatrace
-          tar -czf ../release-artifacts/dynatrace-extension-v1.tar.gz src/
-          zip -r ../release-artifacts/dynatrace-extension-v1.zip src/
-          cd ..
+          # Create combined Dynatrace package with both v1 and v2
+          mkdir -p temp-dynatrace/v1 temp-dynatrace/v2
+          cp -r dynatrace/src temp-dynatrace/v1/
+          cp -r dynatrace_v2/src temp-dynatrace/v2/
           
-          # Package Dynatrace v2
-          cd dynatrace_v2
-          tar -czf ../release-artifacts/dynatrace-extension-v2.tar.gz src/
-          zip -r ../release-artifacts/dynatrace-extension-v2.zip src/
+          cd temp-dynatrace
+          tar -czf ../release-artifacts/redis-dynatrace-${{ steps.version.outputs.VERSION }}.tar.gz v1/ v2/
+          zip -r ../release-artifacts/redis-dynatrace-${{ steps.version.outputs.VERSION }}.zip v1/ v2/
           cd ..
+          rm -rf temp-dynatrace
           
       - name: Package Prometheus artifacts
         run: |
-          # Package Prometheus v1 rules
-          cd prometheus
-          tar -czf ../release-artifacts/prometheus-rules-v1.tar.gz rules/
-          zip -r ../release-artifacts/prometheus-rules-v1.zip rules/
-          cd ..
+          # Create combined Prometheus package with both v1 and v2
+          mkdir -p temp-prometheus/v1 temp-prometheus/v2
+          cp -r prometheus/rules temp-prometheus/v1/
+          cp -r prometheus_v2/rules temp-prometheus/v2/
           
-          # Package Prometheus v2 rules
-          cd prometheus_v2
-          tar -czf ../release-artifacts/prometheus-rules-v2.tar.gz rules/
-          zip -r ../release-artifacts/prometheus-rules-v2.zip rules/
+          cd temp-prometheus
+          tar -czf ../release-artifacts/redis-prometheus-${{ steps.version.outputs.VERSION }}.tar.gz v1/ v2/
+          zip -r ../release-artifacts/redis-prometheus-${{ steps.version.outputs.VERSION }}.zip v1/ v2/
           cd ..
+          rm -rf temp-prometheus
           
       - name: Package NewRelic artifacts
         run: |
-          # Package NewRelic v1
-          cd newrelic
-          tar -czf ../release-artifacts/newrelic-dashboards-v1.tar.gz dashboards/ config/
-          zip -r ../release-artifacts/newrelic-dashboards-v1.zip dashboards/ config/
-          cd ..
+          # Create combined NewRelic package with both v1 and v2
+          mkdir -p temp-newrelic/v1 temp-newrelic/v2
+          cp -r newrelic/dashboards newrelic/config temp-newrelic/v1/
+          cp -r newrelic_v2/dashboards newrelic_v2/config temp-newrelic/v2/
           
-          # Package NewRelic v2
-          cd newrelic_v2
-          tar -czf ../release-artifacts/newrelic-dashboards-v2.tar.gz dashboards/ config/
-          zip -r ../release-artifacts/newrelic-dashboards-v2.zip dashboards/ config/
+          cd temp-newrelic
+          tar -czf ../release-artifacts/redis-newrelic-${{ steps.version.outputs.VERSION }}.tar.gz v1/ v2/
+          zip -r ../release-artifacts/redis-newrelic-${{ steps.version.outputs.VERSION }}.zip v1/ v2/
           cd ..
+          rm -rf temp-newrelic
           
       - name: Package Kibana artifacts
         run: |
-          cd kibana
-          tar -czf ../release-artifacts/kibana-dashboards.tar.gz dashboards/
-          zip -r ../release-artifacts/kibana-dashboards.zip dashboards/
+          # Create Kibana package (single version)
+          mkdir -p temp-kibana
+          cp -r kibana/dashboards temp-kibana/
+          
+          cd temp-kibana
+          tar -czf ../release-artifacts/redis-kibana-${{ steps.version.outputs.VERSION }}.tar.gz dashboards/
+          zip -r ../release-artifacts/redis-kibana-${{ steps.version.outputs.VERSION }}.zip dashboards/
           cd ..
+          rm -rf temp-kibana
           
       - name: Package Splunk artifacts
         run: |
-          cd splunk
-          tar -czf ../release-artifacts/splunk-dashboards.tar.gz dashboards/ config/
-          zip -r ../release-artifacts/splunk-dashboards.zip dashboards/ config/
+          # Create Splunk package (single version)
+          mkdir -p temp-splunk
+          cp -r splunk/dashboards splunk/config temp-splunk/
+          
+          cd temp-splunk
+          tar -czf ../release-artifacts/redis-splunk-${{ steps.version.outputs.VERSION }}.tar.gz dashboards/ config/
+          zip -r ../release-artifacts/redis-splunk-${{ steps.version.outputs.VERSION }}.zip dashboards/ config/
           cd ..
+          rm -rf temp-splunk
+          
+      - name: Package Datadog artifacts
+        run: |
+          # Create Datadog package (v2 only)
+          mkdir -p temp-datadog
+          cp -r datadog_v2/kickstarter temp-datadog/
+          
+          cd temp-datadog
+          tar -czf ../release-artifacts/redis-datadog-${{ steps.version.outputs.VERSION }}.tar.gz kickstarter/
+          zip -r ../release-artifacts/redis-datadog-${{ steps.version.outputs.VERSION }}.zip kickstarter/
+          cd ..
+          rm -rf temp-datadog
           
       - name: Generate checksums
         run: |
           cd release-artifacts
           sha256sum * > checksums.txt
           
-      - name: Create release
-        uses: softprops/action-gh-release@v1
+      # - name: Create release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     tag_name: ${{ steps.version.outputs.VERSION }}
+      #     name: Redis Enterprise Observability ${{ steps.version.outputs.VERSION }}
+      #     body: |
+      #       ## Redis Enterprise Observability Release ${{ steps.version.outputs.VERSION }}
+            
+      #       This release contains individual platform packages for various observability platforms. Each package is versioned and contains both v1 and v2 variants where applicable:
+            
+      #       ### 📊 Individual Platform Packages
+      #       - **redis-grafana-${{ steps.version.outputs.VERSION }}**: Complete dashboard collections (v1 & v2)
+      #       - **redis-dynatrace-${{ steps.version.outputs.VERSION }}**: Extensions and dashboards (v1 & v2)
+      #       - **redis-prometheus-${{ steps.version.outputs.VERSION }}**: Alerting rules and configurations (v1 & v2)
+      #       - **redis-newrelic-${{ steps.version.outputs.VERSION }}**: Dashboard collections and configurations (v1 & v2)
+      #       - **redis-kibana-${{ steps.version.outputs.VERSION }}**: Dashboard configurations for Elasticsearch/Kibana
+      #       - **redis-splunk-${{ steps.version.outputs.VERSION }}**: Dashboard and configuration files
+      #       - **redis-datadog-${{ steps.version.outputs.VERSION }}**: Datadog monitoring configurations
+            
+      #       Each package is available in both `.tar.gz` and `.zip` formats. For detailed setup instructions, please refer to the README files in each platform directory.
+      #     files: |
+      #       release-artifacts/*
+      #     draft: false
+      #     prerelease: false
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      # - name: Upload individual platform packages
+      #   run: |
+      #     echo "Individual platform packages created:"
+      #     ls -la release-artifacts/
+      #     echo "Each package contains the appropriate v1 and v2 variants for the platform"
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: ${{ steps.version.outputs.VERSION }}
-          name: Redis Enterprise Observability ${{ steps.version.outputs.VERSION }}
-          body: |
-            ## Redis Enterprise Observability Release ${{ steps.version.outputs.VERSION }}
-            
-            This release contains dashboards and configuration files for various observability platforms:
-            
-            ### 📊 Dashboards & Configurations
-            - **Grafana v1 & v2**: Complete dashboard collections for Redis Enterprise monitoring
-            - **Dynatrace v1 & v2**: Extensions and dashboards for Dynatrace monitoring
-            - **Prometheus v1 & v2**: Alerting rules and configurations
-            - **NewRelic v1 & v2**: Dashboard collections and configurations
-            - **Kibana**: Dashboard configurations for Elasticsearch/Kibana
-            - **Splunk**: Dashboard and configuration files
-            
-            For detailed setup instructions, please refer to the README files in each platform directory.
-          files: |
-            release-artifacts/*
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: redis-enterprise-observability-artifacts
+          path: release-artifacts/
+          retention-days: 30

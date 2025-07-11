@@ -1,0 +1,24 @@
+# Redis Cloud Configuration
+redis_cloud_api_key     = "your-redis-cloud-api-key"
+redis_cloud_account_key = "your-redis-cloud-account-key"
+subscription_id         = "12345"
+db_name                = "your-database-name"
+
+# AWS Configuration
+aws_account_id     = "123456789012"
+aws_region         = "us-east-1"
+aws_username       = "ubuntu"
+aws_key_pair_name  = "your-key-pair-name"
+
+# SSH Configuration
+ssh_key_file = "path/to/your/private-key"
+
+# DNS Configuration
+zone_dns_name = "yourdomain.com"
+subdomain     = "grafana"
+
+# Optional: Use Existing Infrastructure
+# existing_vpc_id           = "vpc-12345678"
+# existing_subnet_id        = "subnet-12345678"
+# existing_vpc_cidr         = "10.0.0.0/16"
+# existing_security_group_id = "sg-12345678"

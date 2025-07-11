@@ -1,7 +1,8 @@
 name: Release Observability Artifacts
 
 on:
-  branches:
+  push:
+    branches:
       - ci-release
   workflow_dispatch:
     inputs:
@@ -9,6 +10,7 @@ on:
         description: 'Release version (e.g., v1.0.0)'
         required: true
         type: string
+
 
 jobs:
   release:

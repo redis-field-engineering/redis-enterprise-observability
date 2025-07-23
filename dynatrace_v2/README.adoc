@@ -216,7 +216,7 @@ Follow the standard extension setup process using the External VM's ActiveGate.
 == Dashboards
 
 This repository includes sample Dynatrace dashboards for monitoring your Redis deployment. See the
-link:/src/dashboards[dashboards] folder for the available set of dashboards.
+link:/dynatrace_v2/src/dashboards[dashboards] folder for the available set of dashboards.
 
 == Support
 

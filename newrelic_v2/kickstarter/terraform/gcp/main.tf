@@ -14,7 +14,7 @@ resource "google_compute_instance" "prometheus" {
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-os-cloud/ubuntu-2004-lts"
+      image = "ubuntu-2004-focal-v20240731"
       size  = 50
     }
   }

@@ -87,30 +87,6 @@ jobs:
           cd ..
           rm -rf temp-newrelic
           
-      - name: Package Kibana artifacts
-        run: |
-          # Create Kibana package (single version)
-          mkdir -p temp-kibana
-          cp -r kibana/dashboards temp-kibana/
-          
-          cd temp-kibana
-          tar -czf ../release-artifacts/redis-kibana-${{ steps.version.outputs.VERSION }}.tar.gz dashboards/
-          zip -r ../release-artifacts/redis-kibana-${{ steps.version.outputs.VERSION }}.zip dashboards/
-          cd ..
-          rm -rf temp-kibana
-          
-      - name: Package Splunk artifacts
-        run: |
-          # Create Splunk package (single version)
-          mkdir -p temp-splunk
-          cp -r splunk/dashboards splunk/config temp-splunk/
-          
-          cd temp-splunk
-          tar -czf ../release-artifacts/redis-splunk-${{ steps.version.outputs.VERSION }}.tar.gz dashboards/ config/
-          zip -r ../release-artifacts/redis-splunk-${{ steps.version.outputs.VERSION }}.zip dashboards/ config/
-          cd ..
-          rm -rf temp-splunk
-          
       - name: Package Datadog artifacts
         run: |
           # Create Datadog package (v2 only)
@@ -143,8 +119,6 @@ jobs:
       #       - **redis-dynatrace-${{ steps.version.outputs.VERSION }}**: Extensions and dashboards (v1 & v2)
       #       - **redis-prometheus-${{ steps.version.outputs.VERSION }}**: Alerting rules and configurations (v1 & v2)
       #       - **redis-newrelic-${{ steps.version.outputs.VERSION }}**: Dashboard collections and configurations (v1 & v2)
-      #       - **redis-kibana-${{ steps.version.outputs.VERSION }}**: Dashboard configurations for Elasticsearch/Kibana
-      #       - **redis-splunk-${{ steps.version.outputs.VERSION }}**: Dashboard and configuration files
       #       - **redis-datadog-${{ steps.version.outputs.VERSION }}**: Datadog monitoring configurations
             
       #       Each package is available in both `.tar.gz` and `.zip` formats. For detailed setup instructions, please refer to the README files in each platform directory.

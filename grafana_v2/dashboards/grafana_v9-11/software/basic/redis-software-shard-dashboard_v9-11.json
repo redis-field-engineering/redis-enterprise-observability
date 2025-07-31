@@ -1705,7 +1705,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "namedprocess_namegroup_cpu_seconds_total{db=\"$db\", cluster=\"$cluster\", redis=\"$shard\", mode=\"system\"}",
+          "expr": "rate(namedprocess_namegroup_cpu_seconds_total{db=\"$db\", cluster=\"$cluster\", redis=\"$shard\", mode=\"system\"}[1m])",
           "hide": false,
           "legendFormat": "System CPU",
           "range": true,
@@ -1717,7 +1717,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "namedprocess_namegroup_cpu_seconds_total{db=\"$db\", cluster=\"$cluster\", redis=\"$shard\", mode=\"user\"}",
+          "expr": "rate(namedprocess_namegroup_cpu_seconds_total{db=\"$db\", cluster=\"$cluster\", redis=\"$shard\", mode=\"user\"}[1m])",
           "hide": false,
           "legendFormat": "User CPU",
           "range": true,
@@ -1943,7 +1943,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "namedprocess_namegroup_cpu_seconds_total{redis=\"$shard\", mode=\"system\", cluster=\"$cluster\", db=\"$db\"}",
+          "expr": "rate(namedprocess_namegroup_cpu_seconds_total{redis=\"$shard\", mode=\"system\", cluster=\"$cluster\", db=\"$db\"}[1m])",
           "hide": false,
           "legendFormat": "Main Thread - System",
           "range": true,
@@ -1955,7 +1955,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "namedprocess_namegroup_cpu_seconds_total{redis=\"$shard\", mode=\"user\", cluster=\"$cluster\", db=\"$db\"}",
+          "expr": "rate(namedprocess_namegroup_cpu_seconds_total{redis=\"$shard\", mode=\"user\", cluster=\"$cluster\", db=\"$db\"}[1m])",
           "hide": false,
           "legendFormat": "Main Thread - User",
           "range": true,
@@ -2219,7 +2219,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "redis_server_total_commands_processed{db=\"$db\", cluster=\"$cluster\", redis=\"$shard\"}",
+          "expr": "rate(redis_server_total_commands_processed{db=\"$db\", cluster=\"$cluster\", redis=\"$shard\"}[1m])",
           "legendFormat": "Connected Clients",
           "range": true,
           "refId": "A"
@@ -2332,7 +2332,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_server_total_net_output_bytes{db=\"$db\", cluster=\"$cluster\", redis=\"$shard\"}",
+          "expr": "rate(redis_server_total_net_output_bytes{db=\"$db\", cluster=\"$cluster\", redis=\"$shard\"}[1m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Egress",
@@ -2346,7 +2346,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "redis_server_total_net_input_bytes{db=\"$db\", cluster=\"$cluster\", redis=\"$shard\"}",
+          "expr": "rate(redis_server_total_net_input_bytes{db=\"$db\", cluster=\"$cluster\", redis=\"$shard\"}[1m])",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Ingress",

@@ -274,7 +274,7 @@ metrics:
     metadata:
       displayName: Client Connections
       description: Number of client connection establishment events
-      unit: count
+      unit: gauge
       tags:
       - "RedisV2"
       - "EF2"
@@ -283,7 +283,7 @@ metrics:
     metadata:
       displayName: Client Disconnections
       description: Number of client disconnections initiated by the client
-      unit: count
+      unit: gauge
       tags:
       - "RedisV2"
       - "EF2"
@@ -1576,6 +1576,15 @@ metrics:
       - "RedisV2"
       - "EF2"
       - "redis-shard"
+  - key: redis.db_config
+    metadata:
+      displayName: Database Configuration
+      description: A metric with a constant '1' value labeled by a number of database configuration parameters as dimensions (e.g. db_name)
+      unit: gauge
+      tags:
+      - "RedisV2"
+      - "EF2"
+      - "redis-shard"
   - key: redis.redis_server_maxmemory
     metadata:
       displayName: Database Memory Limit
@@ -1965,10 +1974,10 @@ prometheus:
             type: count
           - key: redis.endpoint_client_connections
             value: metric:endpoint_client_connections
-            type: count
+            type: gauge
           - key: redis.endpoint_client_disconnections
             value: metric:endpoint_client_disconnections
-            type: count
+            type: gauge
           - key: redis.endpoint_client_establishment_failures
             value: metric:endpoint_client_establishment_failures
             type: count
@@ -2311,6 +2320,9 @@ prometheus:
           - key: redis.redis_server_master_sync_in_progress
             value: metric:redis_server_master_sync_in_progress
             type: gauge
+          - key: redis.db_config
+            value: metric:db_config
+            type: count
           - key: redis.redis_server_max_process_mem
             value: metric:redis_server_max_process_mem
             type: gauge

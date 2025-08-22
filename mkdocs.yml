@@ -32,7 +32,6 @@ theme:
 
 plugins:
   - search
-  - awesome-pages
   
 markdown_extensions:
   - admonition
@@ -54,16 +53,12 @@ nav:
   - Getting Started:
     - Overview: getting-started/overview.md
     - Quick Start: getting-started/quick-start.md
-    - Prerequisites: getting-started/prerequisites.md
   - Platforms:
     - Grafana:
       - Overview: platforms/grafana/index.md
-      - Installation: platforms/grafana/installation.md
       - Dashboards: platforms/grafana/dashboards.md
-      - Infinity Plugin: platforms/grafana/infinity-plugin.md
     - Prometheus:
       - Overview: platforms/prometheus/index.md
-      - Configuration: platforms/prometheus/configuration.md
       - Alert Rules: platforms/prometheus/alerts.md
     - Dynatrace: platforms/dynatrace/index.md
     - New Relic: platforms/newrelic/index.md
@@ -71,12 +66,11 @@ nav:
     - Kibana: platforms/kibana/index.md
   - Dashboards:
     - Catalog: dashboards/catalog.md
-    - Importing: dashboards/importing.md
-    - Customizing: dashboards/customizing.md
   - Guides:
     - Monitor Redis Cloud: guides/redis-cloud.md
     - Setup Alerting: guides/alerting.md
     - Troubleshooting: guides/troubleshooting.md
+    - Performance Tuning: guides/performance-tuning.md
   - Reference:
     - Metrics: reference/metrics.md
     - API Endpoints: reference/api.md

@@ -75,7 +75,7 @@ Support for Dynatrace, New Relic, Splunk, Kibana, and more
     systemctl restart grafana-server
     ```
     
-    [Full setup guide →](platforms/grafana/infinity-plugin.md)
+    [Full setup guide →](platforms/grafana/index.md)
 
 ## Version Compatibility
 

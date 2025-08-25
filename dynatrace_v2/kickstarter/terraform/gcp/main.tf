@@ -51,7 +51,13 @@ resource "null_resource" "install_activegate" {
       "sudo apt-get install -y wget",
       "wget -O ActiveGate.sh \"${local.activegate_installer_url}\" --header=\"Authorization: Api-Token ${var.dynatrace_api_token}\"",
       "chmod +x ActiveGate.sh",
-      "sudo ./ActiveGate.sh"
+      "sudo ./ActiveGate.sh",
+      "sudo add-apt-repository ppa:deadsnakes/ppa -y",
+      "sudo apt update",
+      "sudo apt install -y python3.12 python3.12-venv python3.12-dev",
+      "python3.12 -m venv venv",
+      ". venv/bin/activate",
+      "pip install redis"
     ]
   }
   connection {
@@ -73,6 +79,8 @@ resource "null_resource" "upload_extension" {
       pip install dt-cli
       base_dir=$(pwd)
       cd ../../..
+      rm -f bundle.zip
+      rm -f extension.zip
       dt extension assemble
       dt extension sign --key $base_dir/${var.developer_pem}
       dt extension upload --tenant-url ${local.dynatrace_tenant_url} --api-token ${var.dynatrace_api_token} bundle.zip

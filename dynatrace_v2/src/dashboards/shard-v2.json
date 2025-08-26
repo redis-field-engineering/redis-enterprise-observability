@@ -3,20 +3,18 @@
     "configurationVersions": [
       7
     ],
-    "clusterVersion": "1.309.54.20250305-171942"
+    "clusterVersion": "1.321.43.20250822-083706"
   },
-  "id": "bf029af8-a94d-49f0-a63b-f2af5a1e0983",
+  "id": "dde4c084-52c3-4b30-9735-38e27d3f9d79",
   "dashboardMetadata": {
     "name": "Redis Enterprise - Shard-V2",
     "shared": false,
-    "owner": "john.burke@redis.com",
-    "popularity": 10,
+    "owner": "steve.lorello@redis.com",
     "dynamicFilters": {
       "filters": [
-        "CUSTOM_DIMENSION:Redis Shard",
-        "CUSTOM_DIMENSION:Redis Cluster",
-        "CUSTOM_DIMENSION:Redis Database",
-        "CUSTOM_DIMENSION:Redis Node"
+        "CUSTOM_DIMENSION:db",
+        "CUSTOM_DIMENSION:cluster",
+        "CUSTOM_DIMENSION:redis"
       ],
       "genericTagFilters": []
     },

@@ -3,17 +3,16 @@
     "configurationVersions": [
       7
     ],
-    "clusterVersion": "1.309.54.20250305-171942"
+    "clusterVersion": "1.321.43.20250822-083706"
   },
   "id": "7a146255-3078-4923-bcb3-8997b1baeb06",
   "dashboardMetadata": {
     "name": "Redis Enterprise - Active-Active-V2",
     "shared": false,
-    "owner": "john.burke@redis.com",
-    "popularity": 5,
+    "owner": "steve.lorello@redis.com",
     "dynamicFilters": {
       "filters": [
-        "CUSTOM_DIMENSION:Redis Cluster"
+        "CUSTOM_DIMENSION:cluster"
       ],
       "genericTagFilters": []
     },

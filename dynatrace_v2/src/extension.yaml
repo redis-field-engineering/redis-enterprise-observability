@@ -1661,7 +1661,7 @@ metrics:
     metadata:
       displayName: Shard Process CPU Seconds
       description: Shard process CPU usage percentage
-      unit: gauge
+      unit: count
       tags:
       - "RedisV2"
       - "EF2"
@@ -1670,7 +1670,7 @@ metrics:
     metadata:
       displayName: Main Thread CPU Seconds
       description: Shard main thread CPU time spent in seconds
-      unit: gauge
+      unit: count
       tags:
       - "RedisV2"
       - "EF2"
@@ -2352,10 +2352,10 @@ prometheus:
             type: gauge
           - key: redis.namedprocess_namegroup_cpu_seconds_total
             value: metric:namedprocess_namegroup_cpu_seconds_total
-            type: gauge
+            type: count
           - key: redis.namedprocess_namegroup_thread_cpu_seconds_total
             value: metric:namedprocess_namegroup_thread_cpu_seconds_total
-            type: gauge
+            type: count
           - key: redis.namedprocess_namegroup_open_filedesc
             value: metric:namedprocess_namegroup_open_filedesc
             type: gauge

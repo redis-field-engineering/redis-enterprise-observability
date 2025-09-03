@@ -1,1 +1,395 @@
-{"version":19,"variables":[{"version":2,"key":"Cluster","type":"query","visible":true,"editable":true,"input":"timeseries any=avg(redis.db_config), by:{cluster}\n| fieldsKeep cluster\n| sort cluster\n","multiple":true,"defaultValue":["3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*"]},{"version":2,"key":"Node","type":"query","visible":true,"editable":true,"input":"timeseries any=avg(redis.node_metrics_up), by:{cluster, node}\n| filter in(cluster,$Cluster)\n| summarize count(), by:{node}\n| fieldsKeep node\n| sort node","multiple":true,"defaultValue":["3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*"]}],"tiles":{"1":{"title":"","type":"data","query":"timeseries {\n  s = avg(redis.node_metrics_up), \n  value.A = avg(redis.node_metrics_up, scalar: true) }, \n  by: { cluster, node }, \n  filter: { matchesValue(cluster, { $Cluster }) \n  AND matchesValue(node, { $Node }) }\n| summarize takeLast(s), by: {cluster, node, status = arrayLast(s)}","visualization":"table","visualizationSettings":{"table":{"columnOrder":["[\"status\"]","[\"cluster\"]","[\"node\"]","[\"takeLast(s)\"]"],"hiddenColumns":[["timeframe","start"],["timeframe","end"],["interval"],["value.A"],["takeLast(s)"]]},"autoSelectVisualization":false,"thresholds":[{"id":1,"field":"status","title":"","isEnabled":true,"rules":[{"id":0,"color":{"Default":"var(--dt-colors-charts-status-ideal-default, #2f6862)"},"comparator":"=","label":"","value":1},{"id":1,"color":{"Default":"var(--dt-colors-charts-status-warning-default, #eea53c)"},"comparator":"≥","label":""},{"id":2,"color":{"Default":"var(--dt-colors-charts-status-critical-default, #c62239)"},"comparator":"<","label":"","value":1}]}],"unitsOverrides":[{"identifier":"status","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756344480520}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"3":{"title":"Shard Count","type":"data","query":"timeseries { count(redis.redis_server_up), `num shards` = avg(redis.redis_server_up, scalar: true) }, by: { cluster, node }, filter: { matchesValue(cluster, $Cluster) AND matchesValue(node, $Node) }","visualization":"table","visualizationSettings":{"table":{"columnOrder":["[\"timeframe\",\"start\"]","[\"timeframe\",\"end\"]","[\"interval\"]","[\"cluster\"]","[\"node\"]","[\"count(redis.redis_server_up)\"]","[\"num shards\"]"],"columnTypeOverrides":[{"fields":["count(redis.redis_server_up)"],"value":"sparkline","id":1756344640543}],"hiddenColumns":[["timeframe","start"],["timeframe","end"],["interval"],["count(redis.redis_server_up)"]]},"autoSelectVisualization":false,"thresholds":[],"unitsOverrides":[{"identifier":"num shards","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756412582074}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"4":{"title":"Node Available Memory","type":"data","subType":"dql-builder-metrics","query":"timeseries { avg(redis.node_available_memory_bytes), value.A = avg(redis.node_available_memory_bytes, scalar: true) }, by: { cluster, node }, filter: { matchesValue(cluster, $Cluster) AND matchesValue(node, $Node) }","visualization":"lineChart","visualizationSettings":{"autoSelectVisualization":true,"thresholds":[]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.node_available_memory_bytes","aggregation":"avg"},"by":["cluster","node"],"filter":"cluster=$Cluster node=$Node"}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"5":{"title":"Memory Usage","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.redis_server_used_memory), value.A = avg(redis.redis_server_used_memory, scalar: true) }, by: { cluster, node }, filter: { matchesValue(cluster, $Cluster) AND matchesValue(node, $Node) }","visualization":"lineChart","visualizationSettings":{"autoSelectVisualization":true,"thresholds":[]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.redis_server_used_memory","aggregation":"sum"},"by":["cluster","node"],"filter":"cluster=$Cluster node=$Node"}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"6":{"title":"CPU Utilization","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.namedprocess_namegroup_cpu_seconds_total, rate: 1s), value.A = avg(redis.namedprocess_namegroup_cpu_seconds_total, rate: 1s, scalar: true) }, by: { cluster, node }, filter: { matchesValue(cluster, $Cluster) AND matchesValue(node, $Node) AND matchesValue(mode, { \"system\", \"user\" }) }","visualization":"lineChart","visualizationSettings":{"autoSelectVisualization":true,"thresholds":[]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.namedprocess_namegroup_cpu_seconds_total","aggregation":"sum"},"by":["cluster","node"],"rate":"1s","filter":"cluster=$Cluster node=$Node mode in (system, user)  "}],"globalCommands":{}},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"8":{"title":"Egress","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.endpoint_egress, rate: 1s), value.A = avg(redis.endpoint_egress, rate: 1s, scalar: true) }, by: { cluster, node }, filter: { matchesValue(cluster, $Cluster) AND matchesValue(node, $Node) }","visualization":"lineChart","visualizationSettings":{"autoSelectVisualization":true,"thresholds":[]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.endpoint_egress","aggregation":"sum"},"by":["cluster","node"],"rate":"1s","filter":"cluster=$Cluster node=$Node"}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"9":{"title":"Ingress","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.endpoint_ingress, rate: 1s), value.A = avg(redis.endpoint_ingress, rate: 1s, scalar: true) }, by: { cluster, node }, filter: { matchesValue(cluster, $Cluster) AND matchesValue(node, $Node) }","visualization":"lineChart","visualizationSettings":{"autoSelectVisualization":true,"thresholds":[]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.endpoint_ingress","aggregation":"sum"},"by":["cluster","node"],"rate":"1s","filter":"cluster=$Cluster node=$Node"}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"10":{"type":"markdown","content":"![Redis Logo](https://media.ffycdn.net/us/redis/fMQoSjYaaHirTkz7jbQk.ai?width=2400&mod=v1/max=2400)"},"11":{"type":"markdown","content":"# Node Dashboard\n\nThis dashboard provides insights into key Node level metrics such as consumed bandwidth, cpu utilization and memory utilization. A node represents a physical machine in your Redis Enterprise Cluster on which the Redis Enterprise Software is running. The Node may contain no shards, or many shards, depending on your deployment and tuning"},"12":{"type":"markdown","content":"# Node Summary"},"13":{"type":"markdown","content":"# Node Memory"},"14":{"type":"markdown","content":"# Node Bandwidth"},"15":{"type":"markdown","content":"# Node CPU"},"16":{"type":"markdown","content":"<!--intentionally blank-->"},"17":{"type":"markdown","content":"<!--intentionally blank-->"},"18":{"type":"markdown","content":"<!--intentionally blank-->"},"19":{"type":"markdown","content":"## Navigation\n\n[Overview]()\n\n[Shard]()\n\n[Database]()\n\n[Active Active]()\n\n[Security]()"}},"layouts":{"1":{"x":0,"y":5,"w":8,"h":6},"3":{"x":8,"y":5,"w":8,"h":6},"4":{"x":0,"y":13,"w":8,"h":6},"5":{"x":8,"y":13,"w":8,"h":6},"6":{"x":0,"y":35,"w":8,"h":6},"8":{"x":8,"y":28,"w":8,"h":6},"9":{"x":0,"y":21,"w":8,"h":6},"10":{"x":0,"y":0,"w":5,"h":4},"11":{"x":5,"y":0,"w":15,"h":4},"12":{"x":0,"y":4,"w":24,"h":1},"13":{"x":0,"y":11,"w":24,"h":1},"14":{"x":0,"y":20,"w":24,"h":1},"15":{"x":0,"y":34,"w":24,"h":1},"16":{"x":0,"y":27,"w":24,"h":1},"17":{"x":0,"y":19,"w":24,"h":1},"18":{"x":0,"y":12,"w":24,"h":1},"19":{"x":20,"y":0,"w":4,"h":4}},"importedWithCode":false,"settings":{}}
+{
+  "version": 19,
+  "variables": [
+    {
+      "version": 2,
+      "key": "Cluster",
+      "type": "query",
+      "visible": true,
+      "editable": true,
+      "input": "timeseries any=avg(redis.db_config), by:{cluster}\n| fieldsKeep cluster\n| sort cluster\n",
+      "multiple": true,
+      "defaultValue": ["3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*"]
+    },
+    {
+      "version": 2,
+      "key": "Node",
+      "type": "query",
+      "visible": true,
+      "editable": true,
+      "input": "timeseries any=avg(redis.node_metrics_up), by:{cluster, node}\n| filter in(cluster,$Cluster)\n| summarize count(), by:{node}\n| fieldsKeep node\n| sort node",
+      "multiple": true,
+      "defaultValue": ["3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*"]
+    }
+  ],
+  "tiles": {
+    "1": {
+      "title": "",
+      "type": "data",
+      "query": "timeseries {\n  s = avg(redis.node_metrics_up), \n  value.A = avg(redis.node_metrics_up, scalar: true) }, \n  by: { cluster, node }, \n  filter: { matchesValue(cluster, { $Cluster }) \n  AND matchesValue(node, { $Node }) }\n| summarize takeLast(s), by: {cluster, node, status = arrayLast(s)}",
+      "visualization": "table",
+      "visualizationSettings": {
+        "table": {
+          "columnOrder": [
+            "[\"status\"]",
+            "[\"cluster\"]",
+            "[\"node\"]",
+            "[\"takeLast(s)\"]"
+          ],
+          "hiddenColumns": [
+            ["timeframe", "start"],
+            ["timeframe", "end"],
+            ["interval"],
+            ["value.A"],
+            ["takeLast(s)"]
+          ]
+        },
+        "autoSelectVisualization": false,
+        "thresholds": [
+          {
+            "id": 1,
+            "field": "status",
+            "title": "",
+            "isEnabled": true,
+            "rules": [
+              {
+                "id": 0,
+                "color": {
+                  "Default": "var(--dt-colors-charts-status-ideal-default, #2f6862)"
+                },
+                "comparator": "=",
+                "label": "",
+                "value": 1
+              },
+              {
+                "id": 1,
+                "color": {
+                  "Default": "var(--dt-colors-charts-status-warning-default, #eea53c)"
+                },
+                "comparator": "≥",
+                "label": ""
+              },
+              {
+                "id": 2,
+                "color": {
+                  "Default": "var(--dt-colors-charts-status-critical-default, #c62239)"
+                },
+                "comparator": "<",
+                "label": "",
+                "value": 1
+              }
+            ]
+          }
+        ],
+        "unitsOverrides": [
+          {
+            "identifier": "status",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756344480520
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "3": {
+      "title": "Shard Count",
+      "type": "data",
+      "query": "timeseries { count(redis.redis_server_up), `num shards` = avg(redis.redis_server_up, scalar: true) }, by: { cluster, node }, filter: { matchesValue(cluster, $Cluster) AND matchesValue(node, $Node) }",
+      "visualization": "table",
+      "visualizationSettings": {
+        "table": {
+          "columnOrder": [
+            "[\"timeframe\",\"start\"]",
+            "[\"timeframe\",\"end\"]",
+            "[\"interval\"]",
+            "[\"cluster\"]",
+            "[\"node\"]",
+            "[\"count(redis.redis_server_up)\"]",
+            "[\"num shards\"]"
+          ],
+          "columnTypeOverrides": [
+            {
+              "fields": ["count(redis.redis_server_up)"],
+              "value": "sparkline",
+              "id": 1756344640543
+            }
+          ],
+          "hiddenColumns": [
+            ["timeframe", "start"],
+            ["timeframe", "end"],
+            ["interval"],
+            ["count(redis.redis_server_up)"]
+          ]
+        },
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "identifier": "num shards",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756412582074
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "4": {
+      "title": "Node Available Memory",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { avg(redis.node_available_memory_bytes), value.A = avg(redis.node_available_memory_bytes, scalar: true) }, by: { cluster, node }, filter: { matchesValue(cluster, $Cluster) AND matchesValue(node, $Node) }",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": true,
+        "thresholds": []
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.node_available_memory_bytes",
+              "aggregation": "avg"
+            },
+            "by": ["cluster", "node"],
+            "filter": "cluster=$Cluster node=$Node"
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "5": {
+      "title": "Memory Usage",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.redis_server_used_memory), value.A = avg(redis.redis_server_used_memory, scalar: true) }, by: { cluster, node }, filter: { matchesValue(cluster, $Cluster) AND matchesValue(node, $Node) }",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": true,
+        "thresholds": []
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.redis_server_used_memory",
+              "aggregation": "sum"
+            },
+            "by": ["cluster", "node"],
+            "filter": "cluster=$Cluster node=$Node"
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "6": {
+      "title": "CPU Utilization",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.namedprocess_namegroup_cpu_seconds_total, rate: 1s), value.A = avg(redis.namedprocess_namegroup_cpu_seconds_total, rate: 1s, scalar: true) }, by: { cluster, node }, filter: { matchesValue(cluster, $Cluster) AND matchesValue(node, $Node) AND matchesValue(mode, { \"system\", \"user\" }) }",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": true,
+        "thresholds": []
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.namedprocess_namegroup_cpu_seconds_total",
+              "aggregation": "sum"
+            },
+            "by": ["cluster", "node"],
+            "rate": "1s",
+            "filter": "cluster=$Cluster node=$Node mode in (system, user)  "
+          }
+        ],
+        "globalCommands": {}
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "8": {
+      "title": "Egress",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.endpoint_egress, rate: 1s), value.A = avg(redis.endpoint_egress, rate: 1s, scalar: true) }, by: { cluster, node }, filter: { matchesValue(cluster, $Cluster) AND matchesValue(node, $Node) }",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": true,
+        "thresholds": []
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": { "key": "redis.endpoint_egress", "aggregation": "sum" },
+            "by": ["cluster", "node"],
+            "rate": "1s",
+            "filter": "cluster=$Cluster node=$Node"
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "9": {
+      "title": "Ingress",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.endpoint_ingress, rate: 1s), value.A = avg(redis.endpoint_ingress, rate: 1s, scalar: true) }, by: { cluster, node }, filter: { matchesValue(cluster, $Cluster) AND matchesValue(node, $Node) }",
+      "visualization": "lineChart",
+      "visualizationSettings": {
+        "autoSelectVisualization": true,
+        "thresholds": []
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": { "key": "redis.endpoint_ingress", "aggregation": "sum" },
+            "by": ["cluster", "node"],
+            "rate": "1s",
+            "filter": "cluster=$Cluster node=$Node"
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "10": {
+      "type": "markdown",
+      "content": "![Redis Logo](https://media.ffycdn.net/us/redis/fMQoSjYaaHirTkz7jbQk.ai?width=2400&mod=v1/max=2400)"
+    },
+    "11": {
+      "type": "markdown",
+      "content": "# Node Dashboard\n\nThis dashboard provides insights into key Node level metrics such as consumed bandwidth, cpu utilization and memory utilization. A node represents a physical machine in your Redis Enterprise Cluster on which the Redis Enterprise Software is running. The Node may contain no shards, or many shards, depending on your deployment and tuning"
+    },
+    "12": { "type": "markdown", "content": "# Node Summary" },
+    "13": { "type": "markdown", "content": "# Node Memory" },
+    "14": { "type": "markdown", "content": "# Node Bandwidth" },
+    "15": { "type": "markdown", "content": "# Node CPU" },
+    "16": { "type": "markdown", "content": "<!--intentionally blank-->" },
+    "17": { "type": "markdown", "content": "<!--intentionally blank-->" },
+    "18": { "type": "markdown", "content": "<!--intentionally blank-->" },
+    "19": {
+      "type": "markdown",
+      "content": "## Navigation\n\n[Overview]()\n\n[Shard]()\n\n[Database]()\n\n[Active Active]()\n\n[Security]()"
+    }
+  },
+  "layouts": {
+    "1": { "x": 0, "y": 5, "w": 8, "h": 6 },
+    "3": { "x": 8, "y": 5, "w": 8, "h": 6 },
+    "4": { "x": 0, "y": 13, "w": 8, "h": 6 },
+    "5": { "x": 8, "y": 13, "w": 8, "h": 6 },
+    "6": { "x": 0, "y": 35, "w": 8, "h": 6 },
+    "8": { "x": 8, "y": 28, "w": 8, "h": 6 },
+    "9": { "x": 0, "y": 21, "w": 8, "h": 6 },
+    "10": { "x": 0, "y": 0, "w": 5, "h": 4 },
+    "11": { "x": 5, "y": 0, "w": 15, "h": 4 },
+    "12": { "x": 0, "y": 4, "w": 24, "h": 1 },
+    "13": { "x": 0, "y": 11, "w": 24, "h": 1 },
+    "14": { "x": 0, "y": 20, "w": 24, "h": 1 },
+    "15": { "x": 0, "y": 34, "w": 24, "h": 1 },
+    "16": { "x": 0, "y": 27, "w": 24, "h": 1 },
+    "17": { "x": 0, "y": 19, "w": 24, "h": 1 },
+    "18": { "x": 0, "y": 12, "w": 24, "h": 1 },
+    "19": { "x": 20, "y": 0, "w": 4, "h": 4 }
+  },
+  "importedWithCode": false,
+  "settings": {}
+}

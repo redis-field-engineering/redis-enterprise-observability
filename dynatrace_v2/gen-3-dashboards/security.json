@@ -1,1 +1,751 @@
-{"version":19,"variables":[{"version":2,"key":"Cluster","type":"query","visible":true,"editable":true,"input":"timeseries any=avg(redis.db_config), by:{cluster}\n| fieldsKeep cluster\n| sort cluster","multiple":true,"defaultValue":["3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*"]}],"tiles":{"0":{"title":"Client Connections","type":"data","subType":"dql-builder-metrics","query":"timeseries { avg(redis.redis_server_connected_clients), value.A = avg(redis.redis_server_connected_clients, scalar: true) }","visualization":"singleValue","visualizationSettings":{"singleValue":{"labelMode":"none"},"autoSelectVisualization":false,"thresholds":[],"unitsOverrides":[{"identifier":"value.A","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756409423225}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.redis_server_connected_clients","aggregation":"avg"}}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"1":{"title":"Password Failures","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.endpoint_failed_user_password_authentication), value.A = avg(redis.endpoint_failed_user_password_authentication, scalar: true) }","visualization":"singleValue","visualizationSettings":{"singleValue":{"labelMode":"none"},"autoSelectVisualization":false,"thresholds":[],"unitsOverrides":[{"identifier":"value.A","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756409493109}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.endpoint_failed_user_password_authentication","aggregation":"sum"}}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"2":{"title":"LDAP Failures","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.endpoint_failed_ldap_authentication), value.A = avg(redis.endpoint_failed_ldap_authentication, scalar: true) }","visualization":"singleValue","visualizationSettings":{"singleValue":{"labelMode":"none"},"autoSelectVisualization":false,"thresholds":[],"unitsOverrides":[{"identifier":"value.A","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756409546591}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.endpoint_failed_ldap_authentication","aggregation":"sum"}}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"3":{"title":"CBA Connections","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.endpoint_successful_cba_authentication), value.A = avg(redis.endpoint_successful_cba_authentication, scalar: true) }","visualization":"singleValue","visualizationSettings":{"singleValue":{"labelMode":"none"},"autoSelectVisualization":false,"thresholds":[],"unitsOverrides":[{"identifier":"value.A","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756409661566}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.endpoint_successful_cba_authentication","aggregation":"sum"}}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"4":{"title":"LDAP Connections","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.endpoint_successful_ldap_authentication), value.A = avg(redis.endpoint_successful_ldap_authentication, scalar: true) }","visualization":"singleValue","visualizationSettings":{"singleValue":{"labelMode":"none"},"autoSelectVisualization":false,"thresholds":[],"unitsOverrides":[{"identifier":"value.A","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756409699049}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.endpoint_successful_ldap_authentication","aggregation":"sum"}}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"5":{"title":"Password Successes","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.endpoint_successful_user_password_authentication), value.A = avg(redis.endpoint_successful_user_password_authentication, scalar: true) }","visualization":"singleValue","visualizationSettings":{"singleValue":{"labelMode":"none"},"autoSelectVisualization":false,"thresholds":[],"unitsOverrides":[{"identifier":"value.A","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756409753154}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.endpoint_successful_user_password_authentication","aggregation":"sum"}}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"6":{"title":"Client Connections","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.endpoint_client_connection_expired), value.A = avg(redis.endpoint_client_connection_expired, scalar: true) }","visualization":"singleValue","visualizationSettings":{"singleValue":{"labelMode":"none"},"autoSelectVisualization":false,"thresholds":[],"unitsOverrides":[{"identifier":"value.A","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756409897313}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.endpoint_client_connection_expired","aggregation":"sum"}}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"7":{"title":"Establishment Failures","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.endpoint_client_establishment_failures), value.A = avg(redis.endpoint_client_establishment_failures, scalar: true) }","visualization":"singleValue","visualizationSettings":{"singleValue":{"labelMode":"none"},"autoSelectVisualization":false,"thresholds":[],"unitsOverrides":[{"identifier":"value.A","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756409897313}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.endpoint_client_establishment_failures","aggregation":"sum"}}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"8":{"title":"LDAP Disconnections","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.endpoint_disconnected_ldap_client), value.A = avg(redis.endpoint_disconnected_ldap_client, scalar: true) }","visualization":"singleValue","visualizationSettings":{"singleValue":{"labelMode":"none"},"autoSelectVisualization":false,"thresholds":[],"unitsOverrides":[{"identifier":"value.A","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756409897313}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.endpoint_disconnected_ldap_client","aggregation":"sum"}}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"9":{"title":"CBA Failures","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.endpoint_failed_cba_authentication), value.A = avg(redis.endpoint_failed_cba_authentication, scalar: true) }","visualization":"singleValue","visualizationSettings":{"singleValue":{"labelMode":"none"},"autoSelectVisualization":false,"thresholds":[],"unitsOverrides":[{"identifier":"value.A","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756409897313}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.endpoint_failed_cba_authentication","aggregation":"sum"}}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"10":{"title":"LDAP Failures","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.endpoint_failed_ldap_authentication), value.A = avg(redis.endpoint_failed_ldap_authentication, scalar: true) }","visualization":"singleValue","visualizationSettings":{"singleValue":{"labelMode":"none"},"autoSelectVisualization":false,"thresholds":[],"unitsOverrides":[{"identifier":"value.A","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756409897313}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.endpoint_failed_ldap_authentication","aggregation":"sum"}}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"11":{"title":"Password Failures","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.endpoint_failed_user_password_authentication), value.A = avg(redis.endpoint_failed_user_password_authentication, scalar: true) }","visualization":"singleValue","visualizationSettings":{"singleValue":{"labelMode":"none"},"autoSelectVisualization":false,"thresholds":[],"unitsOverrides":[{"identifier":"value.A","unitCategory":"unspecified","baseUnit":"none","displayUnit":null,"decimals":0,"suffix":"","delimiter":false,"added":1756409897313}]},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.endpoint_failed_user_password_authentication","aggregation":"sum"}}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"12":{"title":"","type":"data","query":"timeseries min(redis.node_cert_expires_in_seconds), by: { node, cluster, filename, filepath }\n| fieldsAdd expiry_seconds = arrayLast(`min(redis.node_cert_expires_in_seconds)`)\n| fieldsAdd `Expires in` = duration(expiry_seconds, \"s\")\n| fieldsRemove expiry_seconds\n| fieldsRemove cluster\n\n\n\n\n","visualization":"table","visualizationSettings":{"autoSelectVisualization":false,"thresholds":[],"table":{"columnTypeOverrides":[{"fields":["min(redis.node_cert_expires_in_seconds)"],"value":"sparkline","id":1756411060760}],"columnOrder":["[\"timeframe\",\"start\"]","[\"timeframe\",\"end\"]","[\"interval\"]","[\"node\"]","[\"filename\"]","[\"filepath\"]","[\"min(redis.node_cert_expires_in_seconds)\"]","[\"Expires in\"]"],"hiddenColumns":[["timeframe","start"],["timeframe","end"],["interval"],["min(redis.node_cert_expires_in_seconds)"]],"sortBy":[{"columnId":"[\"expiry_seconds\"]","direction":"descending"}]}},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"13":{"title":"Node Info","type":"data","subType":"dql-builder-metrics","query":"timeseries { sum(redis.node_dmi_info), value.A = avg(redis.node_dmi_info, scalar: true) }, by: { node, system_vendor, product_name, global_info, cluster, chassis_vendor, board_vendor, board_name, board_asset_tag, bios_version, bios_vendor, bios_date }, filter: { matchesValue(cluster, $Cluster) }","visualization":"table","visualizationSettings":{"autoSelectVisualization":false,"thresholds":[],"table":{"columnTypeOverrides":[{"fields":["sum(redis.node_dmi_info)"],"value":"sparkline","id":1756411544255}],"hiddenColumns":[["timeframe","start"],["timeframe","end"],["interval"],["sum(redis.node_dmi_info)"],["value.A"]]}},"querySettings":{"maxResultRecords":1000,"defaultScanLimitGbytes":500,"maxResultMegaBytes":1,"defaultSamplingRatio":10,"enableSampling":false},"queryConfig":{"version":"16.1.0","subQueries":[{"id":"A","isEnabled":true,"datatype":"metrics","metric":{"key":"redis.node_dmi_info","aggregation":"sum"},"by":["node","system_vendor","product_name","global_info","cluster","chassis_vendor","board_vendor","board_name","board_asset_tag","bios_version","bios_vendor","bios_date"],"filter":"cluster=$Cluster "}]},"davis":{"enabled":false,"davisVisualization":{"isAvailable":true}}},"14":{"type":"markdown","content":"![](https://media.ffycdn.net/us/redis/fMQoSjYaaHirTkz7jbQk.ai?width=2400&mod=v1/max=2400)"},"15":{"type":"markdown","content":"# Security Dashboard\n\nThe Security Dashboard keeps track of cluster level security metrics for Redis Enterprise."},"16":{"type":"markdown","content":"## Navigation\n\n[Node]()\n\n[Shard]()\n\n[Database]()\n\n[Active Active]()\n\n[Overview]()"}},"layouts":{"0":{"x":0,"y":5,"w":4,"h":4},"1":{"x":4,"y":5,"w":4,"h":4},"2":{"x":8,"y":5,"w":4,"h":4},"3":{"x":12,"y":5,"w":4,"h":4},"4":{"x":16,"y":5,"w":4,"h":4},"5":{"x":20,"y":5,"w":4,"h":4},"6":{"x":0,"y":9,"w":4,"h":4},"7":{"x":4,"y":9,"w":4,"h":4},"8":{"x":8,"y":9,"w":4,"h":4},"9":{"x":12,"y":9,"w":4,"h":4},"10":{"x":16,"y":9,"w":4,"h":4},"11":{"x":20,"y":9,"w":4,"h":4},"12":{"x":0,"y":13,"w":8,"h":7},"13":{"x":8,"y":13,"w":16,"h":7},"14":{"x":0,"y":0,"w":4,"h":5},"15":{"x":4,"y":0,"w":16,"h":5},"16":{"x":20,"y":0,"w":3,"h":5}},"importedWithCode":false,"settings":{}}
+{
+  "version": 19,
+  "variables": [
+    {
+      "version": 2,
+      "key": "Cluster",
+      "type": "query",
+      "visible": true,
+      "editable": true,
+      "input": "timeseries any=avg(redis.db_config), by:{cluster}\n| fieldsKeep cluster\n| sort cluster",
+      "multiple": true,
+      "defaultValue": ["3420b2ac-f1cf-4b24-b62d-61ba1ba8ed05*"]
+    }
+  ],
+  "tiles": {
+    "0": {
+      "title": "Client Connections",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { avg(redis.redis_server_connected_clients), value.A = avg(redis.redis_server_connected_clients, scalar: true) }",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": { "labelMode": "none" },
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "identifier": "value.A",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756409423225
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.redis_server_connected_clients",
+              "aggregation": "avg"
+            }
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "1": {
+      "title": "Password Failures",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.endpoint_failed_user_password_authentication), value.A = avg(redis.endpoint_failed_user_password_authentication, scalar: true) }",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": { "labelMode": "none" },
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "identifier": "value.A",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756409493109
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.endpoint_failed_user_password_authentication",
+              "aggregation": "sum"
+            }
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "2": {
+      "title": "LDAP Failures",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.endpoint_failed_ldap_authentication), value.A = avg(redis.endpoint_failed_ldap_authentication, scalar: true) }",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": { "labelMode": "none" },
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "identifier": "value.A",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756409546591
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.endpoint_failed_ldap_authentication",
+              "aggregation": "sum"
+            }
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "3": {
+      "title": "CBA Connections",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.endpoint_successful_cba_authentication), value.A = avg(redis.endpoint_successful_cba_authentication, scalar: true) }",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": { "labelMode": "none" },
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "identifier": "value.A",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756409661566
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.endpoint_successful_cba_authentication",
+              "aggregation": "sum"
+            }
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "4": {
+      "title": "LDAP Connections",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.endpoint_successful_ldap_authentication), value.A = avg(redis.endpoint_successful_ldap_authentication, scalar: true) }",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": { "labelMode": "none" },
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "identifier": "value.A",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756409699049
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.endpoint_successful_ldap_authentication",
+              "aggregation": "sum"
+            }
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "5": {
+      "title": "Password Successes",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.endpoint_successful_user_password_authentication), value.A = avg(redis.endpoint_successful_user_password_authentication, scalar: true) }",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": { "labelMode": "none" },
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "identifier": "value.A",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756409753154
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.endpoint_successful_user_password_authentication",
+              "aggregation": "sum"
+            }
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "6": {
+      "title": "Client Connections",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.endpoint_client_connection_expired), value.A = avg(redis.endpoint_client_connection_expired, scalar: true) }",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": { "labelMode": "none" },
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "identifier": "value.A",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756409897313
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.endpoint_client_connection_expired",
+              "aggregation": "sum"
+            }
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "7": {
+      "title": "Establishment Failures",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.endpoint_client_establishment_failures), value.A = avg(redis.endpoint_client_establishment_failures, scalar: true) }",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": { "labelMode": "none" },
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "identifier": "value.A",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756409897313
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.endpoint_client_establishment_failures",
+              "aggregation": "sum"
+            }
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "8": {
+      "title": "LDAP Disconnections",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.endpoint_disconnected_ldap_client), value.A = avg(redis.endpoint_disconnected_ldap_client, scalar: true) }",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": { "labelMode": "none" },
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "identifier": "value.A",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756409897313
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.endpoint_disconnected_ldap_client",
+              "aggregation": "sum"
+            }
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "9": {
+      "title": "CBA Failures",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.endpoint_failed_cba_authentication), value.A = avg(redis.endpoint_failed_cba_authentication, scalar: true) }",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": { "labelMode": "none" },
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "identifier": "value.A",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756409897313
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.endpoint_failed_cba_authentication",
+              "aggregation": "sum"
+            }
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "10": {
+      "title": "LDAP Failures",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.endpoint_failed_ldap_authentication), value.A = avg(redis.endpoint_failed_ldap_authentication, scalar: true) }",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": { "labelMode": "none" },
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "identifier": "value.A",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756409897313
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.endpoint_failed_ldap_authentication",
+              "aggregation": "sum"
+            }
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "11": {
+      "title": "Password Failures",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.endpoint_failed_user_password_authentication), value.A = avg(redis.endpoint_failed_user_password_authentication, scalar: true) }",
+      "visualization": "singleValue",
+      "visualizationSettings": {
+        "singleValue": { "labelMode": "none" },
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "unitsOverrides": [
+          {
+            "identifier": "value.A",
+            "unitCategory": "unspecified",
+            "baseUnit": "none",
+            "displayUnit": null,
+            "decimals": 0,
+            "suffix": "",
+            "delimiter": false,
+            "added": 1756409897313
+          }
+        ]
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": {
+              "key": "redis.endpoint_failed_user_password_authentication",
+              "aggregation": "sum"
+            }
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "12": {
+      "title": "",
+      "type": "data",
+      "query": "timeseries min(redis.node_cert_expires_in_seconds), by: { node, cluster, filename, filepath }\n| fieldsAdd expiry_seconds = arrayLast(`min(redis.node_cert_expires_in_seconds)`)\n| fieldsAdd `Expires in` = duration(expiry_seconds, \"s\")\n| fieldsRemove expiry_seconds\n| fieldsRemove cluster\n\n\n\n\n",
+      "visualization": "table",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "table": {
+          "columnTypeOverrides": [
+            {
+              "fields": ["min(redis.node_cert_expires_in_seconds)"],
+              "value": "sparkline",
+              "id": 1756411060760
+            }
+          ],
+          "columnOrder": [
+            "[\"timeframe\",\"start\"]",
+            "[\"timeframe\",\"end\"]",
+            "[\"interval\"]",
+            "[\"node\"]",
+            "[\"filename\"]",
+            "[\"filepath\"]",
+            "[\"min(redis.node_cert_expires_in_seconds)\"]",
+            "[\"Expires in\"]"
+          ],
+          "hiddenColumns": [
+            ["timeframe", "start"],
+            ["timeframe", "end"],
+            ["interval"],
+            ["min(redis.node_cert_expires_in_seconds)"]
+          ],
+          "sortBy": [
+            { "columnId": "[\"expiry_seconds\"]", "direction": "descending" }
+          ]
+        }
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "13": {
+      "title": "Node Info",
+      "type": "data",
+      "subType": "dql-builder-metrics",
+      "query": "timeseries { sum(redis.node_dmi_info), value.A = avg(redis.node_dmi_info, scalar: true) }, by: { node, system_vendor, product_name, global_info, cluster, chassis_vendor, board_vendor, board_name, board_asset_tag, bios_version, bios_vendor, bios_date }, filter: { matchesValue(cluster, $Cluster) }",
+      "visualization": "table",
+      "visualizationSettings": {
+        "autoSelectVisualization": false,
+        "thresholds": [],
+        "table": {
+          "columnTypeOverrides": [
+            {
+              "fields": ["sum(redis.node_dmi_info)"],
+              "value": "sparkline",
+              "id": 1756411544255
+            }
+          ],
+          "hiddenColumns": [
+            ["timeframe", "start"],
+            ["timeframe", "end"],
+            ["interval"],
+            ["sum(redis.node_dmi_info)"],
+            ["value.A"]
+          ]
+        }
+      },
+      "querySettings": {
+        "maxResultRecords": 1000,
+        "defaultScanLimitGbytes": 500,
+        "maxResultMegaBytes": 1,
+        "defaultSamplingRatio": 10,
+        "enableSampling": false
+      },
+      "queryConfig": {
+        "version": "16.1.0",
+        "subQueries": [
+          {
+            "id": "A",
+            "isEnabled": true,
+            "datatype": "metrics",
+            "metric": { "key": "redis.node_dmi_info", "aggregation": "sum" },
+            "by": [
+              "node",
+              "system_vendor",
+              "product_name",
+              "global_info",
+              "cluster",
+              "chassis_vendor",
+              "board_vendor",
+              "board_name",
+              "board_asset_tag",
+              "bios_version",
+              "bios_vendor",
+              "bios_date"
+            ],
+            "filter": "cluster=$Cluster "
+          }
+        ]
+      },
+      "davis": {
+        "enabled": false,
+        "davisVisualization": { "isAvailable": true }
+      }
+    },
+    "14": {
+      "type": "markdown",
+      "content": "![](https://media.ffycdn.net/us/redis/fMQoSjYaaHirTkz7jbQk.ai?width=2400&mod=v1/max=2400)"
+    },
+    "15": {
+      "type": "markdown",
+      "content": "# Security Dashboard\n\nThe Security Dashboard keeps track of cluster level security metrics for Redis Enterprise."
+    },
+    "16": {
+      "type": "markdown",
+      "content": "## Navigation\n\n[Node]()\n\n[Shard]()\n\n[Database]()\n\n[Active Active]()\n\n[Overview]()"
+    }
+  },
+  "layouts": {
+    "0": { "x": 0, "y": 5, "w": 4, "h": 4 },
+    "1": { "x": 4, "y": 5, "w": 4, "h": 4 },
+    "2": { "x": 8, "y": 5, "w": 4, "h": 4 },
+    "3": { "x": 12, "y": 5, "w": 4, "h": 4 },
+    "4": { "x": 16, "y": 5, "w": 4, "h": 4 },
+    "5": { "x": 20, "y": 5, "w": 4, "h": 4 },
+    "6": { "x": 0, "y": 9, "w": 4, "h": 4 },
+    "7": { "x": 4, "y": 9, "w": 4, "h": 4 },
+    "8": { "x": 8, "y": 9, "w": 4, "h": 4 },
+    "9": { "x": 12, "y": 9, "w": 4, "h": 4 },
+    "10": { "x": 16, "y": 9, "w": 4, "h": 4 },
+    "11": { "x": 20, "y": 9, "w": 4, "h": 4 },
+    "12": { "x": 0, "y": 13, "w": 8, "h": 7 },
+    "13": { "x": 8, "y": 13, "w": 16, "h": 7 },
+    "14": { "x": 0, "y": 0, "w": 4, "h": 5 },
+    "15": { "x": 4, "y": 0, "w": 16, "h": 5 },
+    "16": { "x": 20, "y": 0, "w": 3, "h": 5 }
+  },
+  "importedWithCode": false,
+  "settings": {}
+}

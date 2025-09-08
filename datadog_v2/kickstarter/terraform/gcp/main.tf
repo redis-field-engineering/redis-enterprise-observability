@@ -56,7 +56,7 @@ resource "null_resource" "install_datadog_agent" {
                 "git checkout ${var.branch}",
                 "cd ${var.datadog_integration_name}",
                 "python3.12 -m build --wheel",
-                "sudo datadog-agent integration install -r -w  ./dist/datadog_redis_enterprise_prometheus-2.0.1-py3-none-any.whl",
+                "sudo datadog-agent integration install -r -w  ./dist/datadog_redis_enterprise_prometheus-1.0.0-py3-none-any.whl",
             ]
         }
   

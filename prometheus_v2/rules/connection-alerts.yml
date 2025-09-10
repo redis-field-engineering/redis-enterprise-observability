@@ -13,7 +13,7 @@ groups:
           description: "No Connections - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Connections: {{$value}}"
           runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections
       - alert: Excessive Connections
-        expr: endpoint_client_connections > 64000
+        expr: endpoint_client_connections - endpoint_client_disconnections > 64000
         for: 30s
         labels:
           severity: critical

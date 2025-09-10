@@ -1,29 +1,24 @@
 groups:
- - name: latency
-   rules:
-   - alert: Average Latency Warning
-     expr: '(irate(endpoint_acc_latency{job="redis", cluster="localhost", db="1"}[1m])) / (irate(endpoint_total_started_res{job="redis", cluster="localhost", db="1"}[1m]))'
-     for: 30s
-     labels:
-       severity: notification
-       type: latency
-       job: redis
-       cluster: localhost
-       db: 1
-     annotations:
-       summary: Average Latency Warning
-       description: "High Latency - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Latency: {{$value}} ms"
-       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency
-   - alert: Average Latency Critical
-     expr: '(irate(endpoint_acc_latency{job="redis", cluster="localhost", db="1"}[1m])) / (irate(endpoint_total_started_res{job="redis", cluster="localhost", db="1"}[1m]))'
-     for: 30s
-     labels:
-       severity: critical
-       type: latency
-       job: redis
-       cluster: localhost
-       db: 1
-     annotations:
-       summary: Average Latency Critical
-       description: "High Latency - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Latency: {{$value}} ms"
-       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency
+  - name: latency
+    rules:
+      - alert: Average Latency Warning
+        # this will depend on your use case and what your expected actual latency will be - in this example we are alerting if the average latency is over 2ms
+        expr: '(sum by (db)(irate(endpoint_read_requests_latency_histogram_sum[1m]) + irate(endpoint_write_requests_latency_histogram_sum[1m]) + irate(endpoint_other_requests_latency_histogram_sum[1m])))/(sum by (db)(irate(endpoint_read_requests[1m]) + irate(endpoint_write_requests[1m]) + irate(endpoint_other_requests[1m])))/1000 > 2'
+        for: 30s
+        labels:
+          severity: notification
+          type: latency
+        annotations:
+          summary: Average Latency Warning
+          description: "High Latency - DB: {{$labels.db}} Latency: {{$value}} ms"
+          runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency
+      - alert: Average Latency Critical
+        expr: '(sum by (db)(irate(endpoint_read_requests_latency_histogram_sum[1m]) + irate(endpoint_write_requests_latency_histogram_sum[1m]) + irate(endpoint_other_requests_latency_histogram_sum[1m])))/(sum by (db)(irate(endpoint_read_requests[1m]) + irate(endpoint_write_requests[1m]) + irate(endpoint_other_requests[1m])))/1000 > 5'
+        for: 30s
+        labels:
+          severity: notification
+          type: latency
+        annotations:
+          summary: Average Latency Warning
+          description: "High Latency - DB: {{$labels.db}} Latency: {{$value}} ms"
+          runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency

@@ -2,7 +2,7 @@ groups:
   - name: throughput
     rules:
       - alert: No Redis Requests
-        expr: endpoint_read_requests < 1 and endpoint_write_requests < 1
+        expr: increase(endpoint_read_requests[1m]) < 1 and increase(endpoint_write_requests[1m]) < 1
         for: 30s
         labels:
           severity: critical
@@ -12,7 +12,7 @@ groups:
           description: "Too few Redis operations - Cluster: {{$labels.cluster}} DB: {{$labels.db}}  {{$value}} (ops/sec)"
           runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections
       - alert: Excessive Redis Requests
-        expr: (endpoint_read_requests + endpoint_write_requests)/2 > 1000000
+        expr: (irate(endpoint_read_requests[1m]) + irate(endpoint_write_requests[1m]))/2 > 100000 # The actual threshold will be based on your Redis Database, adjust as needed 
         for: 30s
         labels:
           severity: critical

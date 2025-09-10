@@ -6,31 +6,26 @@ groups:
  - name: latency
    rules:
    - alert: Average Latency Warning
-     expr: '(irate(endpoint_acc_latency{job="redis", cluster="localhost", db="1"}[1m])) / (irate(endpoint_total_started_res{job="redis", cluster="localhost", db="1"}[1m]))'
+    # this will depend on your use case and what your expected actual latency will be - in this example we are alerting if the average latency is over 2ms
+     expr: '(sum by (db)(irate(endpoint_read_requests_latency_histogram_sum[1m]) + irate(endpoint_write_requests_latency_histogram_sum[1m]) + irate(endpoint_other_requests_latency_histogram_sum[1m])))/(sum by (db)(irate(endpoint_read_requests[1m]) + irate(endpoint_write_requests[1m]) + irate(endpoint_other_requests[1m])))/1000 > 2' 
      for: 30s
      labels:
-       severity: notification
-       type: latency
-       job: redis
-       cluster: localhost
-       db: 1
+      severity: notification
+      type: latency
      annotations:
-       summary: Average Latency Warning
-       description: "High Latency - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Latency: {{$value}} ms"
-       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency
+      summary: Average Latency Warning
+      description: "High Latency - DB: {{$labels.db}} Latency: {{$value}} ms"
+      runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency
    - alert: Average Latency Critical
-     expr: '(irate(endpoint_acc_latency{job="redis", cluster="localhost", db="1"}[1m])) / (irate(endpoint_total_started_res{job="redis", cluster="localhost", db="1"}[1m]))'
+     expr: '(sum by (db)(irate(endpoint_read_requests_latency_histogram_sum[1m]) + irate(endpoint_write_requests_latency_histogram_sum[1m]) + irate(endpoint_other_requests_latency_histogram_sum[1m])))/(sum by (db)(irate(endpoint_read_requests[1m]) + irate(endpoint_write_requests[1m]) + irate(endpoint_other_requests[1m])))/1000 > 5' 
      for: 30s
      labels:
-       severity: critical
-       type: latency
-       job: redis
-       cluster: localhost
-       db: 1
+      severity: notification
+      type: latency
      annotations:
-       summary: Average Latency Critical
-       description: "High Latency - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Latency: {{$value}} ms"
-       runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency
+      summary: Average Latency Warning
+      description: "High Latency - DB: {{$labels.db}} Latency: {{$value}} ms"
+      runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#read-latency
 
  - name: connections
    rules:
@@ -46,7 +41,7 @@ groups:
        description: "No Connections - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Connections: {{$value}}"
        runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections
    - alert: Excessive Connections
-     expr: endpoint_client_connections > 64000
+     expr: endpoint_client_connections - endpoint_client_disconnections > 64000
      for: 30s
      labels:
        severity: critical
@@ -60,7 +55,7 @@ groups:
  - name: throughput
    rules:
    - alert: No Redis Requests
-     expr: endpoint_read_requests < 1 and endpoint_write_requests < 1
+     expr: increase(endpoint_read_requests[1m]) < 1 and increase(endpoint_write_requests[1m]) < 1
      for: 30s
      labels:
        severity: critical
@@ -70,7 +65,7 @@ groups:
        description: "Too few Redis operations - Cluster: {{$labels.cluster}} DB: {{$labels.db}}  {{$value}} (ops/sec)"
        runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#connections
    - alert: Excessive Redis Requests
-     expr: (endpoint_read_requests + endpoint_write_requests)/2 > 1000000
+     expr: (irate(endpoint_read_requests[1m]) + irate(endpoint_write_requests[1m]))/2 > 100000 # The actual threshold will be based on your Redis Database, adjust as needed 
      for: 30s
      labels:
        severity: critical
@@ -83,7 +78,7 @@ groups:
  - name: capacity
    rules:
    - alert: DB full
-     expr: round((redis_server_used_memory{job="redis", cluster="localhost"}/redis_server_memory_limit{job="redis", cluster="localhost"}) * 100) > 95
+     expr: ((redis_server_used_memory/redis_server_maxmemory) * 100 ) > 95
      for: 30s
      labels:
        severity: critical
@@ -93,7 +88,7 @@ groups:
        description: "DB Usage - Cluster: {{$labels.cluster}} DB: {{$labels.db}} Usage: {{$value}}% full"
        runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory
    - alert: DB full in 2 hours
-     expr: round((redis_server_used_memory{job="redis", cluster="localhost"}/redis_server_memory_limit{job="redis", cluster="localhost"}) * 100) < 95 and (predict_linear(redis_server_used_memory{job="redis", cluster="localhost"}[15m], 2 * 3600) / redis_server_memory_limit{job="redis", cluster="localhost"}) > 0.3 and round(predict_linear(redis_server_used_memory{job="redis", cluster="localhost"}[15m], 2 * 3600)/redis_server_memory_limit{job="redis", cluster="localhost"}) > 0.95
+     expr: round((redis_server_used_memory/redis_server_maxmemory) * 100) < 95 and (predict_linear(redis_server_used_memory[15m], 2 * 3600) / redis_server_maxmemory) > 0.3 and round(predict_linear(redis_server_used_memory[15m], 2 * 3600)/redis_server_maxmemory) > 0.95
      for: 30s
      labels:
        severity: notification
@@ -106,7 +101,7 @@ groups:
  - name: utilization
    rules:
    - alert: Low Hit Ratio
-     expr: (redis_server_keyspace_read_hits{role="master"}/(redis_server_keyspace_read_hits{role="master"} + redis_server_keyspace_read_misses{role="master"})) < 1
+     expr: (irate(redis_server_keyspace_read_hits{role="master"}[1m])/irate(redis_server_keyspace_read_misses{role="master"}[1m])) < 1
      for: 30s
      labels:
        severity: notification
@@ -173,7 +168,7 @@ groups:
  - name: nodes
    rules:
    - alert: Node Not Responding
-     expr: count(node_metrics_up) != 3
+     expr: count(node_metrics_up) != 3 # will depend on the number of nodes in your Redis cluster
      for: 5m
      labels:
        severity: critical
@@ -193,7 +188,7 @@ groups:
        summary: Node Persistent Storage
        description: "Low on Persistent Storage - Cluster: {{$labels.cluster}} Space Free: {{$value}}%"
    - alert: Node Ephemeral Storage
-     expr: round((node_ephemeral_storage_free_bytes/node_ephemeral_storage_avail_bytes) * 100) <= 5
+     expr: node_ephemeral_storage_free_bytes < 5000000000 # Depends on your environment how much ephemeral storage you want to trigger on (5GB in this example)
      for: 2m
      labels:
        severity: critical
@@ -202,7 +197,7 @@ groups:
        summary: Node Ephemeral Storage
        description: "Low on Ephemeral Storage - Cluster: {{$labels.cluster}} Space Free: {{$value}}%"
    - alert: Node Free Memory
-     expr: round((node_available_memory_bytes/node_memory_MemFree_bytes) * 100) <= 15
+     expr: node_available_memory_bytes < 5000000000 # Depends on your environment how much memory you want to trigger on (5GB in this example)
      for: 2m
      labels:
        severity: critical

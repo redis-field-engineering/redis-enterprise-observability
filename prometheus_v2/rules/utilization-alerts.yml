@@ -2,7 +2,7 @@ groups:
   - name: utilization
     rules:
       - alert: Low Hit Ratio
-        expr: (redis_server_keyspace_read_hits{role="master"}/(redis_server_keyspace_read_hits{role="master"} + redis_server_keyspace_read_misses{role="master"})) < 1
+        expr: (irate(redis_server_keyspace_read_hits{role="master"}[1m])/irate(redis_server_keyspace_read_misses{role="master"}[1m])) < 1
         for: 30s
         labels:
           severity: notification

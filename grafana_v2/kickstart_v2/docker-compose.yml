@@ -27,6 +27,8 @@ services:
       - prometheus
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=very-secret-password
     networks:
       kickstart:
         ipv4_address: "172.27.2.3"

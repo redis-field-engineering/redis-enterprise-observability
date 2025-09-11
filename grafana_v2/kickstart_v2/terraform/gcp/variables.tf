@@ -86,3 +86,16 @@ variable "existing_vpc_name" {
   default     = null
   description = "Name of existing VPC to use for peering. Required when existing_vpc_id is provided."
 }
+
+variable "git_branch" {
+    type      = string
+    description = "The git branch to use for the Grafana dashboards and Prometheus rules"
+    default   = "main"
+}
+
+variable "grafana_password" {
+    type        = string
+    description = "The Grafana admin password"
+    default     = "admin"
+    sensitive   = true
+}

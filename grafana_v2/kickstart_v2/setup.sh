@@ -10,14 +10,18 @@ PROJECT="demo"
 
 # this script can take a second argument; the folder from which it should load dashboards
 # by default it will use ../dashboards/grafana_v9-11/software/basic
+# this script can take a third argument; the grafana password (defaults to 'admin')
+
+# Set default password
+password="admin"
 
 if [ $# -eq 0 ]; then
-  echo "using default endpoint and folder"
+  echo "using default endpoint, folder, and password"
   folder="../dashboards/grafana_v9-11/software/basic/*"
 fi
 
 if [ $# -eq 1 ]; then
-  echo "using endpoint $1 and default folder"
+  echo "using endpoint $1, default folder, and default password"
   folder="../dashboards/grafana_v9-11/software/basic/*"
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then # Linux
       sed -i "s/host.docker.internal/$1/g" prometheus.yml
@@ -28,8 +32,24 @@ fi
 
 if [ $# -eq 2 ]; then
   if [ -d "$2" ]; then
-    echo "using endpoint $1 and folder $2"
+    echo "using endpoint $1, folder $2, and default password"
     folder="$2/*"
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then # Linux
+      sed -i "s/host.docker.internal/$1/g" prometheus.yml
+    elif [[ "$OSTYPE" == "darwin"* ]]; then # Mac OSX
+      sed -i '' "s/host.docker.internal/$1/g" prometheus.yml
+    fi
+  else
+    echo "second argument must be a directory!"
+    exit 1
+  fi
+fi
+
+if [ $# -eq 3 ]; then
+  if [ -d "$2" ]; then
+    echo "using endpoint $1, folder $2, and password $3"
+    folder="$2/*"
+    password="$3"
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then # Linux
       sed -i "s/host.docker.internal/$1/g" prometheus.yml
     elif [[ "$OSTYPE" == "darwin"* ]]; then # Mac OSX
@@ -54,7 +74,7 @@ done
 # create prometheus datasource
 echo ""
 echo "create grafana datasource"
-curl -s 'http://admin:admin@localhost:3000/api/datasources' \
+curl -s "http://admin:$password@localhost:3000/api/datasources" \
 --header 'Accept: application/json' \
 --header 'Content-Type: application/json' \
 --data '{   "name": "prometheus-demo",
@@ -68,13 +88,13 @@ curl -s 'http://admin:admin@localhost:3000/api/datasources' \
 echo ""
 echo ""
 echo "perform datasource health check"
-data=`curl -s 'http://admin:admin@localhost:3000/api/datasources/name/prometheus-demo'`
+data=`curl -s "http://admin:$password@localhost:3000/api/datasources/name/prometheus-demo"`
 
 str=${data#*\"uid\"\:\"*}
 uid=${str%%\"*}
 
 # use the datasource's uid to check its health
-data=`curl -s 'http://admin:admin@localhost:3000/api/datasources/uid/'$uid'/health'`
+data=`curl -s "http://admin:$password@localhost:3000/api/datasources/uid/$uid/health"`
 
 str=${data#*\"status\"\:\"*}
 status=${str%%\"*}
@@ -95,7 +115,7 @@ for file in $folder; do
         echo "$file"
         d=`cat "$file"`
         echo "{  \"dashboard\": $d,\"folderId\": 0,  \"message\": \"Created by Redis demo setup script\",  \"overwrite\": false}" \
-        | sed s/\"uid\"\:\ \"\$\{DS_PROMETHEUS\}\"/\"name\"\:\ \"prometheus-demo\"/g | curl -s 'http://admin:admin@localhost:3000/api/dashboards/db' \
+        | sed s/\"uid\"\:\ \"\$\{DS_PROMETHEUS\}\"/\"name\"\:\ \"prometheus-demo\"/g | curl -s "http://admin:$password@localhost:3000/api/dashboards/db" \
                --header 'Accept: application/json' \
                --header 'Content-Type: application/json' \
                --data-binary @-
@@ -104,7 +124,7 @@ done
 
 echo ""
 echo "You can open a browser and access Grafana, and Prometheus at:"
-echo "  Grafana: http://localhost:3000 (username=admin and password=admin)"
+echo "  Grafana: http://localhost:3000 (username=admin and password=$password)"
 echo "  Prometheus: http://localhost:9090"
 echo ""
 echo ""

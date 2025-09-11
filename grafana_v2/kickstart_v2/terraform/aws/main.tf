@@ -265,7 +265,7 @@ resource "null_resource" "run-kickstart" {
         inline = [
             "cd redis-enterprise-observability/grafana_v2/kickstart_v2",
             "git checkout main",
-            "./setup.sh ${local.redis_db_primary_fqdn} ../dashboards/grafana_v9-11/cloud/basic",
+            "./setup.sh ${local.redis_db_primary_fqdn} ../dashboards/grafana_v9-11/cloud/basic ${var.grafana_password}",
         ]
     }
 }

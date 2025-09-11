@@ -86,3 +86,10 @@ variable "existing_security_group_id" {
   default     = null
   description = "ID of existing security group to use. Required when existing_vpc_id is provided."
 }
+
+variable "grafana_password" {
+  type        = string
+  description = "The Grafana admin password"
+  default     = "admin"
+  sensitive   = true
+}

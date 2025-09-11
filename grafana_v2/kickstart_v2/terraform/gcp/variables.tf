@@ -92,3 +92,10 @@ variable "git_branch" {
     description = "The git branch to use for the Grafana dashboards and Prometheus rules"
     default   = "main"
 }
+
+variable "grafana_password" {
+    type        = string
+    description = "The Grafana admin password"
+    default     = "admin"
+    sensitive   = true
+}

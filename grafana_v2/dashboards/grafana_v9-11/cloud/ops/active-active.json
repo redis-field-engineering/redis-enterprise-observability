@@ -1612,7 +1612,7 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "Test Active-Active Lag V2",
+    "title": "Active-Active Lag",
     "uid": "000000001114",
     "version": 2,
     "weekStart": ""

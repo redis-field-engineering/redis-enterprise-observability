@@ -86,7 +86,7 @@
         "title": " Node Dashboard - V2",
         "tooltip": "",
         "type": "link",
-        "url": "https://monitoring.qa.redislabs.com/grafana/d/x13f49YIkf/node-dashboard-v2?"
+        "url": "/d/000000001113/test-node-dashboard-v2?"
       },
       {
         "asDropdown": false,
@@ -98,7 +98,7 @@
         "title": " Database Dashboard - V2",
         "tooltip": "",
         "type": "link",
-        "url": "https://monitoring.qa.redislabs.com/grafana/d/4W6ny8kHk12/database-dashboard-v2?"
+        "url": "/d/4W6ny8kHk12f/test-database-dashboard-v2?"
       },
       {
         "asDropdown": false,
@@ -110,7 +110,7 @@
         "title": "Shard dashboard - V2",
         "tooltip": "",
         "type": "link",
-        "url": "https://monitoring.qa.redislabs.com/grafana/d/GHf7a1LSzh/shard-dashboard-v2?"
+        "url": "/d/000000001116/test-shard-dashboard-v2?"
       }
     ],
     "liveNow": false,
@@ -3228,7 +3228,7 @@
       ]
     },
     "timezone": "utc",
-    "title": "Test Cluster Dashboard - V2",
+    "title": "Cluster Dashboard",
     "uid": "000000001111",
     "version": 2,
     "weekStart": ""

@@ -3560,7 +3560,7 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "Test RediSearch QPS dashboard 2",
+    "title": "RediSearch QPS dashboard",
     "uid": "000000001115",
     "version": 1,
     "weekStart": ""

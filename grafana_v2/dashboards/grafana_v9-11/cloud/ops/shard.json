@@ -2677,7 +2677,6 @@
     "refresh": "5s",
     "schemaVersion": 39,
     "tags": [
-      "Operations Preview"
     ],
     "templating": {
       "list": [

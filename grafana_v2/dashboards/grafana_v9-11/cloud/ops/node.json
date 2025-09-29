@@ -3506,8 +3506,6 @@
     ],
     "schemaVersion": 39,
     "tags": [
-      "Operations Preview",
-      "Customer view"
     ],
     "templating": {
       "list": [

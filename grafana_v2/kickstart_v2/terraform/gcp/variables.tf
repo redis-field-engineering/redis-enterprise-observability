@@ -99,3 +99,16 @@ variable "grafana_password" {
     default     = "admin"
     sensitive   = true
 }
+
+variable "subscription_name" {
+    type        = string
+    description = "The name of the Redis Cloud subscription"
+    default = ""
+  
+}
+
+variable "redis_fqdn" {
+    type        = string
+    description = "The FQDN of the Redis Cloud database"
+    default     = null  
+}

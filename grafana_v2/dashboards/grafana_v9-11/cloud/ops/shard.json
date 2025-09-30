@@ -542,7 +542,7 @@
               "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
-            "expr": "redis_server_used_ram{db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} - redis_server_mem_aof_buffer{cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"}  - redis_mem_clients_slaves{db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}",
+            "expr": "redis_server_used_ram{db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} - redis_server_mem_aof_buffer{cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"}  - redis_server_mem_clients_slaves{db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}",
             "hide": false,
             "legendFormat": "used ram - slave/aof bufs",
             "range": true,
@@ -593,7 +593,7 @@
             "editorMode": "code",
             "expr": "redis_server_max_process_mem{db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} < redis_server_used_memory{db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} * 1.5",
             "hide": false,
-            "legendFormat": "max_process_mem (when low. mear maxmemory)",
+            "legendFormat": "max_process_mem (when low. near maxmemory)",
             "range": true,
             "refId": "I"
           },

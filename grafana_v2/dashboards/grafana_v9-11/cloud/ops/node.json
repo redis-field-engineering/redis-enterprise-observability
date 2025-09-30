@@ -3024,7 +3024,7 @@
               "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
-            "expr": "redis_rdb_bgsave_in_progress{node=\"$node\",cluster=\"$cluster\"}",
+            "expr": "redis_server_rdb_bgsave_in_progress{node=\"$node\",cluster=\"$cluster\"}",
             "format": "time_series",
             "hide": false,
             "intervalFactor": 2,
@@ -3039,7 +3039,7 @@
               "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
-            "expr": "redis_aof_rewrite_in_progress{node=\"$node\",cluster=\"$cluster\"}",
+            "expr": "redis_server_aof_rewrite_in_progress{node=\"$node\",cluster=\"$cluster\"}",
             "format": "time_series",
             "hide": false,
             "intervalFactor": 2,

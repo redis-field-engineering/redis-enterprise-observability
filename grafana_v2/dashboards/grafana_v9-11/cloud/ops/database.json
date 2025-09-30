@@ -882,7 +882,7 @@
             },
             "editorMode": "code",
             "exemplar": false,
-            "expr": "count(redis_up{cluster=\"$cluster\", db=\"$db\"})",
+            "expr": "count(redis_server_up{cluster=\"$cluster\", db=\"$db\"})",
             "hide": true,
             "instant": true,
             "legendFormat": "__auto",
@@ -3458,7 +3458,7 @@
             "editorMode": "code",
             "expr": "redis_server_blocked_clients{db=\"$db\", cluster=\"$cluster\", role=\"master\"}",
             "hide": false,
-            "legendFormat": "Redis: {{Redis}} blocked clients",
+            "legendFormat": "Redis: {{redis}} blocked clients",
             "range": true,
             "refId": "D"
           }

@@ -32,6 +32,7 @@ provider "google" {
 
 # Data source to fetch Redis Cloud database information
 data "rediscloud_database" "redis_db" {
+    count = var.existing_subnet_id == null ? 1 : 0
     subscription_id = var.subscription_id
     name           = var.db_name
 }
@@ -46,7 +47,7 @@ locals {
   # Extract FQDN from Redis Cloud database private_endpoint
   # Format: redis-18738.internal.c41372.us-central1-mz.gcp.cloud.rlrcp.com:18738
   # Extract: internal.c41372.us-central1-mz.gcp.cloud.rlrcp.com
-  redis_db_primary_fqdn = regex("^[^.]+\\.(.+):\\d+$", data.rediscloud_database.redis_db.private_endpoint)[0]
+  redis_db_primary_fqdn = var.redis_fqdn != null ? var.redis_fqdn : regex("^[^.]+\\.(.+):\\d+$", data.rediscloud_database.redis_db[0].private_endpoint)[0]
 }
 
 # Conditionally create VPC only if not using existing one
@@ -120,8 +121,9 @@ resource "google_compute_firewall" "redispeer_allow_egress" {
 }
 
 
+# VPC Peering for regular (non-Active-Active) subscriptions
 resource "rediscloud_subscription_peering" "redispeer-sub-vpc-peering" {
-    count   = var.existing_vpc_id == null ? 1 : 0
+    count   = var.existing_vpc_id == null  ? 1 : 0
     subscription_id = var.subscription_id
     provider_name="GCP"
     gcp_project_id = var.gcp_project

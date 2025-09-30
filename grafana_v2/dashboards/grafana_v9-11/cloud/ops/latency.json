@@ -1,0 +1,2589 @@
+{
+    "__inputs": [
+      {
+        "name": "DS_PROMETHEUS",
+        "label": "Prometheus",
+        "description": "",
+        "type": "datasource",
+        "pluginId": "prometheus",
+        "pluginName": "Prometheus"
+      }
+    ],
+    "__elements": {},
+    "__requires": [
+      {
+        "type": "grafana",
+        "id": "grafana",
+        "name": "Grafana",
+        "version": "10.4.19"
+      },
+      {
+        "type": "datasource",
+        "id": "prometheus",
+        "name": "Prometheus",
+        "version": "1.0.0"
+      },
+      {
+        "type": "panel",
+        "id": "stat",
+        "name": "Stat",
+        "version": ""
+      },
+      {
+        "type": "panel",
+        "id": "timeseries",
+        "name": "Time series",
+        "version": ""
+      }
+    ],
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "target": {
+            "limit": 100,
+            "matchAny": false,
+            "tags": [],
+            "type": "dashboard"
+          },
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": null,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 12,
+        "panels": [],
+        "title": "Proxy Latency",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "µs"
+          },
+          "overrides": [
+            {
+              "__systemRef": "hideSeriesFrom",
+              "matcher": {
+                "id": "byNames",
+                "options": {
+                  "mode": "exclude",
+                  "names": [
+                    "database avg latency"
+                  ],
+                  "prefix": "All except:",
+                  "readOnly": true
+                }
+              },
+              "properties": [
+                {
+                  "id": "custom.hideFrom",
+                  "value": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 1
+        },
+        "id": 39,
+        "options": {
+          "legend": {
+            "calcs": [
+              "min",
+              "max",
+              "mean"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "8.3.3",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "exemplar": true,
+            "expr": "avg(rate(endpoint_read_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) + \r\nrate(endpoint_write_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) + \r\nrate(endpoint_other_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])\r\n) by (db) / avg(rate(endpoint_read_requests_latency_histogram_count{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) + \r\nrate(endpoint_write_requests_latency_histogram_count{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) + \r\nrate(endpoint_other_requests_latency_histogram_count{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])\r\n) by (db)",
+            "hide": false,
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "database avg latency",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "exemplar": true,
+            "expr": "rate(endpoint_write_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) /  rate(endpoint_write_requests_latency_histogram_count{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])",
+            "hide": false,
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "database avg write latency",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "exemplar": true,
+            "expr": "rate(endpoint_read_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) / rate(endpoint_read_requests_latency_histogram_count{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])",
+            "hide": false,
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "database avg read latency",
+            "range": true,
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "exemplar": true,
+            "expr": "rate(endpoint_other_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) / rate(endpoint_other_requests_latency_histogram_count{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])",
+            "hide": false,
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "database avg other latency",
+            "range": true,
+            "refId": "D"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "max_over_time((\r\n  rate(endpoint_read_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) + \r\n  rate(endpoint_write_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) + \r\n  rate(endpoint_other_requests_latency_histogram_sum{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])\r\n)[$aggregation:]) / max_over_time((\r\n  rate(endpoint_read_requests_latency_histogram_count{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) + \r\n  rate(endpoint_write_requests_latency_histogram_count{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) + \r\n  rate(endpoint_other_requests_latency_histogram_count{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])\r\n)[$aggregation:])",
+            "hide": false,
+            "legendFormat": "database avg latency max",
+            "range": true,
+            "refId": "F"
+          }
+        ],
+        "title": "Avg Latency",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 11,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "µs"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 1
+        },
+        "id": 14,
+        "options": {
+          "legend": {
+            "calcs": [
+              "min",
+              "max",
+              "mean"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true,
+            "sortBy": "Max",
+            "sortDesc": false
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "8.5.11",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "avg(rate(endpoint_write_requests_latency_histogram_sum{cluster=\"$cluster\", db=~\"$db.*\"}[$__rate_interval]) + rate(endpoint_read_requests_latency_histogram_sum{cluster=\"$cluster\", db=~\"$db.*\"}[$__rate_interval]) + rate(endpoint_other_requests_latency_histogram_sum{cluster=\"$cluster\", db=~\"$db.*\"}[$__rate_interval])) by (proxy, node, db) / avg(rate(endpoint_write_requests_latency_histogram_count{cluster=\"$cluster\", db=~\"$db.*\"}[$__rate_interval]) + rate(endpoint_read_requests_latency_histogram_count{cluster=\"$cluster\", db=~\"$db.*\"}[$__rate_interval]) + rate(endpoint_other_requests_latency_histogram_count{cluster=\"$cluster\", db=~\"$db.*\"}[$__rate_interval])) by (proxy, node, db)",
+            "format": "heatmap",
+            "hide": true,
+            "legendFormat": "listener {{proxy}}  node {{node}} - listener_acc_latency",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "avg(rate(endpoint_write_requests_latency_histogram_sum{cluster=\"$cluster\", db=~\"$db.*\"}[$__rate_interval])) by (proxy, node, db) / avg(rate(endpoint_write_requests_latency_histogram_count{cluster=\"$cluster\", db=~\"$db.*\"}[$__rate_interval])) by (proxy, node, db)",
+            "hide": false,
+            "legendFormat": "listener {{proxy}}  node {{node}} - listener_acc_write_latency",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "avg(rate(endpoint_read_requests_latency_histogram_sum{cluster=\"$cluster\", db=~\"$db.*\"}[$__rate_interval])) by (proxy, node, db) / avg(rate(endpoint_read_requests_latency_histogram_count{cluster=\"$cluster\", db=~\"$db.*\"}[$__rate_interval]))  by (proxy, node, db)",
+            "hide": false,
+            "legendFormat": "listener {{proxy}}  node {{node}} - listener_acc_read_latency",
+            "range": true,
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "avg(rate(endpoint_other_requests_latency_histogram_sum{cluster=\"$cluster\", db=~\"$db.*\"}[$__rate_interval])) by (proxy, node, db) / avg(rate(endpoint_other_requests_latency_histogram_count{cluster=\"$cluster\", db=~\"$db.*\"}[$__rate_interval])) by (proxy, node, db)",
+            "hide": false,
+            "legendFormat": "listener {{proxy}}  node {{node}} - listener_acc_other_latency",
+            "range": true,
+            "refId": "D"
+          }
+        ],
+        "title": "Avg Proxy Latency ",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 12,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "log": 2,
+                "type": "log"
+              },
+              "showPoints": "always",
+              "spanNulls": true,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "decimals": 2,
+            "mappings": [],
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "µs"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 11,
+          "w": 8,
+          "x": 0,
+          "y": 9
+        },
+        "id": 46,
+        "options": {
+          "legend": {
+            "calcs": [
+              "last",
+              "min",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "8.5.11",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.95, sum(rate(endpoint_read_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
+            "format": "time_series",
+            "legendFormat": "Read",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.95, sum(rate(endpoint_write_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
+            "hide": false,
+            "legendFormat": "Write",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.95, sum(rate(endpoint_other_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
+            "hide": false,
+            "legendFormat": "Other",
+            "range": true,
+            "refId": "C"
+          }
+        ],
+        "title": "p95 Latencies for Read, Write, and Other Requests",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 12,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "log": 2,
+                "type": "log"
+              },
+              "showPoints": "always",
+              "spanNulls": true,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "decimals": 2,
+            "mappings": [],
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "µs"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 11,
+          "w": 8,
+          "x": 8,
+          "y": 9
+        },
+        "id": 44,
+        "options": {
+          "legend": {
+            "calcs": [
+              "last",
+              "min",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.99, sum(rate(endpoint_read_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
+            "format": "time_series",
+            "legendFormat": "Read",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.99, sum(rate(endpoint_write_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
+            "hide": false,
+            "legendFormat": "Write",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.99, sum(rate(endpoint_other_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
+            "hide": false,
+            "legendFormat": "Other",
+            "range": true,
+            "refId": "C"
+          }
+        ],
+        "title": "p99 Latencies for Read, Write, and Other Requests",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 12,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineStyle": {
+                "fill": "solid"
+              },
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "log": 2,
+                "type": "log"
+              },
+              "showPoints": "always",
+              "spanNulls": true,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "decimals": 2,
+            "mappings": [],
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "µs"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 11,
+          "w": 8,
+          "x": 16,
+          "y": 9
+        },
+        "id": 45,
+        "options": {
+          "legend": {
+            "calcs": [
+              "last",
+              "min",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.999, sum(rate(endpoint_read_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
+            "format": "time_series",
+            "legendFormat": "Read",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.999, sum(rate(endpoint_write_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
+            "hide": false,
+            "legendFormat": "Write",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "histogram_quantile(0.999, sum(rate(endpoint_other_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
+            "hide": false,
+            "legendFormat": "Other",
+            "range": true,
+            "refId": "C"
+          }
+        ],
+        "title": "p99.9 Latencies for Read, Write, and Other Requests",
+        "type": "timeseries"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 20
+        },
+        "id": 10,
+        "panels": [],
+        "title": "CPU Usage",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "percentunit"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 8,
+          "x": 0,
+          "y": 21
+        },
+        "id": 37,
+        "options": {
+          "legend": {
+            "calcs": [
+              "min",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "avg(label_replace(\r\n  avg(rate(namedprocess_namegroup_thread_cpu_seconds_total{cluster=\"$cluster\", mode=\"system\", groupname=~\".*redis-.*\", threadname=~\".*redis-server.*\"}[$__rate_interval])) by (groupname, mode),\r\n  \"shard_number\", \"$1\", \"groupname\", \".*redis-(\\\\d+)\"\r\n)\r\n* on (shard_number) group_left(db)\r\nlabel_replace(redis_server_up{cluster=\"$cluster\", db=\"$db\",role=\"master\"}, \"shard_number\", \"$1\", \"redis\", \"(.*)\")) by (db)",
+            "hide": false,
+            "legendFormat": "main threads (masters) system, databases: {{db}}",
+            "range": true,
+            "refId": "G"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "exemplar": true,
+            "expr": "avg(label_replace(\r\n  avg(rate(namedprocess_namegroup_thread_cpu_seconds_total{cluster=\"$cluster\", mode=\"user\", groupname=~\".*redis-.*\", threadname=~\".*redis-server.*\"}[$__rate_interval])) by (groupname, mode),\r\n  \"shard_number\", \"$1\", \"groupname\", \".*redis-(\\\\d+)\"\r\n)\r\n* on (shard_number) group_left(db)\r\nlabel_replace(redis_server_up{cluster=\"$cluster\", db=\"$db\",role=\"master\"}, \"shard_number\", \"$1\", \"redis\", \"(.*)\")) by (db)",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "main threads (masters) user, databases: {{db}}",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "exemplar": true,
+            "expr": "sum(irate(namedprocess_namegroup_cpu_seconds_total{cluster=\"$cluster\", mode=~\"system|user\",db=\"$db\"}[1m])) by (db, mode)",
+            "hide": false,
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "all threads (masters), databases: {{db}}",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "avg(label_replace(\r\n  avg(rate(namedprocess_namegroup_cpu_seconds_total{cluster=\"$cluster\", mode=\"user\", groupname=~\".*redis-.*\"}[$__rate_interval])) by (groupname, mode),\r\n  \"shard_number\", \"$1\", \"groupname\", \".*redis-(\\\\d+)\"\r\n)\r\n* on (shard_number) group_left(db)\r\nlabel_replace(redis_server_current_fork_perc{cluster=\"$cluster\", db=\"$db\"}, \"shard_number\", \"$1\", \"redis\", \"(.*)\")) by (db)",
+            "hide": false,
+            "legendFormat": "all forks (masters) - user, databases: {{db}}",
+            "range": true,
+            "refId": "I"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "avg(label_replace(\r\n  avg(rate(namedprocess_namegroup_cpu_seconds_total{cluster=\"$cluster\", mode=\"system\", groupname=~\".*redis-.*\"}[$__rate_interval])) by (groupname, mode),\r\n  \"shard_number\", \"$1\", \"groupname\", \".*redis-(\\\\d+)\"\r\n)\r\n* on (shard_number) group_left(db)\r\nlabel_replace(redis_server_current_fork_perc{cluster=\"$cluster\", db=\"$db\"}, \"shard_number\", \"$1\", \"redis\", \"(.*)\")) by (db)",
+            "hide": false,
+            "legendFormat": "all forks (masters) - system, databases: {{db}}",
+            "range": true,
+            "refId": "J"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "max(label_replace(\r\n  avg(rate(namedprocess_namegroup_thread_cpu_seconds_total{cluster=\"$cluster\", mode=\"user\", groupname=~\".*redis-.*\", threadname=~\".*redis-server.*\"}[$__rate_interval])) by (groupname, mode),\r\n  \"shard_number\", \"$1\", \"groupname\", \".*redis-(\\\\d+)\"\r\n)\r\n* on (shard_number) group_left(db)\r\nlabel_replace(redis_server_up{cluster=\"$cluster\", db=\"$db\",role=\"master\"}, \"shard_number\", \"$1\", \"redis\", \"(.*)\")) by (db)\r\n",
+            "hide": false,
+            "legendFormat": "main threads max (masters) - user",
+            "range": true,
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "max(label_replace(\r\n  avg(rate(namedprocess_namegroup_thread_cpu_seconds_total{cluster=\"$cluster\", mode=\"system\", groupname=~\".*redis-.*\", threadname=~\".*redis-server.*\"}[$__rate_interval])) by (groupname, mode),\r\n  \"shard_number\", \"$1\", \"groupname\", \".*redis-(\\\\d+)\"\r\n)\r\n* on (shard_number) group_left(db)\r\nlabel_replace(redis_server_up{cluster=\"$cluster\", db=\"$db\",role=\"master\"}, \"shard_number\", \"$1\", \"redis\", \"(.*)\")) by (db)",
+            "hide": false,
+            "legendFormat": "main threads max (masters) - system",
+            "range": true,
+            "refId": "K"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "max(irate(namedprocess_namegroup_cpu_seconds_total{cluster=\"$cluster\", mode=~\"system|user\",db=\"$db\"}[1m])) by (db, mode)",
+            "hide": false,
+            "legendFormat": "all threads max (masters) ",
+            "range": true,
+            "refId": "L"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "avg(irate(namedprocess_namegroup_cpu_seconds_total{cluster=\"$cluster\", mode=\"system\",db=\"$db\", role=\"slave\"}[1m])) by (db, mode)",
+            "hide": false,
+            "legendFormat": "Slave main threads",
+            "range": true,
+            "refId": "H"
+          }
+        ],
+        "title": "Total CPU Utilization",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "percentunit"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 8,
+          "x": 8,
+          "y": 21
+        },
+        "id": 40,
+        "options": {
+          "legend": {
+            "calcs": [
+              "min",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true,
+            "sortBy": "Max",
+            "sortDesc": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "8.5.11",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "avg(irate(namedprocess_namegroup_cpu_seconds_total{cluster=\"$cluster\", mode=\"user\",db=\"$db\"}[1m])) by (redis, role, mode, node)",
+            "hide": false,
+            "legendFormat": "shard: {{redis}}, role: {{role}}, node: {{node}},  mode: {{mode}}",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "avg(irate(namedprocess_namegroup_cpu_seconds_total{cluster=\"$cluster\", mode=\"system\",db=\"$db\"}[1m])) by (redis, role, mode, node)",
+            "hide": false,
+            "legendFormat": "shard: {{redis}}, role: {{role}}, node: {{node}},  mode: {{mode}}",
+            "range": true,
+            "refId": "B"
+          }
+        ],
+        "title": "CPU Usage By Shards ",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 12,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "percentunit"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 8,
+          "x": 16,
+          "y": 21
+        },
+        "id": 34,
+        "options": {
+          "legend": {
+            "calcs": [
+              "min",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true,
+            "sortBy": "Max",
+            "sortDesc": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "sum(rate(namedprocess_namegroup_cpu_seconds_total{cluster=\"$cluster\",groupname=\"dmcproxy\", mode=~\"user|system\"}[$aggregation])) by (node)",
+            "legendFormat": "CPU Total node {{node}}",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Proxy CPU Usage Total ",
+        "type": "timeseries"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 30
+        },
+        "id": 8,
+        "panels": [],
+        "title": "Proxy",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "blue",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "green"
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 5,
+          "x": 0,
+          "y": 31
+        },
+        "id": 19,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "max"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "9.5.21",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "expr": "avg(rate(endpoint_read_requests{cluster=\"$cluster\", db=\"$db\"}[1m]) + rate(endpoint_write_requests{cluster=\"$cluster\", db=\"$db\"}[1m]) + rate(endpoint_other_requests{cluster=\"$cluster\", db=\"$db\"}[1m]))",
+            "refId": "A"
+          }
+        ],
+        "title": "Avg OPS Per Second",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "ops"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 19,
+          "x": 5,
+          "y": 31
+        },
+        "id": 22,
+        "options": {
+          "legend": {
+            "calcs": [
+              "max",
+              "min"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true,
+            "sortBy": "Max",
+            "sortDesc": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "sum (rate(endpoint_write_requests{cluster=\"$cluster\",db=\"$db\"}[$__rate_interval]) + rate(endpoint_read_requests{cluster=\"$cluster\",db=\"$db\"}[$__rate_interval]) + rate(endpoint_other_requests{cluster=\"$cluster\",db=\"$db\"}[$__rate_interval])) ",
+            "hide": false,
+            "legendFormat": "Total requests",
+            "range": true,
+            "refId": "D"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "sum(rate(endpoint_write_requests{cluster=\"$cluster\",db=\"$db\"}[$__rate_interval]))",
+            "hide": false,
+            "legendFormat": "Total Write",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "sum(rate(endpoint_read_requests{cluster=\"$cluster\",db=\"$db\"}[$__rate_interval]))",
+            "hide": false,
+            "legendFormat": "Total Read",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "sum(rate(endpoint_other_requests{cluster=\"$cluster\",db=\"$db\"}[$__rate_interval]))",
+            "hide": false,
+            "legendFormat": "Total Other",
+            "range": true,
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "sum(irate(endpoint_write_requests{cluster=\"$cluster\",db=\"$db\"}[1m])) by (proxy, node)",
+            "hide": false,
+            "legendFormat": "endpoint: {{proxy}} node: {{node}} write",
+            "range": true,
+            "refId": "E"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "sum(irate(endpoint_read_requests{cluster=\"$cluster\",db=\"$db\"}[1m])) by (proxy, node)",
+            "hide": false,
+            "legendFormat": "endpoint: {{proxy}} node: {{node}} read",
+            "range": true,
+            "refId": "F"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "sum(irate(endpoint_other_requests{cluster=\"$cluster\",db=\"$db\"}[1m])) by (proxy, node)",
+            "hide": false,
+            "legendFormat": "endpoint: {{proxy}} node: {{node}} other",
+            "range": true,
+            "refId": "G"
+          }
+        ],
+        "title": "OPS Per Second Rate",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "orange",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "green"
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 5,
+          "x": 0,
+          "y": 38
+        },
+        "id": 20,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "max"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "9.5.21",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "sum(endpoint_client_connections{cluster=\"$cluster\", db=\"$db\"} - endpoint_client_disconnections{cluster=\"$cluster\", db=\"$db\"} - endpoint_proxy_disconnections{cluster=\"$cluster\", db=\"$db\"})",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "#Connections",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 11,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "conn"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 19,
+          "x": 5,
+          "y": 38
+        },
+        "id": 24,
+        "options": {
+          "legend": {
+            "calcs": [
+              "max",
+              "min"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "exemplar": true,
+            "expr": "sum(endpoint_client_connections{cluster=\"$cluster\", db=\"$db\"} - endpoint_client_disconnections{cluster=\"$cluster\", db=\"$db\"} )",
+            "legendFormat": "Total",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "sum(endpoint_client_connections{cluster=\"$cluster\", db=\"$db\"} - endpoint_client_disconnections{cluster=\"$cluster\", db=\"$db\"} ) by (proxy, node)",
+            "hide": false,
+            "legendFormat": "endpoint {{proxy}} node: {{node}}",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "rate(endpoint_client_connections{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) - rate(endpoint_client_disconnections{cluster=\"$cluster\", db=\"$db\"} [$__rate_interval])",
+            "hide": false,
+            "legendFormat": "connections per minute for db:$db - node: {{node}}",
+            "range": true,
+            "refId": "D"
+          }
+        ],
+        "title": "Connection Overview",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 12,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "percentunit"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 45
+        },
+        "id": 16,
+        "options": {
+          "legend": {
+            "calcs": [
+              "min",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "rate(namedprocess_namegroup_cpu_seconds_total{cluster=\"$cluster\",groupname=\"dmcproxy\", mode=\"user\"}[$aggregation])",
+            "legendFormat": "CPU User node {{node}}",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Proxy CPU Usage User ",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 12,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "percentunit"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 45
+        },
+        "id": 25,
+        "options": {
+          "legend": {
+            "calcs": [
+              "min",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "rate(namedprocess_namegroup_cpu_seconds_total{cluster=\"$cluster\",groupname=\"dmcproxy\", mode=\"system\"}[$aggregation])",
+            "hide": false,
+            "legendFormat": "CPU System node: {{node}}",
+            "range": true,
+            "refId": "B"
+          }
+        ],
+        "title": "Proxy CPU Usage System",
+        "type": "timeseries"
+      },
+      {
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 53
+        },
+        "id": 6,
+        "title": "Ingress/Egress",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "Bps"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 0,
+          "y": 54
+        },
+        "id": 27,
+        "options": {
+          "legend": {
+            "calcs": [
+              "max",
+              "min"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "- sum(rate(endpoint_egress{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]))",
+            "hide": false,
+            "legendFormat": "endpoint {{proxy}} node {{node}} egress",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "sum(rate(endpoint_ingress{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]))",
+            "legendFormat": "endpoint {{proxy}} node {{node}} ingress",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Ingress/Egress",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "Bps"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 8,
+          "y": 54
+        },
+        "id": 31,
+        "options": {
+          "legend": {
+            "calcs": [
+              "min",
+              "max"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "- rate(endpoint_egress{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])",
+            "hide": false,
+            "legendFormat": "endpoint {{proxy}} node {{node}} egress",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "rate(endpoint_ingress{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval])",
+            "legendFormat": "endpoint {{proxy}} node {{node}} ingress",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Ingress/Egress By Endpoint",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "Bps"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 16,
+          "y": 54
+        },
+        "id": 30,
+        "options": {
+          "legend": {
+            "calcs": [
+              "max",
+              "min"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "rate(redis_server_total_net_input_bytes{db=\"$db\", cluster=\"$cluster\", role=\"master\"}[1m])",
+            "hide": false,
+            "legendFormat": "Master shard Ingress - shard {{ redis }}",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": " - (rate(redis_server_total_net_input_bytes{db=\"$db\", cluster=\"$cluster\", role=\"master\"}[1m]) - rate(redis_server_master_repl_offset{db=\"$db\", cluster=\"$cluster\", role=\"master\"}[1m]))",
+            "hide": false,
+            "legendFormat": "Master shard Egress - shard {{ redis }}",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "rate(redis_server_master_repl_offset{db=\"$db\", cluster=\"$cluster\", role=\"master\"}[1m])",
+            "hide": false,
+            "legendFormat": "Master shard replication - shard {{ redis }}",
+            "range": true,
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "sum(rate(redis_server_repl_touch_bytes{db=\"$db\", cluster=\"$cluster\", role=\"master\"}[1m]))!=0",
+            "hide": false,
+            "legendFormat": "Master shard repl touch",
+            "range": true,
+            "refId": "D"
+          }
+        ],
+        "title": "Ingress/Egress By Shards",
+        "type": "timeseries"
+      },
+      {
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 62
+        },
+        "id": 4,
+        "title": "Cluster",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "description": "WIth this panel you can identify if your specific database latency is impacted by other database on your cluster",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "µs"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 63
+        },
+        "id": 29,
+        "options": {
+          "legend": {
+            "calcs": [
+              "min",
+              "max",
+              "last"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${DS_PROMETHEUS}"
+            },
+            "editorMode": "code",
+            "expr": "topk(10, avg(irate(endpoint_read_requests_latency_histogram_sum{cluster=\"$cluster\"}[1m]) + irate(endpoint_write_requests_latency_histogram_sum{cluster=\"$cluster\"}[1m]) + irate(endpoint_other_requests_latency_histogram_sum{cluster=\"$cluster\"}[1m])) by (db) / avg(irate(endpoint_read_requests_latency_histogram_count{cluster=\"$cluster\"}[1m]) + irate(endpoint_write_requests_latency_histogram_count{cluster=\"$cluster\"}[1m]) + irate(endpoint_other_requests_latency_histogram_count{cluster=\"$cluster\"}[1m])) by (db))",
+            "legendFormat": "Latency for database: {{db}} ",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Top Databases By Latency In Cluster",
+        "type": "timeseries"
+      },
+      {
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 71
+        },
+        "id": 2,
+        "panels": [],
+        "title": "Shards latency",
+        "type": "row"
+      }
+    ],
+    "refresh": "30s",
+    "schemaVersion": 39,
+    "tags": [
+    ],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": false,
+            "text": "Prometheus",
+            "value": "P9E3C2526B28249DF"
+          },
+          "hide": 2,
+          "includeAll": false,
+          "multi": false,
+          "name": "datasource",
+          "options": [],
+          "query": "prometheus",
+          "refresh": 1,
+          "regex": "Prometheus",
+          "skipUrlSync": false,
+          "type": "datasource"
+        },
+        {
+          "current": {},
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "definition": "label_values(node_metrics_up,cluster)",
+          "hide": 0,
+          "includeAll": false,
+          "multi": false,
+          "name": "cluster",
+          "options": [],
+          "query": {
+            "query": "label_values(node_metrics_up,cluster)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "type": "query"
+        },
+        {
+          "current": {},
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "definition": "label_values(db_status{cluster=\"$cluster\"}, db)",
+          "hide": 0,
+          "includeAll": false,
+          "multi": false,
+          "name": "db",
+          "options": [],
+          "query": {
+            "query": "label_values(db_status{cluster=\"$cluster\"}, db)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "current": {},
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "definition": "label_values(redis_server_up{db=\"$db\", cluster=\"$cluster\"}, status)",
+          "hide": 2,
+          "includeAll": false,
+          "multi": false,
+          "name": "status",
+          "options": [],
+          "query": {
+            "query": "label_values(redis_server_up{db=\"$db\", cluster=\"$cluster\"}, status)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "current": {},
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "definition": "label_values(redis_server_up{db=\"$db\", cluster=\"$cluster\"}, status)",
+          "hide": 2,
+          "includeAll": false,
+          "multi": false,
+          "name": "newStatus",
+          "options": [],
+          "query": {
+            "query": "label_values(redis_server_up{db=\"$db\", cluster=\"$cluster\"}, status)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "current": {},
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "definition": "label_values(redis_server_up{cluster=\"$cluster\", db=\"$db\"}, redis)",
+          "hide": 2,
+          "includeAll": false,
+          "multi": false,
+          "name": "redis",
+          "options": [],
+          "query": {
+            "query": "label_values(redis_server_up{cluster=\"$cluster\", db=\"$db\"}, redis)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "current": {},
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "definition": "label_values(redis_server_up{db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}, role)",
+          "hide": 2,
+          "includeAll": false,
+          "multi": false,
+          "name": "role",
+          "options": [],
+          "query": {
+            "query": "label_values(redis_server_up{db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}, role)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "current": {},
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "definition": "label_values(redis_server_up{db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}, slots)",
+          "hide": 2,
+          "includeAll": false,
+          "multi": false,
+          "name": "slots",
+          "options": [],
+          "query": {
+            "query": "label_values(redis_server_up{db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}, slots)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "current": {},
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "definition": "label_values(node_metrics_up{cluster=\"$cluster\"}, node)",
+          "hide": 2,
+          "includeAll": false,
+          "multi": false,
+          "name": "node",
+          "options": [],
+          "query": {
+            "query": "label_values(node_metrics_up{cluster=\"$cluster\"}, node)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "auto": true,
+          "auto_count": 30,
+          "auto_min": "1m",
+          "current": {
+            "selected": false,
+            "text": "auto",
+            "value": "$__auto_interval_aggregation"
+          },
+          "hide": 0,
+          "label": "interval aggregation",
+          "name": "aggregation",
+          "options": [
+            {
+              "selected": true,
+              "text": "auto",
+              "value": "$__auto_interval_aggregation"
+            },
+            {
+              "selected": false,
+              "text": "1m",
+              "value": "1m"
+            },
+            {
+              "selected": false,
+              "text": "10m",
+              "value": "10m"
+            },
+            {
+              "selected": false,
+              "text": "30m",
+              "value": "30m"
+            },
+            {
+              "selected": false,
+              "text": "1h",
+              "value": "1h"
+            },
+            {
+              "selected": false,
+              "text": "6h",
+              "value": "6h"
+            },
+            {
+              "selected": false,
+              "text": "12h",
+              "value": "12h"
+            },
+            {
+              "selected": false,
+              "text": "1d",
+              "value": "1d"
+            },
+            {
+              "selected": false,
+              "text": "7d",
+              "value": "7d"
+            },
+            {
+              "selected": false,
+              "text": "14d",
+              "value": "14d"
+            },
+            {
+              "selected": false,
+              "text": "30d",
+              "value": "30d"
+            }
+          ],
+          "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+          "queryValue": "",
+          "refresh": 2,
+          "skipUrlSync": false,
+          "type": "interval"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-3h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "utc",
+    "title": "Latency Dashboard",
+    "uid": "02PFI81ESkfff",
+    "version": 1,
+    "weekStart": ""
+  }

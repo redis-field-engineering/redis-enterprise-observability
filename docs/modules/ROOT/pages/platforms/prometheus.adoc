@@ -14,18 +14,51 @@ Prometheus scrapes metrics from Redis Enterprise and stores them as time-series 
 
 == Configuration
 
-=== Prometheus Scrape Configuration
+=== Basic Scrape Configuration
 
 Add the following to your `prometheus.yml`:
 
 [source,yaml]
 ----
+global:
+  scrape_interval: 30s
+  evaluation_interval: 30s
+
 scrape_configs:
   - job_name: 'redis-enterprise'
     static_configs:
-      - targets: ['<redis-enterprise-host>:8070']
+      - targets: ['redis-cluster-1.example.com:8070']
     metrics_path: '/metrics'
     scrape_interval: 30s
+    scrape_timeout: 10s
+----
+
+=== Multiple Cluster Monitoring
+
+Monitor multiple Redis Enterprise clusters:
+
+[source,yaml]
+----
+scrape_configs:
+  - job_name: 'redis-enterprise-prod'
+    static_configs:
+      - targets:
+        - 'redis-prod-1.example.com:8070'
+        - 'redis-prod-2.example.com:8070'
+        - 'redis-prod-3.example.com:8070'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: cluster
+        replacement: 'production'
+
+  - job_name: 'redis-enterprise-staging'
+    static_configs:
+      - targets:
+        - 'redis-staging-1.example.com:8070'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: cluster
+        replacement: 'staging'
 ----
 
 === Authentication
@@ -37,10 +70,77 @@ If your Redis Enterprise cluster requires authentication:
 scrape_configs:
   - job_name: 'redis-enterprise'
     static_configs:
-      - targets: ['<redis-enterprise-host>:8070']
+      - targets: ['redis-cluster.example.com:8070']
     basic_auth:
-      username: '<username>'
-      password: '<password>'
+      username: 'prometheus'
+      password: 'secure-password'
+    # Or use password file for better security
+    # basic_auth:
+    #   username: 'prometheus'
+    #   password_file: /etc/prometheus/redis-password.txt
+----
+
+=== TLS/SSL Configuration
+
+For secure connections:
+
+[source,yaml]
+----
+scrape_configs:
+  - job_name: 'redis-enterprise-secure'
+    scheme: https
+    static_configs:
+      - targets: ['redis-cluster.example.com:8070']
+    tls_config:
+      ca_file: /etc/prometheus/certs/ca.crt
+      cert_file: /etc/prometheus/certs/client.crt
+      key_file: /etc/prometheus/certs/client.key
+      insecure_skip_verify: false
+    basic_auth:
+      username: 'prometheus'
+      password_file: /etc/prometheus/redis-password.txt
+----
+
+=== Service Discovery (Kubernetes)
+
+For Redis Enterprise on Kubernetes:
+
+[source,yaml]
+----
+scrape_configs:
+  - job_name: 'redis-enterprise-k8s'
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+            - redis-enterprise
+    relabel_configs:
+      # Keep only Redis Enterprise pods
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        action: keep
+        regex: redis-enterprise
+      # Use pod name as instance label
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: instance
+      # Add namespace label
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+----
+
+=== Service Discovery (Consul)
+
+For Consul-based discovery:
+
+[source,yaml]
+----
+scrape_configs:
+  - job_name: 'redis-enterprise-consul'
+    consul_sd_configs:
+      - server: 'consul.example.com:8500'
+        services: ['redis-enterprise']
+    relabel_configs:
+      - source_labels: [__meta_consul_service_metadata_cluster]
+        target_label: cluster
 ----
 
 == Available Metrics
@@ -57,15 +157,199 @@ See the xref:reference/metrics.adoc[Metrics Reference] for complete documentatio
 
 == Verification
 
-Verify metrics collection:
+=== Check Targets Status
+
+Verify Prometheus is scraping Redis Enterprise:
 
 [source,bash]
 ----
-# Check Prometheus targets
-curl http://localhost:9090/api/v1/targets
+# Check targets via API
+curl http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | select(.labels.job=="redis-enterprise")'
 
-# Query a sample metric
-curl 'http://localhost:9090/api/v1/query?query=redis_enterprise_up'
+# Or check in Prometheus UI
+# Navigate to: http://localhost:9090/targets
+----
+
+Expected output:
+[source,json]
+----
+{
+  "discoveredLabels": {...},
+  "labels": {
+    "instance": "redis-cluster.example.com:8070",
+    "job": "redis-enterprise"
+  },
+  "scrapePool": "redis-enterprise",
+  "scrapeUrl": "http://redis-cluster.example.com:8070/metrics",
+  "lastError": "",
+  "lastScrape": "2024-01-15T10:30:45.123Z",
+  "lastScrapeDuration": 0.045,
+  "health": "up"
+}
+----
+
+=== Query Sample Metrics
+
+Test that metrics are being collected:
+
+[source,bash]
+----
+# Check if Redis Enterprise is up
+curl -g 'http://localhost:9090/api/v1/query?query=redis_enterprise_database_up' | jq
+
+# Check database operations per second
+curl -g 'http://localhost:9090/api/v1/query?query=redis_enterprise_database_ops_per_sec' | jq
+
+# Check memory usage
+curl -g 'http://localhost:9090/api/v1/query?query=redis_enterprise_database_used_memory' | jq
+----
+
+=== Test with PromQL
+
+Use Prometheus query language to verify data:
+
+[source,promql]
+----
+# Show all Redis Enterprise databases
+redis_enterprise_database_up
+
+# Calculate operations per second (5min average)
+rate(redis_enterprise_database_total_ops[5m])
+
+# Memory usage percentage
+(redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) * 100
+
+# Top 5 databases by ops
+topk(5, rate(redis_enterprise_database_total_ops[5m]))
+----
+
+== Recording Rules
+
+Create recording rules for frequently-used queries to improve performance:
+
+[source,yaml]
+----
+groups:
+  - name: redis_enterprise_recordings
+    interval: 30s
+    rules:
+      # Pre-calculate ops per second
+      - record: redis_enterprise:database:ops_per_sec:rate5m
+        expr: rate(redis_enterprise_database_total_ops[5m])
+        labels:
+          job: redis-enterprise
+
+      # Pre-calculate memory usage percentage
+      - record: redis_enterprise:database:memory_usage_pct
+        expr: |
+          (redis_enterprise_database_used_memory /
+           redis_enterprise_database_memory_limit) * 100
+
+      # Pre-calculate hit rate
+      - record: redis_enterprise:database:hit_rate:rate5m
+        expr: |
+          rate(redis_enterprise_database_keyspace_hits[5m]) /
+          (rate(redis_enterprise_database_keyspace_hits[5m]) +
+           rate(redis_enterprise_database_keyspace_misses[5m]))
+
+      # Pre-calculate eviction rate
+      - record: redis_enterprise:database:evictions_per_sec:rate5m
+        expr: rate(redis_enterprise_database_evicted_keys[5m])
+
+      # Aggregate cluster-wide operations
+      - record: redis_enterprise:cluster:total_ops:rate5m
+        expr: sum(rate(redis_enterprise_database_total_ops[5m])) by (cluster)
+----
+
+Save this to `/etc/prometheus/rules/redis-enterprise.yml` and reference it in `prometheus.yml`:
+
+[source,yaml]
+----
+rule_files:
+  - /etc/prometheus/rules/redis-enterprise.yml
+----
+
+== Retention and Storage
+
+Configure appropriate retention for Redis Enterprise metrics:
+
+[source,yaml]
+----
+# In docker-compose.yml
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=90d'
+      - '--storage.tsdb.retention.size=50GB'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+----
+
+Or via command line:
+
+[source,bash]
+----
+prometheus \
+  --config.file=/etc/prometheus/prometheus.yml \
+  --storage.tsdb.path=/var/lib/prometheus \
+  --storage.tsdb.retention.time=90d \
+  --storage.tsdb.retention.size=50GB \
+  --web.enable-lifecycle
+----
+
+== Troubleshooting
+
+=== Target Down
+
+If targets show as "DOWN":
+
+[source,bash]
+----
+# Test connectivity
+curl http://redis-cluster.example.com:8070/metrics
+
+# Check Prometheus logs
+docker logs prometheus | grep redis-enterprise
+
+# Verify authentication
+curl -u prometheus:password http://redis-cluster.example.com:8070/metrics
+----
+
+=== Missing Metrics
+
+If expected metrics are missing:
+
+[source,bash]
+----
+# List all available metrics
+curl http://redis-cluster.example.com:8070/metrics | grep redis_enterprise
+
+# Check metric cardinality
+curl http://localhost:9090/api/v1/label/__name__/values | jq '.data[] | select(startswith("redis_enterprise"))'
+----
+
+=== High Memory Usage
+
+If Prometheus uses too much memory:
+
+[source,yaml]
+----
+scrape_configs:
+  - job_name: 'redis-enterprise'
+    # ... other config ...
+    metric_relabel_configs:
+      # Keep only essential metrics
+      - source_labels: [__name__]
+        regex: 'redis_enterprise_(database|cluster|node)_.*'
+        action: keep
+      # Drop high-cardinality labels
+      - regex: 'instance_id'
+        action: labeldrop
 ----
 
 == Next Steps

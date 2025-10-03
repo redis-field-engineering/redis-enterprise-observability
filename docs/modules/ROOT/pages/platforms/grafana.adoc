@@ -16,19 +16,121 @@ Grafana provides powerful visualization capabilities for Redis Enterprise metric
 
 === Step 1: Configure Prometheus Data Source
 
+==== Via Grafana UI
+
 . Log in to your Grafana instance
 . Navigate to Configuration > Data Sources
 . Click "Add data source"
 . Select "Prometheus"
-. Enter your Prometheus server URL
+. Configure the data source:
+  * *Name*: `Redis-Enterprise-Prometheus`
+  * *URL*: `http://prometheus:9090` (or your Prometheus URL)
+  * *Access*: `Server` (recommended) or `Browser`
 . Click "Save & Test"
+
+==== Via Configuration File
+
+Create or edit `/etc/grafana/provisioning/datasources/prometheus.yml`:
+
+[source,yaml]
+----
+apiVersion: 1
+
+datasources:
+  - name: Redis-Enterprise-Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: 30s
+      queryTimeout: 60s
+      httpMethod: POST
+    editable: false
+----
+
+==== Via Docker Compose
+
+[source,yaml]
+----
+version: '3.8'
+
+services:
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+
+volumes:
+  grafana-data:
+  prometheus-data:
+----
 
 === Step 2: Import Dashboards
 
-. Navigate to Dashboards > Import
+==== Manual Import via UI
+
+. Navigate to Dashboards > Import (or press `d` then `i`)
 . Upload the dashboard JSON file from this repository
-. Select your Prometheus data source
+. Configure the dashboard:
+  * Select your Prometheus data source
+  * Set a unique ID (or leave blank for auto-generation)
+  * Choose a folder
 . Click "Import"
+
+==== Programmatic Import via API
+
+[source,bash]
+----
+# Set Grafana credentials
+GRAFANA_URL="http://localhost:3000"
+GRAFANA_USER="admin"
+GRAFANA_PASSWORD="admin"
+
+# Import dashboard
+curl -X POST "$GRAFANA_URL/api/dashboards/db" \
+  -H "Content-Type: application/json" \
+  -u "$GRAFANA_USER:$GRAFANA_PASSWORD" \
+  -d @redis-enterprise-cluster-overview.json
+----
+
+==== Provisioning Dashboards
+
+Create `/etc/grafana/provisioning/dashboards/redis-enterprise.yml`:
+
+[source,yaml]
+----
+apiVersion: 1
+
+providers:
+  - name: 'Redis Enterprise'
+    orgId: 1
+    folder: 'Redis Enterprise'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/redis-enterprise
+----
+
+Place dashboard JSON files in `/var/lib/grafana/dashboards/redis-enterprise/`.
 
 == Available Dashboards
 
@@ -38,19 +140,231 @@ See the xref:dashboards/catalog.adoc[Dashboard Catalog] for the complete list of
 
 === Dashboard Variables
 
-Most dashboards include template variables for filtering:
+Most dashboards include template variables for dynamic filtering.
 
-* `cluster` - Select specific Redis Enterprise cluster
-* `database` - Filter by database
-* `node` - Filter by cluster node
+==== Creating Variables
+
+Example variable configuration for cluster selection:
+
+[source,text]
+----
+Name: cluster
+Label: Cluster
+Type: Query
+Data source: Redis-Enterprise-Prometheus
+Query: label_values(redis_enterprise_cluster_health, cluster)
+Regex: .*
+Multi-value: true
+Include All option: true
+----
+
+Example variable for database selection:
+
+[source,text]
+----
+Name: database
+Label: Database
+Type: Query
+Data source: Redis-Enterprise-Prometheus
+Query: label_values(redis_enterprise_database_up{cluster="$cluster"}, database)
+Refresh: On Dashboard Load
+Multi-value: true
+Include All option: true
+----
+
+==== Using Variables in Queries
+
+Use variables in your panel queries:
+
+[source,promql]
+----
+# Filter by selected cluster and database
+redis_enterprise_database_ops_per_sec{cluster="$cluster", database="$database"}
+
+# Multi-value variable example
+redis_enterprise_database_ops_per_sec{cluster=~"$cluster", database=~"$database"}
+
+# With regex
+redis_enterprise_database_ops_per_sec{cluster=~"$cluster", database=~"$database|prod-.*"}
+----
+
+=== Panel Configuration Examples
+
+==== Operations Per Second Graph
+
+[source,json]
+----
+{
+  "title": "Operations Per Second",
+  "targets": [
+    {
+      "expr": "rate(redis_enterprise_database_total_ops{cluster=\"$cluster\", database=\"$database\"}[5m])",
+      "legendFormat": "{{database}} - {{cluster}}",
+      "refId": "A"
+    }
+  ],
+  "type": "timeseries",
+  "options": {
+    "legend": {
+      "calcs": ["mean", "max", "last"],
+      "displayMode": "table"
+    }
+  }
+}
+----
+
+==== Memory Usage Gauge
+
+[source,json]
+----
+{
+  "title": "Memory Usage",
+  "targets": [
+    {
+      "expr": "(redis_enterprise_database_used_memory{cluster=\"$cluster\", database=\"$database\"} / redis_enterprise_database_memory_limit{cluster=\"$cluster\", database=\"$database\"}) * 100",
+      "refId": "A"
+    }
+  ],
+  "type": "gauge",
+  "options": {
+    "reduceOptions": {
+      "values": false,
+      "calcs": ["lastNotNull"]
+    },
+    "thresholds": {
+      "mode": "absolute",
+      "steps": [
+        { "value": 0, "color": "green" },
+        { "value": 80, "color": "yellow" },
+        { "value": 90, "color": "red" }
+      ]
+    }
+  }
+}
+----
+
+==== Stat Panel for Database Count
+
+[source,json]
+----
+{
+  "title": "Active Databases",
+  "targets": [
+    {
+      "expr": "count(redis_enterprise_database_up{cluster=\"$cluster\"} == 1)",
+      "refId": "A"
+    }
+  ],
+  "type": "stat",
+  "options": {
+    "colorMode": "value",
+    "graphMode": "area",
+    "orientation": "auto"
+  }
+}
+----
+
+=== Alerting Configuration
+
+==== Create Alert Rule via UI
+
+. Open a dashboard panel
+. Click the panel title > Edit
+. Go to the Alert tab
+. Click "Create Alert"
+. Configure alert conditions:
+
+[source,text]
+----
+Alert Name: High Memory Usage
+Evaluate every: 1m
+For: 5m
+
+Conditions:
+WHEN avg() OF query(A, 5m, now) IS ABOVE 90
+
+Query A:
+(redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) * 100
+----
+
+==== Alert via Configuration
+
+[source,yaml]
+----
+# /etc/grafana/provisioning/alerting/redis-enterprise.yml
+apiVersion: 1
+
+groups:
+  - name: redis-enterprise-alerts
+    folder: Redis Enterprise
+    interval: 1m
+    rules:
+      - uid: redis-high-memory
+        title: Redis Enterprise High Memory Usage
+        condition: A
+        data:
+          - refId: A
+            queryType: prometheus
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: redis-prometheus
+            model:
+              expr: (redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) * 100 > 90
+              intervalMs: 1000
+              maxDataPoints: 43200
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          description: "Database {{ $labels.database }} memory usage is {{ $value }}%"
+        labels:
+          severity: warning
+----
+
+=== Notification Channels
+
+Configure notification channels in `/etc/grafana/provisioning/notifiers/slack.yml`:
+
+[source,yaml]
+----
+apiVersion: 1
+
+notifiers:
+  - name: redis-alerts-slack
+    type: slack
+    uid: slack-redis
+    org_id: 1
+    is_default: false
+    send_reminder: true
+    frequency: 4h
+    settings:
+      url: https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK
+      recipient: '#redis-alerts'
+      username: Grafana
+----
 
 === Refresh Intervals
 
-Recommended refresh intervals:
+Configure refresh intervals based on use case:
 
-* Production monitoring: 30s - 1m
-* Development: 1m - 5m
-* Historical analysis: Disable auto-refresh
+[source,json]
+----
+{
+  "refresh": "30s",  // For production monitoring
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  }
+}
+----
+
+Recommended intervals:
+
+* *Production monitoring*: `30s` - `1m`
+* *Development*: `1m` - `5m`
+* *Historical analysis*: `false` (disable auto-refresh)
+* *Troubleshooting*: `10s` - `30s`
 
 == Troubleshooting
 

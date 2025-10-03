@@ -11,29 +11,212 @@ use the https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/ext
 
 * link:#Installation[Installation]
 * link:#Dashboards[Dashboards]
-* link:#Dashboards[Alternative Redis Plugins]
+* link:#Alternative-Redis-Plugins[Alternative Redis Plugins]
 * link:#Support[Support]
 * link:#License[License]
 
 == Installation
 
-The Dyntrace v2.0 Extensions support Prometheus metrics, and as such we have created the necessary extension file and
-dashboards so that this option is available. At this time Dynatrace are still testing their signing mechanism so that
-this extension is not available directly from them, but will have to be built and signed according to their instructions.
+The Dynatrace v2.0 Extensions Framework supports Prometheus metrics, and as such we have created the necessary extension file and
+dashboards so that this option is available. At this time Dynatrace are still testing their signing mechanism, so this
+extension is not available directly from them but will have to be built and signed according to their instructions.
 They have indicated that they will sign 3rd party extensions starting in Q1 2025, at which point this process will no
 longer be necessary.
 
-Clone the repository and cd into its root folder ('redis-enterprise-dynatrace-observability'). The contents are already
-in the required format; a 'src' directory containing a .yml file and a folder containing .json dashboard files.
+=== Setting Up the Dynatrace Extension
 
-Follow the instructions here:
+==== Prerequisites
 
-https://www.dynatrace.com/support/help/extend-dynatrace/extensions20/sign-extension
+* Python 3.7+ installed on your system
+* A Dynatrace tenant
+* An API token with permissions: `PaaS integration - Installer download`, `Write extension environment configurations`, `Read extension environment configurations`, `Write extension monitoring configurations`, `Read extension monitoring configurations`, `Write extensions`, `Read extensions`
+* Redis Enterprise Software or Redis Cloud with metrics exporter enabled on port 8070
+
+==== Step-by-Step Installation
+
+1. Set up a Python virtual environment and install dt-cli:
++
+[source,bash]
+----
+python -m venv dt-venv
+source dt-venv/bin/activate  # On Windows: dt-venv\Scripts\activate
+pip install dt-cli
+----
+
+2. Create certificates required for signing the extension:
++
+[source,bash]
+----
+# Create a directory for certificates
+mkdir -p secrets
+
+# Generate a CA certificate
+dt extension genca --no-ca-passphrase
+
+# Generate a CA key
+dt extension generate-developer-pem -o developer.pem --ca-crt ca.pem --ca-key ca.key  --name "Redis Developer"
+
+# Move certificates to the secrets directory
+mv ca.pem ca.key developer.pem developer.key secrets/
+----
+
+When You finish creating the ca.pem, ensure you upload it to your Dynatrace credentials vault by following these link:https://docs.dynatrace.com/docs/ingest-from/extensions20/sign-extension#add-cert[instructions]
+
+3. Assemble, sign, and upload the extension:
++
+[source,bash]
+----
+# Assemble the extension
+dt extension assemble
+
+# Sign the extension with your developer certificate
+dt extension sign --key secrets/developer.pem
+
+# Upload the extension to your Dynatrace tenant
+dt extension upload --tenant-url https://YOUR_TENANT_ID.live.dynatrace.com --api-token YOUR_API_TOKEN bundle.zip
+----
+
+4. *Important:* For remote monitoring, you need an ActiveGate or OneAgent. Install it by following the https://docs.dynatrace.com/docs/ingest-from/dynatrace-activegate/installation/linux[Dynatrace ActiveGate installation instructions].
+
+5. Install your CA certificate on the ActiveGate:
++
+[source,bash]
+----
+# Copy the CA certificate to ActiveGate
+sudo cp secrets/ca.pem /var/lib/dynatrace/remotepluginmodule/agent/conf/certificates/
+
+# Restart ActiveGate to apply changes
+sudo systemctl restart dynatracegateway
+----
+
+6. In your Dynatrace tenant:
+   * Go to "Settings" → "Extensions"
+   * Find "Redis Enterprise Extension" and click "Activate"
+   * Configure remote monitoring with your Redis endpoint: `https://YOUR_REDIS_SOFTWARE_ENDPOINT:8070/v2`
+
+=== Terraform Automation for GCP
+
+If you have an Active-Active Redis Enterprise deployment in GCP, you can use our Terraform scripts to automate the entire process. See the `terraform/gcp` directory for configuration details.
+
+=== Kubernetes Deployments
+
+**Important:** The Dynatrace Kubernetes operator is not compatible with the Extensions V2 framework. If you're running Redis Enterprise in Kubernetes, you have two alternative options:
+
+==== Option 1: Kubernetes Service with Dynatrace Annotations
+
+This approach creates a new service within your Kubernetes cluster with Dynatrace annotations for Prometheus scraping.
+
+===== Prerequisites
+* Dynatrace Kubernetes operator installed in your cluster
+* Prometheus scraping enabled in Dynatrace Kubernetes settings
+
+===== Steps
+
+1. **Install Dynatrace Operator**
++
+Follow the official Dynatrace operator installation guide:
++
+[source,bash]
+----
+# Install Dynatrace operator according to Dynatrace documentation
+kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/latest/download/kubernetes.yaml
+----
+
+2. **Enable Prometheus Scraping in Dynatrace**
++
+Configure Prometheus metric ingestion in your Dynatrace Kubernetes settings according to the official documentation:
+https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/container-platform-monitoring/kubernetes-monitoring/monitor-prometheus-metrics
+
+3. **Create Annotated Service for Redis Metrics**
++
+Apply the following service configuration:
++
+[source,yaml]
+----
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-metrics
+  namespace: redis-enterprise
+  annotations:
+    metrics.dynatrace.com/scrape: "true"
+    metrics.dynatrace.com/port: "8070"
+    metrics.dynatrace.com/path: "/v2"
+    metrics.dynatrace.com/secure: "true"
+    metrics.dynatrace.com/insecure_skip_verify: "true"
+spec:
+  type: ClusterIP
+  selector:
+    app: redis-enterprise
+    redis.io/role: node
+    redis.io/cluster: redis-enterprise-cluster     # or whatever REC name in use
+    redis.io/role-master: "1" # Point only at master node
+  ports:
+    - name: metrics
+      port: 8070
+      targetPort: 8070
+----
+
+4. **Verify Metrics Collection**
++
+Check that Dynatrace is successfully scraping metrics from your Redis Enterprise deployment through the Kubernetes operator.
+
+==== Option 2: External VM with ActiveGate
+
+This approach involves deploying ActiveGate on a VM outside your Kubernetes cluster and exposing the Redis Enterprise metrics endpoint.
+
+===== Prerequisites
+* A VM outside your Kubernetes cluster with network access to the cluster
+* ActiveGate installed on the VM
+* Network connectivity between the ActiveGate VM and your Kubernetes cluster
+
+===== Steps
+
+1. **Deploy ActiveGate on External VM**
++
+Follow the standard ActiveGate installation process on your VM:
++
+[source,bash]
+----
+# Download and install ActiveGate according to Dynatrace documentation
+# https://docs.dynatrace.com/docs/ingest-from/dynatrace-activegate/installation
+----
+
+2. **Expose Redis Enterprise Metrics Service**
++
+Create a NodePort service to expose the redis-enterprise-cluster-prom service:
++
+[source,yaml]
+----
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-metrics-external
+  namespace: redis-enterprise
+spec:
+  type: NodePort
+  selector:
+    app: redis-enterprise
+    redis.io/role-master: "1"
+  ports:
+    - name: metrics
+      port: 8070
+      targetPort: 8070
+      nodePort: 30070  # Choose an available port in the NodePort range
+----
+
+3. **Configure ActiveGate**
++
+Configure your ActiveGate to scrape metrics from the exposed NodePort service using the external IP of your Kubernetes nodes and the NodePort (e.g., `https://KUBERNETES_NODE_IP:30070/v2`).
+
+4. **Setup Extension**
++
+Follow the standard extension setup process using the External VM's ActiveGate.
 
 == Dashboards
 
-This respository includes sample Dynatrace dashboards for monitoring your Redis deplyoment. See the
-link:/dynatrace/dashboards[dashboards] folder for the available set of dashboards.
+This repository includes sample Dynatrace dashboards for monitoring your Redis deployment. See the
+link:/dynatrace_v2/src/dashboards[dashboards] folder for the available set of dashboards.
 
 == Support
 

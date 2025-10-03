@@ -1,5 +1,6 @@
 #!/bin/zsh
 
 for test in $(find ./tests -type f); do
-    promtool test rules "$test";
+    res=`promtool test rules "$test"`
+    echo "test $test $res"
 done

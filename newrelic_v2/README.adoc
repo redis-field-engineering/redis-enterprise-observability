@@ -71,6 +71,22 @@ Replace NEW_RELIC_BEARER_TOKEN with the value of the bearer token you just gener
 Finally, find the "scrape_config" configuration directive where "job_name" is "redis-enterprise".
 Under "static_configs", replace REDIS_ENTERPRISE_HOST with the FQDN or hostname of your Redis Enterprise deployment.
 
+Redis reports hundreds of metrics, and depending on the size of your deployment this may require large amounts of storage.
+In order to tailor the stored data to meet minimal requirements we have included an link:./config/except.txt[except file].
+The contents of this file should be used in conjunction with an except clause:
+
+```
+transformations:
+ - description: "General processing rules"
+   ignore_metrics:
+     - except:
+       - kube_hpa_
+```
+
+See the documentation link:https://docs.newrelic.com/docs/infrastructure/prometheus-integrations/install-configure-openmetrics/ignore-or-include-prometheus-metrics/[here]
+ if you have further questions.
+
+
 === Run a Prometheus Server using Docker
 
 If you don't already have a Prometheus server, you can run Prometheus using a Docker container. This container will

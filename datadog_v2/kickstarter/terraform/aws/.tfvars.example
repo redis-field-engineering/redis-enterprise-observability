@@ -1,0 +1,20 @@
+# AWS Configuration
+aws_region = "us-east-1"
+aws_ami_id = "ami-0abcdef1234567890"  # Ubuntu 20.04 LTS AMI ID for your region
+aws_key_name = "my-key-pair"
+
+# Network Configuration
+vpc_name = "my-vpc"
+subnet_name = "my-subnet"
+aws_security_group_name = "my-security-group"
+
+# SSH Configuration
+ssh_private_key = "~/.ssh/my-key-pair.pem"
+
+# Datadog Configuration
+datadog_site = "datadoghq.com"  # or datadoghq.eu for EU
+datadog_api_key = "your-datadog-api-key-here"
+datadog_integration_name = "redis_enterprise_prometheus"  # default value
+
+# Redis Configuration
+redis_fqdn = "your-redis-cluster.example.com"

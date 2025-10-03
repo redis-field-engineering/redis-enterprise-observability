@@ -655,8 +655,8 @@ metrics:
 - key: redis.node_avg_latency
   metadata:
     displayName: Node Average Latency
-    description: Average latency of requests handled by endpoints on node (seconds); returned only when there is traffic
-    unit: Second
+    description: Average latency of requests handled by endpoints on node (milliseconds); returned only when there is traffic
+    unit: Millisecond
     tags:
     - "Redis"
     - "EF2"

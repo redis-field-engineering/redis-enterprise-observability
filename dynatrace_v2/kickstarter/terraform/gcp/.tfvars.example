@@ -1,0 +1,16 @@
+# example.auto.tfvars
+
+project                = ""
+region                 = ""
+zone                   = ""
+network                = ""
+subnet                 = ""
+ssh_private_key        = ""
+dynatrace_api_token    = ""
+custom_ca_pem          = ""
+developer_pem          = ""
+gcp_user_name          = ""
+tenant_id              = ""
+primary_endpoint       = ""
+secondary_endpoint     = ""
+extension_version      = ""

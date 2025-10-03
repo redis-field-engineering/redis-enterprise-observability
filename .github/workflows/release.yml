@@ -1,0 +1,133 @@
+name: Release Observability Artifacts
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set release version
+        id: version
+        run: |
+          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          
+      - name: Package Grafana artifacts
+        run: |
+          mkdir -p release-artifacts
+          
+          # Create combined Grafana package with both v1 and v2
+          mkdir -p temp-grafana/v1 temp-grafana/v2
+          cp -r grafana/dashboards grafana/alerts temp-grafana/v1/
+          cp -r grafana_v2/dashboards grafana_v2/alerts temp-grafana/v2/
+          
+          cd temp-grafana
+          tar -czf ../release-artifacts/redis-grafana-${{ steps.version.outputs.VERSION }}.tar.gz v1/ v2/
+          zip -r ../release-artifacts/redis-grafana-${{ steps.version.outputs.VERSION }}.zip v1/ v2/
+          cd ..
+          rm -rf temp-grafana
+          
+      - name: Package Dynatrace artifacts
+        run: |
+          # Create combined Dynatrace package with both v1 and v2
+          mkdir -p temp-dynatrace/v1 temp-dynatrace/v2
+          cp -r dynatrace/src temp-dynatrace/v1/
+          cp -r dynatrace_v2/src temp-dynatrace/v2/
+          
+          cd temp-dynatrace
+          tar -czf ../release-artifacts/redis-dynatrace-${{ steps.version.outputs.VERSION }}.tar.gz v1/ v2/
+          zip -r ../release-artifacts/redis-dynatrace-${{ steps.version.outputs.VERSION }}.zip v1/ v2/
+          cd ..
+          rm -rf temp-dynatrace
+          
+      - name: Package Prometheus artifacts
+        run: |
+          # Create combined Prometheus package with both v1 and v2
+          mkdir -p temp-prometheus/v1 temp-prometheus/v2
+          cp -r prometheus/rules temp-prometheus/v1/
+          cp -r prometheus_v2/rules temp-prometheus/v2/
+          
+          cd temp-prometheus
+          tar -czf ../release-artifacts/redis-prometheus-${{ steps.version.outputs.VERSION }}.tar.gz v1/ v2/
+          zip -r ../release-artifacts/redis-prometheus-${{ steps.version.outputs.VERSION }}.zip v1/ v2/
+          cd ..
+          rm -rf temp-prometheus
+          
+      - name: Package NewRelic artifacts
+        run: |
+          # Create combined NewRelic package with both v1 and v2
+          mkdir -p temp-newrelic/v1 temp-newrelic/v2
+          cp -r newrelic/dashboards newrelic/config temp-newrelic/v1/
+          cp -r newrelic_v2/dashboards newrelic_v2/config temp-newrelic/v2/
+          
+          cd temp-newrelic
+          tar -czf ../release-artifacts/redis-newrelic-${{ steps.version.outputs.VERSION }}.tar.gz v1/ v2/
+          zip -r ../release-artifacts/redis-newrelic-${{ steps.version.outputs.VERSION }}.zip v1/ v2/
+          cd ..
+          rm -rf temp-newrelic
+          
+      - name: Package Datadog artifacts
+        run: |
+          # Create Datadog package (v2 only)
+          mkdir -p temp-datadog
+          cp -r datadog_v2/kickstarter temp-datadog/
+          
+          cd temp-datadog
+          tar -czf ../release-artifacts/redis-datadog-${{ steps.version.outputs.VERSION }}.tar.gz kickstarter/
+          zip -r ../release-artifacts/redis-datadog-${{ steps.version.outputs.VERSION }}.zip kickstarter/
+          cd ..
+          rm -rf temp-datadog
+          
+      - name: Generate checksums
+        run: |
+          cd release-artifacts
+          sha256sum * > checksums.txt
+          
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.VERSION }}
+          name: Redis Enterprise Observability ${{ steps.version.outputs.VERSION }}
+          body: |
+            ## Redis Enterprise Observability Release ${{ steps.version.outputs.VERSION }}
+            
+            This release contains individual platform packages for various observability platforms. Each package is versioned and contains both v1 and v2 variants where applicable:
+            
+            ### 📊 Individual Platform Packages
+            - **redis-grafana-${{ steps.version.outputs.VERSION }}**: Complete dashboard collections (v1 & v2)
+            - **redis-dynatrace-${{ steps.version.outputs.VERSION }}**: Extensions and dashboards (v1 & v2)
+            - **redis-prometheus-${{ steps.version.outputs.VERSION }}**: Alerting rules and configurations (v1 & v2)
+            - **redis-newrelic-${{ steps.version.outputs.VERSION }}**: Dashboard collections and configurations (v1 & v2)
+            - **redis-datadog-${{ steps.version.outputs.VERSION }}**: Datadog monitoring configurations
+            
+            Each package is available in both `.tar.gz` and `.zip` formats. For detailed setup instructions, please refer to the README files in each platform directory.
+          files: |
+            release-artifacts/*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Upload individual platform packages
+        run: |
+          echo "Individual platform packages created:"
+          ls -la release-artifacts/
+          echo "Each package contains the appropriate v1 and v2 variants for the platform"
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: redis-enterprise-observability-artifacts
+          path: release-artifacts/
+          retention-days: 30

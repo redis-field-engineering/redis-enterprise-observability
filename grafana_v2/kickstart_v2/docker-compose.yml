@@ -1,8 +1,19 @@
 services:
   prometheus:
     image: prom/prometheus:latest
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=7d'
+      - '--storage.tsdb.retention.size=10GB'
+      - '--web.enable-lifecycle'
+    links:
+      - alertmanager
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ../../prometheus_v2/rules/alerts.yml:/etc/prometheus/rules/alerts.yml
     ports:
       - "9090:9090"
     networks:
@@ -14,9 +25,21 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=very-secret-password
     networks:
       kickstart:
         ipv4_address: "172.27.2.3"
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    ports:
+      - 9093:9093
+    networks:
+      kickstart:
+        ipv4_address: "172.27.2.4"
 networks:
   kickstart:
     driver: bridge

@@ -5,15 +5,15 @@ global:
   # scrape_timeout is set to the global default (10s).
 
 # Alertmanager configuration
-#alerting:
-#  alertmanagers:
-#    - static_configs:
-#        - targets:
-#          - alertmanager:9093
+alerting:
+ alertmanagers:
+   - static_configs:
+       - targets:
+         - alertmanager:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
-  # - "first_rules.yml"
+  - "/etc/prometheus/rules/alerts.yml"
   # - "second_rules.yml"
 
 # A scrape configuration containing exactly one endpoint to scrape:
@@ -24,11 +24,25 @@ scrape_configs:
 
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
+    metrics_path: /metrics
+    scheme: http
     static_configs:
-      - targets: ["172.27.1.2:9090"]
+      - targets: ["host.docker.internal:9090"]
 
   # use an appropriate name
-  - job_name: "redis"
+  - job_name: "redis-v1"
+    scrape_interval: 30s
+    scrape_timeout: 30s
+    metrics_path: /metrics
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+    static_configs:
+      # the default port is 8070, the url is that of the cluster leader
+      - targets: ["host.docker.internal:8070"]
+
+  # use an appropriate name
+  - job_name: "redis-v2"
     scrape_interval: 30s
     scrape_timeout: 30s
     metrics_path: /v2
@@ -37,5 +51,5 @@ scrape_configs:
       insecure_skip_verify: true
     static_configs:
       # the default port is 8070, the url is that of the cluster leader
-      - targets: ["172.27.1.4:8070"]
+      - targets: ["host.docker.internal:8070"]
 

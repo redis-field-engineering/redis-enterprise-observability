@@ -135,6 +135,8 @@ about you cluster's configuration and the Redis slow log.
 These optional dashboards rely on one additional data source beyond Prometheus: the [Infinity Datasource for 
 Grafana](https://grafana.com/grafana/plugins/yesoreyeram-infinity-datasource/).
 
+For setup instructions, see [Infinity Plugin Setup Guide](../../README-INFINITY.md).
+
 ## Alerts
 
 ### Running the alerting tests

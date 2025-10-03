@@ -1,18 +1,24 @@
 = Redis Enterprise Developer Observability - Kickstarter
-:revnumber: 1.0
+:revnumber: 1.1
 :docinfo1:
 
 == About the kickstarter
 
-The kickstarter was created so that it would encapsulate all the elements necessary to demonstrate dashboards using Redis.
+The kickstarter was created so that it would encapsulate all the elements necessary to deploy monitoring of Redis clusters.
 It consists of a docker compose file, in addition to a grafana configuration and dashboards as well as a
 prometheus configuration file.
 
 The setup script 'setup.sh' will install containers for the different elements and configure their networking, after
-which it cleans up any temporary files. Note that it must be passed the specific Redis endpoint that you wish to monitor
-when executing this script. Once the script has executed successfully the Grafana instance will be available at
-localhost:3000 and Prometheus at localhost:9090. As these are the default ports it is important that neither Grafana nor
-Prometheus are already running on the machine.
+which it cleans up any temporary files. Once the script has executed successfully the Grafana instance will be available
+at localhost:3000 and Prometheus at localhost:9090, while the Redis console will be at localhost:8443. As these are the
+default ports it is important that neither Redis nor Grafana nor Prometheus are already running on the machine.
+
+The script takes two optional parameters; the redis metrics endpoint, and a directory. NB: 'host.docker.internal' is the
+value which represents the machine hosting the containers as localhost; localhost in a container points only to the
+container itself.
+
+The script loads dashboards from ./grafana_v2/dashboards/grafana_v9-11/software/basic by default, but it will load
+dashboards from the directory passed as a parameter to the setup script thusly: setup.sh host.docker.internal <dir>.
 
 === Viewing the demo
 

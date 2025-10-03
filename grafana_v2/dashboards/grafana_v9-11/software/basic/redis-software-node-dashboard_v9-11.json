@@ -181,7 +181,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "count(count(redis_used_memory{cluster=\"$cluster\", node=\"$node\"}) by (bdb))",
+          "expr": "count(count(redis_server_used_memory{cluster=\"$cluster\", node=\"$node\"}) by (bdb))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -263,7 +263,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "count(redis_used_memory{cluster=\"$cluster\", node=\"$node\", role=\"master\"})",
+          "expr": "count(redis_server_used_memory{cluster=\"$cluster\", node=\"$node\", role=\"master\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -345,7 +345,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "count(redis_used_memory{cluster=\"$cluster\", node=\"$node\", role=\"slave\"})",
+          "expr": "count(redis_server_used_memory{cluster=\"$cluster\", node=\"$node\", role=\"slave\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -433,7 +433,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "node_cpu_system{node=\"$node\",cluster=\"$cluster\"} + node_cpu_user{node=\"$node\",cluster=\"$cluster\"}",
+          "expr": "(avg by(node) (irate(node_cpu_seconds_total{mode=\"system\", cluster=\"$cluster\", node=\"$node\"}[1m]))) + (avg by(node) (irate(node_cpu_seconds_total{mode=\"user\", cluster=\"$cluster\", node=\"$node\"}[1m])))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "",
@@ -514,7 +514,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "node_available_memory{cluster=\"$cluster\",node=\"$node\"}",
+          "expr": "node_available_memory_bytes{cluster=\"$cluster\",node=\"$node\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "refId": "A",
@@ -713,7 +713,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": " node_cpu_user{cluster=\"$cluster\", node=\"$node\"} + node_cpu_system{cluster=\"$cluster\", node=\"$node\"}",
+          "expr": "(avg by(node) (irate(node_cpu_seconds_total{mode=\"system\", cluster=\"$cluster\", node=\"$node\"}[1m]))) + (avg by(node) (irate(node_cpu_seconds_total{mode=\"user\", cluster=\"$cluster\", node=\"$node\"}[1m])))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -726,7 +726,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "1- node_cpu_idle{cluster=\"$cluster\", node=\"$node\"} - node_cpu_system{cluster=\"$cluster\", node=\"$node\"} - node_cpu_user{cluster=\"$cluster\", node=\"$node\"} unless node_cpu_nice{cluster=\"$cluster\", node=\"$node\"}",
+          "expr": "1- (avg by(node)(irate(node_cpu_seconds_total{mode=\"idle\",cluster=\"$cluster\", node=\"$node\"}[1m]))) - (avg by(node)(irate(node_cpu_seconds_total{mode=\"system\",cluster=\"$cluster\", node=\"$node\"}[1m]))) - (avg by(node)(irate(node_cpu_seconds_total{mode=\"user\",cluster=\"$cluster\", node=\"$node\"}[1m]))) unless (avg by(node)(irate(node_cpu_seconds_total{mode=\"nice\",cluster=\"$cluster\", node=\"$node\"}[1m])))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -739,7 +739,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "node_cpu_steal{cluster=\"$cluster\", node=\"$node\"}",
+          "expr": "(avg by(node)(irate(node_cpu_seconds_total{mode=\"steal\",cluster=\"$cluster\", node=\"$node\"}[1m])))",
           "format": "time_series",
           "hide": true,
           "intervalFactor": 2,
@@ -752,7 +752,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "node_cpu_nice{cluster=\"$cluster\", node=\"$node\"}",
+          "expr": "(avg by(node)(irate(node_cpu_seconds_total{mode=\"nice\",cluster=\"$cluster\", node=\"$node\"}[1m])))",
           "format": "time_series",
           "hide": true,
           "intervalFactor": 2,
@@ -765,7 +765,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "node_cpu_irqs{cluster=\"$cluster\", node=\"$node\"}",
+          "expr": "(avg by(node)(irate(node_cpu_seconds_total{mode=\"irq\",cluster=\"$cluster\", node=\"$node\"}[1m])))",
           "format": "time_series",
           "hide": true,
           "interval": "",
@@ -779,7 +779,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "dmcproxy_process_cpu_usage_percent{cluster=\"$cluster\", node=\"$node\"}/100",
+          "expr": "avg by(node)(irate(dmcproxy_process_cpu_user_seconds_total{cluster=\"$cluster\", node=\"$node\"}[1m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -792,7 +792,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": " node_cpu_iowait{cluster=\"$cluster\", node=\"$node\"}",
+          "expr": "avg by(node)(irate(node_cpu_seconds_total{mode=\"iowait\", cluster=\"$cluster\", node=\"$node\"}[1m]))",
           "format": "time_series",
           "hide": true,
           "interval": "",
@@ -806,7 +806,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(redis_process_cpu_usage_percent{cluster=\"$cluster\", node=\"$node\"}/100)",
+          "expr": "avg by(node)(irate(node_cpu_seconds_total{mode=~\"system|user\", cluster=\"$cluster\", node=\"$node\"}[1m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -970,7 +970,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "node_ingress_bytes{cluster=\"$cluster\", node=\"$node\"}",
+          "expr": "sum by(node)(irate(node_network_receive_bytes_total{cluster=\"$cluster\", node=\"$node\"}[1m]))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -984,7 +984,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "node_egress_bytes{cluster=\"$cluster\", node=\"$node\"}",
+          "expr": "sum by(node)(irate(node_network_transmit_bytes_total{cluster=\"$cluster\", node=\"$node\"}[1m]))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1164,7 +1164,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "avg(redis_allocator_active{node=\"$node\",cluster=\"$cluster\"} / redis_allocator_allocated{node=\"$node\",cluster=\"$cluster\"}) - 1",
+          "expr": "avg(redis_server_allocator_active{node=\"$node\",cluster=\"$cluster\"} / redis_server_allocator_allocated{node=\"$node\",cluster=\"$cluster\"}) - 1",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1179,7 +1179,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "avg(redis_allocator_resident{node=\"$node\",cluster=\"$cluster\"} / redis_allocator_active{node=\"$node\",cluster=\"$cluster\"}) - 1",
+          "expr": "avg(redis_server_allocator_resident{node=\"$node\",cluster=\"$cluster\"} / redis_server_allocator_active{node=\"$node\",cluster=\"$cluster\"}) - 1",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1194,7 +1194,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(redis_allocator_active{node=\"$node\",cluster=\"$cluster\"} - redis_allocator_allocated{node=\"$node\",cluster=\"$cluster\"})",
+          "expr": "sum(redis_server_allocator_active{node=\"$node\",cluster=\"$cluster\"} - redis_server_allocator_allocated{node=\"$node\",cluster=\"$cluster\"})",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1209,7 +1209,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(redis_allocator_resident{node=\"$node\",cluster=\"$cluster\"} - redis_allocator_active{node=\"$node\",cluster=\"$cluster\"})",
+          "expr": "sum(redis_server_allocator_resident{node=\"$node\",cluster=\"$cluster\"} - redis_server_allocator_active{node=\"$node\",cluster=\"$cluster\"})",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1224,7 +1224,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "avg(redis_active_defrag_running{node=\"$node\",cluster=\"$cluster\"})/100",
+          "expr": "avg(redis_server_active_defrag_running{node=\"$node\",cluster=\"$cluster\"})/100",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1237,7 +1237,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(redis_process_resident_memory_bytes{node=\"$node\",cluster=\"$cluster\"}) - sum(redis_allocator_resident{node=\"$node\",cluster=\"$cluster\"})",
+          "expr": "sum(namedprocess_namegroup_memory_bytes{memtype=\"resident\", node=\"$node\",cluster=\"$cluster\"}) - sum(redis_server_allocator_resident{node=\"$node\",cluster=\"$cluster\"})",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1252,7 +1252,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(redis_process_resident_memory_bytes{node=\"$node\",cluster=\"$cluster\"}) / sum(redis_allocator_resident{node=\"$node\",cluster=\"$cluster\"})",
+          "expr": "sum(namedprocess_namegroup_memory_bytes{memtype=\"resident\", node=\"$node\",cluster=\"$cluster\"}) / sum(redis_server_allocator_resident{node=\"$node\",cluster=\"$cluster\"})",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1411,7 +1411,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "topk(10, redis_used_ram{cluster=\"$cluster\", node=\"$node\"} or redis_used_memory{cluster=\"$cluster\", node=\"$node\"})",
+          "expr": "topk(10, redis_server_used_memory{cluster=\"$cluster\", node=\"$node\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1486,7 +1486,7 @@
         "name": "cluster",
         "options": [],
         "query": {
-          "query": "label_values(node_up,cluster)",
+          "query": "label_values(node_metrics_up,cluster)",
           "refId": "Redis-Enterprise-cluster-Variable-Query"
         },
         "refresh": 1,
@@ -1511,7 +1511,7 @@
         "name": "node",
         "options": [],
         "query": {
-          "query": "label_values(node_up{cluster=\"$cluster\"}, node)",
+          "query": "label_values(node_metrics_up{cluster=\"$cluster\"}, node)",
           "refId": "Redis-Enterprise-node-Variable-Query"
         },
         "refresh": 1,

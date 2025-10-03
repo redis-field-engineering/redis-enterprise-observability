@@ -1,0 +1,173 @@
+:linkattrs:
+:project-owner:      redis-field-engineering
+:project-name:       redis-enterprise-observability
+
+= Redis Enterprise Datadog Integration
+
+This directory contains resources for monitoring Redis Enterprise Software and Redis Cloud using Datadog. The integration uses Datadog's OpenMetrics integration to collect Prometheus metrics from Redis Enterprise clusters.
+
+== Table of Contents
+
+* link:#Important-Note[Important Note]
+* link:#Requirements[Requirements]
+* link:#Installation[Installation]
+* link:#Configuration[Configuration]
+* link:#Usage[Usage]
+* link:#Kickstarter[Kickstarter]
+* link:#Support[Support]
+* link:#License[License]
+
+== Important Note
+
+[IMPORTANT]
+====
+The Datadog integration for Redis Enterprise is not included in this repository. It is maintained separately in the official Datadog integrations repository at https://github.com/DataDog/datadog-integrations-extras under the `redis_enterprise_prometheus` integration.
+
+Currently, you will need to use the Field Engineering branch at https://github.com/redis-field-engineering/datadog-integrations-extras/tree/redis_enterprise_prometheus to build and deploy the integration directly, as it is pending merger into the main Datadog repository.
+====
+
+== Requirements
+
+To use this integration, you will need:
+
+* A https://docs.redis.com/latest/rs/[Redis Software] deployment or a https://docs.redis.com/latest/rc/[Redis Cloud] account with a https://docs.redis.com/latest/rc/subscriptions/create-flexible-subscription/[Flexible or Annual subscription]
+* A https://www.datadoghq.com/[Datadog account] with API access
+* A Datadog Agent deployment with the `redis_enterprise_prometheus` integration installed
+
+=== Redis Enterprise Software
+
+To monitor a Redis Enterprise Software deployment, you will need your cluster's FQDN or hostname. The Prometheus endpoint is available on port 8070 at the `/v2` path.
+
+=== Redis Enterprise Cloud
+
+To monitor a Redis Cloud deployment, you will need the https://docs.redis.com/latest/rc/databases/view-edit-database/[private endpoint] for one of the databases associated with your Redis Cloud subscription.
+
+This private endpoint will have the following form:
+`redis-12345.internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:121212`.
+
+To get the Prometheus endpoint for your Redis Cloud subscription, drop the section before the first dot (in this case, the "redis-12345"), and specify the Prometheus exporter port 8070:
+`internal.c67890.us-central1-1.gcp.cloud.rlrcp.com:8070`
+
+== Installation
+
+=== Building the Integration from Source
+
+Since the integration is not yet available in the main Datadog repository, you'll need to build it from the Field Engineering branch:
+
+1. Clone the Field Engineering fork:
++
+[source,bash]
+----
+git clone https://github.com/redis-field-engineering/datadog-integrations-extras.git
+cd datadog-integrations-extras
+git checkout redis_enterprise_prometheus
+----
+
+2. Navigate to the Redis Enterprise integration directory:
++
+[source,bash]
+----
+cd redis_enterprise_prometheus
+----
+
+3. Build the integration wheel:
++
+[source,bash]
+----
+# Install build dependencies
+pip install -r requirements-dev.txt
+
+# Build the wheel
+python setup.py bdist_wheel
+----
+
+4. Install the integration on your Datadog Agent:
++
+[source,bash]
+----
+# Copy the wheel to your Datadog Agent host
+# Install using the Datadog Agent's pip
+sudo -u dd-agent /opt/datadog-agent/embedded/bin/pip install dist/datadog_redis_enterprise_prometheus-*.whl
+----
+
+5. Restart the Datadog Agent:
++
+[source,bash]
+----
+sudo systemctl restart datadog-agent
+----
+
+== Configuration
+
+=== Agent Configuration
+
+Create a configuration file for the Redis Enterprise integration at `/etc/datadog-agent/conf.d/redis_enterprise_prometheus.d/conf.yaml`:
+
+[source,yaml]
+----
+init_config:
+
+instances:
+  - openmetrics_endpoint: https://your-redis-cluster.example.com:8070/v2
+    tls_verify: false
+    type_overrides:
+      endpoint_client_connections: gauge
+----
+
+=== Configuration Options
+
+* `openmetrics_endpoint`: The Redis Enterprise Prometheus metrics endpoint (required)
+* `tls_verify`: Set to `false` to skip TLS certificate verification (default: `true`)
+* `type_overrides`: Override metric types as needed
+
+=== Network Access Requirements
+
+Ensure your Datadog Agent can reach:
+* Redis Enterprise cluster on port 8070 (HTTPS)
+* For Redis Cloud, ensure VPC peering or appropriate network connectivity
+
+== Usage
+
+=== Verifying the Integration
+
+1. Check that the integration is loaded:
++
+[source,bash]
+----
+sudo datadog-agent status
+----
+
+2. Verify metrics are being collected:
++
+[source,bash]
+----
+sudo datadog-agent check redis_enterprise_prometheus
+----
+
+3. In the Datadog UI, search for metrics starting with `redis_enterprise_prometheus.*`
+
+=== Available Metrics
+
+The integration collects Redis Enterprise metrics including:
+* Database metrics (connections, operations, memory usage)
+* Node metrics (CPU, memory, network)
+* Cluster metrics (shard distribution, replication)
+* Proxy metrics (throughput, latency)
+
+== Kickstarter
+
+This repository includes a Terraform-based kickstarter to automate the deployment of the Datadog Agent with the Redis Enterprise integration. See the link:kickstarter/README.md[kickstarter README] for detailed instructions on using Terraform to deploy monitoring infrastructure on GCP.
+
+The kickstarter handles:
+* VM deployment with Datadog Agent
+* Integration installation and configuration
+* Network and security configuration
+* Automated setup for Redis Enterprise monitoring
+
+== Support
+
+This project is supported by Redis, Inc. on a good faith effort basis. To report bugs, request features, or receive assistance, please https://github.com/{project-owner}/{project-name}/issues[file an issue].
+
+== License
+
+This code in this repository is licensed under the MIT License. Copyright (C) 2025 Redis, Inc.

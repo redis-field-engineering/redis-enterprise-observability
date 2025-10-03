@@ -42,9 +42,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT latest(bdb_up) as Status FROM Metric FACET cluster as Cluster, bdb_name as Database"
+                "query": "SELECT latest(db_config) as Status FROM Metric FACET cluster as Cluster, db_name as Database"
               }
             ],
             "platformOptions": {
@@ -62,29 +62,42 @@
           },
           "linkedEntityGuids": null,
           "visualization": {
-            "id": "viz.billboard"
+            "id": "viz.line"
           },
           "rawConfiguration": {
-            "dataFormatters": [
-              {
-                "name": "bdb_avg_latency",
-                "precision": 0,
-                "type": "duration"
-              }
-            ],
             "facet": {
               "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
             },
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT latest(bdb_avg_latency) * 1000000 AS 'milliseconds' FROM Metric "
+                "query": "SELECT average(endpoint_read_requests_latency_histogram_sum)/average(endpoint_read_requests_latency_histogram_count) + average(endpoint_write_requests_latency_histogram_sum)/average(endpoint_write_requests_latency_histogram_count) AS 'Total Latecny' FROM Metric TIMESERIES 1 hour"
               }
             ],
             "platformOptions": {
               "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
             }
           }
         },
@@ -107,9 +120,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT average(redis_db0_keys) AS 'keys' FROM Metric "
+                "query": "SELECT average(redis_server_db0_keys) AS 'keys' FROM Metric "
               }
             ],
             "platformOptions": {
@@ -136,9 +149,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT latest(node_up) as 'running nodes' FROM Metric "
+                "query": "SELECT latest(node_metrics_up) as 'running nodes' FROM Metric "
               }
             ],
             "platformOptions": {
@@ -175,9 +188,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT rate(latest(node_total_req), 5 minutes ) as 'requests/second' FROM Metric "
+                "query": "SELECT rate(latest(endpoint_read_requests), 1 minute) + rate(latest(endpoint_write_requests), 1 minute) + rate(latest(endpoint_other_requests), 1 minute) as 'requests/second' FROM Metric "
               }
             ],
             "platformOptions": {
@@ -215,9 +228,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT latest(bdb_used_memory)/1048576 AS 'megabytes' FROM Metric "
+                "query": "SELECT latest(redis_server_used_memory)/1048576 AS 'megabytes' FROM Metric "
               }
             ],
             "platformOptions": {
@@ -250,9 +263,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT latest(bdb_conns) as 'connections' FROM Metric "
+                "query": "SELECT latest(endpoint_client_connections) as 'connections' FROM Metric "
               }
             ],
             "platformOptions": {
@@ -279,12 +292,20 @@
             "legend": {
               "enabled": true
             },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT latest(bdb_used_memory) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+                "query": "SELECT latest(redis_server_used_memory)/latest(redis_server_maxmemory) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {
@@ -292,6 +313,9 @@
             },
             "thresholds": {
               "isLabelVisible": true
+            },
+            "units": {
+              "unit": "PERCENTAGE"
             },
             "yAxisLeft": {
               "zero": true
@@ -320,12 +344,20 @@
             "legend": {
               "enabled": true
             },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT latest(bdb_avg_latency) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+                "query": "SELECT percentile(endpoint_read_requests_latency_histogram_bucket, 95), percentile(endpoint_write_requests_latency_histogram_bucket, 95) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {
@@ -333,6 +365,9 @@
             },
             "thresholds": {
               "isLabelVisible": true
+            },
+            "units": {
+              "unit": "MS"
             },
             "yAxisLeft": {
               "zero": true
@@ -361,12 +396,20 @@
             "legend": {
               "enabled": true
             },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT latest(bdb_no_of_keys) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+                "query": "SELECT latest(redis_server_db0_keys) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {
@@ -402,12 +445,20 @@
             "legend": {
               "enabled": true
             },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT latest(bdb_conns) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+                "query": "SELECT latest(endpoint_client_connections) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {
@@ -443,12 +494,20 @@
             "legend": {
               "enabled": true
             },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT latest(bdb_total_req) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+                "query": "SELECT rate(latest(endpoint_read_requests), 1 minute) + rate(latest(endpoint_write_requests), 1 minute) + rate(latest(endpoint_other_requests), 1 minute) FROM Metric FACET cluster SINCE 10 MINUTES AGO TIMESERIES 1 MINUTE"
               }
             ],
             "platformOptions": {
@@ -475,7 +534,7 @@
           },
           "linkedEntityGuids": null,
           "visualization": {
-            "id": "viz.stacked-bar"
+            "id": "viz.line"
           },
           "rawConfiguration": {
             "facet": {
@@ -484,16 +543,33 @@
             "legend": {
               "enabled": true
             },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT latest(bdb_expired_objects) FROM Metric FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
+                "query": "SELECT latest(redis_server_expired_keys) FROM Metric WHERE role = 'master' FACET cluster SINCE 60 MINUTES AGO TIMESERIES 5 MINUTES"
               }
             ],
             "platformOptions": {
               "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
             }
           }
         }

@@ -1,0 +1,22 @@
+* xref:index.adoc[Overview]
+* xref:quick-start.adoc[Quick Start]
+
+.Platforms
+* xref:platforms/grafana.adoc[Grafana]
+* xref:platforms/prometheus.adoc[Prometheus]
+* xref:platforms/dynatrace.adoc[Dynatrace]
+* xref:platforms/newrelic.adoc[New Relic]
+* xref:platforms/splunk.adoc[Splunk]
+* xref:platforms/kibana.adoc[Kibana]
+
+.Dashboards
+* xref:dashboards/catalog.adoc[Dashboard Catalog]
+
+.Guides
+* xref:guides/monitoring-redis-cloud.adoc[Monitoring Redis Cloud]
+* xref:guides/alerting.adoc[Alerting]
+* xref:guides/troubleshooting.adoc[Troubleshooting]
+
+.Reference
+* xref:reference/metrics.adoc[Metrics Reference]
+* xref:reference/configuration.adoc[Configuration]

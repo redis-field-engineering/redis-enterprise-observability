@@ -1,0 +1,127 @@
+= Monitoring Redis Cloud
+
+Guide to monitoring Redis Enterprise Cloud deployments.
+
+== Overview
+
+Redis Enterprise Cloud is the fully-managed cloud service. This guide covers specific considerations for monitoring cloud deployments.
+
+== Prerequisites
+
+* Redis Cloud subscription (any tier)
+* API access enabled in Redis Cloud console
+* Observability platform configured
+
+== Redis Cloud API Access
+
+=== Generating API Keys
+
+. Log in to Redis Cloud console
+. Navigate to Account Settings > API Keys
+. Click "Generate API Key"
+. Save the key securely (it's only shown once)
+
+=== API Endpoints
+
+Redis Cloud exposes metrics via REST API:
+
+[source,bash]
+----
+curl -X GET "https://api.redislabs.com/v1/subscriptions/{subscription-id}/databases" \
+  -H "x-api-key: ${API_KEY}" \
+  -H "x-api-secret-key: ${API_SECRET}"
+----
+
+== Metrics Collection
+
+=== Using Prometheus
+
+Configure Prometheus to scrape Redis Cloud metrics:
+
+[source,yaml]
+----
+scrape_configs:
+  - job_name: 'redis-cloud'
+    static_configs:
+      - targets: ['api.redislabs.com']
+    metrics_path: '/v1/subscriptions/{subscription-id}/metrics'
+    bearer_token: '<your-api-key>'
+----
+
+=== Using Native Integrations
+
+Redis Cloud supports native integrations with:
+
+* Datadog
+* Prometheus
+* New Relic (coming soon)
+
+Configure integrations in the Redis Cloud console under Observability.
+
+== Key Metrics for Cloud
+
+Focus on these metrics for Redis Cloud:
+
+* *Database availability* - Uptime and connectivity
+* *Request rate* - Operations per second
+* *Latency* - Read/write response times
+* *Memory usage* - Used vs. allocated memory
+* *Network throughput* - Ingress/egress traffic
+
+== Cloud-Specific Considerations
+
+=== Multi-Region Deployments
+
+For Active-Active databases:
+
+* Monitor replication lag between regions
+* Track conflict resolution metrics
+* Watch cross-region latency
+
+=== Autoscaling
+
+Redis Cloud can autoscale based on usage:
+
+* Monitor scaling events
+* Track memory usage trends
+* Set alerts for scale-up triggers
+
+=== Backup Monitoring
+
+Monitor backup operations:
+
+* Backup success/failure status
+* Backup duration and size
+* Point-in-time recovery availability
+
+== Alerting for Cloud
+
+Recommended alerts:
+
+* Database unavailability
+* Memory usage > 80%
+* Latency > 10ms (adjust for use case)
+* Connection failures
+* Backup failures
+
+== Troubleshooting
+
+=== High Latency
+
+. Check Redis Cloud status page
+. Verify network connectivity
+. Review connection pooling settings
+. Check for slow commands
+
+=== Memory Pressure
+
+. Review eviction policy
+. Analyze key size distribution
+. Consider upgrading plan
+. Enable dataset compression if applicable
+
+== Next Steps
+
+* xref:guides/alerting.adoc[Configure alerting]
+* xref:reference/metrics.adoc[Metrics reference]
+* xref:guides/troubleshooting.adoc[Troubleshooting guide]

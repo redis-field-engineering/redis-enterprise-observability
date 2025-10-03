@@ -1,0 +1,48 @@
+= Quick Start Guide
+
+Get started with Redis Enterprise monitoring in 5 minutes.
+
+== Prerequisites
+
+* Redis Enterprise cluster (Cloud or self-hosted)
+* Access to one of the supported observability platforms
+* API credentials or access tokens (platform-dependent)
+
+== Step 1: Choose Your Platform
+
+Select the observability platform you want to use:
+
+* xref:platforms/grafana.adoc[Grafana] - Open source visualization
+* xref:platforms/prometheus.adoc[Prometheus] - Time-series metrics
+* xref:platforms/dynatrace.adoc[Dynatrace] - Commercial APM
+* xref:platforms/newrelic.adoc[New Relic] - SaaS monitoring
+* xref:platforms/splunk.adoc[Splunk] - Enterprise analytics
+* xref:platforms/kibana.adoc[Kibana] - Elastic Stack
+
+== Step 2: Configure Metrics Collection
+
+=== For Prometheus/Grafana
+
+[source,bash]
+----
+# Configure Prometheus to scrape Redis Enterprise metrics
+# See Prometheus platform guide for details
+----
+
+=== For Commercial Platforms
+
+Follow the platform-specific integration guide to configure metrics forwarding.
+
+== Step 3: Import Dashboards
+
+Download and import the pre-built dashboards from the xref:dashboards/catalog.adoc[Dashboard Catalog] for your platform.
+
+== Step 4: Verify Monitoring
+
+Check that metrics are flowing and dashboards are displaying data from your Redis Enterprise cluster.
+
+== Next Steps
+
+* xref:guides/alerting.adoc[Configure alerting]
+* xref:guides/monitoring-redis-cloud.adoc[Monitor Redis Cloud]
+* xref:reference/metrics.adoc[Explore available metrics]

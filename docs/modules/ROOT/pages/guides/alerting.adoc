@@ -1,0 +1,227 @@
+= Alerting Guide
+
+Configure effective alerts for Redis Enterprise monitoring.
+
+== Overview
+
+Proactive alerting helps identify and resolve issues before they impact users. This guide covers alert configuration across different platforms.
+
+== Alert Philosophy
+
+=== What to Alert On
+
+Alert on conditions that:
+
+* Require immediate action
+* Indicate user-facing impact
+* Signal impending capacity issues
+* Show significant deviation from baseline
+
+=== What Not to Alert On
+
+Avoid alerts for:
+
+* Normal operational variations
+* Self-healing transient issues
+* Informational metrics
+* Low-urgency capacity planning
+
+== Critical Alerts
+
+=== Database Unavailable
+
+*Condition*: Database is down or unreachable
+
+[source,promql]
+----
+redis_enterprise_database_up == 0
+----
+
+*Severity*: Critical +
+*Action*: Investigate immediately, check cluster health
+
+=== Memory Usage Critical
+
+*Condition*: Memory usage > 90%
+
+[source,promql]
+----
+(redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) > 0.9
+----
+
+*Severity*: Critical +
+*Action*: Investigate memory usage, consider scaling
+
+=== High Latency
+
+*Condition*: P99 latency > 100ms (adjust threshold for use case)
+
+[source,promql]
+----
+redis_enterprise_database_latency_p99 > 0.1
+----
+
+*Severity*: High +
+*Action*: Check for slow commands, investigate load
+
+== Warning Alerts
+
+=== Memory Usage High
+
+*Condition*: Memory usage > 80%
+
+[source,promql]
+----
+(redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) > 0.8
+----
+
+*Severity*: Warning +
+*Action*: Plan for capacity increase
+
+=== Connection Count High
+
+*Condition*: Connections approaching limit
+
+[source,promql]
+----
+redis_enterprise_database_connections > 9000
+----
+
+*Severity*: Warning +
+*Action*: Review connection pooling, investigate leaks
+
+=== Eviction Rate Increasing
+
+*Condition*: Keys being evicted due to memory pressure
+
+[source,promql]
+----
+rate(redis_enterprise_database_evicted_keys[5m]) > 10
+----
+
+*Severity*: Warning +
+*Action*: Investigate memory usage patterns
+
+== Platform-Specific Configuration
+
+=== Prometheus Alertmanager
+
+Create alerting rules in `alert.rules.yml`:
+
+[source,yaml]
+----
+groups:
+- name: redis_enterprise
+  interval: 30s
+  rules:
+  - alert: RedisEnterpriseDatabaseDown
+    expr: redis_enterprise_database_up == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Redis Enterprise database {{ $labels.database }} is down"
+      description: "Database has been unavailable for more than 1 minute"
+----
+
+=== Grafana Alerts
+
+. Open dashboard panel
+. Click "Alert" tab
+. Define alert condition
+. Configure notification channels
+. Save alert rule
+
+=== Dynatrace Alerts
+
+Dynatrace provides AI-powered anomaly detection. Configure custom events:
+
+. Navigate to Settings > Anomaly Detection
+. Create custom event for Redis Enterprise metrics
+. Define baseline and thresholds
+. Set alerting profile
+
+=== New Relic Alerts
+
+Create NRQL alert conditions:
+
+[source,sql]
+----
+SELECT average(redis_enterprise_database_used_memory)
+FROM Metric
+WHERE database = 'production'
+FACET database
+----
+
+=== Splunk Alerts
+
+Create alerts from SPL searches:
+
+[source,spl]
+----
+index=metrics metric_name=redis_enterprise_database_up value=0
+| stats count by database, cluster
+----
+
+== Alert Routing
+
+=== Notification Channels
+
+Configure multiple channels based on severity:
+
+* *Critical*: PagerDuty, phone, SMS
+* *High*: Slack, email, PagerDuty
+* *Warning*: Email, Slack, ticket system
+
+=== On-Call Escalation
+
+Define escalation policies:
+
+. Primary on-call: Immediate notification
+. Secondary on-call: After 10 minutes
+. Team lead: After 30 minutes
+. Management: After 1 hour (for critical)
+
+== Alert Tuning
+
+=== Reducing False Positives
+
+* Use appropriate time windows (for: 5m)
+* Set realistic thresholds based on baseline
+* Implement hysteresis to avoid flapping
+* Use rate() instead of instantaneous values
+
+=== Testing Alerts
+
+Validate alert configuration:
+
+. Trigger alerts in non-production environment
+. Verify notification delivery
+. Test escalation policies
+. Document runbooks for each alert
+
+== Runbooks
+
+Create runbooks for each alert type:
+
+=== Database Down Runbook
+
+. Check cluster status: `rladmin status`
+. Verify node health
+. Review logs for errors
+. Attempt failover if needed
+. Escalate to Redis support if unresolved
+
+=== High Memory Runbook
+
+. Identify large keys: `redis-cli --bigkeys`
+. Review eviction policy
+. Check for memory leaks
+. Plan capacity increase
+. Enable compression if applicable
+
+== Next Steps
+
+* xref:guides/troubleshooting.adoc[Troubleshooting guide]
+* xref:reference/metrics.adoc[Metrics reference]
+* xref:dashboards/catalog.adoc[Dashboard catalog]

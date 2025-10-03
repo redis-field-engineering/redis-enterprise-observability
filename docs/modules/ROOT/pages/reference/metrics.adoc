@@ -1,0 +1,204 @@
+= Metrics Reference
+
+Complete reference for Redis Enterprise metrics exposed via Prometheus.
+
+== Overview
+
+Redis Enterprise exposes comprehensive metrics at the cluster, node, and database levels via a Prometheus-compatible endpoint at `:8070/metrics`.
+
+== Cluster Metrics
+
+=== redis_enterprise_cluster_health
+* *Type*: Gauge
+* *Description*: Overall cluster health status
+* *Values*: 0 (unhealthy), 1 (healthy)
+
+=== redis_enterprise_cluster_nodes_total
+* *Type*: Gauge
+* *Description*: Total number of nodes in the cluster
+* *Labels*: `cluster`
+
+=== redis_enterprise_cluster_databases_total
+* *Type*: Gauge
+* *Description*: Total number of databases in the cluster
+* *Labels*: `cluster`
+
+== Node Metrics
+
+=== redis_enterprise_node_up
+* *Type*: Gauge
+* *Description*: Node availability status
+* *Values*: 0 (down), 1 (up)
+* *Labels*: `cluster`, `node`
+
+=== redis_enterprise_node_cpu_usage
+* *Type*: Gauge
+* *Description*: Node CPU utilization percentage
+* *Unit*: Percent (0-100)
+* *Labels*: `cluster`, `node`
+
+=== redis_enterprise_node_memory_usage_bytes
+* *Type*: Gauge
+* *Description*: Node memory usage in bytes
+* *Unit*: Bytes
+* *Labels*: `cluster`, `node`
+
+=== redis_enterprise_node_network_bytes_in
+* *Type*: Counter
+* *Description*: Network bytes received by node
+* *Unit*: Bytes
+* *Labels*: `cluster`, `node`
+
+=== redis_enterprise_node_network_bytes_out
+* *Type*: Counter
+* *Description*: Network bytes sent by node
+* *Unit*: Bytes
+* *Labels*: `cluster`, `node`
+
+== Database Metrics
+
+=== redis_enterprise_database_up
+* *Type*: Gauge
+* *Description*: Database availability status
+* *Values*: 0 (down), 1 (up)
+* *Labels*: `cluster`, `database`, `db_id`
+
+=== redis_enterprise_database_total_ops
+* *Type*: Counter
+* *Description*: Total operations performed on database
+* *Unit*: Operations
+* *Labels*: `cluster`, `database`
+
+=== redis_enterprise_database_ops_per_sec
+* *Type*: Gauge
+* *Description*: Current operations per second
+* *Unit*: Operations/second
+* *Labels*: `cluster`, `database`
+
+=== redis_enterprise_database_used_memory
+* *Type*: Gauge
+* *Description*: Memory used by database
+* *Unit*: Bytes
+* *Labels*: `cluster`, `database`
+
+=== redis_enterprise_database_memory_limit
+* *Type*: Gauge
+* *Description*: Memory limit configured for database
+* *Unit*: Bytes
+* *Labels*: `cluster`, `database`
+
+=== redis_enterprise_database_connections
+* *Type*: Gauge
+* *Description*: Number of active connections to database
+* *Unit*: Connections
+* *Labels*: `cluster`, `database`
+
+=== redis_enterprise_database_total_keys
+* *Type*: Gauge
+* *Description*: Total number of keys in database
+* *Unit*: Keys
+* *Labels*: `cluster`, `database`
+
+=== redis_enterprise_database_evicted_keys
+* *Type*: Counter
+* *Description*: Number of keys evicted due to memory pressure
+* *Unit*: Keys
+* *Labels*: `cluster`, `database`
+
+=== redis_enterprise_database_expired_keys
+* *Type*: Counter
+* *Description*: Number of keys expired (TTL reached)
+* *Unit*: Keys
+* *Labels*: `cluster`, `database`
+
+== Latency Metrics
+
+=== redis_enterprise_database_latency_avg
+* *Type*: Gauge
+* *Description*: Average latency for database operations
+* *Unit*: Seconds
+* *Labels*: `cluster`, `database`
+
+=== redis_enterprise_database_latency_p50
+* *Type*: Gauge
+* *Description*: 50th percentile latency
+* *Unit*: Seconds
+* *Labels*: `cluster`, `database`
+
+=== redis_enterprise_database_latency_p95
+* *Type*: Gauge
+* *Description*: 95th percentile latency
+* *Unit*: Seconds
+* *Labels*: `cluster`, `database`
+
+=== redis_enterprise_database_latency_p99
+* *Type*: Gauge
+* *Description*: 99th percentile latency
+* *Unit*: Seconds
+* *Labels*: `cluster`, `database`
+
+== Replication Metrics
+
+=== redis_enterprise_database_replication_lag
+* *Type*: Gauge
+* *Description*: Replication lag between source and replica
+* *Unit*: Seconds
+* *Labels*: `cluster`, `database`, `source`, `replica`
+
+=== redis_enterprise_database_replication_status
+* *Type*: Gauge
+* *Description*: Replication status
+* *Values*: 0 (failed), 1 (syncing), 2 (synced)
+* *Labels*: `cluster`, `database`
+
+== Common PromQL Queries
+
+=== Operations Per Second
+[source,promql]
+----
+rate(redis_enterprise_database_total_ops[5m])
+----
+
+=== Memory Usage Percentage
+[source,promql]
+----
+(redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) * 100
+----
+
+=== Hit Rate
+[source,promql]
+----
+rate(redis_enterprise_database_hits[5m]) /
+(rate(redis_enterprise_database_hits[5m]) + rate(redis_enterprise_database_misses[5m]))
+----
+
+=== Eviction Rate
+[source,promql]
+----
+rate(redis_enterprise_database_evicted_keys[5m])
+----
+
+== Recording Rules Examples
+
+Recommended recording rules for common queries:
+
+[source,yaml]
+----
+groups:
+- name: redis_enterprise
+  interval: 30s
+  rules:
+  - record: redis_enterprise:database:ops_per_sec
+    expr: rate(redis_enterprise_database_total_ops[5m])
+
+  - record: redis_enterprise:database:memory_usage_pct
+    expr: |
+      (redis_enterprise_database_used_memory /
+       redis_enterprise_database_memory_limit) * 100
+----
+
+== Next Steps
+
+* xref:guides/alerting.adoc[Configure alerts using these metrics]
+* xref:platforms/prometheus.adoc[Set up Prometheus collection]
+* xref:dashboards/catalog.adoc[View pre-built dashboards]

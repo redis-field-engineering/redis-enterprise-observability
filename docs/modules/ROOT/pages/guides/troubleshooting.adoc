@@ -1,0 +1,230 @@
+= Troubleshooting Guide
+
+Common issues and solutions for Redis Enterprise monitoring.
+
+== Overview
+
+This guide helps diagnose and resolve common monitoring and observability issues.
+
+== No Metrics Data
+
+=== Symptom
+Dashboards show no data or "No data" messages.
+
+=== Possible Causes
+
+==== Metrics Endpoint Not Accessible
+
+*Diagnosis*:
+[source,bash]
+----
+curl http://<redis-enterprise-host>:8070/metrics
+----
+
+*Solution*: Verify firewall rules allow access to port 8070
+
+==== Prometheus Not Scraping
+
+*Diagnosis*:
+[source,bash]
+----
+# Check Prometheus targets
+curl http://localhost:9090/api/v1/targets
+----
+
+*Solution*: Verify scrape configuration in `prometheus.yml`
+
+==== Authentication Issues
+
+*Diagnosis*: Check Prometheus logs for 401/403 errors
+
+*Solution*: Verify credentials in scrape configuration
+
+== Incorrect Metric Values
+
+=== Symptom
+Metrics show unexpected or incorrect values.
+
+=== Possible Causes
+
+==== Time Zone Issues
+
+*Solution*: Ensure Prometheus, Grafana, and Redis Enterprise are using consistent time zones (UTC recommended)
+
+==== Aggregation Issues
+
+*Problem*: Using sum() when avg() is appropriate
+
+*Solution*: Review PromQL queries and aggregation functions
+
+==== Unit Conversion
+
+*Problem*: Memory shown in bytes instead of GB
+
+*Solution*: Apply unit conversion in queries or dashboard panel settings
+
+== High Cardinality Issues
+
+=== Symptom
+Prometheus performance degradation, high memory usage.
+
+=== Cause
+Too many unique label combinations in metrics.
+
+=== Solution
+
+. Identify high cardinality metrics:
++
+[source,bash]
+----
+promtool tsdb analyze /path/to/prometheus/data
+----
+
+. Review and reduce unnecessary labels
+. Implement metric relabeling:
++
+[source,yaml]
+----
+metric_relabel_configs:
+  - source_labels: [__name__]
+    regex: 'redis_enterprise_.*'
+    action: keep
+----
+
+== Dashboard Performance Issues
+
+=== Symptom
+Dashboards load slowly or time out.
+
+=== Solutions
+
+==== Optimize Time Range
+
+* Reduce default time range
+* Use shorter refresh intervals
+* Implement query result caching
+
+==== Optimize Queries
+
+* Use recording rules for complex calculations
+* Add rate() instead of querying raw counters
+* Limit cardinality in queries
+
+==== Use Recording Rules
+
+Create recording rules for frequently used queries:
+
+[source,yaml]
+----
+groups:
+- name: redis_enterprise_recordings
+  interval: 30s
+  rules:
+  - record: job:redis_enterprise_ops_per_sec:rate5m
+    expr: rate(redis_enterprise_database_total_ops[5m])
+----
+
+== Alert Fatigue
+
+=== Symptom
+Too many alerts, reducing effectiveness.
+
+=== Solutions
+
+==== Adjust Thresholds
+
+* Review historical data to set realistic thresholds
+* Implement dynamic thresholds based on patterns
+
+==== Add Alert Conditions
+
+Use `for:` clause to require sustained conditions:
+
+[source,yaml]
+----
+- alert: HighMemory
+  expr: memory_usage > 80
+  for: 10m  # Alert only if high for 10 minutes
+----
+
+==== Implement Alert Grouping
+
+Group related alerts to reduce notification volume:
+
+[source,yaml]
+----
+group_by: ['cluster', 'alertname']
+group_wait: 30s
+group_interval: 5m
+----
+
+== Redis Cloud Specific Issues
+
+=== API Rate Limiting
+
+*Symptom*: 429 errors from Redis Cloud API
+
+*Solution*:
+* Increase scrape interval
+* Implement exponential backoff
+* Contact Redis support for rate limit increase
+
+=== SSL/TLS Certificate Issues
+
+*Symptom*: Certificate validation errors
+
+*Solution*:
+[source,yaml]
+----
+tls_config:
+  insecure_skip_verify: false  # Set true only for testing
+  ca_file: /path/to/ca.crt
+----
+
+== Data Retention Issues
+
+=== Symptom
+Historical data missing or incomplete.
+
+=== Solutions
+
+==== Increase Prometheus Retention
+
+[source,bash]
+----
+prometheus \
+  --storage.tsdb.retention.time=90d \
+  --storage.tsdb.retention.size=100GB
+----
+
+==== Implement Downsampling
+
+Use recording rules to create downsampled metrics for long-term storage.
+
+==== Configure Remote Storage
+
+Forward metrics to long-term storage:
+
+[source,yaml]
+----
+remote_write:
+  - url: "https://long-term-storage.example.com/api/v1/write"
+----
+
+== Getting Help
+
+If issues persist:
+
+. Check Redis Enterprise logs
+. Review platform-specific documentation
+. Contact Redis support with:
+  * Cluster version and configuration
+  * Metrics endpoint samples
+  * Platform details (Prometheus/Grafana versions)
+  * Error messages and logs
+
+== Next Steps
+
+* xref:guides/alerting.adoc[Alerting guide]
+* xref:reference/metrics.adoc[Metrics reference]
+* xref:platforms/prometheus.adoc[Prometheus configuration]

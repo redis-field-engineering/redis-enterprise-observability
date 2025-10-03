@@ -1,0 +1,39 @@
+= Redis Enterprise Observability
+
+Monitor and observe your Redis Enterprise deployments with pre-built dashboards and integrations for popular observability platforms.
+
+== Overview
+
+This project provides comprehensive monitoring solutions for Redis Enterprise, including:
+
+* Pre-configured dashboards for multiple platforms
+* Metrics exporters and collectors
+* Alert definitions and templates
+* Integration guides for popular observability tools
+
+== Supported Platforms
+
+* xref:platforms/grafana.adoc[Grafana] - Visualization and analytics
+* xref:platforms/prometheus.adoc[Prometheus] - Metrics collection and storage
+* xref:platforms/dynatrace.adoc[Dynatrace] - Full-stack monitoring
+* xref:platforms/newrelic.adoc[New Relic] - Application performance monitoring
+* xref:platforms/splunk.adoc[Splunk] - Log analytics and SIEM
+* xref:platforms/kibana.adoc[Kibana] - Elasticsearch visualization
+
+== Getting Started
+
+Ready to start monitoring? Check out the xref:quick-start.adoc[Quick Start Guide] to get up and running in 5 minutes.
+
+== Key Features
+
+* *Pre-built Dashboards* - Import ready-to-use dashboards for your platform
+* *Comprehensive Metrics* - Monitor cluster health, performance, and capacity
+* *Flexible Integration* - Works with Redis Enterprise Cloud and self-hosted deployments
+* *Alert Templates* - Get notified of issues before they impact users
+* *Best Practices* - Built on Redis engineering expertise
+
+== Resources
+
+* xref:dashboards/catalog.adoc[Dashboard Catalog]
+* xref:guides/monitoring-redis-cloud.adoc[Monitoring Redis Cloud]
+* xref:reference/metrics.adoc[Metrics Reference]

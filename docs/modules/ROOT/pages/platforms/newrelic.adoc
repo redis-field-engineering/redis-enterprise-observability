@@ -1,0 +1,66 @@
+= New Relic Integration
+
+Monitor Redis Enterprise with New Relic's application performance monitoring platform.
+
+== Overview
+
+New Relic provides comprehensive monitoring and alerting for Redis Enterprise clusters.
+
+== Prerequisites
+
+* New Relic account
+* New Relic Infrastructure agent or Prometheus integration
+* License key from New Relic
+
+== Installation Options
+
+=== Option 1: New Relic Infrastructure Agent
+
+. Install the Infrastructure agent on Redis Enterprise nodes
+. Configure the Prometheus integration
+. Point to Redis Enterprise metrics endpoint
+
+=== Option 2: Prometheus Remote Write
+
+Configure Prometheus to forward metrics to New Relic:
+
+[source,yaml]
+----
+remote_write:
+  - url: https://metric-api.newrelic.com/prometheus/v1/write?prometheus_server=<your-cluster-name>
+    bearer_token: <your-license-key>
+----
+
+== Dashboard Import
+
+. Navigate to Dashboards in New Relic One
+. Click "Import dashboard"
+. Upload the JSON file from this repository
+. Configure data source and account
+
+== Querying Metrics
+
+Use NRQL to query Redis Enterprise metrics:
+
+[source,sql]
+----
+SELECT average(redis_enterprise_database_ops_per_sec)
+FROM Metric
+WHERE cluster = 'production'
+TIMESERIES
+----
+
+== Alerting
+
+Create alert conditions for:
+
+* High memory usage
+* Connection count thresholds
+* Operations per second anomalies
+* Cluster node availability
+
+== Next Steps
+
+* xref:dashboards/catalog.adoc[Dashboard catalog]
+* xref:guides/alerting.adoc[Alert configuration]
+* xref:reference/metrics.adoc[Metrics reference]

@@ -1,0 +1,75 @@
+= Prometheus Integration
+
+Collect and store Redis Enterprise metrics with Prometheus.
+
+== Overview
+
+Prometheus scrapes metrics from Redis Enterprise and stores them as time-series data for querying and visualization.
+
+== Prerequisites
+
+* Prometheus server (v2.30 or later recommended)
+* Network access to Redis Enterprise cluster
+* Redis Enterprise metrics endpoint enabled
+
+== Configuration
+
+=== Prometheus Scrape Configuration
+
+Add the following to your `prometheus.yml`:
+
+[source,yaml]
+----
+scrape_configs:
+  - job_name: 'redis-enterprise'
+    static_configs:
+      - targets: ['<redis-enterprise-host>:8070']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+----
+
+=== Authentication
+
+If your Redis Enterprise cluster requires authentication:
+
+[source,yaml]
+----
+scrape_configs:
+  - job_name: 'redis-enterprise'
+    static_configs:
+      - targets: ['<redis-enterprise-host>:8070']
+    basic_auth:
+      username: '<username>'
+      password: '<password>'
+----
+
+== Available Metrics
+
+Redis Enterprise exposes comprehensive metrics including:
+
+* Cluster health and status
+* Database operations and performance
+* Node resource utilization
+* Network traffic and connections
+* Replication lag and status
+
+See the xref:reference/metrics.adoc[Metrics Reference] for complete documentation.
+
+== Verification
+
+Verify metrics collection:
+
+[source,bash]
+----
+# Check Prometheus targets
+curl http://localhost:9090/api/v1/targets
+
+# Query a sample metric
+curl 'http://localhost:9090/api/v1/query?query=redis_enterprise_up'
+----
+
+== Next Steps
+
+* xref:platforms/grafana.adoc[Set up Grafana visualization]
+* xref:guides/alerting.adoc[Configure Prometheus alerts]
+* xref:reference/metrics.adoc[Explore available metrics]

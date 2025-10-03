@@ -1,0 +1,73 @@
+= Grafana Integration
+
+Monitor Redis Enterprise with Grafana dashboards and Prometheus data sources.
+
+== Overview
+
+Grafana provides powerful visualization capabilities for Redis Enterprise metrics. This integration uses Prometheus as the data source.
+
+== Prerequisites
+
+* Grafana instance (v8.0 or later recommended)
+* Prometheus configured to scrape Redis Enterprise metrics
+* Access to import dashboards in Grafana
+
+== Installation
+
+=== Step 1: Configure Prometheus Data Source
+
+. Log in to your Grafana instance
+. Navigate to Configuration > Data Sources
+. Click "Add data source"
+. Select "Prometheus"
+. Enter your Prometheus server URL
+. Click "Save & Test"
+
+=== Step 2: Import Dashboards
+
+. Navigate to Dashboards > Import
+. Upload the dashboard JSON file from this repository
+. Select your Prometheus data source
+. Click "Import"
+
+== Available Dashboards
+
+See the xref:dashboards/catalog.adoc[Dashboard Catalog] for the complete list of Grafana dashboards.
+
+== Configuration
+
+=== Dashboard Variables
+
+Most dashboards include template variables for filtering:
+
+* `cluster` - Select specific Redis Enterprise cluster
+* `database` - Filter by database
+* `node` - Filter by cluster node
+
+=== Refresh Intervals
+
+Recommended refresh intervals:
+
+* Production monitoring: 30s - 1m
+* Development: 1m - 5m
+* Historical analysis: Disable auto-refresh
+
+== Troubleshooting
+
+=== No Data Displayed
+
+* Verify Prometheus is scraping Redis Enterprise metrics
+* Check data source configuration
+* Ensure time range includes recent data
+
+=== Missing Metrics
+
+* Confirm Redis Enterprise exporter is running
+* Check Prometheus scrape configuration
+* Verify metrics endpoint is accessible
+
+== Next Steps
+
+* xref:guides/alerting.adoc[Configure Grafana alerts]
+* xref:dashboards/catalog.adoc[Explore dashboard catalog]
+* xref:reference/metrics.adoc[Review metrics reference]

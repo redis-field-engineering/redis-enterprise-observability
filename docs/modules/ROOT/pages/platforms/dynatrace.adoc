@@ -1,0 +1,57 @@
+= Dynatrace Integration
+
+Full-stack monitoring of Redis Enterprise with Dynatrace.
+
+== Overview
+
+Dynatrace provides automated, AI-powered monitoring for Redis Enterprise deployments.
+
+== Prerequisites
+
+* Dynatrace account (SaaS or Managed)
+* Dynatrace OneAgent or ActiveGate
+* API token with metrics ingestion permissions
+
+== Installation
+
+=== Using Dynatrace OneAgent
+
+The OneAgent automatically discovers and monitors Redis Enterprise processes when installed on the same host.
+
+. Install OneAgent on Redis Enterprise nodes
+. OneAgent will automatically detect Redis processes
+. Metrics will appear in Dynatrace within minutes
+
+=== Using Prometheus Integration
+
+For containerized or remote deployments:
+
+. Configure Prometheus to scrape Redis Enterprise
+. Set up Dynatrace Prometheus integration
+. Configure metrics ingestion
+
+== Dashboard Configuration
+
+Import the Redis Enterprise dashboard template:
+
+. Navigate to Dashboards in Dynatrace
+. Click "Import Dashboard"
+. Upload the JSON template from this repository
+. Configure data source mapping
+
+== Alerting
+
+Dynatrace provides AI-powered anomaly detection for Redis Enterprise metrics.
+
+Recommended alert configurations:
+
+* Memory usage anomalies
+* Connection spikes
+* Replication lag
+* Database unavailability
+
+== Next Steps
+
+* xref:dashboards/catalog.adoc[View dashboard catalog]
+* xref:guides/alerting.adoc[Configure alerts]
+* xref:reference/metrics.adoc[Metrics reference]

@@ -1,0 +1,72 @@
+= Splunk Integration
+
+Monitor Redis Enterprise metrics and logs with Splunk.
+
+== Overview
+
+Splunk provides enterprise-grade analytics for Redis Enterprise observability data.
+
+== Prerequisites
+
+* Splunk Enterprise or Splunk Cloud
+* HTTP Event Collector (HEC) token
+* Network access between Prometheus/Telegraf and Splunk
+
+== Installation
+
+=== Using Splunk Prometheus Integration
+
+. Install the Prometheus integration app in Splunk
+. Configure Prometheus to forward metrics
+. Set up index and sourcetype
+
+=== Using Telegraf
+
+Configure Telegraf to collect Redis Enterprise metrics and forward to Splunk:
+
+[source,toml]
+----
+[[inputs.prometheus]]
+  urls = ["http://<redis-enterprise-host>:8070/metrics"]
+
+[[outputs.http]]
+  url = "https://<splunk-hec-endpoint>:8088/services/collector"
+  data_format = "splunkmetric"
+  splunk_token = "<your-hec-token>"
+----
+
+== Dashboard Import
+
+. Navigate to Search & Reporting
+. Import the dashboard XML from this repository
+. Configure data source and time range
+. Save dashboard
+
+== SPL Queries
+
+Example queries for Redis Enterprise metrics:
+
+[source,spl]
+----
+index=metrics metric_name=redis_enterprise_database_ops_per_sec
+| timechart avg(value) by database
+
+index=metrics metric_name=redis_enterprise_memory_usage
+| where value > 80
+| stats count by cluster, node
+----
+
+== Alerting
+
+Configure alerts using Splunk's alert framework:
+
+* Memory usage thresholds
+* Operation rate anomalies
+* Cluster health checks
+* Database availability
+
+== Next Steps
+
+* xref:dashboards/catalog.adoc[Dashboard catalog]
+* xref:guides/alerting.adoc[Alert setup]
+* xref:reference/metrics.adoc[Metrics reference]

@@ -1,0 +1,80 @@
+= Dashboard Catalog
+
+Browse the complete collection of pre-built dashboards for Redis Enterprise monitoring.
+
+== Overview
+
+This catalog contains ready-to-use dashboards for various observability platforms. Each dashboard provides comprehensive monitoring of Redis Enterprise clusters, databases, and nodes.
+
+== Grafana Dashboards
+
+=== Redis Enterprise Cluster Overview
+* *File*: `grafana/cluster-overview.json`
+* *Description*: High-level view of cluster health, resource usage, and performance
+* *Key Metrics*: Cluster status, total operations, memory usage, node count
+
+=== Redis Enterprise Database Details
+* *File*: `grafana/database-details.json`
+* *Description*: Detailed metrics for individual databases
+* *Key Metrics*: Ops/sec, hit rate, latency, connection count, memory usage
+
+=== Redis Enterprise Node Monitoring
+* *File*: `grafana/node-monitoring.json`
+* *Description*: Node-level resource utilization and health
+* *Key Metrics*: CPU, memory, disk I/O, network traffic
+
+== Dynatrace Dashboards
+
+=== Redis Enterprise Full Stack
+* *File*: `dynatrace/full-stack-monitoring.json`
+* *Description*: Comprehensive view across infrastructure and application layers
+* *Features*: AI-powered anomaly detection, automatic baselining
+
+== New Relic Dashboards
+
+=== Redis Enterprise Performance
+* *File*: `newrelic/performance-dashboard.json`
+* *Description*: Application performance monitoring focused on Redis operations
+* *Features*: NRQL queries, custom widgets, alert correlation
+
+== Splunk Dashboards
+
+=== Redis Enterprise Analytics
+* *File*: `splunk/analytics-dashboard.xml`
+* *Description*: Enterprise analytics with SPL queries
+* *Features*: Historical trending, capacity planning, anomaly detection
+
+== Kibana Dashboards
+
+=== Redis Enterprise Metrics
+* *File*: `kibana/metrics-dashboard.ndjson`
+* *Description*: Visualization of metrics in Elasticsearch
+* *Features*: Custom visualizations, Canvas integration
+
+== Importing Dashboards
+
+See the platform-specific guides for import instructions:
+
+* xref:platforms/grafana.adoc[Grafana Import Guide]
+* xref:platforms/dynatrace.adoc[Dynatrace Import Guide]
+* xref:platforms/newrelic.adoc[New Relic Import Guide]
+* xref:platforms/splunk.adoc[Splunk Import Guide]
+* xref:platforms/kibana.adoc[Kibana Import Guide]
+
+== Customization
+
+All dashboards can be customized to fit your specific needs:
+
+* Modify time ranges and refresh intervals
+* Add or remove panels
+* Adjust thresholds and alert conditions
+* Create dashboard variables for filtering
+
+== Contributing
+
+To contribute new dashboards or improvements:
+
+. Fork the repository
+. Add your dashboard to the appropriate platform directory
+. Update this catalog
+. Submit a pull request

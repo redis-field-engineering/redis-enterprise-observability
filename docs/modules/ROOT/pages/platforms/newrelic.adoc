@@ -16,9 +16,52 @@ New Relic provides comprehensive monitoring and alerting for Redis Enterprise cl
 
 === Option 1: New Relic Infrastructure Agent
 
-. Install the Infrastructure agent on Redis Enterprise nodes
-. Configure the Prometheus integration
-. Point to Redis Enterprise metrics endpoint
+==== Install Infrastructure Agent
+
+[source,bash]
+----
+# Add New Relic repository (Ubuntu/Debian)
+curl -s https://download.newrelic.com/infrastructure_agent/gpg/newrelic-infra.gpg | sudo apt-key add -
+sudo printf "deb https://download.newrelic.com/infrastructure_agent/linux/apt focal main" | sudo tee /etc/apt/sources.list.d/newrelic-infra.list
+
+# Install agent
+sudo apt-get update
+sudo apt-get install newrelic-infra -y
+
+# Configure with license key
+echo "license_key: YOUR_LICENSE_KEY" | sudo tee /etc/newrelic-infra.yml
+sudo systemctl restart newrelic-infra
+----
+
+==== Configure Prometheus Integration
+
+Create `/etc/newrelic-infra/integrations.d/prometheus-config.yml`:
+
+[source,yaml]
+----
+integrations:
+  - name: nri-prometheus
+    config:
+      # Redis Enterprise metrics endpoint
+      standalone_urls:
+        - http://redis-cluster.example.com:8070/metrics
+
+      # Scrape interval
+      scrape_duration: "30s"
+
+      # Optional: Add custom labels
+      transformations:
+        - description: "Add cluster label"
+          add_attributes:
+            - cluster: "production"
+
+      # Optional: Filter metrics
+      emitters:
+        - prometheus
+
+      verbose: false
+      audit: false
+----
 
 === Option 2: Prometheus Remote Write
 
@@ -26,9 +69,61 @@ Configure Prometheus to forward metrics to New Relic:
 
 [source,yaml]
 ----
+# In prometheus.yml
+global:
+  external_labels:
+    cluster: 'production'
+    environment: 'prod'
+
 remote_write:
-  - url: https://metric-api.newrelic.com/prometheus/v1/write?prometheus_server=<your-cluster-name>
-    bearer_token: <your-license-key>
+  - url: https://metric-api.newrelic.com/prometheus/v1/write?prometheus_server=redis-enterprise-prod
+    bearer_token: YOUR_NEW_RELIC_LICENSE_KEY
+
+    # Queue configuration for reliability
+    queue_config:
+      capacity: 10000
+      max_shards: 50
+      max_samples_per_send: 5000
+      batch_send_deadline: 5s
+      max_retries: 3
+      min_backoff: 30ms
+      max_backoff: 100ms
+
+    # Optional: Filter what to send
+    write_relabel_configs:
+      # Only send Redis Enterprise metrics
+      - source_labels: [__name__]
+        regex: 'redis_enterprise_.*'
+        action: keep
+----
+
+=== Option 3: New Relic Kubernetes Integration
+
+For Redis Enterprise on Kubernetes:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nri-prometheus-config
+  namespace: newrelic
+data:
+  config.yaml: |
+    cluster_name: "redis-k8s-cluster"
+    audit: false
+    scrape_enabled_label: "prometheus.io/scrape"
+
+    transformations:
+      - description: "General processing rules"
+        add_attributes:
+          - environment: "production"
+
+    targets:
+      - description: "Redis Enterprise pods"
+        urls:
+          - "http://redis-enterprise-cluster:8070/metrics"
+        interval: 30s
 ----
 
 == Dashboard Import
@@ -40,24 +135,237 @@ remote_write:
 
 == Querying Metrics
 
-Use NRQL to query Redis Enterprise metrics:
+=== NRQL Query Examples
+
+Use NRQL (New Relic Query Language) to query Redis Enterprise metrics:
 
 [source,sql]
 ----
+-- Operations per second by database
 SELECT average(redis_enterprise_database_ops_per_sec)
 FROM Metric
 WHERE cluster = 'production'
-TIMESERIES
+FACET database
+TIMESERIES AUTO
+
+-- Memory usage percentage
+SELECT (average(redis_enterprise_database_used_memory) /
+        average(redis_enterprise_database_memory_limit)) * 100
+AS 'Memory Usage %'
+FROM Metric
+WHERE cluster = 'production'
+FACET database
+TIMESERIES AUTO
+
+-- Database availability
+SELECT sum(redis_enterprise_database_up)
+FROM Metric
+WHERE cluster = 'production'
+FACET database
+TIMESERIES AUTO
+
+-- Top 5 databases by operations
+SELECT average(redis_enterprise_database_ops_per_sec) AS 'Ops/Sec'
+FROM Metric
+WHERE cluster = 'production'
+FACET database
+LIMIT 5
+
+-- Connection count over time
+SELECT average(redis_enterprise_database_connections)
+FROM Metric
+WHERE cluster = 'production' AND database = 'prod-cache'
+TIMESERIES AUTO
+
+-- P99 Latency trend
+SELECT percentile(redis_enterprise_database_latency, 99) AS 'P99 Latency'
+FROM Metric
+WHERE cluster = 'production'
+FACET database
+TIMESERIES 5 minutes
+----
+
+=== Creating Custom Dashboards
+
+Example dashboard configuration via API:
+
+[source,bash]
+----
+# Create dashboard via New Relic API
+curl -X POST 'https://api.newrelic.com/graphql' \
+  -H 'Api-Key: YOUR_USER_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "query": "mutation {
+      dashboardCreate(
+        accountId: YOUR_ACCOUNT_ID,
+        dashboard: {
+          name: \"Redis Enterprise Monitoring\",
+          permissions: PRIVATE,
+          pages: [{
+            name: \"Overview\",
+            widgets: [{
+              title: \"Operations Per Second\",
+              visualization: {
+                id: \"viz.line\"
+              },
+              rawConfiguration: {
+                nrqlQueries: [{
+                  accountId: YOUR_ACCOUNT_ID,
+                  query: \"SELECT average(redis_enterprise_database_ops_per_sec) FROM Metric FACET database TIMESERIES\"
+                }]
+              }
+            }]
+          }]
+        }
+      ) {
+        entityResult {
+          guid
+        }
+      }
+    }"
+  }'
 ----
 
 == Alerting
 
-Create alert conditions for:
+=== Create Alert Policies via UI
 
-* High memory usage
-* Connection count thresholds
-* Operations per second anomalies
-* Cluster node availability
+. Navigate to Alerts & AI > Alert Policies
+. Click "New alert policy"
+. Name: "Redis Enterprise Monitoring"
+. Configure alert conditions
+
+=== NRQL Alert Conditions
+
+==== High Memory Usage Alert
+
+[source,sql]
+----
+-- Alert when memory usage > 90%
+SELECT (average(redis_enterprise_database_used_memory) /
+        average(redis_enterprise_database_memory_limit)) * 100
+FROM Metric
+WHERE cluster = 'production'
+FACET database
+
+-- Threshold: Above 90 for at least 5 minutes
+-- Severity: Critical
+----
+
+==== Database Down Alert
+
+[source,sql]
+----
+-- Alert when database is down
+SELECT sum(redis_enterprise_database_up)
+FROM Metric
+WHERE cluster = 'production'
+FACET database
+
+-- Threshold: Equal to 0 for at least 1 minute
+-- Severity: Critical
+----
+
+==== High Latency Alert
+
+[source,sql]
+----
+-- Alert when P99 latency exceeds threshold
+SELECT percentile(redis_enterprise_database_latency, 99)
+FROM Metric
+WHERE cluster = 'production'
+FACET database
+
+-- Threshold: Above 0.1 (100ms) for at least 5 minutes
+-- Severity: Warning
+----
+
+=== Alert Configuration via Terraform
+
+[source,hcl]
+----
+# Configure New Relic alerts with Terraform
+resource "newrelic_alert_policy" "redis_enterprise" {
+  name = "Redis Enterprise Monitoring"
+}
+
+resource "newrelic_nrql_alert_condition" "high_memory" {
+  account_id                   = var.newrelic_account_id
+  policy_id                    = newrelic_alert_policy.redis_enterprise.id
+  type                         = "static"
+  name                         = "Redis Enterprise High Memory Usage"
+  description                  = "Alert when database memory usage exceeds 90%"
+  enabled                      = true
+  violation_time_limit_seconds = 259200
+
+  nrql {
+    query = <<-EOT
+      SELECT (average(redis_enterprise_database_used_memory) /
+              average(redis_enterprise_database_memory_limit)) * 100
+      FROM Metric
+      WHERE cluster = 'production'
+      FACET database
+    EOT
+  }
+
+  critical {
+    operator              = "above"
+    threshold             = 90
+    threshold_duration    = 300
+    threshold_occurrences = "all"
+  }
+
+  warning {
+    operator              = "above"
+    threshold             = 80
+    threshold_duration    = 600
+    threshold_occurrences = "all"
+  }
+}
+
+resource "newrelic_nrql_alert_condition" "database_down" {
+  account_id                   = var.newrelic_account_id
+  policy_id                    = newrelic_alert_policy.redis_enterprise.id
+  type                         = "static"
+  name                         = "Redis Enterprise Database Down"
+  description                  = "Alert when database is unavailable"
+  enabled                      = true
+
+  nrql {
+    query = <<-EOT
+      SELECT sum(redis_enterprise_database_up)
+      FROM Metric
+      WHERE cluster = 'production'
+      FACET database
+    EOT
+  }
+
+  critical {
+    operator              = "equals"
+    threshold             = 0
+    threshold_duration    = 60
+    threshold_occurrences = "all"
+  }
+}
+
+# Notification channel
+resource "newrelic_notification_channel" "slack" {
+  name = "Redis Alerts Slack"
+  type = "slack"
+
+  config {
+    url = var.slack_webhook_url
+    channel = "#redis-alerts"
+  }
+}
+
+# Link policy to channel
+resource "newrelic_alert_policy_channel" "redis_slack" {
+  policy_id  = newrelic_alert_policy.redis_enterprise.id
+  channel_id = newrelic_notification_channel.slack.id
+}
+----
 
 == Next Steps
 

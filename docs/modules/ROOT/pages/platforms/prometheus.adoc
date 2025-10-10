@@ -143,6 +143,26 @@ scrape_configs:
         target_label: cluster
 ----
 
+== Example Configurations
+
+=== Production-Ready Templates
+
+Complete, tested configuration files are available in the GitHub repository:
+
+* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/prometheus_v2/rules[Alert Rules^] - Production-ready alert definitions
+** https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/prometheus_v2/rules/alerts.yml[alerts.yml^] - Comprehensive alert suite
+** https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/prometheus_v2/rules/capacity-alerts.yml[capacity-alerts.yml^] - Capacity monitoring
+** https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/prometheus_v2/rules/latency-alerts.yml[latency-alerts.yml^] - Latency thresholds
+** https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/prometheus_v2/rules/connection-alerts.yml[connection-alerts.yml^] - Connection monitoring
+** https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/prometheus_v2/rules/node-alerts.yml[node-alerts.yml^] - Node health alerts
+** https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/prometheus_v2/rules/shard-alerts.yml[shard-alerts.yml^] - Shard monitoring
+
+* https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana_v2/demo_v2/prometheus.yml[Complete Prometheus Configuration^] - Working example with v1 and v2 endpoints
+
+* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/prometheus_v2/tests[Alert Test Files^] - Validation tests for each alert rule
+
+TIP: Download and customize these files for your environment rather than starting from scratch. Each alert includes recommended thresholds and runbook URLs.
+
 == Available Metrics
 
 Redis Enterprise exposes comprehensive metrics including:

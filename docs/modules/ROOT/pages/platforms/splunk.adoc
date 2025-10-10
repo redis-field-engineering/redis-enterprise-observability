@@ -35,6 +35,22 @@ Configure Telegraf to collect Redis Enterprise metrics and forward to Splunk:
   splunk_token = "<your-hec-token>"
 ----
 
+== Example Configurations
+
+=== Production-Ready Templates
+
+Complete configuration files are available in the GitHub repository:
+
+* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/splunk[Splunk Configurations^]
+** https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/splunk/config/agent_config.yml[agent_config.yml^] - Complete OpenTelemetry Collector configuration (300+ lines)
+*** Receivers: Prometheus, OTLP, Jaeger, Zipkin
+*** Processors: Memory limiter, resource detection, batch processing
+*** Exporters: Splunk HEC, SignalFx
+*** Pre-configured pipelines for metrics, traces, and logs
+** Dashboard XML templates for Splunk UI
+
+TIP: The agent_config.yml provides a complete working configuration for the Splunk OpenTelemetry Collector. Replace placeholder values (REDIS_ENTERPRISE_HOST, SPLUNK_* environment variables) with your environment specifics.
+
 == Dashboard Import
 
 . Navigate to Search & Reporting

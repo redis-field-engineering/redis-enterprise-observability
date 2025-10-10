@@ -132,6 +132,26 @@ providers:
 
 Place dashboard JSON files in `/var/lib/grafana/dashboards/redis-enterprise/`.
 
+== Example Configurations
+
+=== Production-Ready Templates
+
+Complete dashboard and configuration files are available in the GitHub repository:
+
+* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/grafana_v2[Grafana Dashboards^] - Full JSON dashboard definitions
+** Cluster overview dashboards
+** Database performance dashboards
+** Node monitoring dashboards
+** Active-Active replication dashboards
+
+* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/grafana_v2/demo_v2[Complete Demo Environment^] - Working docker-compose setup
+** https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana_v2/demo_v2/docker-compose.yml[docker-compose.yml^] - Full stack (Prometheus + Grafana + Redis)
+** https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/grafana_v2/demo_v2/prometheus.yml[prometheus.yml^] - Pre-configured scrape settings
+
+* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/grafana_v2/kickstart_v2[Kickstart Environment^] - Quick production setup
+
+TIP: Import the complete dashboard JSON files directly into Grafana rather than recreating panels manually. All dashboards include pre-configured variables and alert templates.
+
 == Available Dashboards
 
 See the xref:dashboards/catalog.adoc[Dashboard Catalog] for the complete list of Grafana dashboards.

@@ -126,6 +126,21 @@ data:
         interval: 30s
 ----
 
+== Example Configurations
+
+=== Production-Ready Templates
+
+Complete configuration files are available in the GitHub repository:
+
+* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/newrelic_v2[New Relic Configurations^]
+** https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/newrelic_v2/config/prometheus.yml[prometheus.yml^] - Prometheus remote write template
+** https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/newrelic_v2/kickstarter[Kickstarter Scripts^] - Automated deployment tools
+** https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/newrelic_v2/kickstarter/terraform[Terraform Modules^] - AWS and GCP deployment examples
+
+* Dashboard JSON files for import into New Relic One
+
+TIP: The Prometheus configuration template includes placeholder comments showing exactly where to add your cluster hostname and New Relic bearer token.
+
 == Dashboard Import
 
 . Navigate to Dashboards in New Relic One

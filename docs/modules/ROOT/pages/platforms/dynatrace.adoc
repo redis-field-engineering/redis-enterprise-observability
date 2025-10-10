@@ -30,6 +30,23 @@ For containerized or remote deployments:
 . Set up Dynatrace Prometheus integration
 . Configure metrics ingestion
 
+== Example Configurations
+
+=== Production-Ready Templates
+
+Complete extension and dashboard files are available in the GitHub repository:
+
+* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/dynatrace_v2[Dynatrace Extension^]
+** https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/dynatrace_v2/src/extension.yaml[extension.yaml^] - Complete metric definitions (1700+ lines)
+*** Defines all Redis Enterprise v2 metrics
+*** Includes metric metadata, units, and descriptions
+*** Organized by category: cluster, node, endpoint, shard, replication, Active-Active
+** https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/dynatrace_v2/src/dashboards[Dashboard Templates^] - Pre-built dashboards
+
+* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/dynatrace[Legacy v1 Extension^] - For older Redis Enterprise versions
+
+TIP: The extension.yaml file provides a complete catalog of available metrics. Review it to understand which metrics to monitor and customize for your environment.
+
 == Dashboard Configuration
 
 Import the Redis Enterprise dashboard template:

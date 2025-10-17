@@ -6,6 +6,8 @@ Full-stack monitoring of Redis Enterprise with Dynatrace.
 
 Dynatrace provides automated, AI-powered monitoring for Redis Enterprise deployments.
 
+NOTE: This guide uses v2 dashboards (Generation 3), which are recommended for all deployments. For legacy v1 dashboards, see the xref:dashboards/catalog.adoc#legacy-dashboards[Legacy Dashboards] section in the catalog.
+
 == Prerequisites
 
 * Dynatrace account (SaaS or Managed)

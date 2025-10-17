@@ -6,6 +6,8 @@ Collect and store Redis Enterprise metrics with Prometheus.
 
 Prometheus scrapes metrics from Redis Enterprise and stores them as time-series data for querying and visualization.
 
+NOTE: This guide references v2 alert rules and configurations, which are recommended for all deployments. For legacy v1 configurations, see the xref:dashboards/catalog.adoc#legacy-dashboards[Legacy Dashboards] section in the catalog.
+
 == Prerequisites
 
 * Prometheus server (v2.30 or later recommended)

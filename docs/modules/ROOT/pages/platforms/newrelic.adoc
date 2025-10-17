@@ -6,6 +6,8 @@ Monitor Redis Enterprise with New Relic's application performance monitoring pla
 
 New Relic provides comprehensive monitoring and alerting for Redis Enterprise clusters.
 
+NOTE: This guide uses v2 dashboards and configurations, which are recommended for all deployments. For legacy v1 resources, see the xref:dashboards/catalog.adoc#legacy-dashboards[Legacy Dashboards] section in the catalog.
+
 == Prerequisites
 
 * New Relic account

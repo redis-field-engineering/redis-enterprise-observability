@@ -6,6 +6,8 @@ Monitor Redis Enterprise with Grafana dashboards and Prometheus data sources.
 
 Grafana provides powerful visualization capabilities for Redis Enterprise metrics. This integration uses Prometheus as the data source.
 
+NOTE: This guide uses v2 dashboards, which are recommended for all deployments. If you need legacy v1 dashboards, see the xref:dashboards/catalog.adoc#legacy-dashboards[Legacy Dashboards] section in the catalog.
+
 == Prerequisites
 
 * Grafana instance (v8.0 or later recommended)

@@ -11,6 +11,8 @@ This project provides comprehensive monitoring solutions for Redis Enterprise, i
 * Alert definitions and templates
 * Integration guides for popular observability tools
 
+IMPORTANT: This documentation focuses on our v2 dashboards and configurations, which feature improved metrics, better visualizations, and enhanced alert rules. V2 is recommended for all deployments. Legacy v1 resources are available in the xref:dashboards/catalog.adoc#legacy-dashboards[Dashboard Catalog].
+
 == Supported Platforms
 
 * xref:platforms/grafana.adoc[Grafana] - Visualization and analytics

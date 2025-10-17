@@ -12,6 +12,9 @@ logs
 # Lock files
 *.lock
 
+# Node modules
+node_modules/
+
 playbook/target
 
 .vscode

@@ -377,7 +377,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum by(cluster, db)(redis_server_used_memory{cluster=\"$cluster\", db=\"$db\"}) / sum by(cluster, db)(redis_server_maxmemory{cluster=\"$cluster\", db=\"$db\"})",
+          "expr": "sum by (cluster,db)(redis_server_used_memory{role=\"master\", db=\"$db\", cluster=\"$cluster\"}) / (avg by(cluster,db)(db_memory_limit_bytes{db=\"$db\", cluster=\"$cluster\"}) / max by(cluster,db)(db_replication_factor{db=\"$db\", cluster=\"$cluster\"}))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",

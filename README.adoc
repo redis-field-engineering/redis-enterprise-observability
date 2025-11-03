@@ -18,7 +18,7 @@ This repository contains documentation and dashboard configurations for using se
 
 == Docs
 
-Check out the docks link:https://redis-field-engineering.github.io/redis-enterprise-observability/redis-enterprise-observability/latest/index.html[here]
+Check out the docs link:https://redis-field-engineering.github.io/redis-enterprise-observability/redis-enterprise-observability/latest/index.html[here]
 
 == Support
 

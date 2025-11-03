@@ -46,7 +46,7 @@ integrations:
     config:
       # Redis Enterprise metrics endpoint
       standalone_urls:
-        - http://redis-cluster.example.com:8070/metrics
+        - http://redis-cluster.example.com:8070/v2
 
       # Scrape interval
       scrape_duration: "30s"
@@ -95,7 +95,7 @@ remote_write:
     write_relabel_configs:
       # Only send Redis Enterprise metrics
       - source_labels: [__name__]
-        regex: 'redis_enterprise_.*'
+        regex: '(redis_server_.*|endpoint_.*|db_.*|node_.*)'
         action: keep
 ----
 
@@ -124,7 +124,7 @@ data:
     targets:
       - description: "Redis Enterprise pods"
         urls:
-          - "http://redis-enterprise-cluster:8070/metrics"
+          - "http://redis-enterprise-cluster:8070/v2"
         interval: 30s
 ----
 
@@ -159,46 +159,46 @@ Use NRQL (New Relic Query Language) to query Redis Enterprise metrics:
 [source,sql]
 ----
 -- Operations per second by database
-SELECT average(redis_enterprise_database_ops_per_sec)
+SELECT rate(endpoint_read_requests, 1 minute) + rate(endpoint_write_requests, 1 minute) + rate(endpoint_other_requests, 1 minute)
 FROM Metric
 WHERE cluster = 'production'
-FACET database
+FACET db
 TIMESERIES AUTO
 
 -- Memory usage percentage
-SELECT (average(redis_enterprise_database_used_memory) /
-        average(redis_enterprise_database_memory_limit)) * 100
+SELECT (average(redis_server_used_memory) /
+        average(db_memory_limit_bytes)) * 100
 AS 'Memory Usage %'
 FROM Metric
-WHERE cluster = 'production'
-FACET database
+WHERE cluster = 'production' AND role = 'master'
+FACET db
 TIMESERIES AUTO
 
 -- Database availability
-SELECT sum(redis_enterprise_database_up)
+SELECT sum(redis_server_up)
 FROM Metric
 WHERE cluster = 'production'
-FACET database
+FACET db
 TIMESERIES AUTO
 
 -- Top 5 databases by operations
-SELECT average(redis_enterprise_database_ops_per_sec) AS 'Ops/Sec'
+SELECT rate(endpoint_read_requests, 1 minute) + rate(endpoint_write_requests, 1 minute) + rate(endpoint_other_requests, 1 minute) AS 'Ops/Sec'
 FROM Metric
 WHERE cluster = 'production'
-FACET database
+FACET db
 LIMIT 5
 
 -- Connection count over time
-SELECT average(redis_enterprise_database_connections)
+SELECT average(endpoint_client_connections)
 FROM Metric
-WHERE cluster = 'production' AND database = 'prod-cache'
+WHERE cluster = 'production' AND db = 'prod-cache'
 TIMESERIES AUTO
 
 -- P99 Latency trend
-SELECT percentile(redis_enterprise_database_latency, 99) AS 'P99 Latency'
+SELECT percentile(endpoint_latency, 99) AS 'P99 Latency'
 FROM Metric
 WHERE cluster = 'production'
-FACET database
+FACET db
 TIMESERIES 5 minutes
 ----
 
@@ -229,7 +229,7 @@ curl -X POST 'https://api.newrelic.com/graphql' \
               rawConfiguration: {
                 nrqlQueries: [{
                   accountId: YOUR_ACCOUNT_ID,
-                  query: \"SELECT average(redis_enterprise_database_ops_per_sec) FROM Metric FACET database TIMESERIES\"
+                  query: \"SELECT rate(endpoint_read_requests, 1 minute) + rate(endpoint_write_requests, 1 minute) + rate(endpoint_other_requests, 1 minute) FROM Metric FACET db TIMESERIES\"
                 }]
               }
             }]
@@ -260,11 +260,11 @@ curl -X POST 'https://api.newrelic.com/graphql' \
 [source,sql]
 ----
 -- Alert when memory usage > 90%
-SELECT (average(redis_enterprise_database_used_memory) /
-        average(redis_enterprise_database_memory_limit)) * 100
+SELECT (average(redis_server_used_memory) /
+        average(db_memory_limit_bytes)) * 100
 FROM Metric
-WHERE cluster = 'production'
-FACET database
+WHERE cluster = 'production' AND role = 'master'
+FACET db
 
 -- Threshold: Above 90 for at least 5 minutes
 -- Severity: Critical
@@ -275,10 +275,10 @@ FACET database
 [source,sql]
 ----
 -- Alert when database is down
-SELECT sum(redis_enterprise_database_up)
+SELECT sum(redis_server_up)
 FROM Metric
 WHERE cluster = 'production'
-FACET database
+FACET db
 
 -- Threshold: Equal to 0 for at least 1 minute
 -- Severity: Critical
@@ -289,10 +289,10 @@ FACET database
 [source,sql]
 ----
 -- Alert when P99 latency exceeds threshold
-SELECT percentile(redis_enterprise_database_latency, 99)
+SELECT percentile(endpoint_latency, 99)
 FROM Metric
 WHERE cluster = 'production'
-FACET database
+FACET db
 
 -- Threshold: Above 0.1 (100ms) for at least 5 minutes
 -- Severity: Warning
@@ -318,11 +318,11 @@ resource "newrelic_nrql_alert_condition" "high_memory" {
 
   nrql {
     query = <<-EOT
-      SELECT (average(redis_enterprise_database_used_memory) /
-              average(redis_enterprise_database_memory_limit)) * 100
+      SELECT (average(redis_server_used_memory) /
+              average(db_memory_limit_bytes)) * 100
       FROM Metric
-      WHERE cluster = 'production'
-      FACET database
+      WHERE cluster = 'production' AND role = 'master'
+      FACET db
     EOT
   }
 
@@ -351,10 +351,10 @@ resource "newrelic_nrql_alert_condition" "database_down" {
 
   nrql {
     query = <<-EOT
-      SELECT sum(redis_enterprise_database_up)
+      SELECT sum(redis_server_up)
       FROM Metric
       WHERE cluster = 'production'
-      FACET database
+      FACET db
     EOT
   }
 

@@ -174,7 +174,7 @@ Name: cluster
 Label: Cluster
 Type: Query
 Data source: Redis-Enterprise-Prometheus
-Query: label_values(redis_enterprise_cluster_health, cluster)
+Query: label_values(node_metrics_up, cluster)
 Regex: .*
 Multi-value: true
 Include All option: true
@@ -184,11 +184,11 @@ Example variable for database selection:
 
 [source,text]
 ----
-Name: database
-Label: Database
+Name: db
+Label: db
 Type: Query
 Data source: Redis-Enterprise-Prometheus
-Query: label_values(redis_enterprise_database_up{cluster="$cluster"}, database)
+Query: label_values(endpoint_client_connections{cluster="$cluster"}, db)
 Refresh: On Dashboard Load
 Multi-value: true
 Include All option: true
@@ -201,13 +201,10 @@ Use variables in your panel queries:
 [source,promql]
 ----
 # Filter by selected cluster and database
-redis_enterprise_database_ops_per_sec{cluster="$cluster", database="$database"}
+rate(endpoint_read_requests{cluster="$cluster", db="$db"}[5m]) + rate(endpoint_write_requests{cluster="$cluster", db="$db"}[5m]) + rate(endpoint_other_requests{cluster="$cluster", db="$db"}[5m])
 
 # Multi-value variable example
-redis_enterprise_database_ops_per_sec{cluster=~"$cluster", database=~"$database"}
-
-# With regex
-redis_enterprise_database_ops_per_sec{cluster=~"$cluster", database=~"$database|prod-.*"}
+rate(endpoint_read_requests{cluster=~"$cluster", db=~"$db"}[5m]) + rate(endpoint_write_requests{cluster=~"$cluster", db=~"$db"}[5m]) + rate(endpoint_other_requests{cluster=~"$cluster", db=~"$db"}[5m])
 ----
 
 === Panel Configuration Examples
@@ -220,8 +217,8 @@ redis_enterprise_database_ops_per_sec{cluster=~"$cluster", database=~"$database|
   "title": "Operations Per Second",
   "targets": [
     {
-      "expr": "rate(redis_enterprise_database_total_ops{cluster=\"$cluster\", database=\"$database\"}[5m])",
-      "legendFormat": "{{database}} - {{cluster}}",
+      "expr": "rate(endpoint_read_requests{cluster=\"$cluster\", db=\"$db\"}[5m]) + rate(endpoint_write_requests{cluster=\"$cluster\", db=\"$db\"}[5m]) + rate(endpoint_other_requests{cluster=\"$cluster\", db=\"$db\"}[5m])",
+      "legendFormat": "{{db}} - {{cluster}}",
       "refId": "A"
     }
   ],
@@ -243,7 +240,7 @@ redis_enterprise_database_ops_per_sec{cluster=~"$cluster", database=~"$database|
   "title": "Memory Usage",
   "targets": [
     {
-      "expr": "(redis_enterprise_database_used_memory{cluster=\"$cluster\", database=\"$database\"} / redis_enterprise_database_memory_limit{cluster=\"$cluster\", database=\"$database\"}) * 100",
+      "expr": "(sum by(cluster,db)(redis_server_used_memory{cluster=\"$cluster\", db=\"$db\", role=\"master\"}) / (avg by(cluster,db)(db_memory_limit_bytes{cluster=\"$cluster\", db=\"$db\"}) / avg by(cluster,db)(db_replication_factor{cluster=\"$cluster\", db=\"$db\"}))) * 100",
       "refId": "A"
     }
   ],
@@ -273,7 +270,7 @@ redis_enterprise_database_ops_per_sec{cluster=~"$cluster", database=~"$database|
   "title": "Active Databases",
   "targets": [
     {
-      "expr": "count(redis_enterprise_database_up{cluster=\"$cluster\"} == 1)",
+      "expr": "count(endpoint_client_connections{cluster=\"$cluster\"})",
       "refId": "A"
     }
   ],
@@ -306,7 +303,7 @@ Conditions:
 WHEN avg() OF query(A, 5m, now) IS ABOVE 90
 
 Query A:
-(redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) * 100
+(sum by(cluster,db)(redis_server_used_memory{role="master"}) / (avg by(cluster,db)(db_memory_limit_bytes) / avg by(cluster,db)(db_replication_factor))) * 100
 ----
 
 ==== Alert via Configuration
@@ -332,7 +329,7 @@ groups:
               to: 0
             datasourceUid: redis-prometheus
             model:
-              expr: (redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) * 100 > 90
+              expr: (sum by(cluster,db)(redis_server_used_memory{role="master"}) / (avg by(cluster,db)(db_memory_limit_bytes) / avg by(cluster,db)(db_replication_factor))) * 100 > 90
               intervalMs: 1000
               maxDataPoints: 43200
         noDataState: NoData

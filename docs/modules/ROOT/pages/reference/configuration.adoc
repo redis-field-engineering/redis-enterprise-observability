@@ -42,7 +42,7 @@ Filter metrics to reduce cardinality:
 [source,bash]
 ----
 # Configure metric prefixes to include
-rladmin cluster config metrics_include_list "redis_enterprise_database,redis_enterprise_cluster"
+rladmin cluster config metrics_include_list "endpoint_,db_,redis_server_,node_,database_"
 
 # Configure metric prefixes to exclude
 rladmin cluster config metrics_exclude_list "redis_enterprise_internal"
@@ -136,7 +136,7 @@ scrape_configs:
     metric_relabel_configs:
       # Keep only specific metrics
       - source_labels: [__name__]
-        regex: 'redis_enterprise_(database|cluster)_.*'
+        regex: '(endpoint_|redis_server_).*'
         action: keep
 
       # Drop high cardinality labels
@@ -182,13 +182,13 @@ Common dashboard variables for Redis Enterprise:
       {
         "name": "cluster",
         "type": "query",
-        "query": "label_values(redis_enterprise_cluster_health, cluster)",
+        "query": "label_values(endpoint_client_connections, cluster)",
         "refresh": 1
       },
       {
-        "name": "database",
+        "name": "db",
         "type": "query",
-        "query": "label_values(redis_enterprise_database_up{cluster=\"$cluster\"}, database)",
+        "query": "label_values(endpoint_client_connections{cluster=\"$cluster\"}, db)",
         "refresh": 1
       }
     ]

@@ -8,174 +8,215 @@ Redis Enterprise exposes comprehensive metrics at the cluster, node, and databas
 
 == Cluster Metrics
 
-=== redis_enterprise_cluster_health
-* *Type*: Gauge
-* *Description*: Overall cluster health status
-* *Values*: 0 (unhealthy), 1 (healthy)
-
-=== redis_enterprise_cluster_nodes_total
-* *Type*: Gauge
-* *Description*: Total number of nodes in the cluster
-* *Labels*: `cluster`
-
-=== redis_enterprise_cluster_databases_total
-* *Type*: Gauge
-* *Description*: Total number of databases in the cluster
-* *Labels*: `cluster`
-
 == Node Metrics
 
-=== redis_enterprise_node_up
+=== node_up
 * *Type*: Gauge
 * *Description*: Node availability status
 * *Values*: 0 (down), 1 (up)
 * *Labels*: `cluster`, `node`
 
-=== redis_enterprise_node_cpu_usage
-* *Type*: Gauge
-* *Description*: Node CPU utilization percentage
-* *Unit*: Percent (0-100)
+=== node_cpu_seconds_total
+* *Type*: counter
+* *Description*: CPU time spent by node processes in seconds
+* *Unit*: Seconds
 * *Labels*: `cluster`, `node`
 
-=== redis_enterprise_node_memory_usage_bytes
+=== node_available_memory_bytes
 * *Type*: Gauge
-* *Description*: Node memory usage in bytes
+* *Description*: Available memory in the node (bytes) that is available for database provisioning
 * *Unit*: Bytes
 * *Labels*: `cluster`, `node`
 
-=== redis_enterprise_node_network_bytes_in
+=== node_network_receive_bytes_total
 * *Type*: Counter
-* *Description*: Network bytes received by node
+* *Description*: Total bytes received by the node network interfaces
 * *Unit*: Bytes
 * *Labels*: `cluster`, `node`
 
-=== redis_enterprise_node_network_bytes_out
+=== node_network_transmit_bytes_total
 * *Type*: Counter
-* *Description*: Network bytes sent by node
+* *Description*: Total bytes transmitted by the node network interfaces
 * *Unit*: Bytes
 * *Labels*: `cluster`, `node`
 
 == Database Metrics
 
-=== redis_enterprise_database_up
-* *Type*: Gauge
-* *Description*: Database availability status
-* *Values*: 0 (down), 1 (up)
-* *Labels*: `cluster`, `database`, `db_id`
-
-=== redis_enterprise_database_total_ops
+=== endpoint_read_requests
 * *Type*: Counter
-* *Description*: Total operations performed on database
+* *Description*: Total number of read requests for the database
 * *Unit*: Operations
-* *Labels*: `cluster`, `database`
+* *Labels*: `cluster`, `db`
 
-=== redis_enterprise_database_ops_per_sec
-* *Type*: Gauge
-* *Description*: Current operations per second
-* *Unit*: Operations/second
-* *Labels*: `cluster`, `database`
+=== endpoint_write_requests
+* *Type*: Counter
+* *Description*: Total number of write requests for the database
+* *Unit*: Operations
+* *Labels*: `cluster`, `db`
 
-=== redis_enterprise_database_used_memory
-* *Type*: Gauge
-* *Description*: Memory used by database
-* *Unit*: Bytes
-* *Labels*: `cluster`, `database`
+=== endpoint_other_requests
+* *Type*: Counter
+* *Description*: Total number of other requests for the database
+* *Unit*: Operations
+* *Labels*: `cluster`, `db`
 
-=== redis_enterprise_database_memory_limit
+=== endpiont_read_requests_latency_histogram
+* *Type*: Counter
+* *Description*: Latency (in us) histogram of read commands
+* *Unit*: Microseconds
+* *Labels*: `cluster`, `db`
+
+=== endpoint_write_requests_latency_histogram
+* *Type*: Counter
+* *Description*: Latency (in us) histogram of write commands
+* *Unit*: Microseconds
+* *Labels*: `cluster`, `db`
+
+=== endpoint_other_requests_latency_histogram
+* *Type*: Counter
+* *Description*: Latency (in us) histogram of other commands
+* *Unit*: Microseconds
+* *Labels*: `cluster`, `db`
+
+=== db_memory_limit_bytes
 * *Type*: Gauge
 * *Description*: Memory limit configured for database
 * *Unit*: Bytes
-* *Labels*: `cluster`, `database`
+* *Labels*: `cluster`, `db`
 
-=== redis_enterprise_database_connections
-* *Type*: Gauge
-* *Description*: Number of active connections to database
+=== endpoint_client_connections
+* *Type*: Counter
+* *Description*: Total number of client connections established
 * *Unit*: Connections
-* *Labels*: `cluster`, `database`
+* *Labels*: `cluster`, `db`
 
-=== redis_enterprise_database_total_keys
-* *Type*: Gauge
-* *Description*: Total number of keys in database
-* *Unit*: Keys
-* *Labels*: `cluster`, `database`
-
-=== redis_enterprise_database_evicted_keys
+=== endpoint_client_disconnections
 * *Type*: Counter
-* *Description*: Number of keys evicted due to memory pressure
-* *Unit*: Keys
-* *Labels*: `cluster`, `database`
+* *Description*: Total number of client disconnections
+* *Unit*: Connections
+* *Labels*: `cluster`, `db`
 
-=== redis_enterprise_database_expired_keys
+=== endpoint_proxy_disconnections
 * *Type*: Counter
-* *Description*: Number of keys expired (TTL reached)
-* *Unit*: Keys
-* *Labels*: `cluster`, `database`
-
-== Latency Metrics
-
-=== redis_enterprise_database_latency_avg
-* *Type*: Gauge
-* *Description*: Average latency for database operations
-* *Unit*: Seconds
-* *Labels*: `cluster`, `database`
-
-=== redis_enterprise_database_latency_p50
-* *Type*: Gauge
-* *Description*: 50th percentile latency
-* *Unit*: Seconds
-* *Labels*: `cluster`, `database`
-
-=== redis_enterprise_database_latency_p95
-* *Type*: Gauge
-* *Description*: 95th percentile latency
-* *Unit*: Seconds
-* *Labels*: `cluster`, `database`
-
-=== redis_enterprise_database_latency_p99
-* *Type*: Gauge
-* *Description*: 99th percentile latency
-* *Unit*: Seconds
-* *Labels*: `cluster`, `database`
+* *Description*: Total number of client disconnections initiated by the proxy
+* *Unit*: Connections
+* *Labels*: `cluster`, `db`
 
 == Replication Metrics
 
-=== redis_enterprise_database_replication_lag
+=== database_syncer_lag_ms
 * *Type*: Gauge
 * *Description*: Replication lag between source and replica
 * *Unit*: Seconds
-* *Labels*: `cluster`, `database`, `source`, `replica`
+* *Labels*: `cluster`, `db`, `source`, `replica`
 
-=== redis_enterprise_database_replication_status
+=== database_syncer_current_status
 * *Type*: Gauge
 * *Description*: Replication status
-* *Values*: 0 (failed), 1 (syncing), 2 (synced)
-* *Labels*: `cluster`, `database`
+* *Values*: 0 (in-sync), 2 (out-of-sync)
+* *Labels*: `cluster`, `db`
+
+== Shard
+
+=== redis_server_up
+* *Type*: Gauge
+* *Description*: Shard is up and running
+* *Values*: 0 (down), 1 (up)
+* *Labels*: `cluster`, `db`, `redis`
+
+=== redis_server_used_memory
+* *Type*: Gauge
+* *Description*: Memory used by shard 
+* *Unit*: Bytes
+* *Labels*: `cluster`, `db`, `redis`
+
+=== redis_server_db0_keys
+* *Type*: Gauge
+* *Description*: Total key count in db 0
+* *Unit*: Keys
+* *Labels*: `cluster`, `db`, `redis`
+
+=== redis_server_db_keys
+* *Type*: Gauge
+* *Description*: Total key count in all dbs
+* *Unit*: Keys
+* *Labels*: `cluster`, `db`, `redis`
+
+=== redis_server_evicted_keys
+* *Type*: Counter
+* *Description*: Keys evicted so far (since restart)
+* *Unit*: Keys
+* *Labels*: `cluster`, `db`, `redis`
+
+=== redis_server_expired_keys
+* *Type*: Counter
+* *Description*: Keys expired so far (since restart)
+* *Unit*: Keys
+* *Labels*: `cluster`, `db`, `redis`
+
+=== redis_server_keyspace_read_hits
+* *Type*: Counter
+* *Description*: Number of read operations accessing an existing keyspace
+* *Unit*: Operations
+* *Labels*: `cluster`, `db`, `redis`
+
+=== redis_server_keyspace_read_misses
+
+* *Type*: Counter
+* *Description*: Number of read operations accessing a non-existing keyspace
+* *Unit*: Operations
+* *Labels*: `cluster`, `db`, `redis`
+
+=== redis_server_keyspace_write_hits
+
+* *Type*: Counter
+* *Description*: Number of write operations accessing an existing keyspace
+* *Unit*: Operations
+* *Labels*: `cluster`, `db`, `redis`
+
+=== redis_server_keyspace_write_misses
+* *Type*: Counter
+* *Description*: Number of write operations accessing a non-existing keyspace
+* *Unit*: Operations
+* *Labels*: `cluster`, `db`, `redis`
+
+=== namedprocess_namegroup_cpu_seconds_total
+* *Type*: Counter
+* *Description*: Shard process CPU usage seconds
+* *Unit*: Seconds
+* *Labels*: `cluster`, `db`, `redis`, `mode`
+
+=== namedprocess_namegroup_thread_cpu_seconds_total
+* *Type*: Counter
+* *Description*: Shard thread CPU usage seconds
+* *Unit*: Seconds
+* *Labels*: `cluster`, `db`, `redis`, `thread`,`mode`
 
 == Common PromQL Queries
 
 === Operations Per Second
 [source,promql]
 ----
-rate(redis_enterprise_database_total_ops[5m])
+irate(endpoint_read_requests[5m]) + irate(endpoint_write_requests[5m]) + irate(endpoint_other_requests[5m])
 ----
 
 === Memory Usage Percentage
 [source,promql]
 ----
-(redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) * 100
+(sum by(cluster,db)(redis_server_used_memory{role="master"}) / (avg by(cluster,db)(db_memory_limit_bytes) / avg by(cluster,db)(db_replication_factor))) * 100
 ----
 
 === Hit Rate
 [source,promql]
 ----
-rate(redis_enterprise_database_hits[5m]) /
-(rate(redis_enterprise_database_hits[5m]) + rate(redis_enterprise_database_misses[5m]))
+rate(redis_server_keyspace_read_hits[5m]) /
+(rate(redis_server_keyspace_read_hits[5m]) + rate(redis_server_keyspace_read_misses[5m]))
 ----
 
 === Eviction Rate
 [source,promql]
 ----
-rate(redis_enterprise_database_evicted_keys[5m])
+rate(redis_server_evicted_keys[5m])
 ----
 
 == Recording Rules Examples
@@ -189,12 +230,12 @@ groups:
   interval: 30s
   rules:
   - record: redis_enterprise:database:ops_per_sec
-    expr: rate(redis_enterprise_database_total_ops[5m])
+    expr: rate(endpoint_read_requests[5m]) + rate(endpoint_write_requests[5m]) + rate(endpoint_other_requests[5m])
 
   - record: redis_enterprise:database:memory_usage_pct
     expr: |
-      (redis_enterprise_database_used_memory /
-       redis_enterprise_database_memory_limit) * 100
+      (sum by(cluster,db)(redis_server_used_memory{role="master"}) / 
+       (avg by(cluster,db)(db_memory_limit_bytes) / avg by(cluster,db)(db_replication_factor))) * 100
 ----
 
 == Next Steps

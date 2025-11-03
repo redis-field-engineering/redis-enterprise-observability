@@ -30,7 +30,7 @@ scrape_configs:
   - job_name: 'redis-enterprise'
     static_configs:
       - targets: ['redis-cluster-1.example.com:8070']
-    metrics_path: '/metrics'
+    metrics_path: '/v2'
     scrape_interval: 30s
     scrape_timeout: 10s
 ----
@@ -216,14 +216,14 @@ Test that metrics are being collected:
 
 [source,bash]
 ----
-# Check if Redis Enterprise is up
-curl -g 'http://localhost:9090/api/v1/query?query=redis_enterprise_database_up' | jq
+# Check if Redis Enterprise databases are up
+curl -g 'http://localhost:9090/api/v1/query?query=redis_server_up' | jq
 
 # Check database operations per second
-curl -g 'http://localhost:9090/api/v1/query?query=redis_enterprise_database_ops_per_sec' | jq
+curl -g 'http://localhost:9090/api/v1/query?query=rate(endpoint_read_requests[5m])' | jq
 
 # Check memory usage
-curl -g 'http://localhost:9090/api/v1/query?query=redis_enterprise_database_used_memory' | jq
+curl -g 'http://localhost:9090/api/v1/query?query=redis_server_used_memory' | jq
 ----
 
 === Test with PromQL
@@ -233,16 +233,16 @@ Use Prometheus query language to verify data:
 [source,promql]
 ----
 # Show all Redis Enterprise databases
-redis_enterprise_database_up
+redis_server_up
 
 # Calculate operations per second (5min average)
-rate(redis_enterprise_database_total_ops[5m])
+rate(endpoint_read_requests[5m]) + rate(endpoint_write_requests[5m]) + rate(endpoint_other_requests[5m])
 
 # Memory usage percentage
-(redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) * 100
+(sum by(cluster,db)(redis_server_used_memory{role="master"}) / (avg by(cluster,db)(db_memory_limit_bytes) / avg by(cluster,db)(db_replication_factor))) * 100
 
 # Top 5 databases by ops
-topk(5, rate(redis_enterprise_database_total_ops[5m]))
+topk(5, rate(endpoint_read_requests[5m]) + rate(endpoint_write_requests[5m]) + rate(endpoint_other_requests[5m]))
 ----
 
 == Recording Rules
@@ -257,30 +257,28 @@ groups:
     rules:
       # Pre-calculate ops per second
       - record: redis_enterprise:database:ops_per_sec:rate5m
-        expr: rate(redis_enterprise_database_total_ops[5m])
-        labels:
-          job: redis-enterprise
+        expr: rate(endpoint_read_requests[5m]) + rate(endpoint_write_requests[5m]) + rate(endpoint_other_requests[5m])
 
       # Pre-calculate memory usage percentage
       - record: redis_enterprise:database:memory_usage_pct
         expr: |
-          (redis_enterprise_database_used_memory /
-           redis_enterprise_database_memory_limit) * 100
+          (sum by(cluster,db)(redis_server_used_memory{role="master"}) / 
+           (avg by(cluster,db)(db_memory_limit_bytes) / avg by(cluster,db)(db_replication_factor))) * 100
 
       # Pre-calculate hit rate
       - record: redis_enterprise:database:hit_rate:rate5m
         expr: |
-          rate(redis_enterprise_database_keyspace_hits[5m]) /
-          (rate(redis_enterprise_database_keyspace_hits[5m]) +
-           rate(redis_enterprise_database_keyspace_misses[5m]))
+          rate(redis_server_keyspace_read_hits{role="master"}[5m]) /
+          (rate(redis_server_keyspace_read_hits{role="master"}[5m]) +
+           rate(redis_server_keyspace_read_misses{role="master"}[5m]))
 
       # Pre-calculate eviction rate
       - record: redis_enterprise:database:evictions_per_sec:rate5m
-        expr: rate(redis_enterprise_database_evicted_keys[5m])
+        expr: rate(redis_server_evicted_keys{role="master"}[5m])
 
       # Aggregate cluster-wide operations
       - record: redis_enterprise:cluster:total_ops:rate5m
-        expr: sum(rate(redis_enterprise_database_total_ops[5m])) by (cluster)
+        expr: sum(rate(endpoint_read_requests[5m]) + rate(endpoint_write_requests[5m]) + rate(endpoint_other_requests[5m])) by (cluster)
 ----
 
 Save this to `/etc/prometheus/rules/redis-enterprise.yml` and reference it in `prometheus.yml`:
@@ -333,13 +331,13 @@ If targets show as "DOWN":
 [source,bash]
 ----
 # Test connectivity
-curl http://redis-cluster.example.com:8070/metrics
+curl http://redis-cluster.example.com:8070/v2
 
 # Check Prometheus logs
 docker logs prometheus | grep redis-enterprise
 
 # Verify authentication
-curl -u prometheus:password http://redis-cluster.example.com:8070/metrics
+curl -u prometheus:password http://redis-cluster.example.com:8070/v2
 ----
 
 === Missing Metrics
@@ -349,7 +347,7 @@ If expected metrics are missing:
 [source,bash]
 ----
 # List all available metrics
-curl http://redis-cluster.example.com:8070/metrics | grep redis_enterprise
+curl http://redis-cluster.example.com:8070/v2 | grep redis_enterprise
 
 # Check metric cardinality
 curl http://localhost:9090/api/v1/label/__name__/values | jq '.data[] | select(startswith("redis_enterprise"))'
@@ -365,12 +363,12 @@ scrape_configs:
   - job_name: 'redis-enterprise'
     # ... other config ...
     metric_relabel_configs:
-      # Keep only essential metrics
+      # Keep only essential metrics (adjust based on your actual needs)
       - source_labels: [__name__]
-        regex: 'redis_enterprise_(database|cluster|node)_.*'
+        regex: '(redis_server_.*|endpoint_.*|db_.*|cluster_.*|node_.*)'
         action: keep
-      # Drop high-cardinality labels
-      - regex: 'instance_id'
+      # Drop high-cardinality labels if needed
+      - regex: 'shard_id'
         action: labeldrop
 ----
 

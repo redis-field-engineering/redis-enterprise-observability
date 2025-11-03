@@ -1,0 +1,463 @@
+= Alerting Guide
+
+Configure effective alerts for Redis Enterprise monitoring.
+
+== Overview
+
+Proactive alerting helps identify and resolve issues before they impact users. This guide covers alert configuration across different platforms.
+
+== Alert Philosophy
+
+=== What to Alert On
+
+Alert on conditions that:
+
+* Require immediate action
+* Indicate user-facing impact
+* Signal impending capacity issues
+* Show significant deviation from baseline
+
+=== What Not to Alert On
+
+Avoid alerts for:
+
+* Normal operational variations
+* Self-healing transient issues
+* Informational metrics
+* Low-urgency capacity planning
+
+== Critical Alerts
+
+=== Database Unavailable
+
+*Condition*: Database is down or unreachable
+
+[source,promql]
+----
+redis_enterprise_database_up == 0
+----
+
+*Severity*: Critical +
+*Action*: Investigate immediately, check cluster health
+
+=== Memory Usage Critical
+
+*Condition*: Memory usage > 90%
+
+[source,promql]
+----
+(redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) > 0.9
+----
+
+*Severity*: Critical +
+*Action*: Investigate memory usage, consider scaling
+
+=== High Latency
+
+*Condition*: P99 latency > 100ms (adjust threshold for use case)
+
+[source,promql]
+----
+redis_enterprise_database_latency_p99 > 0.1
+----
+
+*Severity*: High +
+*Action*: Check for slow commands, investigate load
+
+== Warning Alerts
+
+=== Memory Usage High
+
+*Condition*: Memory usage > 80%
+
+[source,promql]
+----
+(redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) > 0.8
+----
+
+*Severity*: Warning +
+*Action*: Plan for capacity increase
+
+=== Connection Count High
+
+*Condition*: Connections approaching limit
+
+[source,promql]
+----
+redis_enterprise_database_connections > 9000
+----
+
+*Severity*: Warning +
+*Action*: Review connection pooling, investigate leaks
+
+=== Eviction Rate Increasing
+
+*Condition*: Keys being evicted due to memory pressure
+
+[source,promql]
+----
+rate(redis_enterprise_database_evicted_keys[5m]) > 10
+----
+
+*Severity*: Warning +
+*Action*: Investigate memory usage patterns
+
+== Platform-Specific Configuration
+
+=== Prometheus Alertmanager
+
+==== Alert Rules Configuration
+
+Create `/etc/prometheus/rules/redis-enterprise-alerts.yml`:
+
+[source,yaml]
+----
+groups:
+  - name: redis_enterprise_critical
+    interval: 30s
+    rules:
+      - alert: RedisEnterpriseDatabaseDown
+        expr: redis_enterprise_database_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: "Redis Enterprise database {{ $labels.database }} is down"
+          description: "Database {{ $labels.database }} in cluster {{ $labels.cluster }} has been unavailable for more than 1 minute"
+          runbook_url: "https://docs.example.com/runbooks/database-down"
+
+      - alert: RedisEnterpriseMemoryCritical
+        expr: |
+          (redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) > 0.95
+        for: 5m
+        labels:
+          severity: critical
+          component: memory
+        annotations:
+          summary: "Redis database {{ $labels.database }} memory critical"
+          description: "Database {{ $labels.database }} is using {{ $value | humanizePercentage }} of its memory limit"
+
+      - alert: RedisEnterpriseClusterNodeDown
+        expr: redis_enterprise_node_up == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: node
+        annotations:
+          summary: "Redis Enterprise node {{ $labels.node }} is down"
+          description: "Cluster node {{ $labels.node }} in {{ $labels.cluster }} has been down for 2 minutes"
+
+  - name: redis_enterprise_warning
+    interval: 1m
+    rules:
+      - alert: RedisEnterpriseHighMemoryUsage
+        expr: |
+          (redis_enterprise_database_used_memory / redis_enterprise_database_memory_limit) > 0.80
+        for: 10m
+        labels:
+          severity: warning
+          component: memory
+        annotations:
+          summary: "Redis database {{ $labels.database }} high memory usage"
+          description: "Database {{ $labels.database }} is using {{ $value | humanizePercentage }} of memory"
+
+      - alert: RedisEnterpriseHighLatency
+        expr: redis_enterprise_database_latency_p99 > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: performance
+        annotations:
+          summary: "High latency on {{ $labels.database }}"
+          description: "P99 latency is {{ $value }}s on database {{ $labels.database }}"
+
+      - alert: RedisEnterpriseHighEvictionRate
+        expr: rate(redis_enterprise_database_evicted_keys[5m]) > 100
+        for: 10m
+        labels:
+          severity: warning
+          component: memory
+        annotations:
+          summary: "High eviction rate on {{ $labels.database }}"
+          description: "Database {{ $labels.database }} is evicting {{ $value | humanize }} keys/sec"
+
+      - alert: RedisEnterpriseHighConnectionCount
+        expr: redis_enterprise_database_connections > 9000
+        for: 5m
+        labels:
+          severity: warning
+          component: connections
+        annotations:
+          summary: "High connection count on {{ $labels.database }}"
+          description: "Database {{ $labels.database }} has {{ $value }} connections (limit is 10000)"
+
+      - alert: RedisEnterpriseReplicationLag
+        expr: redis_enterprise_database_replication_lag > 30
+        for: 5m
+        labels:
+          severity: warning
+          component: replication
+        annotations:
+          summary: "Replication lag detected on {{ $labels.database }}"
+          description: "Replication lag is {{ $value }}s on database {{ $labels.database }}"
+----
+
+==== Alertmanager Configuration
+
+Create `/etc/alertmanager/alertmanager.yml`:
+
+[source,yaml]
+----
+global:
+  resolve_timeout: 5m
+  slack_api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+  pagerduty_url: 'https://events.pagerduty.com/v2/enqueue'
+
+# Routing tree
+route:
+  group_by: ['cluster', 'alertname', 'severity']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  receiver: 'redis-team'
+
+  routes:
+    # Critical alerts go to PagerDuty and Slack
+    - match:
+        severity: critical
+      receiver: 'pagerduty-critical'
+      continue: true
+      group_wait: 10s
+      repeat_interval: 1h
+
+    - match:
+        severity: critical
+      receiver: 'slack-critical'
+      continue: false
+
+    # Warning alerts go to Slack and create tickets
+    - match:
+        severity: warning
+      receiver: 'slack-warnings'
+      group_wait: 2m
+      repeat_interval: 12h
+
+# Inhibition rules
+inhibit_rules:
+  # Inhibit warning memory alerts if critical memory alert is firing
+  - source_match:
+      severity: 'critical'
+      component: 'memory'
+    target_match:
+      severity: 'warning'
+      component: 'memory'
+    equal: ['cluster', 'database']
+
+  # Inhibit database alerts if node is down
+  - source_match:
+      alertname: 'RedisEnterpriseClusterNodeDown'
+    target_match_re:
+      alertname: 'RedisEnterpriseDatabase.*'
+    equal: ['cluster']
+
+# Receivers
+receivers:
+  - name: 'redis-team'
+    email_configs:
+      - to: 'redis-team@example.com'
+        from: 'alertmanager@example.com'
+        smarthost: 'smtp.example.com:587'
+        auth_username: 'alertmanager'
+        auth_password: 'password'
+        headers:
+          Subject: '[{{ .Status | toUpper }}] {{ .GroupLabels.alertname }}'
+
+  - name: 'pagerduty-critical'
+    pagerduty_configs:
+      - service_key: 'YOUR_PAGERDUTY_SERVICE_KEY'
+        severity: '{{ if eq .CommonLabels.severity "critical" }}critical{{ else }}error{{ end }}'
+        description: '{{ .GroupLabels.alertname }}: {{ .CommonAnnotations.summary }}'
+        details:
+          firing: '{{ .Alerts.Firing | len }}'
+          resolved: '{{ .Alerts.Resolved | len }}'
+          cluster: '{{ .GroupLabels.cluster }}'
+
+  - name: 'slack-critical'
+    slack_configs:
+      - channel: '#redis-critical'
+        username: 'Alertmanager'
+        icon_emoji: ':rotating_light:'
+        title: ':fire: Critical Alert'
+        text: |
+          *Alert:* {{ .GroupLabels.alertname }}
+          *Severity:* {{ .CommonLabels.severity }}
+          *Cluster:* {{ .GroupLabels.cluster }}
+          *Summary:* {{ .CommonAnnotations.summary }}
+          *Description:* {{ .CommonAnnotations.description }}
+        actions:
+          - type: button
+            text: 'View in Prometheus'
+            url: 'http://prometheus:9090/alerts'
+          - type: button
+            text: 'Runbook'
+            url: '{{ .CommonAnnotations.runbook_url }}'
+
+  - name: 'slack-warnings'
+    slack_configs:
+      - channel: '#redis-alerts'
+        username: 'Alertmanager'
+        icon_emoji: ':warning:'
+        title: 'Warning Alert'
+        text: |
+          *Alert:* {{ .GroupLabels.alertname }}
+          *Summary:* {{ .CommonAnnotations.summary }}
+          {{ range .Alerts }}
+          - Database: {{ .Labels.database }}
+          {{ end }}
+----
+
+==== Testing Alerts
+
+[source,bash]
+----
+# Send a test alert to Alertmanager
+curl -X POST http://localhost:9093/api/v1/alerts \
+  -H "Content-Type: application/json" \
+  -d '[{
+    "labels": {
+      "alertname": "TestAlert",
+      "severity": "warning",
+      "cluster": "test-cluster",
+      "database": "test-db"
+    },
+    "annotations": {
+      "summary": "This is a test alert",
+      "description": "Testing alert routing and notifications"
+    },
+    "startsAt": "'$(date -u +%Y-%m-%dT%H:%M:%S.000Z)'",
+    "endsAt": "'$(date -u -d '+5 minutes' +%Y-%m-%dT%H:%M:%S.000Z)'"
+  }]'
+
+# Check Alertmanager status
+curl http://localhost:9093/api/v1/status
+
+# List active alerts
+curl http://localhost:9093/api/v1/alerts
+
+# Silence an alert
+curl -X POST http://localhost:9093/api/v1/silences \
+  -H "Content-Type: application/json" \
+  -d '{
+    "matchers": [
+      {"name": "alertname", "value": "RedisEnterpriseHighMemoryUsage", "isRegex": false},
+      {"name": "database", "value": "test-db", "isRegex": false}
+    ],
+    "startsAt": "'$(date -u +%Y-%m-%dT%H:%M:%S.000Z)'",
+    "endsAt": "'$(date -u -d '+2 hours' +%Y-%m-%dT%H:%M:%S.000Z)'",
+    "createdBy": "admin",
+    "comment": "Planned maintenance"
+  }'
+----
+
+=== Grafana Alerts
+
+. Open dashboard panel
+. Click "Alert" tab
+. Define alert condition
+. Configure notification channels
+. Save alert rule
+
+=== Dynatrace Alerts
+
+Dynatrace provides AI-powered anomaly detection. Configure custom events:
+
+. Navigate to Settings > Anomaly Detection
+. Create custom event for Redis Enterprise metrics
+. Define baseline and thresholds
+. Set alerting profile
+
+=== New Relic Alerts
+
+Create NRQL alert conditions:
+
+[source,sql]
+----
+SELECT average(redis_enterprise_database_used_memory)
+FROM Metric
+WHERE database = 'production'
+FACET database
+----
+
+=== Splunk Alerts
+
+Create alerts from SPL searches:
+
+[source,spl]
+----
+index=metrics metric_name=redis_enterprise_database_up value=0
+| stats count by database, cluster
+----
+
+== Alert Routing
+
+=== Notification Channels
+
+Configure multiple channels based on severity:
+
+* *Critical*: PagerDuty, phone, SMS
+* *High*: Slack, email, PagerDuty
+* *Warning*: Email, Slack, ticket system
+
+=== On-Call Escalation
+
+Define escalation policies:
+
+. Primary on-call: Immediate notification
+. Secondary on-call: After 10 minutes
+. Team lead: After 30 minutes
+. Management: After 1 hour (for critical)
+
+== Alert Tuning
+
+=== Reducing False Positives
+
+* Use appropriate time windows (for: 5m)
+* Set realistic thresholds based on baseline
+* Implement hysteresis to avoid flapping
+* Use rate() instead of instantaneous values
+
+=== Testing Alerts
+
+Validate alert configuration:
+
+. Trigger alerts in non-production environment
+. Verify notification delivery
+. Test escalation policies
+. Document runbooks for each alert
+
+== Runbooks
+
+Create runbooks for each alert type:
+
+=== Database Down Runbook
+
+. Check cluster status: `rladmin status`
+. Verify node health
+. Review logs for errors
+. Attempt failover if needed
+. Escalate to Redis support if unresolved
+
+=== High Memory Runbook
+
+. Identify large keys: `redis-cli --bigkeys`
+. Review eviction policy
+. Check for memory leaks
+. Plan capacity increase
+. Enable compression if applicable
+
+== Next Steps
+
+* xref:guides/troubleshooting.adoc[Troubleshooting guide]
+* xref:reference/metrics.adoc[Metrics reference]
+* xref:dashboards/catalog.adoc[Dashboard catalog]

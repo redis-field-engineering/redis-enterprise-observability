@@ -1,0 +1,314 @@
+= Configuration Reference
+
+Configuration options for Redis Enterprise observability components.
+
+== Overview
+
+This reference covers configuration options for metrics collection, export, and monitoring across different platforms.
+
+== Redis Enterprise Configuration
+
+=== Enabling Metrics Endpoint
+
+Metrics are enabled by default on port 8070. To verify or configure:
+
+[source,bash]
+----
+# Check if metrics endpoint is accessible
+curl http://localhost:8070/metrics
+
+# Configure metrics endpoint (if needed)
+rladmin cluster config metrics_exporter_port 8070
+----
+
+=== Authentication
+
+Configure authentication for metrics endpoint:
+
+[source,bash]
+----
+# Enable authentication
+rladmin cluster config metrics_exporter_auth enabled
+
+# Set credentials
+rladmin cluster config metrics_exporter_username <username>
+rladmin cluster config metrics_exporter_password <password>
+----
+
+=== Metrics Filtering
+
+Filter metrics to reduce cardinality:
+
+[source,bash]
+----
+# Configure metric prefixes to include
+rladmin cluster config metrics_include_list "endpoint_,db_,redis_server_,node_,database_"
+
+# Configure metric prefixes to exclude
+rladmin cluster config metrics_exclude_list "redis_enterprise_internal"
+----
+
+== Prometheus Configuration
+
+=== Basic Scrape Configuration
+
+[source,yaml]
+----
+global:
+  scrape_interval: 30s
+  evaluation_interval: 30s
+
+scrape_configs:
+  - job_name: 'redis-enterprise'
+    static_configs:
+      - targets: ['redis-host-1:8070', 'redis-host-2:8070']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+----
+
+=== Service Discovery
+
+==== Kubernetes
+[source,yaml]
+----
+scrape_configs:
+  - job_name: 'redis-enterprise-k8s'
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+            - redis-enterprise
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        action: keep
+        regex: redis-enterprise
+----
+
+==== Consul
+[source,yaml]
+----
+scrape_configs:
+  - job_name: 'redis-enterprise-consul'
+    consul_sd_configs:
+      - server: 'consul.example.com:8500'
+        services: ['redis-enterprise']
+----
+
+=== Authentication Configuration
+
+[source,yaml]
+----
+scrape_configs:
+  - job_name: 'redis-enterprise'
+    static_configs:
+      - targets: ['redis-host:8070']
+    basic_auth:
+      username: 'prometheus'
+      password: 'secure-password'
+    # Or use file-based auth
+    basic_auth:
+      username: 'prometheus'
+      password_file: /etc/prometheus/redis-password
+----
+
+=== TLS Configuration
+
+[source,yaml]
+----
+scrape_configs:
+  - job_name: 'redis-enterprise'
+    scheme: https
+    tls_config:
+      ca_file: /etc/prometheus/certs/ca.crt
+      cert_file: /etc/prometheus/certs/client.crt
+      key_file: /etc/prometheus/certs/client.key
+      insecure_skip_verify: false
+----
+
+=== Metric Relabeling
+
+[source,yaml]
+----
+scrape_configs:
+  - job_name: 'redis-enterprise'
+    static_configs:
+      - targets: ['redis-host:8070']
+    metric_relabel_configs:
+      # Keep only specific metrics
+      - source_labels: [__name__]
+        regex: '(endpoint_|redis_server_).*'
+        action: keep
+
+      # Drop high cardinality labels
+      - source_labels: [instance_id]
+        action: labeldrop
+
+      # Rename labels
+      - source_labels: [db_name]
+        target_label: database
+----
+
+== Grafana Configuration
+
+=== Data Source Configuration
+
+[source,yaml]
+----
+apiVersion: 1
+
+datasources:
+  - name: Prometheus-RedisEnterprise
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: 30s
+      queryTimeout: 60s
+      httpMethod: POST
+    secureJsonData:
+      basicAuthPassword: 'password'
+----
+
+=== Dashboard Variables
+
+Common dashboard variables for Redis Enterprise:
+
+[source,json]
+----
+{
+  "templating": {
+    "list": [
+      {
+        "name": "cluster",
+        "type": "query",
+        "query": "label_values(endpoint_client_connections, cluster)",
+        "refresh": 1
+      },
+      {
+        "name": "db",
+        "type": "query",
+        "query": "label_values(endpoint_client_connections{cluster=\"$cluster\"}, db)",
+        "refresh": 1
+      }
+    ]
+  }
+}
+----
+
+== Alerting Configuration
+
+=== Alertmanager Configuration
+
+[source,yaml]
+----
+global:
+  resolve_timeout: 5m
+  slack_api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+
+route:
+  group_by: ['cluster', 'alertname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 12h
+  receiver: 'redis-team'
+  routes:
+    - match:
+        severity: critical
+      receiver: 'pagerduty'
+      continue: true
+
+receivers:
+  - name: 'redis-team'
+    slack_configs:
+      - channel: '#redis-alerts'
+        title: 'Redis Enterprise Alert'
+
+  - name: 'pagerduty'
+    pagerduty_configs:
+      - service_key: 'YOUR_PAGERDUTY_KEY'
+----
+
+=== Recording Rules Configuration
+
+[source,yaml]
+----
+groups:
+  - name: redis_enterprise_recordings
+    interval: 30s
+    rules:
+      - record: redis_enterprise:database:ops_per_sec:rate5m
+        expr: rate(redis_enterprise_database_total_ops[5m])
+        labels:
+          job: redis-enterprise
+
+      - record: redis_enterprise:database:memory_usage_pct
+        expr: |
+          (redis_enterprise_database_used_memory /
+           redis_enterprise_database_memory_limit) * 100
+----
+
+== Storage Configuration
+
+=== Prometheus Storage
+
+[source,yaml]
+----
+storage:
+  tsdb:
+    path: /prometheus/data
+    retention:
+      time: 90d
+      size: 100GB
+    wal_compression: true
+    min_block_duration: 2h
+    max_block_duration: 36h
+----
+
+=== Remote Write Configuration
+
+[source,yaml]
+----
+remote_write:
+  - url: "https://long-term-storage.example.com/api/v1/write"
+    queue_config:
+      capacity: 10000
+      max_shards: 50
+      max_samples_per_send: 5000
+    write_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'redis_enterprise_.*'
+        action: keep
+----
+
+== Performance Tuning
+
+=== Prometheus Tuning
+
+[source,bash]
+----
+# Increase memory limit
+prometheus \
+  --storage.tsdb.path=/data \
+  --storage.tsdb.retention.time=90d \
+  --query.max-samples=50000000 \
+  --query.timeout=2m
+----
+
+=== Grafana Tuning
+
+[source,ini]
+----
+[database]
+max_open_conn = 300
+max_idle_conn = 100
+
+[dataproxy]
+timeout = 90
+----
+
+== Next Steps
+
+* xref:platforms/prometheus.adoc[Set up Prometheus]
+* xref:platforms/grafana.adoc[Configure Grafana]
+* xref:guides/alerting.adoc[Configure alerting]

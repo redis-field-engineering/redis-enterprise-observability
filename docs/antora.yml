@@ -1,0 +1,5 @@
+name: redis-enterprise-observability
+version: latest
+title: Redis Enterprise Observability
+nav:
+- modules/ROOT/nav.adoc

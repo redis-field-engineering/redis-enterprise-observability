@@ -1,0 +1,24 @@
+site:
+  title: Redis Enterprise Observability
+  start_page: redis-enterprise-observability::index.adoc
+  url: https://redis-field-engineering.github.io/redis-enterprise-observability
+
+content:
+  sources:
+    - url: .
+      branches: HEAD
+      start_path: docs
+
+ui:
+  bundle:
+    url: https://github.com/redis/antora-ui-redis/releases/latest/download/ui-bundle.zip
+    snapshot: true
+  supplemental_files:
+    - path: ui.yml
+      contents: |
+        static_files:
+        - .nojekyll
+    - path: .nojekyll
+
+output:
+  dir: ./build/site

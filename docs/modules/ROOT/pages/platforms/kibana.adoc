@@ -1,0 +1,68 @@
+= Kibana Integration
+
+Visualize Redis Enterprise metrics with Kibana and the Elastic Stack.
+
+== Overview
+
+Kibana provides visualization capabilities for Redis Enterprise metrics stored in Elasticsearch.
+
+== Prerequisites
+
+* Elasticsearch cluster
+* Kibana instance (matching Elasticsearch version)
+* Metricbeat or Logstash for metrics ingestion
+
+== Installation
+
+=== Using Metricbeat
+
+Configure Metricbeat to collect Prometheus metrics:
+
+[source,yaml]
+----
+metricbeat.modules:
+- module: prometheus
+  period: 30s
+  hosts: ["<redis-enterprise-host>:8070"]
+  metrics_path: /metrics
+----
+
+=== Using Logstash
+
+Configure Logstash with Prometheus input plugin:
+
+[source,ruby]
+----
+input {
+  prometheus {
+    url => "http://<redis-enterprise-host>:8070/metrics"
+  }
+}
+----
+
+== Dashboard Import
+
+. Navigate to Management > Stack Management > Saved Objects
+. Click "Import"
+. Upload the NDJSON file from this repository
+. Configure index pattern
+
+== Index Patterns
+
+Create index patterns for Redis Enterprise metrics:
+
+* Pattern: `metricbeat-*` or `redis-enterprise-metrics-*`
+* Time field: `@timestamp`
+
+== Visualization Examples
+
+* Line charts for operations per second
+* Gauge for memory usage percentage
+* Heat maps for request latency
+* Tables for database statistics
+
+== Next Steps
+
+* xref:dashboards/catalog.adoc[Dashboard catalog]
+* xref:guides/alerting.adoc[Configure alerting]
+* xref:reference/metrics.adoc[Metrics reference]

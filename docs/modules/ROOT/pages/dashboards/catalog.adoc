@@ -1,0 +1,164 @@
+= Dashboard Catalog
+
+Browse the complete collection of pre-built dashboards for Redis Enterprise monitoring.
+
+== Overview
+
+This catalog contains ready-to-use dashboards for various observability platforms. Each dashboard provides comprehensive monitoring of Redis Enterprise clusters, databases, and nodes.
+
+NOTE: All dashboards listed below are from the v2 collection, which is recommended for all deployments. If you need legacy v1 dashboards, see the xref:#legacy-dashboards[Legacy Dashboards] section.
+
+== Grafana Dashboards (v2)
+
+=== Kickstart Collection
+Production-ready dashboards for immediate deployment:
+
+* *Cluster Dashboard*: `grafana_v2/dashboards/kickstart/cluster.json` - High-level cluster health and performance
+* *Database Dashboard*: `grafana_v2/dashboards/kickstart/database.json` - Detailed database metrics and operations
+* *Node Dashboard*: `grafana_v2/dashboards/kickstart/node.json` - Node-level resource utilization
+* *Shard Dashboard*: `grafana_v2/dashboards/kickstart/shard.json` - Shard-level monitoring and health
+* *Active-Active Dashboard*: `grafana_v2/dashboards/kickstart/active-active.json` - Active-Active replication monitoring
+* *System Security Dashboard*: `grafana_v2/dashboards/kickstart/sys-sec.json` - Security and system metrics
+
+=== Grafana v9-11 Collection
+Optimized for Grafana versions 9-11:
+
+==== Basic Dashboards
+* *Cluster*: `grafana_v2/dashboards/grafana_v9-11/software/basic/redis-software-cluster-dashboard_v9-11.json`
+* *Database*: `grafana_v2/dashboards/grafana_v9-11/software/basic/redis-software-database-dashboard_v9-11.json`
+* *Node*: `grafana_v2/dashboards/grafana_v9-11/software/basic/redis-software-node-dashboard_v9-11.json`
+* *Shard*: `grafana_v2/dashboards/grafana_v9-11/software/basic/redis-software-shard-dashboard_v9-11.json`
+* *Active-Active*: `grafana_v2/dashboards/grafana_v9-11/software/basic/redis-software-active-active-dashboard_v9-11.json`
+* *Synchronization*: `grafana_v2/dashboards/grafana_v9-11/software/basic/redis-software-synchronization-overview_v9-11.json`
+
+==== Extended Dashboards
+* *Database Extended*: `grafana_v2/dashboards/grafana_v9-11/software/extended/redis-software-database-extended-dashboard_v9-11.json` - Comprehensive database analysis
+
+==== Workflow Dashboards
+Database-focused operational views:
+
+* *All Databases*: `grafana_v2/dashboards/grafana_v9-11/workflow/databases/redis-software-cluster-databases_v9-11.json`
+* *Database CPU*: `grafana_v2/dashboards/grafana_v9-11/workflow/databases/redis-software-cluster-database-cpu_v9-11.json`
+* *Database Memory*: `grafana_v2/dashboards/grafana_v9-11/workflow/databases/redis-software-cluster-database-memory_v9-11.json`
+* *Database Latency*: `grafana_v2/dashboards/grafana_v9-11/workflow/databases/redis-software-cluster-database-latency_v9-11.json`
+* *Database Requests*: `grafana_v2/dashboards/grafana_v9-11/workflow/databases/redis-software-cluster-database-requests_v9-11.json`
+
+==== Module-Specific Dashboards
+* *RediSearch QPS*: `grafana_v2/dashboards/grafana_v9-11/search/RediSearchQPS.json`
+
+=== Alert Dashboard
+* *Redis Alert Dashboard*: `grafana_v2/alerts/redis-alert-dashboard.json` - Centralized alert visualization
+
+== Dynatrace Dashboards (v2)
+
+=== Generation 3 Dashboards
+Latest Dynatrace dashboard generation:
+
+* *Directory*: `dynatrace_v2/gen-3-dashboards/`
+* *Description*: AI-powered monitoring with automatic baselining and anomaly detection
+* *Features*: Full-stack observability, Davis AI integration
+
+=== Kickstarter
+* *Directory*: `dynatrace_v2/kickstarter/`
+* *Description*: Quick-start templates for rapid deployment
+
+See the https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/dynatrace_v2[dynatrace_v2 README^] for detailed information.
+
+== New Relic Dashboards (v2)
+
+=== Dashboard Collection
+* *Directory*: `newrelic_v2/dashboards/`
+* *Description*: Comprehensive monitoring with NRQL queries
+* *Features*: Custom widgets, alert correlation, APM integration
+
+=== Kickstarter
+* *Directory*: `newrelic_v2/kickstarter/`
+* *Description*: Pre-configured setup for quick deployment
+
+See the https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/newrelic_v2[newrelic_v2 README^] for configuration details.
+
+== Datadog Dashboards (v2)
+
+=== Kickstarter
+* *Directory*: `datadog_v2/kickstarter/`
+* *Description*: Ready-to-use Datadog monitoring setup
+* *Features*: APM integration, log correlation, custom metrics
+
+See the https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/datadog_v2[datadog_v2 README^] for setup instructions.
+
+== Prometheus Alert Rules (v2)
+
+Production-ready alert definitions:
+
+* *All Alerts*: `prometheus_v2/rules/alerts.yml` - Comprehensive alert suite
+* *Capacity Alerts*: `prometheus_v2/rules/capacity-alerts.yml` - Capacity planning and thresholds
+* *Connection Alerts*: `prometheus_v2/rules/connection-alerts.yml` - Connection monitoring
+* *Latency Alerts*: `prometheus_v2/rules/latency-alerts.yml` - Performance thresholds
+* *Node Alerts*: `prometheus_v2/rules/node-alerts.yml` - Node health monitoring
+* *Shard Alerts*: `prometheus_v2/rules/shard-alerts.yml` - Shard-level alerts
+* *Synchronization Alerts*: `prometheus_v2/rules/synchronization-alerts.yml` - Replication monitoring
+* *Throughput Alerts*: `prometheus_v2/rules/throughput-alerts.yml` - Throughput thresholds
+* *Utilization Alerts*: `prometheus_v2/rules/utilization-alerts.yml` - Resource utilization
+
+== Splunk Dashboards
+
+=== Redis Enterprise Analytics
+* *File*: `splunk/analytics-dashboard.xml`
+* *Description*: Enterprise analytics with SPL queries
+* *Features*: Historical trending, capacity planning, anomaly detection
+
+== Kibana Dashboards
+
+=== Redis Enterprise Metrics
+* *File*: `kibana/metrics-dashboard.ndjson`
+* *Description*: Visualization of metrics in Elasticsearch
+* *Features*: Custom visualizations, Canvas integration
+
+== Importing Dashboards
+
+See the platform-specific guides for import instructions:
+
+* xref:platforms/grafana.adoc[Grafana Import Guide]
+* xref:platforms/dynatrace.adoc[Dynatrace Import Guide]
+* xref:platforms/newrelic.adoc[New Relic Import Guide]
+* xref:platforms/splunk.adoc[Splunk Import Guide]
+* xref:platforms/kibana.adoc[Kibana Import Guide]
+
+== Customization
+
+All dashboards can be customized to fit your specific needs:
+
+* Modify time ranges and refresh intervals
+* Add or remove panels
+* Adjust thresholds and alert conditions
+* Create dashboard variables for filtering
+
+[#legacy-dashboards]
+== Legacy Dashboards (v1)
+
+WARNING: The v1 dashboards are provided for compatibility with older deployments only. We recommend upgrading to v2 dashboards for the latest features and improvements.
+
+=== Grafana v1 (Legacy)
+* *Directory*: `grafana/dashboards/`
+* *Note*: Basic cluster, database, and node monitoring dashboards
+
+=== Dynatrace v1 (Legacy)
+* *Directory*: `dynatrace/`
+* *Note*: Earlier generation dashboards
+
+=== New Relic v1 (Legacy)
+* *Directory*: `newrelic/`
+* *Note*: Legacy integration setup
+
+=== Prometheus v1 (Legacy)
+* *Directory*: `prometheus/`
+* *Note*: Original Prometheus configurations and rules
+
+== Contributing
+
+To contribute new dashboards or improvements:
+
+. Fork the repository
+. Add your dashboard to the appropriate v2 platform directory
+. Update this catalog
+. Submit a pull request

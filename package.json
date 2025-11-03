@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "docs": "antora antora-playbook.yml",
+    "docs:serve": "npx http-server build/site -p 8080"
+  },
+  "devDependencies": {
+    "antora": "3.1.13"
+  }
+}

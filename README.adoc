@@ -16,6 +16,10 @@ This repository contains documentation and dashboard configurations for using se
 * link:/newrelic[New Relic]
 * link:/splunk[Splunk]
 
+== Docs
+
+Check out the docks link:https://redis-field-engineering.github.io/redis-enterprise-observability/redis-enterprise-observability/latest/index.html[here]
+
 == Support
 
 Support for the observability platforms mentioned in this repository is provided on a good faith effort basis by Redis. Inc. To report bugs, request features, or receive assistance, please https://github.com/{project-owner}/{project-name}/issues[file an issue].

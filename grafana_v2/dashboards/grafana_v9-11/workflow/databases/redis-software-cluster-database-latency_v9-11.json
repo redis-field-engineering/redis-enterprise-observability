@@ -858,7 +858,7 @@
         "name": "cluster",
         "options": [],
         "query": {
-          "query": "label_values(node_up,cluster)",
+          "query": "label_values(node_metrics_up,cluster)",
           "refId": "Redis-Enterprise-cluster-Variable-Query"
         },
         "refresh": 1,
@@ -883,7 +883,7 @@
         "name": "version",
         "options": [],
         "query": {
-          "query": "label_values(node_up{cluster=\"$cluster\",node=\"$node\"}, cnm_version)",
+          "query": "label_values(node_config{cluster=\"$cluster\",node=\"$node\"}, cnm_version)",
           "refId": "Redis-Enterprise-version-Variable-Query"
         },
         "refresh": 1,

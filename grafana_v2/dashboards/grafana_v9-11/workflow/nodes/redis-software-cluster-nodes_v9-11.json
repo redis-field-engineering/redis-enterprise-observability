@@ -511,7 +511,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(node_up,node)",
+        "definition": "label_values(node_metrics_up,node)",
         "hide": 0,
         "includeAll": true,
         "label": "node",
@@ -519,7 +519,7 @@
         "name": "node",
         "options": [],
         "query": {
-          "query": "label_values(node_up,node)",
+          "query": "label_values(node_metrics_up,node)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,

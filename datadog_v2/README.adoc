@@ -21,9 +21,7 @@ This directory contains resources for monitoring Redis Enterprise Software and R
 
 [IMPORTANT]
 ====
-The Datadog integration for Redis Enterprise is not included in this repository. It is maintained separately in the official Datadog integrations repository at https://github.com/DataDog/datadog-integrations-extras under the `redis_enterprise_prometheus` integration.
-
-Currently, you will need to use the Field Engineering branch at https://github.com/redis-field-engineering/datadog-integrations-extras/tree/redis_enterprise_prometheus to build and deploy the integration directly, as it is pending merger into the main Datadog repository.
+The Redis Enterprise Prometheus integration is now available in the official Datadog integrations. You can install it directly using the Datadog Agent following the instructions at https://docs.datadoghq.com/integrations/redis-enterprise-prometheus/[Datadog's Redis Enterprise Prometheus integration documentation].
 ====
 
 == Requirements
@@ -58,39 +56,12 @@ Since the integration is not yet available in the main Datadog repository, you'l
 +
 [source,bash]
 ----
-git clone https://github.com/redis-field-engineering/datadog-integrations-extras.git
-cd datadog-integrations-extras
-git checkout redis_enterprise_prometheus
+sudo datadog-agent integration install -t -r datadog-redis_enterprise_prometheus==1.0.0
 ----
 
-2. Navigate to the Redis Enterprise integration directory:
-+
-[source,bash]
-----
-cd redis_enterprise_prometheus
-----
+2. Configure the integration as described in the link:#Configuration[Configuration] section below.
 
-3. Build the integration wheel:
-+
-[source,bash]
-----
-# Install build dependencies
-pip install -r requirements-dev.txt
-
-# Build the wheel
-python setup.py bdist_wheel
-----
-
-4. Install the integration on your Datadog Agent:
-+
-[source,bash]
-----
-# Copy the wheel to your Datadog Agent host
-# Install using the Datadog Agent's pip
-sudo -u dd-agent /opt/datadog-agent/embedded/bin/pip install dist/datadog_redis_enterprise_prometheus-*.whl
-----
-
-5. Restart the Datadog Agent:
+2. Restart the Datadog Agent:
 +
 [source,bash]
 ----
@@ -112,6 +83,8 @@ instances:
     tls_verify: false
     type_overrides:
       endpoint_client_connections: gauge
+      endpoint_client_disconnections: gauge
+      endpoint_proxy_disconnections: gauge
 ----
 
 === Configuration Options

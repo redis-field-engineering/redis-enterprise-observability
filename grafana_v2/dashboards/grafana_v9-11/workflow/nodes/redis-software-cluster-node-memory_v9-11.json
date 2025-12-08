@@ -809,7 +809,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(node_up,cluster)",
+        "definition": "label_values(node_metrics_up,cluster)",
         "hide": 0,
         "includeAll": false,
         "label": "cluster",
@@ -817,7 +817,7 @@
         "name": "cluster",
         "options": [],
         "query": {
-          "query": "label_values(node_up,cluster)",
+          "query": "label_values(node_metrics_up,cluster)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -832,7 +832,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(node_up{cluster=\"$cluster\"}, node)",
+        "definition": "label_values(node_metrics_up{cluster=\"$cluster\"}, node)",
         "hide": 0,
         "includeAll": false,
         "label": "node",
@@ -840,7 +840,7 @@
         "name": "node",
         "options": [],
         "query": {
-          "query": "label_values(node_up{cluster=\"$cluster\"}, node)",
+          "query": "label_values(node_metrics_up{cluster=\"$cluster\"}, node)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,

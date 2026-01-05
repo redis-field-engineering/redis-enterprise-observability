@@ -3460,7 +3460,7 @@
         "targets": [
           {
             "editorMode": "code",
-            "expr": "sum by (unresponsive_node) (cluster_wd_failures_total{cluster=\"$cluster\"})",
+            "expr": "sum by (unresponsive_node) (cluster_wd_gossip_failures_total{cluster=\"$cluster\"})",
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"

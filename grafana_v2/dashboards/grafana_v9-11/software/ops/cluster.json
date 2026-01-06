@@ -3178,7 +3178,7 @@
         "targets": [
           {
             "editorMode": "code",
-            "expr": "sum by (node) (cluster_wd_state_id_increment_failures_total{cluster=\"$cluster\"})",
+            "expr": "sum by (node) (increase(cluster_wd_state_id_increment_failures_total{cluster=\"$cluster\"}[5m]))",
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"
@@ -3272,7 +3272,7 @@
         "targets": [
           {
             "editorMode": "code",
-            "expr": "sum by (node) (cluster_wd_supervisord_update_failures_total{cluster=\"$cluster\"})",
+            "expr": "sum by (node) (increase(cluster_wd_supervisord_update_failures_total{cluster=\"$cluster\"}[5m]))",
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"
@@ -3366,7 +3366,7 @@
         "targets": [
           {
             "editorMode": "code",
-            "expr": "sum by (node) (cluster_wd_master_ccs_connection_failures_total{cluster=\"$cluster\"})",
+            "expr": "sum by (node) (increase(cluster_wd_master_ccs_connection_failures_total{cluster=\"$cluster\"}[5m]))",
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"
@@ -3460,7 +3460,7 @@
         "targets": [
           {
             "editorMode": "code",
-            "expr": "sum by (unresponsive_node) (cluster_wd_gossip_failures_total{cluster=\"$cluster\"})",
+            "expr": "sum by (unresponsive_node) (increase(cluster_wd_gossip_failures_total{cluster=\"$cluster\"}[5m]))",
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"
@@ -3554,7 +3554,7 @@
         "targets": [
           {
             "editorMode": "code",
-            "expr": "sum by (node) (cluster_wd_master_selection_restart_loops_total{cluster=\"$cluster\"})",
+            "expr": "sum by (node) (increase(cluster_wd_master_selection_restart_loops_total{cluster=\"$cluster\"}[5m]))",
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"

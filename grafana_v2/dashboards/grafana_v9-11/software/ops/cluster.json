@@ -3184,7 +3184,7 @@
             "refId": "A"
           }
         ],
-        "title": "connection to master ccs failed",
+        "title": "CCS Connection Failures (Upgrade Unpin)",
         "type": "timeseries"
       },
       {
@@ -3278,7 +3278,7 @@
             "refId": "A"
           }
         ],
-        "title": "Communication failures",
+        "title": "Gossip Communication Failures",
         "type": "timeseries"
       },
       {
@@ -3560,7 +3560,7 @@
             "refId": "A"
           }
         ],
-        "title": "Node Watchdog check for stable cluster failed",
+        "title": "Cluster State Check Failures",
         "type": "timeseries"
       },
       {
@@ -3654,7 +3654,7 @@
             "refId": "A"
           }
         ],
-        "title": "All fixes for a given node_wd check have failed",
+        "title": "Unrecoverable Health Check Failures",
         "type": "timeseries"
       }
     ],

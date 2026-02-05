@@ -11,3 +11,6 @@ cluster_wd_master_ccs_connection_failures_total{cluster_wd=<node_uid>}: Monotoni
 cluster_wd_supervisord_update_failures_total{cluster_wd=<node_uid>}: Monotonic counter for each supervisord update failure
 cluster_wd_state_id_increment_failures_total{cluster_wd=<node_uid>}: Monotonic counter for each state id increment failure
 cluster_wd_master_selection_restart_loops_total{cluster_wd=<node_uid>}: Monotonic counter for each master selection restart loop
+node_wd_cache_refresh_failures: Number of times the node failed to refresh its cache, indicates issues with CCS
+node_wd_cluster_state_check_failures: Number of times the cluster has been in unstable state
+node_wd_all_fixes_failed: Number of times the node_wd tried to fix a failing check but all fixes failed

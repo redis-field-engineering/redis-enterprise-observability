@@ -9,6 +9,7 @@ To collect metrics in Dynatrace from Redis Enterprise Software or Redis Cloud, u
 == Table of Contents
 
 * link:#Current-Workflow[Current Workflow]
+* link:#Kickstarter[Kickstarter]
 * link:#Dashboards[Dashboards]
 * link:#Legacy-Assets[Legacy Assets]
 * link:#Support[Support]
@@ -34,6 +35,18 @@ Use the official Dynatrace documentation and Hub entry for the current setup exp
 * Dynatrace OneAgent or ActiveGate, depending on your topology
 * A Dynatrace API token with the permissions required by the published extension
 * Redis Enterprise Software or Redis Cloud with the Prometheus exporter reachable on port `8070`
+
+== Kickstarter
+
+This repository still ships a Dynatrace kickstarter for the infrastructure bootstrap pieces that remain useful in the current workflow:
+
+* Provision an ActiveGate VM in AWS or GCP
+* Install ActiveGate automatically
+* Optionally preload a custom CA certificate onto the ActiveGate host
+
+The kickstarter no longer uploads the extension or creates monitoring configurations for you. Use it when you want a ready ActiveGate host, then complete extension activation and endpoint configuration in Dynatrace.
+
+See `dynatrace_v2/kickstarter/` for the current bootstrap flow.
 
 === Kubernetes Deployments
 
@@ -162,7 +175,6 @@ The previous self-managed Dynatrace materials are still available for reference,
 
 * `dynatrace_v2/legacy/src/` - historical extension source and dashboard JSON
 * `dynatrace_v2/legacy/gen-3-dashboards/` - generated dashboard exports
-* `dynatrace_v2/legacy/kickstarter/` - legacy Terraform and helper scripts for the old self-managed flow
 
 == Support
 

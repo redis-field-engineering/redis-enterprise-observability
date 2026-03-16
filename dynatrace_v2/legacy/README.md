@@ -8,4 +8,3 @@ Contents:
 
 - `src/` - historical extension source and dashboard JSON
 - `gen-3-dashboards/` - generated dashboard exports
-- `kickstarter/` - legacy Terraform and helper scripts

@@ -63,10 +63,14 @@ Dynatrace now provides the primary Redis Enterprise experience through the publi
 
 * *Directory*: `dynatrace_v2/legacy/gen-3-dashboards/`
 * *Description*: Historical generated dashboard exports
-* *Directory*: `dynatrace_v2/legacy/kickstarter/`
-* *Description*: Legacy self-managed Terraform and helper scripts
 * *Directory*: `dynatrace_v2/legacy/src/`
 * *Description*: Historical extension source and dashboard JSON
+
+=== Dynatrace Kickstarter
+
+* *Directory*: `dynatrace_v2/kickstarter/`
+* *Description*: ActiveGate bootstrap for AWS and GCP, plus optional CA installation
+* *Scope*: Does not upload the extension or create monitoring configurations
 
 See the https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/dynatrace_v2[dynatrace_v2 README^] for the current workflow and legacy notes.
 

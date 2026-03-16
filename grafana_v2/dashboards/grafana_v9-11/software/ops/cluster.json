@@ -1681,7 +1681,7 @@
               "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
-            "expr": "(sum(redis_server_used_memory{cluster=\"$cluster\"}) / sum(db_memory_limit_bytes{cluster=\"$cluster\"})) * 100",
+            "expr": "avg by(cluster) ((sum by(cluster, db) (redis_server_used_memory{cluster=\"$cluster\"}) / avg by(cluster, db) (db_memory_limit_bytes{cluster=\"$cluster\"}) / avg by(cluster, db) (db_replication_factor{cluster=\"$cluster\"})) * 100)",
             "legendFormat": "Memory Load % ",
             "range": true,
             "refId": "A"

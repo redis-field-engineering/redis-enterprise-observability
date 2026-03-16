@@ -1,28 +1,6 @@
 # This file is maintained automatically by "terraform init".
 # Manual edits may be lost in future updates.
 
-provider "registry.terraform.io/dynatrace-oss/dynatrace" {
-  version     = "1.88.0"
-  constraints = "~> 1.0"
-  hashes = [
-    "h1:G/5l+9ukhEJKJlELz711Z42OVdLy6uDwngURCgrwbv8=",
-    "zh:03a315af8fa88c2d231561b00a68fe0b0d3736e3610c48621a0cba7388cb9622",
-    "zh:127eb7d8b1d47da3ef8ef5212fd99aa1eea8495d25c4752ac3fc3d4dbc47f3d2",
-    "zh:1323981571f74242d645f1516e36ea065409032f4cd349c5aaa4b918b59e6420",
-    "zh:1ce9e64caca352820891023d79a4a41d90de21c1013d0d827164e0e040037df6",
-    "zh:293cc0833d43c67f52571e59f5449da7434cbb2a147031615b6185f09efd196b",
-    "zh:30ec13a248526eed02cb3e744a69217906dd5b87097cbd32acd9cc623791c5ae",
-    "zh:5806d56d2c8c2d7782acff7056dfb81a40d4a3898d8f64874e50020744c53c97",
-    "zh:5fa61d6a4ab210651293f3220931dad9d81042c41d33b1b3a0b0998975b9cbab",
-    "zh:7e55786039d7ae47034db663f9f6e6ee101402a132348786b70c30459e0a16c3",
-    "zh:91818b4a63d3ab8ae2dfe0a84fe72bb59160aee76e5a6d0d15cc31fd9c56c088",
-    "zh:b15d8bd0cfe08a14d89990dc03baf5cb7512aa6bd302303b38b0379d61c9376d",
-    "zh:dad89b617bb9a15d968f83a36973c3c27f65ca7967d70595048bcbfa0e64abde",
-    "zh:f7633aa9e8363ff8d5f7501ec35b4dd9ebe990db4b57f1c593fbf08ac34b06ec",
-    "zh:fa47ea3fd8b2ebc886d056f50b4f6dd4774f5f00785eaa8bb39c7f8807429758",
-  ]
-}
-
 provider "registry.terraform.io/hashicorp/google" {
   version = "7.13.0"
   hashes = [

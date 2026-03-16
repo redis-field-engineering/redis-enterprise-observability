@@ -37,19 +37,12 @@ variable "datadog_site" {
 variable "datadog_api_key" {
   description = "Datadog API key"
   type        = string
-  sensitive   = true  
-}
-
-variable "datadog_integration_name" {
-  description = "Name of the Datadog integration to install"
-  type        = string
-  default     = "redis_enterprise_prometheus"  
+  sensitive   = true
 }
 
 variable "gcp_user_name" {
   description = "GCP user name"
   type        = string
-  
 }
 
 variable "redis_fqdn" {

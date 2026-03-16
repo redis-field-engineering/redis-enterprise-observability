@@ -5,15 +5,6 @@ provider "google" {
   region  = var.region
 }
 
-terraform {
-  required_providers {
-    dynatrace = {
-      version = "~> 1.0"
-      source  = "dynatrace-oss/dynatrace"
-    }
-  }
-}
-
 data "google_compute_network" "primary_network" {
   name = var.network
 }
@@ -35,10 +26,7 @@ resource "google_compute_instance" "activegate" {
     access_config {}
   }
 
-  labels = {
-    skip_deletion = "yes"
-    owner         = "steve_lorello"
-  }
+  labels = var.instance_labels
 
   tags = ["dynatrace"]
 }

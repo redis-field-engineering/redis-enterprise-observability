@@ -6,7 +6,7 @@ Full-stack monitoring of Redis Enterprise with Dynatrace.
 
 Dynatrace provides automated, AI-powered monitoring for Redis Enterprise deployments.
 
-NOTE: The current recommended path is Dynatrace's published `Redis Enterprise - Prometheus` extension from Dynatrace Hub. This repository still keeps a current ActiveGate bootstrap kickstarter in `dynatrace_v2/kickstarter/`, while the old self-managed extension assets live under `dynatrace_v2/legacy/`.
+NOTE: The current recommended path is Dynatrace's published https://www.dynatrace.com/hub/detail/redis-enterprise-prometheus/[`Redis Enterprise - Prometheus` extension]. This repository still keeps a current ActiveGate bootstrap kickstarter in `dynatrace_v2/kickstarter/`, while the old self-managed extension assets live under `dynatrace_v2/legacy/`.
 
 == Prerequisites
 

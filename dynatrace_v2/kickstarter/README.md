@@ -121,6 +121,7 @@ If you later activate or test extension builds manually, use whatever additional
    # Networking
    network = "your-vpc-network"
    subnet = "your-subnet"
+   instance_labels = {}
    
    # Dynatrace Configuration
    tenant_id = "abc12345"
@@ -148,6 +149,7 @@ If you later activate or test extension builds manually, use whatever additional
 | `zone` | GCP zone | Yes |
 | `network` | VPC network name | Yes |
 | `subnet` | Subnet name | Yes |
+| `instance_labels` | Optional labels applied to the ActiveGate VM | No |
 | `tenant_id` | Dynatrace tenant ID | Yes |
 | `dynatrace_api_token` | Dynatrace API token | Yes |
 | `gcp_user_name` | GCP SSH username | Yes |
@@ -168,7 +170,7 @@ After successful deployment:
 
 1. Access your Dynatrace environment at `https://{tenant_id}.live.dynatrace.com`
 2. Verify the ActiveGate host is connected and healthy
-3. Activate the published `Redis Enterprise - Prometheus` extension from Dynatrace Hub
+3. Activate the published https://www.dynatrace.com/hub/detail/redis-enterprise-prometheus/[`Redis Enterprise - Prometheus` extension]
 4. Create or update the monitoring configuration in Dynatrace for your Redis Enterprise endpoint
 
 For development work, this kickstarter is still useful when you want a ready ActiveGate host with your CA material already installed before manually testing extension builds.

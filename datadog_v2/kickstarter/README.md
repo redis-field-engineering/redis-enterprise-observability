@@ -64,7 +64,6 @@ Before using the GCP deployment, ensure you have:
    # Datadog Configuration
    datadog_api_key = "your-datadog-api-key"
    datadog_site = "datadoghq.com"  # or your specific site
-   datadog_integration_name = "redis_enterprise_prometheus"
    
    # Security and Access
    gcp_user_name = "your-gcp-username"
@@ -90,7 +89,6 @@ Before using the GCP deployment, ensure you have:
 | `redis_fqdn` | Redis cluster FQDN | Yes | |
 | `datadog_api_key` | Datadog API key | Yes | |
 | `datadog_site` | Datadog site identifier | Yes | |
-| `datadog_integration_name` | Datadog Agent check name | No | `redis_enterprise_prometheus` |
 | `gcp_user_name` | GCP SSH username | Yes | |
 | `ssh_private_key` | Path to SSH private key | Yes | |
 
@@ -169,9 +167,9 @@ To verify metrics are flowing correctly:
    ```
 
 3. **Datadog Metrics Explorer**: In Datadog UI, search for:
-   - `rdse2.cluster.total_live_nodes_count`
-   - `rdse2.node.node_available_memory_bytes`
-   - `rdse2.database.endpoint_client_connections`
+   - `rdse2.total_live_nodes_count`
+   - `rdse2.node_available_memory_bytes`
+   - `rdse2.endpoint_client_connections`
 
 ## Cleanup
 

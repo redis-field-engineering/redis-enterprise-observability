@@ -4,7 +4,7 @@
 
 = Observe Redis Enterprise with Dynatrace
 
-To collect metrics in Dynatrace from Redis Enterprise Software or Redis Cloud, use Dynatrace's published `redis-enterprise-prometheus` extension from the Dynatrace Hub.
+To collect metrics in Dynatrace from Redis Enterprise Software or Redis Cloud, use Dynatrace's published https://www.dynatrace.com/hub/detail/redis-enterprise-prometheus/[`redis-enterprise-prometheus` extension] from the Dynatrace Hub.
 
 == Table of Contents
 

@@ -25,6 +25,12 @@ variable "subnet" {
   type        = string
 }
 
+variable "instance_labels" {
+  description = "Optional labels to apply to the ActiveGate instance"
+  type        = map(string)
+  default     = {}
+}
+
 variable "ssh_private_key" {
   description = "Path to SSH private key file"
   type        = string

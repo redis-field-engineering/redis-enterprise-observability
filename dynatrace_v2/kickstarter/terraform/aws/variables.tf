@@ -29,24 +29,19 @@ variable "subdomain" {
   description = "The subdomain to deploy the app to"
 }
 
-variable "redis_fqdn" {
-  type        = string
-  description = "The fully qualified domain name (FQDN) of the Redis cluster, in the case of Redis cloud this would be the private endpoint (starting with internal.)"  
-}
-
 variable "vpc_name" {
-    type        = string
-    description = "The name of the VPC to deploy resources in"
+  type        = string
+  description = "The name of the VPC to deploy resources in"
 }
 
 variable "subnet_name" {
-    type        = string
-    description = "The name of the subnet to deploy resources in"
+  type        = string
+  description = "The name of the subnet to deploy resources in"
 }
 
 variable "aws_security_group_name" {
-    type        = string
-    description = "The ID of the security group to associate with the EC2 instance" 
+  type        = string
+  description = "The ID of the security group to associate with the EC2 instance"
 }
 
 variable "tenant_id" {
@@ -62,20 +57,11 @@ variable "dynatrace_api_token" {
 
 variable "ssh_private_key" {
   type        = string
-  description = "Path to SSH private key file"  
-}
-
-variable "developer_pem" {
-  type        = string
-  description = "Path to the developer PEM file for signing the extension"
+  description = "Path to SSH private key file"
 }
 
 variable "custom_ca_pem" {
   type        = string
   description = "Path to a custom CA PEM file, if any"
-}
-
-variable "extension_version" {
-  type        = string
-  description = "Version of the extension to deploy"  
+  default     = ""
 }

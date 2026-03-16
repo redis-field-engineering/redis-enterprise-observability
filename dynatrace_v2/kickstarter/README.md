@@ -1,13 +1,13 @@
 # Redis Enterprise Dynatrace Observability - Kickstarter
 
-This kickstarter contains Terraform configurations to quickly deploy Dynatrace ActiveGate instances and configure Redis Enterprise monitoring for both AWS and GCP environments.
+This kickstarter contains Terraform configurations to quickly deploy Dynatrace ActiveGate instances for Redis Enterprise monitoring in AWS and GCP environments.
 
 ## About the Kickstarter
 
 The kickstarter automates the deployment and configuration of:
 - Dynatrace ActiveGate VM instance
-- Redis Enterprise extension upload and signing
-- Monitoring configuration for Redis Enterprise clusters
+- ActiveGate installation and bootstrap
+- Optional custom CA installation on the ActiveGate host
 - Required networking and security configurations
 
 ## Prerequisites
@@ -15,21 +15,16 @@ The kickstarter automates the deployment and configuration of:
 Before using either AWS or GCP deployments, ensure you have:
 
 1. **Terraform** installed (version 1.0 or later)
-2. **Python 3** with `dt-cli` package installed
-3. **Dynatrace tenant** with appropriate permissions
-4. **Developer certificate** for extension signing
-5. **Redis Cloud or Enterprise Software cluster** accessible from the cloud environment
+2. **Dynatrace tenant** with appropriate permissions
+3. **Redis Cloud or Enterprise Software cluster** accessible from the cloud environment
+4. **Optional CA certificate** if you want the kickstarter to preload trust material onto ActiveGate
 
 ### Required Dynatrace Permissions
 
-Your Dynatrace API token must have the following scopes:
+Your Dynatrace API token must be able to download the ActiveGate installer:
 - `PaaS integration - Installer download`
-- `Write extension environment configurations`
-- `Read extension environment configurations`
-- `Write extension monitoring configurations`
-- `Read extension monitoring configurations`
-- `Write extensions`
-- `Read extensions`
+
+If you later activate or test extension builds manually, use whatever additional Dynatrace permissions that workflow requires. This kickstarter no longer uploads extensions or creates monitoring configurations.
 
 ## AWS Deployment
 
@@ -44,7 +39,7 @@ Your Dynatrace API token must have the following scopes:
 
 1. Navigate to the AWS terraform directory:
    ```bash
-   cd kickstart/terraform/aws
+   cd dynatrace_v2/kickstarter/terraform/aws
    ```
 
 2. Create a `terraform.tfvars` file with your configuration:
@@ -64,17 +59,12 @@ Your Dynatrace API token must have the following scopes:
    dns_zone_id = "Z1234567890ABC"
    subdomain = "example.com"
    
-   # Redis Configuration
-   redis_fqdn = "internal-redis-cluster.example.com"
-   
    # Dynatrace Configuration
    tenant_id = "abc12345"
    dynatrace_api_token = "dt0c01.ST2EY72KQINMH613..."
-   extension_version = "1.0.0"
    
    # Security Files
    ssh_private_key = "path/to/your/private-key.pem"
-   developer_pem = "secrets/developer.pem"
    custom_ca_pem = "secrets/ca.pem"
    ```
 
@@ -100,13 +90,10 @@ Your Dynatrace API token must have the following scopes:
 | `aws_security_group_name` | Security group name | Yes |
 | `dns_zone_id` | Route53 hosted zone ID | No |
 | `subdomain` | Domain for ActiveGate | No |
-| `redis_fqdn` | Redis cluster FQDN | Yes |
 | `tenant_id` | Dynatrace tenant ID | Yes |
 | `dynatrace_api_token` | Dynatrace API token | Yes |
-| `extension_version` | Extension version | Yes |
 | `ssh_private_key` | Path to SSH private key | Yes |
-| `developer_pem` | Path to developer certificate | Yes |
-| `custom_ca_pem` | Path to CA certificate | Yes |
+| `custom_ca_pem` | Path to CA certificate | No |
 
 ## GCP Deployment
 
@@ -121,7 +108,7 @@ Your Dynatrace API token must have the following scopes:
 
 1. Navigate to the GCP terraform directory:
    ```bash
-   cd kickstart/terraform/gcp
+   cd dynatrace_v2/kickstarter/terraform/gcp
    ```
 
 2. Create a `terraform.tfvars` file with your configuration:
@@ -134,19 +121,15 @@ Your Dynatrace API token must have the following scopes:
    # Networking
    network = "your-vpc-network"
    subnet = "your-subnet"
-   
-   # Redis Configuration
-   redis_fqdn = "redis-cluster.example.com"
+   instance_labels = {}
    
    # Dynatrace Configuration
    tenant_id = "abc12345"
    dynatrace_api_token = "dt0c01.ST2EY72KQINMH613..."
-   extension_version = "1.0.0"
    
    # Security and Access
    gcp_user_name = "your-gcp-username"
    ssh_private_key = "path/to/your/private-key"
-   developer_pem = "secrets/developer.pem"
    custom_ca_pem = "secrets/ca.pem"
    ```
 
@@ -166,13 +149,11 @@ Your Dynatrace API token must have the following scopes:
 | `zone` | GCP zone | Yes |
 | `network` | VPC network name | Yes |
 | `subnet` | Subnet name | Yes |
-| `redis_fqdn` | Redis cluster FQDN | Yes |
+| `instance_labels` | Optional labels applied to the ActiveGate VM | No |
 | `tenant_id` | Dynatrace tenant ID | Yes |
 | `dynatrace_api_token` | Dynatrace API token | Yes |
-| `extension_version` | Extension version | Yes |
 | `gcp_user_name` | GCP SSH username | Yes |
 | `ssh_private_key` | Path to SSH private key | Yes |
-| `developer_pem` | Path to developer certificate | Yes |
 | `custom_ca_pem` | Path to CA certificate | No |
 
 ## What Gets Deployed
@@ -180,27 +161,19 @@ Your Dynatrace API token must have the following scopes:
 Both deployments create:
 
 1. **Compute Instance**: VM running Ubuntu 20.04 LTS with Dynatrace ActiveGate
-2. **Extension Management**: Automated upload and signing of the Redis Enterprise extension
-3. **Monitoring Configuration**: ActiveGate configured to monitor your Redis endpoints
-4. **Certificate Installation**: Custom CA certificates installed for secure communication
+2. **ActiveGate Bootstrap**: Dynatrace ActiveGate installed and ready for extension activation
+3. **Certificate Installation**: Optional custom CA certificates installed for secure communication with Redis endpoints
 
 ## Post-Deployment
 
 After successful deployment:
 
 1. Access your Dynatrace environment at `https://{tenant_id}.live.dynatrace.com`
-2. Navigate to **Hub > Extensions** to verify the Redis Enterprise extension is installed
-3. Check **Infrastructure > Technologies** to see your Redis cluster
-4. Import the provided dashboards from the `src/dashboards/` directory
+2. Verify the ActiveGate host is connected and healthy
+3. Activate the published https://www.dynatrace.com/hub/detail/redis-enterprise-prometheus/[`Redis Enterprise - Prometheus` extension]
+4. Create or update the monitoring configuration in Dynatrace for your Redis Enterprise endpoint
 
-## Monitoring Scripts
-
-Both deployments include monitoring management scripts:
-
-- `start-monitoring.sh` - Configure monitoring for Redis endpoints
-- `stop-monitoring.sh` - Remove monitoring configuration
-
-These scripts are automatically executed during Terraform apply/destroy operations.
+For development work, this kickstarter is still useful when you want a ready ActiveGate host with your CA material already installed before manually testing extension builds.
 
 ## Cleanup
 
@@ -212,21 +185,18 @@ terraform destroy
 
 This will:
 - Delete the ActiveGate VM instance
-- Remove the extension from Dynatrace
-- Clean up monitoring configurations
 - Remove any created DNS records (AWS only)
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Extension upload fails**: Ensure your API token has `extensions.*` scope
-2. **SSH connection fails**: Verify your SSH key permissions and path
-3. **ActiveGate installation fails**: Check that the Dynatrace tenant URL and token are correct
-4. **Redis connection fails**: Ensure your Redis FQDN is accessible from the cloud environment
+1. **SSH connection fails**: Verify your SSH key permissions and path
+2. **ActiveGate installation fails**: Check that the Dynatrace tenant URL and token are correct
+3. **CA installation fails**: Ensure `custom_ca_pem` points to a readable PEM file, or leave it unset
 
 ### Logs and Debugging
 
 - ActiveGate logs: `/var/log/dynatrace/gateway/`
-- Extension logs: Check Dynatrace UI under **Hub > Extensions**
+- Extension logs: Check Dynatrace UI under **Hub > Extensions** after you activate the extension manually
 - Terraform state: `terraform show` to inspect current state

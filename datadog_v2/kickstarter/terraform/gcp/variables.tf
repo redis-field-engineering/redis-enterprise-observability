@@ -37,34 +37,15 @@ variable "datadog_site" {
 variable "datadog_api_key" {
   description = "Datadog API key"
   type        = string
-  sensitive   = true  
-}
-
-variable "datadog_integration_name" {
-  description = "Name of the Datadog integration to install"
-  type        = string
-  default     = "redis_enterprise_prometheus"  
+  sensitive   = true
 }
 
 variable "gcp_user_name" {
   description = "GCP user name"
   type        = string
-  
 }
 
 variable "redis_fqdn" {
   description = "The fully qualified domain name (FQDN) of the Redis cluster"
   type        = string
-}
-
-variable "repo" {
-  description = "Git repository URL for the Datadog integration"
-  type        = string
-  default     = "https://github.com/DataDog/integrations-extras"  
-}
-
-variable "branch" {
-  description = "Git branch to checkout for the Datadog integration"
-  type        = string
-  default     = "master"  
 }

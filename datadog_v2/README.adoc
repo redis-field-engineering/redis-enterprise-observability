@@ -4,7 +4,7 @@
 
 = Redis Enterprise Datadog Integration
 
-This directory contains resources for monitoring Redis Enterprise Software and Redis Cloud using Datadog. The integration uses Datadog's OpenMetrics integration to collect Prometheus metrics from Redis Enterprise clusters.
+This directory contains resources for monitoring Redis Enterprise Software and Redis Cloud using Datadog. The supported path is Datadog's official `redis-enterprise-prometheus` integration, which uses OpenMetrics to collect Prometheus metrics from Redis Enterprise clusters.
 
 == Table of Contents
 
@@ -48,11 +48,11 @@ To get the Prometheus endpoint for your Redis Cloud subscription, drop the secti
 
 == Installation
 
-=== Building the Integration from Source
+=== Install the Official Datadog Integration
 
-Since the integration is not yet available in the main Datadog repository, you'll need to build it from the Field Engineering branch:
+Install the Datadog-published package on the Datadog Agent host:
 
-1. Clone the Field Engineering fork:
+1. Install the integration:
 +
 [source,bash]
 ----
@@ -61,7 +61,7 @@ sudo datadog-agent integration install -t -r datadog-redis_enterprise_prometheus
 
 2. Configure the integration as described in the link:#Configuration[Configuration] section below.
 
-2. Restart the Datadog Agent:
+3. Restart the Datadog Agent:
 +
 [source,bash]
 ----
@@ -117,7 +117,7 @@ sudo datadog-agent status
 sudo datadog-agent check redis_enterprise_prometheus
 ----
 
-3. In the Datadog UI, search for metrics starting with `redis_enterprise_prometheus.*`
+3. In the Datadog UI, search for Redis Enterprise metrics with the `rdse2.` prefix.
 
 === Available Metrics
 
@@ -133,7 +133,7 @@ This repository includes a Terraform-based kickstarter to automate the deploymen
 
 The kickstarter handles:
 * VM deployment with Datadog Agent
-* Integration installation and configuration
+* Official integration installation and configuration
 * Network and security configuration
 * Automated setup for Redis Enterprise monitoring
 

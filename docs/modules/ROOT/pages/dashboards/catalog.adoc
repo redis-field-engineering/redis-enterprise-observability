@@ -51,18 +51,28 @@ Database-focused operational views:
 
 == Dynatrace Dashboards (v2)
 
-=== Generation 3 Dashboards
-Latest Dynatrace dashboard generation:
+Dynatrace now provides the primary Redis Enterprise experience through the published `Redis Enterprise - Prometheus` extension in Dynatrace Hub.
 
-* *Directory*: `dynatrace_v2/gen-3-dashboards/`
-* *Description*: AI-powered monitoring with automatic baselining and anomaly detection
-* *Features*: Full-stack observability, Davis AI integration
+=== Current Path
 
-=== Kickstarter
+* *Source*: Dynatrace Hub `Redis Enterprise - Prometheus`
+* *Description*: Supported extension lifecycle, activation, and vendor-managed dashboards
+* *Features*: Full-stack observability, Davis AI integration, published extension updates
+
+=== Legacy Repository Assets
+
+* *Directory*: `dynatrace_v2/legacy/gen-3-dashboards/`
+* *Description*: Historical generated dashboard exports
+* *Directory*: `dynatrace_v2/legacy/src/`
+* *Description*: Historical extension source and dashboard JSON
+
+=== Dynatrace Kickstarter
+
 * *Directory*: `dynatrace_v2/kickstarter/`
-* *Description*: Quick-start templates for rapid deployment
+* *Description*: ActiveGate bootstrap for AWS and GCP, plus optional CA installation
+* *Scope*: Does not upload the extension or create monitoring configurations
 
-See the https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/dynatrace_v2[dynatrace_v2 README^] for detailed information.
+See the https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/dynatrace_v2[dynatrace_v2 README^] for the current workflow and legacy notes.
 
 == New Relic Dashboards (v2)
 
@@ -81,7 +91,7 @@ See the https://github.com/redis-field-engineering/redis-enterprise-observabilit
 
 === Kickstarter
 * *Directory*: `datadog_v2/kickstarter/`
-* *Description*: Ready-to-use Datadog monitoring setup
+* *Description*: Ready-to-use Datadog monitoring setup using the official `redis-enterprise-prometheus` integration
 * *Features*: APM integration, log correlation, custom metrics
 
 See the https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/datadog_v2[datadog_v2 README^] for setup instructions.

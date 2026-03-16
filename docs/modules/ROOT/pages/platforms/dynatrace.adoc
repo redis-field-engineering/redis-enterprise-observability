@@ -6,13 +6,13 @@ Full-stack monitoring of Redis Enterprise with Dynatrace.
 
 Dynatrace provides automated, AI-powered monitoring for Redis Enterprise deployments.
 
-NOTE: This guide uses v2 dashboards (Generation 3), which are recommended for all deployments. For legacy v1 dashboards, see the xref:dashboards/catalog.adoc#legacy-dashboards[Legacy Dashboards] section in the catalog.
+NOTE: The current recommended path is Dynatrace's published https://www.dynatrace.com/hub/detail/redis-enterprise-prometheus/[`Redis Enterprise - Prometheus` extension]. This repository still keeps a current ActiveGate bootstrap kickstarter in `dynatrace_v2/kickstarter/`, while the old self-managed extension assets live under `dynatrace_v2/legacy/`.
 
 == Prerequisites
 
 * Dynatrace account (SaaS or Managed)
 * Dynatrace OneAgent or ActiveGate
-* API token with metrics ingestion permissions
+* API token with the permissions required by the Dynatrace-published extension
 
 == Installation
 
@@ -24,39 +24,36 @@ The OneAgent automatically discovers and monitors Redis Enterprise processes whe
 . OneAgent will automatically detect Redis processes
 . Metrics will appear in Dynatrace within minutes
 
-=== Using Prometheus Integration
+=== Using the Published Extension
 
 For containerized or remote deployments:
 
 . Configure Prometheus to scrape Redis Enterprise
-. Set up Dynatrace Prometheus integration
-. Configure metrics ingestion
+. Install or activate the `Redis Enterprise - Prometheus` extension from Dynatrace Hub
+. Configure the extension to target the Redis Enterprise endpoint on `https://<redis-endpoint>:8070/v2`
 
 == Example Configurations
 
-=== Production-Ready Templates
+=== Current References
 
-Complete extension and dashboard files are available in the GitHub repository:
+Use Dynatrace's current product docs and Hub listing first:
 
-* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/dynatrace_v2[Dynatrace Extension^]
-** https://github.com/redis-field-engineering/redis-enterprise-observability/blob/main/dynatrace_v2/src/extension.yaml[extension.yaml^] - Complete metric definitions (1700+ lines)
-*** Defines all Redis Enterprise v2 metrics
-*** Includes metric metadata, units, and descriptions
-*** Organized by category: cluster, node, endpoint, shard, replication, Active-Active
-** https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/dynatrace_v2/src/dashboards[Dashboard Templates^] - Pre-built dashboards
+* https://www.dynatrace.com/hub/detail/redis-enterprise-prometheus/[Dynatrace Hub: Redis Enterprise - Prometheus^]
+* https://docs.dynatrace.com/docs/ingest-from/extensions20/extensions-concepts[Dynatrace Extensions 2.0 docs^]
 
-* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/dynatrace[Legacy v1 Extension^] - For older Redis Enterprise versions
+Additional repository assets are still available in GitHub:
 
-TIP: The extension.yaml file provides a complete catalog of available metrics. Review it to understand which metrics to monitor and customize for your environment.
+* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/dynatrace_v2/kickstarter[dynatrace_v2 kickstarter^]
+* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/dynatrace_v2/legacy[dynatrace_v2 legacy assets^]
+* https://github.com/redis-field-engineering/redis-enterprise-observability/tree/main/dynatrace[Legacy v1 extension^]
 
 == Dashboard Configuration
 
 Import the Redis Enterprise dashboard template:
 
 . Navigate to Dashboards in Dynatrace
-. Click "Import Dashboard"
-. Upload the JSON template from this repository
-. Configure data source mapping
+. Use the dashboards installed with the published extension, or import tenant-specific JSON if you maintain custom views
+. Configure data source mapping as required in your tenant
 
 == Alerting
 

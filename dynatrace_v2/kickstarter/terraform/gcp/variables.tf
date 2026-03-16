@@ -25,15 +25,16 @@ variable "subnet" {
   type        = string
 }
 
+variable "instance_labels" {
+  description = "Optional labels to apply to the ActiveGate instance"
+  type        = map(string)
+  default     = {}
+}
+
 variable "ssh_private_key" {
   description = "Path to SSH private key file"
   type        = string
 }
-
-# variable "dynatrace_tenant_url" {
-#   description = "Dynatrace tenant URL (e.g. https://<env>.live.dynatrace.com)"
-#   type        = string
-# }
 
 variable "dynatrace_api_token" {
   description = "API token with extensions.* and metrics.ingest scopes"
@@ -47,42 +48,12 @@ variable "custom_ca_pem" {
   default     = ""
 }
 
-# variable "activegate_installer_url" {
-#   description = "URL to the ActiveGate installer script from Dynatrace"
-#   type        = string
-# }
-
-# variable "platform_token" {
-#   description = "Dynatrace platform token used for ActiveGate install"
-#   type        = string
-#   sensitive   = true
-# }
 variable "gcp_user_name" {
   description = "GCP user name"
   type        = string
-  
-}
-variable "developer_pem" {
-  description = "Path to the developer PEM file for signing the extension"
-  type        = string  
-}
-
-# variable "downloader_token" {
-#   description = "token for downloading activegate"
-#   type        = string
-# }
-
-variable "redis_fqdn" {
-  description = "The fully qualified domain name (FQDN) of the Redis cluster"
-  type        = string
-}
-
-variable "extension_version" {
-  description = "Version of the extension to be used"
-  type        = string  
 }
 
 variable "tenant_id" {
   description = "Tenant ID for the Dynatrace environment"
-  type        = string  
+  type        = string
 }

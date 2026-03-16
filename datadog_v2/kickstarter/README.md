@@ -1,12 +1,12 @@
 # Redis Enterprise Datadog Observability - Kickstarter
 
-This kickstarter contains Terraform configurations to quickly deploy Datadog Agent instances with the Redis Enterprise integration configured for monitoring Redis Enterprise clusters on GCP.
+This kickstarter contains Terraform configurations to quickly deploy Datadog Agent instances with Datadog's official `redis-enterprise-prometheus` integration configured for Redis Enterprise monitoring.
 
 ## About the Kickstarter
 
 The kickstarter automates the deployment and configuration of:
 - Datadog Agent VM instance with the Redis Enterprise integration
-- Automatic build and installation of the `redis_enterprise_prometheus` integration from the Field Engineering branch
+- Installation of Datadog's published `redis-enterprise-prometheus` integration package
 - Required networking and security configurations
 - Automatic service setup and monitoring configuration
 
@@ -90,7 +90,7 @@ Before using the GCP deployment, ensure you have:
 | `redis_fqdn` | Redis cluster FQDN | Yes | |
 | `datadog_api_key` | Datadog API key | Yes | |
 | `datadog_site` | Datadog site identifier | Yes | |
-| `datadog_integration_name` | Integration name | No | `redis_enterprise_prometheus` |
+| `datadog_integration_name` | Datadog Agent check name | No | `redis_enterprise_prometheus` |
 | `gcp_user_name` | GCP SSH username | Yes | |
 | `ssh_private_key` | Path to SSH private key | Yes | |
 
@@ -99,7 +99,7 @@ Before using the GCP deployment, ensure you have:
 The deployment creates:
 
 1. **Compute Instance**: VM running Ubuntu 20.04 LTS with Datadog Agent
-2. **Integration Build**: Automatic cloning and building of the Redis Enterprise Datadog integration from the Field Engineering branch
+2. **Integration Install**: Automatic installation of the official Redis Enterprise Prometheus integration package
 3. **Agent Configuration**: Configured to collect metrics from Redis Enterprise on port 8070
 4. **Service Management**: Systemd service management for automatic startup
 
@@ -108,11 +108,8 @@ The deployment creates:
 The kickstarter automatically:
 
 1. **Installs Datadog Agent 7** using the official installation script
-2. **Clones the Field Engineering repository**: `https://github.com/redis-field-engineering/datadog-integrations-extras`
-3. **Checks out the correct branch**: Currently uses `v2-metrics-extended` branch
-4. **Builds the integration**: Creates a Python wheel for the `redis_enterprise_prometheus` integration
-5. **Installs the integration**: Uses `datadog-agent integration install` command
-6. **Configures monitoring**: Sets up the integration configuration file with your Redis FQDN
+2. **Installs the published integration package**: `sudo datadog-agent integration install -t -r datadog-redis_enterprise_prometheus==1.0.0`
+3. **Configures monitoring**: Sets up the integration configuration file with your Redis FQDN
 
 ## Agent Configuration
 
@@ -139,7 +136,7 @@ After successful deployment:
 3. **Monitor Datadog UI**: 
    - Navigate to your Datadog dashboard
    - Go to **Infrastructure > Host Map** to see your new host
-   - Search for metrics with prefix `rdse.*`
+   - Search for metrics with prefix `rdse2.*`
 
 4. **Import Dashboards**: Use any available Redis Enterprise dashboards for Datadog
 
@@ -172,9 +169,9 @@ To verify metrics are flowing correctly:
    ```
 
 3. **Datadog Metrics Explorer**: In Datadog UI, search for:
-   - `redis_enterprise_prometheus.cluster_up`
-   - `redis_enterprise_prometheus.node_cpu`
-   - `redis_enterprise_prometheus.database_total_req`
+   - `rdse2.cluster.total_live_nodes_count`
+   - `rdse2.node.node_available_memory_bytes`
+   - `rdse2.database.endpoint_client_connections`
 
 ## Cleanup
 
@@ -193,10 +190,8 @@ Ensure the following network access from the Datadog Agent VM:
 
 ### Integration Updates
 
-The integration is built from the Field Engineering branch. To update:
+The kickstarter installs the Datadog-published package. To update:
 
 1. SSH into the VM
-2. Navigate to the integration directory: `cd ~/datadog-integrations-extras/redis_enterprise_prometheus`
-3. Pull latest changes: `git pull origin v2-metrics-extended`
-4. Rebuild and reinstall: `python3.12 -m build --wheel && sudo datadog-agent integration install -r -w ./dist/datadog_redis_enterprise_prometheus-*.whl`
-5. Restart the agent: `sudo systemctl restart datadog-agent`
+2. Reinstall the desired published package version: `sudo datadog-agent integration install -t -r datadog-redis_enterprise_prometheus==1.0.0`
+3. Restart the agent: `sudo systemctl restart datadog-agent`

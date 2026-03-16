@@ -693,10 +693,10 @@ The following is a list of alerts contained in the `alerts.yml` file. There are 
 |bdb_total_req > 1000000
 
 |The database in question will soon be unable to accept new data
-|round((bdb_used_memory/bdb_memory_limit) * 100) > 98
+|round(((sum by(cluster,db)(redis_server_used_memory) / avg by(cluster,db)(db_memory_limit_bytes)) / avg by(cluster,db)(db_replication_factor)) * 100) > 98
 
 |The database in question will be unable to accept new data in two hours
-|round((bdb_used_memory/bdb_memory_limit) * 100) < 98 and (predict_linear(bdb_used_memory[15m], 2 * 3600) / bdb_memory_limit) > 0.3 and round(predict_linear(bdb_used_memory[15m], 2 * 3600)/bdb_memory_limit) > 0.98
+|round(((sum by(cluster,db)(redis_server_used_memory) / avg by(cluster,db)(db_memory_limit_bytes)) / avg by(cluster,db)(db_replication_factor)) * 100) < 98 and ((sum by(cluster,db)(predict_linear(redis_server_used_memory[15m], 2 * 3600)) / avg by(cluster,db)(db_memory_limit_bytes)) / avg by(cluster,db)(db_replication_factor)) > 0.3 and round(((sum by(cluster,db)(predict_linear(redis_server_used_memory[15m], 2 * 3600)) / avg by(cluster,db)(db_memory_limit_bytes)) / avg by(cluster,db)(db_replication_factor)) * 100) > 98
 
 |Database read operations are failing to find entries more than 50% of the time
 |(100 * bdb_read_hits)/(bdb_read_hits + bdb_read_misses) < 50

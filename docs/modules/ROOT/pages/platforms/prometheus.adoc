@@ -239,7 +239,7 @@ redis_server_up
 rate(endpoint_read_requests[5m]) + rate(endpoint_write_requests[5m]) + rate(endpoint_other_requests[5m])
 
 # Memory usage percentage
-(sum by(cluster,db)(redis_server_used_memory{role="master"}) / (avg by(cluster,db)(db_memory_limit_bytes) / avg by(cluster,db)(db_replication_factor))) * 100
+(sum by(cluster,db)(redis_server_used_memory) / avg by(cluster,db)(db_memory_limit_bytes) / avg by(cluster,db)(db_replication_factor)) * 100
 
 # Top 5 databases by ops
 topk(5, rate(endpoint_read_requests[5m]) + rate(endpoint_write_requests[5m]) + rate(endpoint_other_requests[5m]))
@@ -262,8 +262,9 @@ groups:
       # Pre-calculate memory usage percentage
       - record: redis_enterprise:database:memory_usage_pct
         expr: |
-          (sum by(cluster,db)(redis_server_used_memory{role="master"}) / 
-           (avg by(cluster,db)(db_memory_limit_bytes) / avg by(cluster,db)(db_replication_factor))) * 100
+          (sum by(cluster,db)(redis_server_used_memory) /
+           avg by(cluster,db)(db_memory_limit_bytes) /
+           avg by(cluster,db)(db_replication_factor)) * 100
 
       # Pre-calculate hit rate
       - record: redis_enterprise:database:hit_rate:rate5m

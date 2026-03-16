@@ -29,4 +29,4 @@ tests:
               job: redis            
             exp_annotations:
               summary: "DB will be full in two hours"
-              description: "DB Usage - Cluster: {{ $labels.cluster }} DB: {{$labels.bdb}} Usage: {{$value}}% in 2 hours"
+              description: "DB Usage - Cluster: {{ $labels.cluster }} DB: {{$labels.db}} Usage: {{$value}}% in 2 hours"

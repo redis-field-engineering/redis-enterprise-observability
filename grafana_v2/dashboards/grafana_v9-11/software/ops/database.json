@@ -1359,7 +1359,7 @@
               "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
-            "expr": "sum by (db) (db_memory_limit_bytes{db=\"$db\", cluster=\"$cluster\"}) and (sum by (db) (\nredis_server_used_memory{cluster=\"$cluster\", role=\"master\"}) * 3 > sum by (db) (db_memory_limit_bytes{db=\"$db\", cluster=\"$cluster\"}))",
+            "expr": "sum by (db) (db_memory_limit_bytes{db=\"$db\", cluster=\"$cluster\"}) and on(db) (((sum by (cluster, db) (redis_server_used_memory{cluster=\"$cluster\", db=\"$db\"}) / avg by (cluster, db) (db_memory_limit_bytes{cluster=\"$cluster\", db=\"$db\"})) / avg by (cluster, db) (db_replication_factor{cluster=\"$cluster\", db=\"$db\"})) > 0.8)",
             "hide": false,
             "legendFormat": "limit (when low, near used)",
             "range": true,

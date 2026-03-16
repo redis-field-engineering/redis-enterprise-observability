@@ -240,7 +240,7 @@ rate(endpoint_read_requests{cluster=~"$cluster", db=~"$db"}[5m]) + rate(endpoint
   "title": "Memory Usage",
   "targets": [
     {
-      "expr": "(sum by(cluster,db)(redis_server_used_memory{cluster=\"$cluster\", db=\"$db\", role=\"master\"}) / (avg by(cluster,db)(db_memory_limit_bytes{cluster=\"$cluster\", db=\"$db\"}) / avg by(cluster,db)(db_replication_factor{cluster=\"$cluster\", db=\"$db\"}))) * 100",
+      "expr": "(sum by(cluster,db)(redis_server_used_memory{cluster=\"$cluster\", db=\"$db\"}) / avg by(cluster,db)(db_memory_limit_bytes{cluster=\"$cluster\", db=\"$db\"}) / avg by(cluster,db)(db_replication_factor{cluster=\"$cluster\", db=\"$db\"})) * 100",
       "refId": "A"
     }
   ],
@@ -303,7 +303,7 @@ Conditions:
 WHEN avg() OF query(A, 5m, now) IS ABOVE 90
 
 Query A:
-(sum by(cluster,db)(redis_server_used_memory{role="master"}) / (avg by(cluster,db)(db_memory_limit_bytes) / avg by(cluster,db)(db_replication_factor))) * 100
+(sum by(cluster,db)(redis_server_used_memory) / avg by(cluster,db)(db_memory_limit_bytes) / avg by(cluster,db)(db_replication_factor)) * 100
 ----
 
 ==== Alert via Configuration
@@ -329,7 +329,7 @@ groups:
               to: 0
             datasourceUid: redis-prometheus
             model:
-              expr: (sum by(cluster,db)(redis_server_used_memory{role="master"}) / (avg by(cluster,db)(db_memory_limit_bytes) / avg by(cluster,db)(db_replication_factor))) * 100 > 90
+              expr: (sum by(cluster,db)(redis_server_used_memory) / avg by(cluster,db)(db_memory_limit_bytes) / avg by(cluster,db)(db_replication_factor)) * 100 > 90
               intervalMs: 1000
               maxDataPoints: 43200
         noDataState: NoData

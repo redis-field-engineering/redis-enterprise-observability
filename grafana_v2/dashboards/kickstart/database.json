@@ -229,7 +229,7 @@
               "type": "prometheus"
             },
             "editorMode": "code",
-            "expr": "avg(redis_server_used_memory{cluster=\"$cluster\", db=\"$db\"}/redis_server_maxmemory{cluster=\"$cluster\", db=\"$db\"})",
+            "expr": "(sum by(cluster, db)(redis_server_used_memory{cluster=\"$cluster\", db=\"$db\"}) / avg by(cluster, db)(db_memory_limit_bytes{cluster=\"$cluster\", db=\"$db\"})) / avg by(cluster, db)(db_replication_factor{cluster=\"$cluster\", db=\"$db\"})",
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"

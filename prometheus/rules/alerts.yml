@@ -14,11 +14,12 @@
 # Excessive Redis Requests : bdb_total_req > 1000000 (30s)
 
 #* is this valid? this is too high at the shard level per kurt mueller; could be switched to redis_used_memory and move to SHARD *#
-# DB full : round((bdb_used_memory/bdb_memory_limit) * 100) > 98 (30s)
+# DB full : round(((sum by(cluster,db)(redis_server_used_memory) / avg by(cluster,db)(db_memory_limit_bytes)) / avg by(cluster,db)(db_replication_factor)) * 100) > 98 (30s)
 
 #* is this valid? this needs evaluation and testing *#
-# DB full in 2 hours : round((bdb_used_memory/bdb_memory_limit) * 100) < 98 and (predict_linear(bdb_used_memory[15m], 2 * 3600) / bdb_memory_limit) > 0.3 and \
-# round(predict_linear(bdb_used_memory[15m], 2 * 3600)/bdb_memory_limit) > 0.98 (30s)
+# DB full in 2 hours : round(((sum by(cluster,db)(redis_server_used_memory) / avg by(cluster,db)(db_memory_limit_bytes)) / avg by(cluster,db)(db_replication_factor)) * 100) < 98 and \
+# ((sum by(cluster,db)(predict_linear(redis_server_used_memory[15m], 2 * 3600)) / avg by(cluster,db)(db_memory_limit_bytes)) / avg by(cluster,db)(db_replication_factor)) > 0.3 and \
+# round(((sum by(cluster,db)(predict_linear(redis_server_used_memory[15m], 2 * 3600)) / avg by(cluster,db)(db_memory_limit_bytes)) / avg by(cluster,db)(db_replication_factor)) * 100) > 98 (30s)
 
 # Low Hit Ratio : (100 * bdb_read_hits)/(bdb_read_hits + bdb_read_misses) < 50 (1m)
 
@@ -132,24 +133,24 @@ groups:
  - name: capacity
    rules:
    - alert: DB full
-     expr: round((bdb_used_memory/bdb_memory_limit) * 100) > 98
+     expr: round(((sum by(cluster,db)(redis_server_used_memory) / avg by(cluster,db)(db_memory_limit_bytes)) / avg by(cluster,db)(db_replication_factor)) * 100) > 98
      for: 30s
      labels:
        severity: critical
        type: capacity
      annotations:
        summary: DB is full
-       description: "DB Usage - Cluster: {{ $labels.cluster }} DB: {{$labels.bdb}} Usage: {{$value}}% full "
+       description: "DB Usage - Cluster: {{ $labels.cluster }} DB: {{$labels.db}} Usage: {{$value}}% full "
        runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/capacity.md#db-full
    - alert: DB full in 2 hours
-     expr: round((bdb_used_memory/bdb_memory_limit) * 100) < 98 and (predict_linear(bdb_used_memory[15m], 2 * 3600) / bdb_memory_limit) > 0.3 and round(predict_linear(bdb_used_memory[15m], 2 * 3600)/bdb_memory_limit) > 0.98
+     expr: round(((sum by(cluster,db)(redis_server_used_memory) / avg by(cluster,db)(db_memory_limit_bytes)) / avg by(cluster,db)(db_replication_factor)) * 100) < 98 and ((sum by(cluster,db)(predict_linear(redis_server_used_memory[15m], 2 * 3600)) / avg by(cluster,db)(db_memory_limit_bytes)) / avg by(cluster,db)(db_replication_factor)) > 0.3 and round(((sum by(cluster,db)(predict_linear(redis_server_used_memory[15m], 2 * 3600)) / avg by(cluster,db)(db_memory_limit_bytes)) / avg by(cluster,db)(db_replication_factor)) * 100) > 98
      for: 30s
      labels:
        severity: notification
        type: capacity
      annotations:
        summary: DB will be full in two hours
-       description: "DB Usage - Cluster: {{ $labels.cluster }} DB: {{$labels.bdb}} Usage: {{$value}}% in 2 hours "
+       description: "DB Usage - Cluster: {{ $labels.cluster }} DB: {{$labels.db}} Usage: {{$value}}% in 2 hours "
        runbook: https://github.com/Redislabs-Solution-Architects/RedisEnterprisePrometheus/blob/master/runbooks/capacity.md#db-full-in-2-hours
 
  - name: utilization

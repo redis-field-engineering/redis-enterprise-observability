@@ -311,7 +311,7 @@
                 "accountIds": [
                   6704154
                 ],
-                "query": " SELECT ((max(endpoint_read_requests) - min(endpoint_read_requests)) + (max(endpoint_write_requests) - min(endpoint_write_requests)) + (max(endpoint_other_requests) - min(endpoint_other_requests))) / 60 AS 'reads/sec'\n  FROM Metric\n  FACET cluster, db\n  WHERE cluster IN ({{cluster}}) AND db IN ({{db}})\n  TIMESERIES 1 minute"
+                "query": " SELECT ((max(endpoint_read_requests) - min(endpoint_read_requests)) + (max(endpoint_write_requests) - min(endpoint_write_requests)) + (max(endpoint_other_requests) - min(endpoint_other_requests))) / 60 AS 'requests/sec'\n  FROM Metric\n  FACET cluster, db\n  WHERE cluster IN ({{cluster}}) AND db IN ({{db}})\n  TIMESERIES 1 minute"
               }
             ],
             "platformOptions": {
@@ -419,7 +419,7 @@
                 "accountIds": [
                   6704154
                 ],
-                "query": " SELECT (max(endpoint_write_requests) - min(endpoint_write_requests)) / 60 AS 'reads/sec'\n  FROM Metric\n  FACET cluster, db\n  WHERE cluster IN ({{cluster}}) AND db IN ({{db}})\n  TIMESERIES 1 minute"
+                "query": " SELECT (max(endpoint_write_requests) - min(endpoint_write_requests)) / 60 AS 'writes/sec'\n  FROM Metric\n  FACET cluster, db\n  WHERE cluster IN ({{cluster}}) AND db IN ({{db}})\n  TIMESERIES 1 minute"
               }
             ],
             "platformOptions": {

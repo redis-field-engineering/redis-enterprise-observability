@@ -1,13 +1,15 @@
 {
-  "name": "Redis Software Database - v2",
+  "name": "Redis Software Database v2",
   "description": null,
   "permissions": "PUBLIC_READ_WRITE",
   "pages": [
     {
+      "guid": "NjcwNDE1NHxWSVp8REFTSEJPQVJEfDM3MDc2NDY2",
       "name": "Redis Enterprise Shard",
       "description": null,
       "widgets": [
         {
+          "id": "412013576",
           "title": "",
           "layout": {
             "column": 1,
@@ -24,6 +26,7 @@
           }
         },
         {
+          "id": "412013577",
           "title": "Databases",
           "layout": {
             "column": 5,
@@ -42,9 +45,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT if(latest(db_config) = 1, 'Up', 'Down') as Status FROM Metric FACET substring(cluster, 0, 15) as Cluster, db_name as Name, db as Id"
+                "query": "SELECT if(latest(db_config) = 1, 'Up', 'Down') as Status FROM Metric FACET substring(cluster, 0, 15) as Cluster, db_name as Name, db as Id WHERE metricName = 'db_config' AND cluster IN ({{cluster}}) AND db IN ({{db}})"
               }
             ],
             "platformOptions": {
@@ -53,7 +56,8 @@
           }
         },
         {
-          "title": "CPU Usage",
+          "id": "412013578",
+          "title": "CPU Usage By Shard",
           "layout": {
             "column": 9,
             "row": 1,
@@ -62,45 +66,12 @@
           },
           "linkedEntityGuids": null,
           "visualization": {
-            "id": "viz.billboard"
-          },
-          "rawConfiguration": {
-            "dataFormatters": [
-              {
-                "name": "CPU",
-                "precision": 3,
-                "type": "humanized"
-              }
-            ],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "nrqlQueries": [
-              {
-                "accountIds": [
-                  3321735
-                ],
-                "query": "SELECT percentage(rate(count(*), 1 minute)/100, WHERE metricName = 'namedprocess_namegroup_cpu_seconds_total') FROM Metric SINCE 1 hour ago"
-              }
-            ],
-            "platformOptions": {
-              "ignoreTimeRange": false
-            }
-          }
-        },
-        {
-          "title": "Used Memory",
-          "layout": {
-            "column": 1,
-            "row": 4,
-            "width": 4,
-            "height": 3
-          },
-          "linkedEntityGuids": null,
-          "visualization": {
             "id": "viz.line"
           },
           "rawConfiguration": {
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
             "facet": {
               "showOtherSeries": false
             },
@@ -109,6 +80,7 @@
             },
             "markers": {
               "displayedTypes": {
+                "annotations": true,
                 "criticalViolations": false,
                 "deployments": true,
                 "relatedDeployments": true,
@@ -118,9 +90,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT latest(redis_server_used_memory) FROM Metric FACET db TIMESERIES 1 MINUTES"
+                "query": "SELECT (rate(sum(namedprocess_namegroup_cpu_seconds_total), 1 minute)/60) * 100\n  FROM Metric\n  WHERE mode IN ('system', 'user') AND groupname LIKE 'redis-%' AND cluster IN ({{cluster}}) AND db IN ({{db}})\n FACET redis\n\n  TIMESERIES 1 minute"
               }
             ],
             "platformOptions": {
@@ -138,6 +110,61 @@
           }
         },
         {
+          "id": "412013579",
+          "title": "{{db_name}} Used Memory",
+          "layout": {
+            "column": 1,
+            "row": 4,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  6704154
+                ],
+                "query": "SELECT sum(redis_server_used_memory) \n  FROM Metric\n  FACET cluster, db\n  WHERE cluster IN ({{cluster}}) AND db IN ({{db}})\n  TIMESERIES 30 seconds"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "id": "412013580",
           "title": "CPU Usage",
           "layout": {
             "column": 5,
@@ -150,6 +177,9 @@
             "id": "viz.line"
           },
           "rawConfiguration": {
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
             "facet": {
               "showOtherSeries": false
             },
@@ -158,6 +188,7 @@
             },
             "markers": {
               "displayedTypes": {
+                "annotations": true,
                 "criticalViolations": false,
                 "deployments": true,
                 "relatedDeployments": true,
@@ -167,9 +198,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT rate(average(namedprocess_namegroup_thread_cpu_seconds_total), 1 minute) FROM Metric WHERE (mode = 'user' OR mode = 'system') AND threadname like 'redis-server%' TIMESERIES 1 MINUTES"
+                "query": "SELECT (rate(sum(namedprocess_namegroup_cpu_seconds_total), 1 minute)/60)\n  FROM Metric\n  WHERE mode IN ('system', 'user') AND groupname LIKE 'redis-%' AND cluster IN ({{cluster}}) AND db IN ({{db}})\n FACET db\n\n  TIMESERIES 1 minute"
               }
             ],
             "platformOptions": {
@@ -190,6 +221,7 @@
           }
         },
         {
+          "id": "412013581",
           "title": "Connection Count",
           "layout": {
             "column": 9,
@@ -202,6 +234,9 @@
             "id": "viz.line"
           },
           "rawConfiguration": {
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
             "facet": {
               "showOtherSeries": false
             },
@@ -210,6 +245,7 @@
             },
             "markers": {
               "displayedTypes": {
+                "annotations": true,
                 "criticalViolations": false,
                 "deployments": true,
                 "relatedDeployments": true,
@@ -219,9 +255,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT rate(max(endpoint_client_connections) - max(endpoint_client_disconnections), 5 minutes) FROM Metric FACET db, cluster TIMESERIES 5 MINUTES"
+                "query": "SELECT (max(endpoint_client_connections) - max(endpoint_proxy_disconnections) - max(endpoint_client_disconnections))\n  FROM Metric\n  FACET cluster, db\n  WHERE cluster IN ({{cluster}}) AND db IN ({{db}})\n  TIMESERIES 30 seconds"
               }
             ],
             "platformOptions": {
@@ -239,6 +275,7 @@
           }
         },
         {
+          "id": "412013582",
           "title": "Total Requests",
           "layout": {
             "column": 1,
@@ -251,6 +288,9 @@
             "id": "viz.line"
           },
           "rawConfiguration": {
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
             "facet": {
               "showOtherSeries": false
             },
@@ -259,6 +299,7 @@
             },
             "markers": {
               "displayedTypes": {
+                "annotations": true,
                 "criticalViolations": false,
                 "deployments": true,
                 "relatedDeployments": true,
@@ -268,9 +309,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT rate(latest(endpoint_read_requests), 1 minute) + rate(latest(endpoint_write_requests), 1 minute) + rate(latest(endpoint_other_requests), 1 minute) FROM Metric FACET db TIMESERIES 1 MINUTES"
+                "query": " SELECT ((max(endpoint_read_requests) - min(endpoint_read_requests)) + (max(endpoint_write_requests) - min(endpoint_write_requests)) + (max(endpoint_other_requests) - min(endpoint_other_requests))) / 60 AS 'reads/sec'\n  FROM Metric\n  FACET cluster, db\n  TIMESERIES 1 minute"
               }
             ],
             "platformOptions": {
@@ -288,6 +329,7 @@
           }
         },
         {
+          "id": "412013583",
           "title": "Reads",
           "layout": {
             "column": 5,
@@ -300,6 +342,9 @@
             "id": "viz.line"
           },
           "rawConfiguration": {
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
             "facet": {
               "showOtherSeries": false
             },
@@ -308,6 +353,7 @@
             },
             "markers": {
               "displayedTypes": {
+                "annotations": true,
                 "criticalViolations": false,
                 "deployments": true,
                 "relatedDeployments": true,
@@ -317,9 +363,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT rate(latest(endpoint_read_requests), 1 minutes) AS 'reads/sec' FROM Metric FACET db TIMESERIES 1 MINUTES"
+                "query": " SELECT (max(endpoint_read_requests) - min(endpoint_read_requests)) / 60 AS 'reads/sec'\n  FROM Metric\n  FACET cluster, db\n  TIMESERIES 1 minute"
               }
             ],
             "platformOptions": {
@@ -337,6 +383,7 @@
           }
         },
         {
+          "id": "412013584",
           "title": "Writes",
           "layout": {
             "column": 9,
@@ -349,6 +396,9 @@
             "id": "viz.line"
           },
           "rawConfiguration": {
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
             "facet": {
               "showOtherSeries": false
             },
@@ -357,6 +407,7 @@
             },
             "markers": {
               "displayedTypes": {
+                "annotations": true,
                 "criticalViolations": false,
                 "deployments": true,
                 "relatedDeployments": true,
@@ -366,9 +417,9 @@
             "nrqlQueries": [
               {
                 "accountIds": [
-                  3321735
+                  6704154
                 ],
-                "query": "SELECT rate(latest(endpoint_write_requests), 1 minute) AS 'writes/sec' FROM Metric FACET db TIMESERIES 1 MINUTES"
+                "query": " SELECT (max(endpoint_write_requests) - min(endpoint_write_requests)) / 60 AS 'reads/sec'\n  FROM Metric\n  FACET cluster, db\n  TIMESERIES 1 minute"
               }
             ],
             "platformOptions": {
@@ -388,5 +439,87 @@
       ]
     }
   ],
-  "variables": []
+  "variables": [
+    {
+      "name": "cluster",
+      "items": null,
+      "defaultValues": [
+        {
+          "value": {
+            "string": "*"
+          }
+        }
+      ],
+      "nrqlQuery": {
+        "accountIds": [
+          6704154
+        ],
+        "query": "FROM Metric\nSELECT uniques(cluster)\nWHERE metricName  = 'node_metrics_up'\nSINCE 5 minutes ago"
+      },
+      "options": {
+        "hiddenOnVariablesBar": false,
+        "ignoreTimeRange": true,
+        "excluded": false,
+        "showApplyAction": true
+      },
+      "title": "",
+      "type": "NRQL",
+      "isMultiSelection": true,
+      "replacementStrategy": "STRING"
+    },
+    {
+      "name": "db_name",
+      "items": null,
+      "defaultValues": [
+        {
+          "value": {
+            "string": "*"
+          }
+        }
+      ],
+      "nrqlQuery": {
+        "accountIds": [
+          6704154
+        ],
+        "query": "FROM Metric SELECT uniques(db_name) WHERE metricName = 'db_config' AND cluster IN ({{cluster}}) SINCE 30 minutes ago"
+      },
+      "options": {
+        "hiddenOnVariablesBar": false,
+        "ignoreTimeRange": true,
+        "excluded": false,
+        "showApplyAction": true
+      },
+      "title": "",
+      "type": "NRQL",
+      "isMultiSelection": true,
+      "replacementStrategy": "STRING"
+    },
+    {
+      "name": "db",
+      "items": null,
+      "defaultValues": [
+        {
+          "value": {
+            "string": "*"
+          }
+        }
+      ],
+      "nrqlQuery": {
+        "accountIds": [
+          6704154
+        ],
+        "query": "FROM Metric SELECT uniques(db) WHERE metricName = 'db_config' AND cluster IN ({{cluster}}) SINCE 30 minutes ago"
+      },
+      "options": {
+        "hiddenOnVariablesBar": false,
+        "ignoreTimeRange": true,
+        "excluded": false,
+        "showApplyAction": false
+      },
+      "title": "",
+      "type": "NRQL",
+      "isMultiSelection": true,
+      "replacementStrategy": "STRING"
+    }
+  ]
 }

@@ -135,13 +135,13 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "count(redis_server_up{cluster=\"$cluster\"})",
-          "legendFormat": "count",
+          "expr": "sum(endpoint_client_connections{cluster=\"$cluster\"})",
+          "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Database Count",
+      "title": "Endpoint Client Connections",
       "type": "stat"
     },
     {

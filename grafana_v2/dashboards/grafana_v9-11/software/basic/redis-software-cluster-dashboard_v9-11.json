@@ -135,7 +135,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "count(redis_server_up{cluster=\"$cluster\"})",
+          "expr": "scalar(count(count by (db) (endpoint_client_connections{cluster=\"$cluster\"})))",
           "legendFormat": "count",
           "range": true,
           "refId": "A"

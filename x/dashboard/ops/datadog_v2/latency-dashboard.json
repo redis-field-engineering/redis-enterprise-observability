@@ -1,0 +1,849 @@
+{
+  "title": "Redis Enterprise - Latency Dashboard",
+  "description": "Import-safe Datadog version of Latency Dashboard.",
+  "widgets": [
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Proxy Latency",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Avg Latency",
+              "requests": [
+                {
+                  "q": "(avg:rdse2.endpoint_read_requests_latency_histogram{$cluster,$db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(avg:rdse2.endpoint_read_requests_latency_histogram{$cluster,$db}) / 1000",
+                      "alias_name": "read"
+                    }
+                  ]
+                },
+                {
+                  "q": "(avg:rdse2.endpoint_write_requests_latency_histogram{$cluster,$db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "warm",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(avg:rdse2.endpoint_write_requests_latency_histogram{$cluster,$db}) / 1000",
+                      "alias_name": "write"
+                    }
+                  ]
+                },
+                {
+                  "q": "(avg:rdse2.endpoint_other_requests_latency_histogram{$cluster,$db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(avg:rdse2.endpoint_other_requests_latency_histogram{$cluster,$db}) / 1000",
+                      "alias_name": "other"
+                    }
+                  ]
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "ms"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Read Latency By Proxy",
+              "requests": [
+                {
+                  "q": "(avg:rdse2.endpoint_read_requests_latency_histogram{$cluster,$db} by {proxy}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(avg:rdse2.endpoint_read_requests_latency_histogram{$cluster,$db} by {proxy}) / 1000",
+                      "alias_name": "read {{proxy}}"
+                    }
+                  ]
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "ms"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Write Latency By Proxy",
+              "requests": [
+                {
+                  "q": "(avg:rdse2.endpoint_write_requests_latency_histogram{$cluster,$db} by {proxy}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "warm",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(avg:rdse2.endpoint_write_requests_latency_histogram{$cluster,$db} by {proxy}) / 1000",
+                      "alias_name": "{{proxy}}"
+                    }
+                  ]
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "ms"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Other Latency By Proxy",
+              "requests": [
+                {
+                  "q": "(avg:rdse2.endpoint_other_requests_latency_histogram{$cluster,$db} by {proxy}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(avg:rdse2.endpoint_other_requests_latency_histogram{$cluster,$db} by {proxy}) / 1000",
+                      "alias_name": "{{proxy}}"
+                    }
+                  ]
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "ms"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "p95 Latencies for Read, Write, and Other Requests",
+              "requests": [
+                {
+                  "q": "(p95:rdse2.endpoint_read_requests_latency_histogram{$cluster,$db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(p95:rdse2.endpoint_read_requests_latency_histogram{$cluster,$db}) / 1000",
+                      "alias_name": "read"
+                    }
+                  ]
+                },
+                {
+                  "q": "(p95:rdse2.endpoint_write_requests_latency_histogram{$cluster,$db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "warm",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(p95:rdse2.endpoint_write_requests_latency_histogram{$cluster,$db}) / 1000",
+                      "alias_name": "write"
+                    }
+                  ]
+                },
+                {
+                  "q": "(p95:rdse2.endpoint_other_requests_latency_histogram{$cluster,$db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(p95:rdse2.endpoint_other_requests_latency_histogram{$cluster,$db}) / 1000",
+                      "alias_name": "other"
+                    }
+                  ]
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "ms"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "CPU Usage",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "p99 Latencies for Read, Write, and Other Requests",
+              "requests": [
+                {
+                  "q": "(p99:rdse2.endpoint_read_requests_latency_histogram{$cluster,$db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(p99:rdse2.endpoint_read_requests_latency_histogram{$cluster,$db}) / 1000",
+                      "alias_name": "read"
+                    }
+                  ]
+                },
+                {
+                  "q": "(p99:rdse2.endpoint_write_requests_latency_histogram{$cluster,$db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "warm",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(p99:rdse2.endpoint_write_requests_latency_histogram{$cluster,$db}) / 1000",
+                      "alias_name": "write"
+                    }
+                  ]
+                },
+                {
+                  "q": "(p99:rdse2.endpoint_other_requests_latency_histogram{$cluster,$db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(p99:rdse2.endpoint_other_requests_latency_histogram{$cluster,$db}) / 1000",
+                      "alias_name": "other"
+                    }
+                  ]
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "ms"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "p99.9 Latencies for Read, Write, and Other Requests",
+              "requests": [
+                {
+                  "q": "(p99.9:rdse2.endpoint_read_requests_latency_histogram{$cluster,$db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(p99.9:rdse2.endpoint_read_requests_latency_histogram{$cluster,$db}) / 1000",
+                      "alias_name": "read"
+                    }
+                  ]
+                },
+                {
+                  "q": "(p99.9:rdse2.endpoint_write_requests_latency_histogram{$cluster,$db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "warm",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(p99.9:rdse2.endpoint_write_requests_latency_histogram{$cluster,$db}) / 1000",
+                      "alias_name": "write"
+                    }
+                  ]
+                },
+                {
+                  "q": "(p99.9:rdse2.endpoint_other_requests_latency_histogram{$cluster,$db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(p99.9:rdse2.endpoint_other_requests_latency_histogram{$cluster,$db}) / 1000",
+                      "alias_name": "other"
+                    }
+                  ]
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "ms"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Total CPU Utilization",
+              "requests": [
+                {
+                  "q": "avg:rdse2.namedprocess_namegroup_cpu_seconds.count{$cluster,$db} by {groupname,mode}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Proxy",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "CPU Usage By Shards ",
+              "requests": [
+                {
+                  "q": "avg:rdse2.namedprocess_namegroup_cpu_seconds.count{$cluster,$db} by {redis,role,mode,node}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Proxy CPU Usage Total ",
+              "requests": [
+                {
+                  "q": "avg:rdse2.namedprocess_namegroup_cpu_seconds.count{$cluster,$db} by {node}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Avg OPS Per Second",
+              "requests": [
+                {
+                  "q": "sum:rdse2.endpoint_other_requests.count{$cluster,$db}.as_rate()",
+                  "aggregator": "last"
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Ingress/Egress",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "OPS Per Second Rate",
+              "requests": [
+                {
+                  "q": "avg:rdse2.endpoint_other_requests.count{$cluster,$db}.as_count()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "#Connections",
+              "requests": [
+                {
+                  "q": "sum:rdse2.endpoint_client_connections{$cluster, $db} - sum:rdse2.endpoint_client_disconnections{$cluster, $db} - sum:rdse2.endpoint_proxy_disconnections{$cluster, $db}",
+                  "aggregator": "last"
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Connection Overview",
+              "requests": [
+                {
+                  "q": "sum:rdse2.endpoint_client_connections{$cluster, $db} - sum:rdse2.endpoint_client_disconnections{$cluster, $db} - sum:rdse2.endpoint_proxy_disconnections{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Cluster",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Proxy CPU Usage User ",
+              "requests": [
+                {
+                  "q": "avg:rdse2.namedprocess_namegroup_cpu_seconds.count{$cluster,mode:user}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Proxy CPU Usage System",
+              "requests": [
+                {
+                  "q": "avg:rdse2.namedprocess_namegroup_cpu_seconds.count{$cluster,mode:system}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Ingress/Egress",
+              "requests": [
+                {
+                  "q": "-sum:rdse2.endpoint_egress.count{$cluster,$db}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                },
+                {
+                  "q": "sum:rdse2.endpoint_ingress.count{$cluster,$db}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Shards latency",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Ingress/Egress By Endpoint",
+              "requests": [
+                {
+                  "q": "-sum:rdse2.endpoint_egress.count{$cluster,$db} by {proxy}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                },
+                {
+                  "q": "sum:rdse2.endpoint_ingress.count{$cluster,$db} by {proxy}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Ingress/Egress By Shards",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_total_net_input_bytes.count{$cluster,$db} by {redis}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                },
+                {
+                  "q": "-sum:rdse2.redis_server_total_net_output_bytes.count{$cluster,$db} by {redis}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Top Databases By Latency In Cluster",
+              "requests": [
+                {
+                  "q": "(avg:rdse2.endpoint_read_requests_latency_histogram{$cluster} by {db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(avg:rdse2.endpoint_read_requests_latency_histogram{$cluster} by {db}) / 1000",
+                      "alias_name": "read"
+                    }
+                  ]
+                },
+                {
+                  "q": "(avg:rdse2.endpoint_write_requests_latency_histogram{$cluster} by {db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "warm",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(avg:rdse2.endpoint_write_requests_latency_histogram{$cluster} by {db}) / 1000",
+                      "alias_name": "write"
+                    }
+                  ]
+                },
+                {
+                  "q": "(avg:rdse2.endpoint_other_requests_latency_histogram{$cluster} by {db}) / 1000",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "cool",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(avg:rdse2.endpoint_other_requests_latency_histogram{$cluster} by {db}) / 1000",
+                      "alias_name": "other"
+                    }
+                  ]
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "scale": "linear",
+                "label": "ms"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "cluster",
+      "prefix": "cluster",
+      "available_values": [],
+      "default": "*"
+    },
+    {
+      "name": "db",
+      "prefix": "db",
+      "available_values": [],
+      "default": "*"
+    }
+  ],
+  "layout_type": "ordered",
+  "notify_list": []
+}

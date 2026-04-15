@@ -1,0 +1,1682 @@
+{
+  "title": "Redis Enterprise - Database Dashboard",
+  "description": "Database performance monitoring for Redis Enterprise. Ported from Grafana v2 ops dashboards.",
+  "widgets": [
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Overview",
+        "widgets": [
+          {
+            "definition": {
+              "type": "toplist",
+              "requests": [
+                {
+                  "q": "sum:rdse2.db_config{$cluster, $db} by {db_name}"
+                }
+              ],
+              "title": "Name",
+              "style": {
+                "palette": "dog_classic"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "toplist",
+              "requests": [
+                {
+                  "q": "sum:rdse2.db_config{$cluster, $db} by {db_version}"
+                }
+              ],
+              "title": "Redis Version",
+              "style": {
+                "palette": "dog_classic"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "sum:rdse2.endpoint_client_connections{$cluster, $db} - sum:rdse2.endpoint_client_disconnections{$cluster, $db} - sum:rdse2.endpoint_proxy_disconnections{$cluster, $db}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    }
+                  ]
+                }
+              ],
+              "title": "#Connections",
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_db_keys{role:master, $cluster, $db}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    }
+                  ]
+                }
+              ],
+              "title": "#Keys",
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_table",
+              "requests": [
+                {
+                  "q": "top(sum:rdse2.redis_server_up{$cluster, role:master, $db} by {redis, slots, node, status}, 1, 'mean', 'desc')",
+                  "aggregator": "last"
+                }
+              ],
+              "title": "Primary Shard Mapping"
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "sum:rdse2.db_status{$cluster, $db}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    }
+                  ]
+                }
+              ],
+              "title": "Status",
+              "autoscale": true,
+              "precision": 2,
+              "custom_unit": ""
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Keyspace",
+        "widgets": [
+          {
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "count:rdse2.endpoint_read_requests.count{$cluster, $db}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    }
+                  ]
+                }
+              ],
+              "title": "#Endpoints",
+              "autoscale": true,
+              "precision": 2,
+              "custom_unit": ""
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "count:rdse2.redis_server_up{$cluster, $db}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    }
+                  ]
+                }
+              ],
+              "title": "#Shards",
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "write"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "write"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.endpoint_read_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.endpoint_read_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "read"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.endpoint_other_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.endpoint_other_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "other"
+                    }
+                  ]
+                }
+              ],
+              "title": "Avg Database Requests Latency ",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "write"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "write"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.endpoint_read_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.endpoint_read_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "read"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.endpoint_other_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.endpoint_other_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "other"
+                    }
+                  ]
+                }
+              ],
+              "title": "Avg Endpoint Requests Latency ",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Latency",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_used_memory{$cluster, $db, role:master}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_used_memory{$cluster, $db, role:master}",
+                      "alias_name": "used memory"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.redis_server_current_cow_size{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_current_cow_size{$cluster, $db}",
+                      "alias_name": "cow size"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.namedprocess_namegroup_memory_bytes{$cluster, $db, memtype:resident}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.namedprocess_namegroup_memory_bytes{$cluster, $db, memtype:resident}",
+                      "alias_name": "resident mem"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.db_memory_limit_bytes{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.db_memory_limit_bytes{$cluster, $db}",
+                      "alias_name": "db memory limit"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.db_memory_limit_bytes{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.db_memory_limit_bytes{$cluster, $db}",
+                      "alias_name": "memory limit guard"
+                    }
+                  ]
+                }
+              ],
+              "title": "Memory Utilization",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "label": "Bytes"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:rdse2.endpoint_read_requests.count{$cluster, $db}.as_count()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.endpoint_read_requests.count{$cluster, $db}.as_count()",
+                      "alias_name": "read"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.endpoint_write_requests.count{$cluster, $db}.as_count()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.endpoint_write_requests.count{$cluster, $db}.as_count()",
+                      "alias_name": "write"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.endpoint_other_requests.count{$cluster, $db}.as_count()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.endpoint_other_requests.count{$cluster, $db}.as_count()",
+                      "alias_name": "other"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.endpoint_read_requests.count{$cluster, $db}.as_count()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.endpoint_read_requests.count{$cluster, $db}.as_count()",
+                      "alias_name": "total read proxy"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.endpoint_write_requests.count{$cluster, $db}.as_count()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.endpoint_write_requests.count{$cluster, $db}.as_count()",
+                      "alias_name": "total write proxy"
+                    }
+                  ]
+                }
+              ],
+              "title": "Requests[total,read,write,other] ",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "rdse2.redis_server_instantaneous_ops_per_sec{$db, $cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "rdse2.redis_server_instantaneous_ops_per_sec{$db, $cluster}",
+                      "alias_name": "node: {{node}},  redis: {{redis}}, role: {{role}},  slots: {{slots}} "
+                    }
+                  ]
+                }
+              ],
+              "title": "Real-Time Ops Per Second (Instantaneous)",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:rdse2.endpoint_egress.count{$cluster, $db}.as_count()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.endpoint_egress.count{$cluster, $db}.as_count()",
+                      "alias_name": "endpoint egress"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.endpoint_ingress.count{$cluster, $db}.as_count()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.endpoint_ingress.count{$cluster, $db}.as_count()",
+                      "alias_name": "endpoint ingress"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.redis_server_total_net_input_bytes{$cluster, $db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_total_net_input_bytes{$cluster, $db, role:master}.as_rate()",
+                      "alias_name": "redis net input"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.redis_server_total_net_output_bytes{$cluster, $db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_total_net_output_bytes{$cluster, $db, role:master}.as_rate()",
+                      "alias_name": "redis net output"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.redis_server_master_repl_offset{$cluster, $db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_master_repl_offset{$cluster, $db, role:master}.as_rate()",
+                      "alias_name": "repl offset"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.redis_server_repl_touch_bytes{$cluster, $db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_repl_touch_bytes{$cluster, $db, role:master}.as_rate()",
+                      "alias_name": "repl touch"
+                    }
+                  ]
+                }
+              ],
+              "title": "Endpoint Ingress/Egress",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+    {
+      "q": "sum:rdse2.endpoint_client_connections{$cluster, $db} - sum:rdse2.endpoint_client_disconnections{$cluster, $db} - sum:rdse2.endpoint_proxy_disconnections{$cluster, $db}",
+      "display_type": "line",
+      "style": {
+        "palette": "dog_classic",
+        "line_type": "solid",
+        "line_width": "normal"
+      },
+      "metadata": [
+        {
+          "expression": "sum:rdse2.endpoint_client_connections{$cluster, $db} - sum:rdse2.endpoint_client_disconnections{$cluster, $db} - sum:rdse2.endpoint_proxy_disconnections{$cluster, $db}",
+          "alias_name": "active connections"
+        }
+      ]
+    },
+    {
+      "q": "sum:rdse2.endpoint_client_connections{$cluster, $db}.as_rate()",
+      "display_type": "line",
+      "style": {
+        "palette": "dog_classic",
+        "line_type": "solid",
+        "line_width": "normal"
+      },
+      "metadata": [
+        {
+          "expression": "sum:rdse2.endpoint_client_connections{$cluster, $db}.as_rate()",
+          "alias_name": "new connections / sec"
+        }
+      ]
+    },
+    {
+      "q": "sum:rdse2.endpoint_client_disconnections{$cluster, $db}.as_rate()",
+      "display_type": "line",
+      "style": {
+        "palette": "dog_classic",
+        "line_type": "solid",
+        "line_width": "normal"
+      },
+      "metadata": [
+        {
+          "expression": "sum:rdse2.endpoint_client_disconnections{$cluster, $db}.as_rate()",
+          "alias_name": "client disconnections / sec"
+        }
+      ]
+    },
+    {
+      "q": "sum:rdse2.endpoint_proxy_disconnections{$cluster, $db}.as_rate()",
+      "display_type": "line",
+      "style": {
+        "palette": "dog_classic",
+        "line_type": "solid",
+        "line_width": "normal"
+      },
+      "metadata": [
+        {
+          "expression": "sum:rdse2.endpoint_proxy_disconnections{$cluster, $db}.as_rate()",
+          "alias_name": "proxy disconnections / sec"
+        }
+      ]
+    }
+              ],
+              "title": "Connection Overview",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Connectivity ",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:rdse2.namedprocess_namegroup_cpu_seconds.count{$cluster, $db, mode:user}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.namedprocess_namegroup_cpu_seconds.count{$cluster, $db, mode:user}.as_rate()",
+                      "alias_name": "user cpu"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.namedprocess_namegroup_cpu_seconds.count{$cluster, $db, mode:system}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.namedprocess_namegroup_cpu_seconds.count{$cluster, $db, mode:system}.as_rate()",
+                      "alias_name": "system cpu"
+                    }
+                  ]
+                }
+              ],
+              "title": "CPU Usage Per  Shards",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:rdse2.redis_server_used_memory{$cluster, $db} by {redis}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.redis_server_used_memory{$cluster, $db} by {redis}",
+                      "alias_name": "used memory"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.redis_server_current_cow_size{$cluster, $db} by {redis}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.redis_server_current_cow_size{$cluster, $db} by {redis}",
+                      "alias_name": "cow size"
+                    }
+                  ]
+                }
+              ],
+              "title": "Memory Utilization Per Shard",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "label": "Bytes"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "query_table",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_strings_sizes_under_128M{role:master, $db, $cluster}",
+                  "aggregator": "last"
+                },
+                {
+                  "q": "sum:rdse2.redis_server_hashes_items_under_1M{role:master, $db, $cluster}",
+                  "aggregator": "last"
+                },
+                {
+                  "q": "sum:rdse2.redis_server_hashes_items_1M_to_8M{role:master, $db, $cluster}",
+                  "aggregator": "last"
+                },
+                {
+                  "q": "sum:rdse2.redis_server_hashes_items_over_8M{role:master, $db, $cluster}",
+                  "aggregator": "last"
+                },
+                {
+                  "q": "sum:rdse2.redis_server_lists_items_under_1M{role:master, $db, $cluster}",
+                  "aggregator": "last"
+                },
+                {
+                  "q": "sum:rdse2.redis_server_lists_items_1M_to_8M{role:master, $db, $cluster}",
+                  "aggregator": "last"
+                },
+                {
+                  "q": "sum:rdse2.redis_server_lists_items_over_8M{role:master, $db, $cluster}",
+                  "aggregator": "last"
+                },
+                {
+                  "q": "sum:rdse2.redis_server_sets_items_under_1M{role:master, $db, $cluster}",
+                  "aggregator": "last"
+                },
+                {
+                  "q": "sum:rdse2.redis_server_sets_items_1M_to_8M{role:master, $db, $cluster}",
+                  "aggregator": "last"
+                },
+                {
+                  "q": "sum:rdse2.redis_server_sets_items_over_8M{role:master, $db, $cluster}",
+                  "aggregator": "last"
+                },
+                {
+                  "q": "sum:rdse2.redis_server_zsets_items_under_1M{role:master, $db, $cluster}",
+                  "aggregator": "last"
+                },
+                {
+                  "q": "sum:rdse2.redis_server_zsets_items_1M_to_8M{role:master, $db, $cluster}",
+                  "aggregator": "last"
+                },
+                {
+                  "q": "sum:rdse2.redis_server_zsets_items_over_8M{role:master, $db, $cluster}",
+                  "aggregator": "last"
+                }
+              ],
+              "title": "Key Size Distribution (Bar Gauge)"
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:rdse2.redis_server_db_keys{$cluster, $db} by {redis}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.redis_server_db_keys{$cluster, $db} by {redis}",
+                      "alias_name": "keys"
+                    }
+                  ]
+                }
+              ],
+              "title": "#Keys Per Shard",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_db_keys{role:master, $cluster, $db}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    }
+                  ]
+                }
+              ],
+              "title": "#Keys",
+              "autoscale": true,
+              "precision": 0
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_expired_keys{$cluster, $db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_expired_keys{$cluster, $db, role:master}.as_rate()",
+                      "alias_name": "expired"
+                    }
+                  ]
+                }
+              ],
+              "title": "Expired Objects",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_evicted_keys{$cluster, $db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_evicted_keys{$cluster, $db, role:master}.as_rate()",
+                      "alias_name": "evicted"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.redis_server_keys_trimmed{$cluster, $db}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_keys_trimmed{$cluster, $db}.as_rate()",
+                      "alias_name": "trimmed"
+                    }
+                  ]
+                }
+              ],
+              "title": "Evicted Objects",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Memory ",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "p99.9:rdse2.endpoint_read_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "p99.9:rdse2.endpoint_read_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "Read"
+                    }
+                  ]
+                },
+                {
+                  "q": "p99.9:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "p99.9:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "Write"
+                    }
+                  ]
+                },
+                {
+                  "q": "p99.9:rdse2.endpoint_other_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "p99.9:rdse2.endpoint_other_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "Other"
+                    }
+                  ]
+                }
+              ],
+              "title": "p99.9 Latency (\u00b5s) Over Time [read, write, other requests]",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "p90:rdse2.endpoint_read_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "p90:rdse2.endpoint_read_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "Read"
+                    }
+                  ]
+                },
+                {
+                  "q": "p90:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "p90:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "Write"
+                    }
+                  ]
+                },
+                {
+                  "q": "p90:rdse2.endpoint_other_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "p90:rdse2.endpoint_other_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "Other"
+                    }
+                  ]
+                }
+              ],
+              "title": "p99 Latency (\u00b5s) Over Time [read, write, other requests]",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "p50:rdse2.endpoint_read_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "p50:rdse2.endpoint_read_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "Read"
+                    }
+                  ]
+                },
+                {
+                  "q": "p50:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "p50:rdse2.endpoint_write_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "Write"
+                    }
+                  ]
+                },
+                {
+                  "q": "p50:rdse2.endpoint_other_requests_latency_histogram{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "p50:rdse2.endpoint_other_requests_latency_histogram{$cluster, $db}",
+                      "alias_name": "Other"
+                    }
+                  ]
+                }
+              ],
+              "title": "p50 Latency (\u00b5s) Over Time [read, write, other requests]",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:rdse2.redis_server_connected_clients{$cluster, $db, role:master}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.redis_server_connected_clients{$cluster, $db, role:master}",
+                      "alias_name": "connected clients"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.redis_server_maxclients{$cluster, $db, role:master}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.redis_server_maxclients{$cluster, $db, role:master}",
+                      "alias_name": "max clients"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.endpoint_client_connections{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.endpoint_client_connections{$cluster, $db}",
+                      "alias_name": "endpoint connections"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.endpoint_client_disconnections{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.endpoint_client_disconnections{$cluster, $db}",
+                      "alias_name": "endpoint disconnections"
+                    }
+                  ]
+                }
+              ],
+              "title": "Connections Per (master) Shard",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_keyspace_read_hits{$db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_keyspace_read_hits{$db, role:master}.as_rate()",
+                      "alias_name": "read hits"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.redis_server_keyspace_read_misses{$db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_keyspace_read_misses{$db, role:master}.as_rate()",
+                      "alias_name": "read misses"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.redis_server_keyspace_write_hits{$db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_keyspace_write_hits{$db, role:master}.as_rate()",
+                      "alias_name": "write hits"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.redis_server_keyspace_write_misses{$db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_keyspace_write_misses{$db, role:master}.as_rate()",
+                      "alias_name": "write misses"
+                    }
+                  ]
+                }
+              ],
+              "title": "Hit Ratio (hits / requests)",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "label": "Percent",
+                "max": "100"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_keyspace_read_misses{$cluster, $db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_keyspace_read_misses{$cluster, $db, role:master}.as_rate()",
+                      "alias_name": "read misses"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.redis_server_keyspace_write_misses{$cluster, $db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_keyspace_write_misses{$cluster, $db, role:master}.as_rate()",
+                      "alias_name": "write misses"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.redis_server_keyspace_read_hits{$cluster, $db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_keyspace_read_hits{$cluster, $db, role:master}.as_rate()",
+                      "alias_name": "read hits"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.redis_server_keyspace_write_hits{$cluster, $db, role:master}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_keyspace_write_hits{$cluster, $db, role:master}.as_rate()",
+                      "alias_name": "write hits"
+                    }
+                  ]
+                }
+              ],
+              "title": "Read/Write Hits / Misses  + Lazyfree + Errors",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_blocked_clients{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_blocked_clients{$cluster, $db}",
+                      "alias_name": "blocked clients"
+                    }
+                  ]
+                }
+              ],
+              "title": "Blocked Clients",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Replication",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "rdse2.redis_server_mem_fragmentation_ratio{$db, $cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "rdse2.redis_server_mem_fragmentation_ratio{$db, $cluster}",
+                      "alias_name": "Redis {{redis}} ({{role}})"
+                    }
+                  ]
+                }
+              ],
+              "title": "Shard RSS Fragmentation",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "label": "Percent",
+                "max": "100"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "max:rdse2.redis_server_master_repl_offset{$cluster, $db, role:master}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "max:rdse2.redis_server_master_repl_offset{$cluster, $db, role:master}",
+                      "alias_name": "master repl offset"
+                    }
+                  ]
+                },
+                {
+                  "q": "max:rdse2.redis_server_slave_offset{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "max:rdse2.redis_server_slave_offset{$cluster, $db}",
+                      "alias_name": "replica offset"
+                    }
+                  ]
+                }
+              ],
+              "title": "Replication Offset Difference (Primary vs. Replica)",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Persistency",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_mem_aof_buffer{$cluster, $db}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_mem_aof_buffer{$cluster, $db}",
+                      "alias_name": "aof buffer"
+                    }
+                  ]
+                }
+              ],
+              "title": "AOF To Replica/Primary Lag Monitoring ",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "cluster",
+      "prefix": "cluster",
+      "available_values": [],
+      "default": "*"
+    },
+    {
+      "name": "db",
+      "prefix": "db",
+      "available_values": [],
+      "default": "*"
+    }
+  ],
+  "layout_type": "ordered",
+  "notify_list": []
+}

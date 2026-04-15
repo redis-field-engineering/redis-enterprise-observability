@@ -1,0 +1,1559 @@
+{
+  "name": "Redis Enterprise - RediSearch QPS Dashboard",
+  "description": "New Relic implementation of the validated Redis Enterprise RediSearch QPS dashboard.",
+  "permissions": "PUBLIC_READ_WRITE",
+  "pages": [
+    {
+      "name": "QPS Dashboard",
+      "description": null,
+      "widgets": [
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 1,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "# Redis Enterprise RediSearch QPS Dashboard\n\nNew Relic implementation of the validated Redis Enterprise RediSearch QPS dashboard. Filter by `cluster` and `db`."
+          }
+        },
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 2,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "## General"
+          }
+        },
+        {
+          "title": "Number of indexes",
+          "layout": {
+            "column": 1,
+            "row": 3,
+            "width": 3,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_number_of_indexes) AS 'indexes' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Fields count",
+          "layout": {
+            "column": 4,
+            "row": 3,
+            "width": 5,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_fields_text_Text) AS 'text' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_fields_tag_Tag) AS 'tag' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_fields_numeric_Numeric) AS 'numeric' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_fields_geo_Geo) AS 'geo' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_fields_vector_Vector) AS 'vector' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Active indexes",
+          "layout": {
+            "column": 9,
+            "row": 3,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_number_of_active_indexes) AS 'active indexes' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Active indexes running queries",
+          "layout": {
+            "column": 11,
+            "row": 3,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_number_of_active_indexes_running_queries) AS 'active indexes running queries' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 6,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "## Current State"
+          }
+        },
+        {
+          "title": "Active indexes indexing",
+          "layout": {
+            "column": 1,
+            "row": 7,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_number_of_active_indexes_indexing) AS 'active indexes indexing' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Total Indexes memory",
+          "layout": {
+            "column": 5,
+            "row": 7,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_used_memory_indexes) AS 'index memory' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "Max memory index",
+          "layout": {
+            "column": 9,
+            "row": 7,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_largest_memory_index) AS 'largest index memory' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "Average memory per index",
+          "layout": {
+            "column": 1,
+            "row": 10,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_used_memory_indexes) / average(redis_server_search_number_of_indexes) AS 'avg memory per index' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "Active queries",
+          "layout": {
+            "column": 7,
+            "row": 10,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_total_active_queries) AS 'avg active queries' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_total_active_queries) AS 'active queries' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 13,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "## Performance"
+          }
+        },
+        {
+          "title": "Total indexing time",
+          "layout": {
+            "column": 1,
+            "row": 14,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_total_indexing_time) AS 'total indexing time' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Indexing time rate",
+          "layout": {
+            "column": 5,
+            "row": 14,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_search_total_indexing_time) - min(redis_server_search_total_indexing_time)) / 60 AS 'indexing time/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Processed queries server latency",
+          "layout": {
+            "column": 9,
+            "row": 14,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_total_query_execution_time_ms) AS 'query latency ms' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "MS"
+            }
+          }
+        },
+        {
+          "title": "Query commands server latency",
+          "layout": {
+            "column": 1,
+            "row": 17,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_total_query_execution_time_ms) AS 'query latency ms' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_search_total_query_execution_time_ms) - min(redis_server_search_total_query_execution_time_ms)) / 60 AS 'query execution time delta' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "MS"
+            }
+          }
+        },
+        {
+          "title": "QPS (processed queries)",
+          "layout": {
+            "column": 5,
+            "row": 17,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_search_total_queries_processed) - min(redis_server_search_total_queries_processed)) / 60 AS 'processed queries/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "QPS (query commands)",
+          "layout": {
+            "column": 9,
+            "row": 17,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_search_total_query_commands) - min(redis_server_search_total_query_commands)) / 60 AS 'query commands/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 20,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "## Cursors / Errors"
+          }
+        },
+        {
+          "title": "Total cursors",
+          "layout": {
+            "column": 1,
+            "row": 21,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_global_total_user) AS 'user cursors' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_global_total_internal) AS 'internal cursors' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Idle cursors",
+          "layout": {
+            "column": 5,
+            "row": 21,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_global_idle_user) AS 'idle user cursors' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_global_idle_internal) AS 'idle internal cursors' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Indexing failures",
+          "layout": {
+            "column": 9,
+            "row": 21,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_errors_indexing_failures) AS 'indexing failures' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Max indexing failures",
+          "layout": {
+            "column": 1,
+            "row": 24,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_errors_for_index_with_max_failures) AS 'max failures' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Per field Indexing failures",
+          "layout": {
+            "column": 5,
+            "row": 24,
+            "width": 8,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_fields_text_IndexErrors) AS 'text errors' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_fields_tag_IndexErrors) AS 'tag errors' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_fields_numeric_IndexErrors) AS 'numeric errors' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_fields_geo_IndexErrors) AS 'geo errors' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_fields_vector_IndexErrors) AS 'vector errors' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 27,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "## Garbage Collector"
+          }
+        },
+        {
+          "title": "Total memory collected",
+          "layout": {
+            "column": 1,
+            "row": 28,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_gc_bytes_collected) AS 'gc bytes collected' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "Average memory collected / cycle",
+          "layout": {
+            "column": 5,
+            "row": 28,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_gc_bytes_collected) AS 'avg gc bytes / cycle' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "Average gc cycle duration",
+          "layout": {
+            "column": 9,
+            "row": 28,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_gc_total_ms_run) AS 'gc duration ms' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "MS"
+            }
+          }
+        },
+        {
+          "title": "Total marked deleted vectors",
+          "layout": {
+            "column": 1,
+            "row": 31,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_search_gc_marked_deleted_vectors) AS 'deleted vectors' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Vector indexes count",
+          "layout": {
+            "column": 5,
+            "row": 31,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT average(redis_server_search_fields_vector_HNSW) AS 'hnsw' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "cluster",
+      "items": null,
+      "defaultValues": [
+        {
+          "value": {
+            "string": "*"
+          }
+        }
+      ],
+      "nrqlQuery": {
+        "accountIds": [
+          0
+        ],
+        "query": "FROM Metric SELECT uniques(cluster) WHERE metricName = 'redis_server_search_number_of_indexes' SINCE 30 minutes ago"
+      },
+      "options": {
+        "hiddenOnVariablesBar": false,
+        "ignoreTimeRange": true,
+        "excluded": false,
+        "showApplyAction": true
+      },
+      "title": "Cluster",
+      "type": "NRQL",
+      "isMultiSelection": true,
+      "replacementStrategy": "STRING"
+    },
+    {
+      "name": "db",
+      "items": null,
+      "defaultValues": [
+        {
+          "value": {
+            "string": "*"
+          }
+        }
+      ],
+      "nrqlQuery": {
+        "accountIds": [
+          0
+        ],
+        "query": "FROM Metric SELECT uniques(db) WHERE metricName = 'redis_server_search_number_of_indexes' AND cluster IN ({{cluster}}) SINCE 30 minutes ago"
+      },
+      "options": {
+        "hiddenOnVariablesBar": false,
+        "ignoreTimeRange": true,
+        "excluded": false,
+        "showApplyAction": false
+      },
+      "title": "Database",
+      "type": "NRQL",
+      "isMultiSelection": true,
+      "replacementStrategy": "STRING"
+    }
+  ]
+}

@@ -1,0 +1,1444 @@
+{
+  "name": "Redis Enterprise - Cluster Dashboard",
+  "description": "New Relic implementation of the validated Redis Enterprise cluster operations dashboard.",
+  "permissions": "PUBLIC_READ_WRITE",
+  "pages": [
+    {
+      "name": "Cluster Dashboard",
+      "description": null,
+      "widgets": [
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 1,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "# Redis Enterprise Cluster Dashboard\n\nNew Relic implementation of the validated Redis Enterprise cluster operations dashboard. Filter by `cluster`."
+          }
+        },
+        {
+          "title": "Name",
+          "layout": {
+            "column": 1,
+            "row": 2,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.table"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT uniques(cluster) WHERE metricName = 'node_metrics_up' AND cluster IN ({{cluster}}) SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Status",
+          "layout": {
+            "column": 3,
+            "row": 2,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT uniqueCount(node) AS 'status' WHERE metricName = 'node_metrics_up' AND cluster IN ({{cluster}}) SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Cluster has quorum?",
+          "layout": {
+            "column": 5,
+            "row": 2,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT max(has_quorum) AS 'quorum' WHERE cluster IN ({{cluster}}) SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "#Shards",
+          "layout": {
+            "column": 7,
+            "row": 2,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT uniqueCount(redis) AS 'shards' WHERE metricName = 'redis_server_used_memory' AND cluster IN ({{cluster}}) SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "#Master Shards",
+          "layout": {
+            "column": 9,
+            "row": 2,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT uniqueCount(redis) AS 'master shards' WHERE metricName = 'redis_server_used_memory' AND role = 'master' AND cluster IN ({{cluster}}) SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "License",
+          "layout": {
+            "column": 11,
+            "row": 2,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(license_shards_limit) - uniqueCount(redis) AS 'license headroom' WHERE cluster IN ({{cluster}}) SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "OS version",
+          "layout": {
+            "column": 1,
+            "row": 5,
+            "width": 3,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.table"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT uniques(pretty_name) WHERE metricName = 'node_os_info' AND cluster IN ({{cluster}}) SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Enterprise Version",
+          "layout": {
+            "column": 4,
+            "row": 5,
+            "width": 3,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.table"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT uniques(rs_version) WHERE metricName = 'node_config' AND cluster IN ({{cluster}}) SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "# Nodes",
+          "layout": {
+            "column": 7,
+            "row": 5,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT uniqueCount(node) AS 'nodes' WHERE metricName = 'node_metrics_up' AND cluster IN ({{cluster}}) SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "# Databases",
+          "layout": {
+            "column": 9,
+            "row": 5,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT uniqueCount(db) AS 'databases' WHERE metricName = 'db_config' AND cluster IN ({{cluster}}) SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Grow Over Minute (Over 100MiB)",
+          "layout": {
+            "column": 11,
+            "row": 5,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_used_memory) - min(redis_server_used_memory)) / 60 AS 'growth bytes/sec' WHERE cluster IN ({{cluster}}) FACET db LIMIT MAX TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES_PER_SECOND"
+            }
+          }
+        },
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 8,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "## Storage"
+          }
+        },
+        {
+          "title": "Cluster Master",
+          "layout": {
+            "column": 1,
+            "row": 9,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(is_primary) AS 'is primary' WHERE cluster IN ({{cluster}}) FACET node TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Used Memory",
+          "layout": {
+            "column": 5,
+            "row": 9,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_used_memory) AS 'used memory' WHERE cluster IN ({{cluster}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(node_available_memory_bytes) AS 'available memory' WHERE cluster IN ({{cluster}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(node_provisional_memory_bytes) AS 'provisional memory' WHERE cluster IN ({{cluster}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(node_provisional_memory_no_overbooking_bytes) AS 'provisional memory no overbooking' WHERE cluster IN ({{cluster}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "Total Databases Count Over Time",
+          "layout": {
+            "column": 9,
+            "row": 9,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(db_status) AS 'database count' WHERE cluster IN ({{cluster}}) FACET db TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Top 10 Memory Per Database",
+          "layout": {
+            "column": 1,
+            "row": 12,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_used_memory) AS 'used memory' WHERE role = 'master' AND cluster IN ({{cluster}}) FACET db LIMIT 10 TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "Memory Load Over Time",
+          "layout": {
+            "column": 7,
+            "row": 12,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (sum(redis_server_used_memory) / sum(db_memory_limit_bytes)) * 100 AS 'memory load %' WHERE cluster IN ({{cluster}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "PERCENTAGE"
+            }
+          }
+        },
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 15,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "## Databases Traffic"
+          }
+        },
+        {
+          "title": "Active - Allocated (Defraggable)",
+          "layout": {
+            "column": 1,
+            "row": 16,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_allocator_active) - latest(redis_server_allocator_allocated) AS 'defraggable' WHERE cluster IN ({{cluster}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "Total Shards Memory",
+          "layout": {
+            "column": 5,
+            "row": 16,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_used_memory) AS 'total shard memory' WHERE cluster IN ({{cluster}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "Available Memory per node",
+          "layout": {
+            "column": 9,
+            "row": 16,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(node_available_memory_bytes) AS 'available memory' WHERE cluster IN ({{cluster}}) FACET node TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "CPU Usage by Node",
+          "layout": {
+            "column": 1,
+            "row": 19,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (1 - average(node_cpu_seconds_total)) * 100 AS 'total CPU utilization' WHERE mode = 'idle' AND cluster IN ({{cluster}}) FACET node TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT ((max(node_cpu_seconds_total) - min(node_cpu_seconds_total)) / 60) * 100 AS 'iowait' WHERE mode = 'iowait' AND cluster IN ({{cluster}}) FACET node TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT ((max(node_cpu_seconds_total) - min(node_cpu_seconds_total)) / 60) * 100 AS 'nice' WHERE mode = 'nice' AND cluster IN ({{cluster}}) FACET node TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "PERCENTAGE"
+            }
+          }
+        },
+        {
+          "title": "Disk Usage by Mount (%)",
+          "layout": {
+            "column": 7,
+            "row": 19,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (1 - (latest(node_filesystem_avail_bytes) / latest(node_filesystem_size_bytes))) * 100 AS 'disk usage %' WHERE cluster IN ({{cluster}}) FACET mountpoint, node TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "PERCENTAGE"
+            }
+          }
+        },
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 22,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "## Latency / Traffic"
+          }
+        },
+        {
+          "title": "Top 10 Read and Write Requests Latency (P99)",
+          "layout": {
+            "column": 1,
+            "row": 23,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT bucketPercentile(endpoint_read_requests_latency_histogram_bucket, 99) / 1000 AS 'read p99 ms' WHERE cluster IN ({{cluster}}) FACET db LIMIT 10 TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT bucketPercentile(endpoint_write_requests_latency_histogram_bucket, 99) / 1000 AS 'write p99 ms' WHERE cluster IN ({{cluster}}) FACET db LIMIT 10 TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "MS"
+            }
+          }
+        },
+        {
+          "title": "Top 10 Read and Write Requests Latency (P95)",
+          "layout": {
+            "column": 5,
+            "row": 23,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT bucketPercentile(endpoint_read_requests_latency_histogram_bucket, 95) / 1000 AS 'read p95 ms' WHERE cluster IN ({{cluster}}) FACET db LIMIT 10 TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT bucketPercentile(endpoint_write_requests_latency_histogram_bucket, 95) / 1000 AS 'write p95 ms' WHERE cluster IN ({{cluster}}) FACET db LIMIT 10 TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "MS"
+            }
+          }
+        },
+        {
+          "title": "Top 10 Used Connections By Database (All Nodes)",
+          "layout": {
+            "column": 9,
+            "row": 23,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM (FROM Metric SELECT latest(endpoint_client_connections) AS connections, latest(endpoint_client_disconnections) AS client_disconnections, latest(endpoint_proxy_disconnections) AS proxy_disconnections WHERE cluster IN ({{cluster}}) FACET db TIMESERIES 1 minute LIMIT 10) SELECT sum(connections) - sum(client_disconnections) - sum(proxy_disconnections) AS 'used connections' FACET db TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Top 10 Active Listeners By Requests (Read/Write/Other)",
+          "layout": {
+            "column": 1,
+            "row": 26,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(endpoint_read_requests) - min(endpoint_read_requests)) / 60 AS 'read req/sec' WHERE cluster IN ({{cluster}}) FACET proxy LIMIT 10 TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(endpoint_write_requests) - min(endpoint_write_requests)) / 60 AS 'write req/sec' WHERE cluster IN ({{cluster}}) FACET proxy LIMIT 10 TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(endpoint_other_requests) - min(endpoint_other_requests)) / 60 AS 'other req/sec' WHERE cluster IN ({{cluster}}) FACET proxy LIMIT 10 TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Total Traffic",
+          "layout": {
+            "column": 7,
+            "row": 26,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(endpoint_ingress) - min(endpoint_ingress)) / 60 AS 'endpoint ingress' WHERE cluster IN ({{cluster}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(endpoint_egress) - min(endpoint_egress)) / 60 AS 'endpoint egress' WHERE cluster IN ({{cluster}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES_PER_SECOND"
+            }
+          }
+        },
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 29,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "## Certificate / Node Memory"
+          }
+        },
+        {
+          "title": "Used Mem By Redis By Node",
+          "layout": {
+            "column": 1,
+            "row": 30,
+            "width": 8,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_used_memory) AS 'used memory' WHERE cluster IN ({{cluster}}) FACET node, db, redis TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "Certificate Expiration (Days)",
+          "layout": {
+            "column": 9,
+            "row": 30,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(node_cert_expires_in_seconds) / 86400 AS 'days to expiry' WHERE cluster IN ({{cluster}}) FACET node, issuer TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "cluster",
+      "items": null,
+      "defaultValues": [
+        {
+          "value": {
+            "string": "*"
+          }
+        }
+      ],
+      "nrqlQuery": {
+        "accountIds": [
+          0
+        ],
+        "query": "FROM Metric SELECT uniques(cluster) WHERE metricName = 'node_metrics_up' SINCE 30 minutes ago"
+      },
+      "options": {
+        "hiddenOnVariablesBar": false,
+        "ignoreTimeRange": true,
+        "excluded": false,
+        "showApplyAction": true
+      },
+      "title": "Cluster",
+      "type": "NRQL",
+      "isMultiSelection": true,
+      "replacementStrategy": "STRING"
+    }
+  ]
+}

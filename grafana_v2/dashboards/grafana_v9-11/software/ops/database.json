@@ -3163,7 +3163,7 @@
               "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
-            "expr": "histogram_quantile(0.90, sum(rate(endpoint_read_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
+            "expr": "histogram_quantile(0.99, sum(rate(endpoint_read_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
             "format": "time_series",
             "legendFormat": "Read",
             "range": true,
@@ -3187,7 +3187,7 @@
               "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
-            "expr": "histogram_quantile(0.90, sum(rate(endpoint_other_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
+            "expr": "histogram_quantile(0.99, sum(rate(endpoint_other_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
             "hide": false,
             "legendFormat": "Other",
             "range": true,

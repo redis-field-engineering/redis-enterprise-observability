@@ -1,0 +1,990 @@
+{
+  "title": "Redis Enterprise - Cluster Dashboard",
+  "description": "Cluster health and performance monitoring for Redis Enterprise. Ported from Grafana v2 ops dashboards.",
+  "widgets": [
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Overview",
+        "widgets": [
+          {
+            "definition": {
+              "type": "toplist",
+              "requests": [
+                {
+                  "q": "sum:rdse2.node_metrics_up{$cluster} by {cluster}"
+                }
+              ],
+              "title": "Name",
+              "style": {
+                "palette": "dog_classic"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "count_nonzero(rdse2.node_metrics_up{$cluster})",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    }
+                  ]
+                }
+              ],
+              "title": "Status",
+              "autoscale": true,
+              "precision": 0,
+              "custom_unit": ""
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "max:rdse2.has_quorum{$cluster}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                    {
+                      "comparator": "<",
+                      "value": 1,
+                      "palette": "white_on_red"
+                    },
+                    {
+                      "comparator": ">=",
+                      "value": 1,
+                      "palette": "white_on_green"
+                    }
+                  ]
+                }
+              ],
+              "title": "Cluster has quorum?",
+              "autoscale": true,
+              "precision": 0
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "count:rdse2.redis_server_used_memory{$cluster}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    }
+                  ]
+                }
+              ],
+              "title": "#Shards",
+              "autoscale": true,
+              "precision": 0,
+              "custom_unit": ""
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "count:rdse2.redis_server_used_memory{$cluster, role:master}",
+                  "aggregator": "last"
+                }
+              ],
+              "title": "#Master Shards",
+              "autoscale": true,
+              "precision": 0,
+              "custom_unit": ""
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "sum:rdse2.license_shards_limit{$cluster} - count:rdse2.redis_server_used_memory{$cluster}",
+                  "aggregator": "last"
+                }
+              ],
+              "title": "License ",
+              "autoscale": true,
+              "precision": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Versions and Counts",
+        "widgets": [
+          {
+            "definition": {
+              "type": "toplist",
+              "requests": [
+                {
+                  "q": "sum:rdse2.node_os_info{$cluster} by {id}"
+                }
+              ],
+              "title": "OS version",
+              "style": {
+                "palette": "dog_classic"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "toplist",
+              "requests": [
+                {
+                  "q": "sum:rdse2.node_config{$cluster} by {cluster,rs_version}"
+                }
+              ],
+              "title": "Enterprise Version",
+              "style": {
+                "palette": "dog_classic"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "count:rdse2.node_metrics_up{$cluster}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    }
+                  ]
+                }
+              ],
+              "title": "# Nodes",
+              "autoscale": true,
+              "precision": 2,
+              "custom_unit": ""
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "count:rdse2.db_config{$cluster}",
+                  "aggregator": "last",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 80,
+                      "palette": "white_on_red"
+                    }
+                  ]
+                }
+              ],
+              "title": "# Databases",
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_used_memory{$cluster}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_used_memory{$cluster}.as_rate()",
+                      "alias_name": "Database: {{db}}"
+                    }
+                  ]
+                }
+              ],
+              "title": "Grow Over Minute (Over 100MiB)",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Database Memory",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "rdse2.is_primary{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "rdse2.is_primary{$cluster}",
+                      "alias_name": "Primary"
+                    }
+                  ]
+                }
+              ],
+              "title": "Cluster Master",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_used_memory{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_used_memory{$cluster}",
+                      "alias_name": "Total Used"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.node_available_memory_bytes{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.node_available_memory_bytes{$cluster}",
+                      "alias_name": "Total Available"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.node_provisional_memory_bytes{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.node_provisional_memory_bytes{$cluster}",
+                      "alias_name": "Total Provisional"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.node_provisional_memory_no_overbooking_bytes{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.node_provisional_memory_no_overbooking_bytes{$cluster}",
+                      "alias_name": "Total Provisional (No Overbooking)"
+                    }
+                  ]
+                }
+              ],
+              "title": "Used Memory",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "count:rdse2.db_status{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "count:rdse2.db_status{$cluster}",
+                      "alias_name": "Total databases "
+                    }
+                  ]
+                }
+              ],
+              "title": "Total Databases Count Over Time",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "top(rdse2.redis_server_used_memory{$cluster, role:master}, 10, 'mean', 'desc')",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "top(rdse2.redis_server_used_memory{$cluster, role:master}, 10, 'mean', 'desc')",
+                      "alias_name": "Database: {{db}}"
+                    }
+                  ]
+                }
+              ],
+              "title": "Top 10 Memory Per Database",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "label": "Bytes"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "(sum:rdse2.redis_server_used_memory{$cluster} / sum:rdse2.db_memory_limit_bytes{$cluster}) * 100",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "(sum:rdse2.redis_server_used_memory{$cluster} / sum:rdse2.db_memory_limit_bytes{$cluster}) * 100",
+                      "alias_name": "Memory Load % "
+                    }
+                  ]
+                }
+              ],
+              "title": "Memory Load Over Time ",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "label": "Percent",
+                "max": "100"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Node Resources",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "rdse2.redis_server_allocator_active{$cluster} - rdse2.redis_server_allocator_allocated{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "rdse2.redis_server_allocator_active{$cluster} - rdse2.redis_server_allocator_allocated{$cluster}",
+                      "alias_name": "Database: {{db}} Redis: {{redis}}"
+                    }
+                  ]
+                }
+              ],
+              "title": "Active - Allocated (Defraggable)",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:rdse2.redis_server_used_memory{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.redis_server_used_memory{$cluster}",
+                      "alias_name": "Total shards memory"
+                    }
+                  ]
+                }
+              ],
+              "title": "Total Shards Memory",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "label": "Bytes"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "rdse2.node_available_memory_bytes{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "rdse2.node_available_memory_bytes{$cluster}",
+                      "alias_name": "Available memory: node {{node}}"
+                    }
+                  ]
+                }
+              ],
+              "title": "Available Memory per node",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "label": "Bytes"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "100 * (1 - avg:rdse2.node_cpu_seconds_total.count{mode:idle,$cluster} by {node}.as_rate())",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "100 * (1 - avg:rdse2.node_cpu_seconds_total.count{mode:idle,$cluster} by {node}.as_rate())",
+                      "alias_name": "total CPU utilization {{node}}"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.node_cpu_seconds_total.count{mode:idle,$cluster} by {node}.as_rate() * 100",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.node_cpu_seconds_total.count{mode:idle,$cluster} by {node}.as_rate() * 100",
+                      "alias_name": "idle {{node}}"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.node_cpu_seconds_total.count{$cluster,mode:iowait} by {node}.as_rate() * 100",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.node_cpu_seconds_total.count{$cluster,mode:iowait} by {node}.as_rate() * 100",
+                      "alias_name": "iowait {{node}}"
+                    }
+                  ]
+                },
+                {
+                  "q": "avg:rdse2.node_cpu_seconds_total.count{$cluster,mode:nice} by {node}.as_rate() * 100",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "avg:rdse2.node_cpu_seconds_total.count{$cluster,mode:nice} by {node}.as_rate() * 100",
+                      "alias_name": "nice {{node}}"
+                    }
+                  ]
+                }
+              ],
+              "title": "CPU Usage by Node",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "label": "Percent",
+                "max": "100"
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "100*(1 - \n  rdse2.node_filesystem_avail_bytes{$cluster} \n/\n  rdse2.node_filesystem_size_bytes{$cluster}\n)",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "100*(1 - \n  rdse2.node_filesystem_avail_bytes{$cluster} \n/\n  rdse2.node_filesystem_size_bytes{$cluster}\n)",
+                      "alias_name": "Mount: {{mountpoint}} Node: {{node}}"
+                    }
+                  ]
+                }
+              ],
+              "title": "Disk Usage by Mount (%)",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true,
+                "label": "Percent",
+                "max": "100"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Traffic and Latency",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "top(p99:rdse2.endpoint_read_requests_latency_histogram{$cluster}, 10, 'mean', 'desc')",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "top(p99:rdse2.endpoint_read_requests_latency_histogram{$cluster}, 10, 'mean', 'desc')",
+                      "alias_name": "p99_read databases: {{db}}"
+                    }
+                  ]
+                },
+                {
+                  "q": "top(p99:rdse2.endpoint_write_requests_latency_histogram{$cluster}, 10, 'mean', 'desc')",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "top(p99:rdse2.endpoint_write_requests_latency_histogram{$cluster}, 10, 'mean', 'desc')",
+                      "alias_name": "p99_write databases: {{db}}"
+                    }
+                  ]
+                }
+              ],
+              "title": "Top 10 Read and Write Requests Latency (P99) ",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "top(p95:rdse2.endpoint_write_requests_latency_histogram{$cluster}, 10, 'mean', 'desc')",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "top(p95:rdse2.endpoint_write_requests_latency_histogram{$cluster}, 10, 'mean', 'desc')",
+                      "alias_name": "p95_read databases: {{db}}"
+                    }
+                  ]
+                },
+                {
+                  "q": "top(p95:rdse2.endpoint_write_requests_latency_histogram{$cluster}, 10, 'mean', 'desc')",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "top(p95:rdse2.endpoint_write_requests_latency_histogram{$cluster}, 10, 'mean', 'desc')",
+                      "alias_name": "p95_write databases: {{db}}"
+                    }
+                  ]
+                }
+              ],
+              "title": "Top 10 Read and Write Requests Latency (P95) ",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "top(rdse2.endpoint_client_connections{$cluster} - rdse2.endpoint_client_disconnections{$cluster} - rdse2.endpoint_proxy_disconnections{$cluster}, 10, 'mean', 'desc')",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "top(rdse2.endpoint_client_connections{$cluster} - rdse2.endpoint_client_disconnections{$cluster} - rdse2.endpoint_proxy_disconnections{$cluster}, 10, 'mean', 'desc')",
+                      "alias_name": "Active connections by database: {{db}}"
+                    }
+                  ]
+                }
+              ],
+              "title": "Top 10 Used Connections By Database (All Nodes)",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "top(rdse2.endpoint_read_requests.count{$cluster}.as_rate() + rdse2.endpoint_write_requests.count{$cluster}.as_rate() + rdse2.endpoint_other_requests.count{$cluster}.as_rate(), 10, 'mean', 'desc')",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "top(rdse2.endpoint_read_requests.count{$cluster}.as_rate() + rdse2.endpoint_write_requests.count{$cluster}.as_rate() + rdse2.endpoint_other_requests.count{$cluster}.as_rate(), 10, 'mean', 'desc')",
+                      "alias_name": "listener: {{proxy}} for database: {{db}}"
+                    }
+                  ]
+                }
+              ],
+              "title": "Top 10 Active Listeners By Requests (Read/Write/Other)",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "-sum:rdse2.endpoint_egress.count{$cluster}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "-sum:rdse2.endpoint_egress.count{$cluster}.as_rate()",
+                      "alias_name": "Egress for database: {{db}}"
+                    }
+                  ]
+                },
+                {
+                  "q": "sum:rdse2.endpoint_ingress.count{$cluster}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "sum:rdse2.endpoint_ingress.count{$cluster}.as_rate()",
+                      "alias_name": "Ingress for database: {{db}}"
+                    }
+                  ]
+                }
+              ],
+              "title": "Total Traffic",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Certificates and Per-Redis Memory",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "rdse2.redis_server_used_memory{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "metadata": [
+                    {
+                      "expression": "rdse2.redis_server_used_memory{$cluster}",
+                      "alias_name": "Node: {{node}} Database: {{db}} Redis: {{redis}}"
+                    }
+                  ]
+                }
+              ],
+              "title": "Used Mem By Redis By Node",
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "toplist",
+              "requests": [
+                {
+                  "q": "max:rdse2.node_cert_expires_in_seconds{$cluster} by {node,issuer} / 86400"
+                }
+              ],
+              "title": "Certificate Expiration (Days)",
+              "style": {
+                "palette": "dog_classic"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "cluster",
+      "prefix": "cluster",
+      "available_values": [],
+      "default": "*"
+    }
+  ],
+  "layout_type": "ordered",
+  "notify_list": []
+}

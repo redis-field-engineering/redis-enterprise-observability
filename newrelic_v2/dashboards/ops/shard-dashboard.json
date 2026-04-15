@@ -1,0 +1,1154 @@
+{
+  "name": "Redis Enterprise - Shard Dashboard",
+  "description": "New Relic implementation of the validated Redis Enterprise shard operations dashboard.",
+  "permissions": "PUBLIC_READ_WRITE",
+  "pages": [
+    {
+      "name": "Shard Dashboard",
+      "description": null,
+      "widgets": [
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 1,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "# Redis Enterprise Shard Dashboard\n\nNew Relic implementation of the validated Redis Enterprise shard operations dashboard. Filter by `cluster`, `db`, and `redis`."
+          }
+        },
+        {
+          "title": "Used Memory",
+          "layout": {
+            "column": 1,
+            "row": 2,
+            "width": 3,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM (FROM Metric SELECT latest(redis_server_used_memory) / 1024 / 1024 / 1024 AS value WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis, node, role LIMIT MAX) SELECT max(value) AS 'used memory GiB' SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "#Keys",
+          "layout": {
+            "column": 4,
+            "row": 2,
+            "width": 3,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM (FROM Metric SELECT latest(redis_server_db_keys) AS value WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis, node, role LIMIT MAX) SELECT max(value) AS 'keys' SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "#Connections",
+          "layout": {
+            "column": 7,
+            "row": 2,
+            "width": 3,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM (FROM Metric SELECT latest(redis_server_connected_clients) AS value WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis, node, role LIMIT MAX) SELECT max(value) AS 'connections' SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Node / Role",
+          "layout": {
+            "column": 10,
+            "row": 2,
+            "width": 3,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.table"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_up) AS 'up' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET node, role LIMIT MAX SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Slots",
+          "layout": {
+            "column": 1,
+            "row": 5,
+            "width": 3,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.table"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_up) AS 'up' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET slots LIMIT MAX SINCE 2 minutes ago"
+              }
+            ]
+          }
+        },
+        {
+          "title": "Used Memory",
+          "layout": {
+            "column": 4,
+            "row": 5,
+            "width": 8,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_used_memory) AS 'used memory' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_maxmemory) AS 'maxmemory' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_max_process_mem) AS 'max process mem' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_current_cow_size) AS 'current cow size' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(namedprocess_namegroup_memory_bytes) AS 'resident memory' WHERE memtype = 'resident' AND cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "Ops Per Second",
+          "layout": {
+            "column": 1,
+            "row": 8,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_total_commands_processed) - min(redis_server_total_commands_processed)) / 60 AS 'commands/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_keyspace_read_hits) - min(redis_server_keyspace_read_hits)) / 60 AS 'read hits/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_keyspace_read_misses) - min(redis_server_keyspace_read_misses)) / 60 AS 'read misses/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_keyspace_write_hits) - min(redis_server_keyspace_write_hits)) / 60 AS 'write hits/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_keyspace_write_misses) - min(redis_server_keyspace_write_misses)) / 60 AS 'write misses/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Bandwidth",
+          "layout": {
+            "column": 7,
+            "row": 8,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_total_net_input_bytes) - min(redis_server_total_net_input_bytes)) / 60 AS 'net input' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_total_net_output_bytes) - min(redis_server_total_net_output_bytes)) / 60 AS 'net output' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_repl_touch_bytes) - min(redis_server_repl_touch_bytes)) / 60 AS 'repl touch' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES_PER_SECOND"
+            }
+          }
+        },
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 11,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "## Keyspace"
+          }
+        },
+        {
+          "title": "CPU Usage",
+          "layout": {
+            "column": 1,
+            "row": 12,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT ((max(namedprocess_namegroup_cpu_seconds_total) - min(namedprocess_namegroup_cpu_seconds_total)) / 60) * 100 AS 'cpu %' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET mode TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "PERCENTAGE"
+            }
+          }
+        },
+        {
+          "title": "#Keys",
+          "layout": {
+            "column": 7,
+            "row": 12,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_db_keys) AS 'keys' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_db_expires) AS 'expiring keys' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_total_blocking_keys) AS 'blocking keys' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_total_blocking_keys_on_nokey) AS 'blocking keys on nokey' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_tracking_total_keys) AS 'tracking keys' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_tracking_total_prefixes) AS 'tracking prefixes' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_pubsub_patterns) AS 'pubsub patterns' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_pubsub_channels) AS 'pubsub channels' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_pubsubshard_channels) AS 'pubsub shard channels' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_total_watched_keys) AS 'watched keys' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_db_subexpiry) AS 'subexpiry' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Expired / Evicted Objects Per Second",
+          "layout": {
+            "column": 1,
+            "row": 15,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_expired_keys) - min(redis_server_expired_keys)) / 60 AS 'expired keys/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_evicted_keys) - min(redis_server_evicted_keys)) / 60 AS 'evicted keys/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_expired_subkeys) - min(redis_server_expired_subkeys)) / 60 AS 'expired subkeys/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_keys_trimmed) - min(redis_server_keys_trimmed)) / 60 AS 'keys trimmed/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_db0_avg_ttl) AS 'avg ttl' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Shard Connections",
+          "layout": {
+            "column": 7,
+            "row": 15,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_connected_clients) AS 'connected clients' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_maxclients) AS 'max clients' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_total_connections_received) - min(redis_server_total_connections_received)) / 60 AS 'connections received/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_blocked_clients) AS 'blocked clients' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_tracking_clients) AS 'tracking clients' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_pubsub_clients) AS 'pubsub clients' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_watching_clients) AS 'watching clients' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "",
+          "layout": {
+            "column": 1,
+            "row": 18,
+            "width": 12,
+            "height": 1
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "rawConfiguration": {
+            "text": "## Memory Breakdown"
+          }
+        },
+        {
+          "title": "Read/Write Hits/Misses + Lazyfree + Errors",
+          "layout": {
+            "column": 1,
+            "row": 19,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_keyspace_read_hits) - min(redis_server_keyspace_read_hits)) / 60 AS 'read hits/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_keyspace_write_hits) - min(redis_server_keyspace_write_hits)) / 60 AS 'write hits/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_keyspace_read_misses) - min(redis_server_keyspace_read_misses)) / 60 AS 'read misses/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_keyspace_write_misses) - min(redis_server_keyspace_write_misses)) / 60 AS 'write misses/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_lazyfreed_objects) - min(redis_server_lazyfreed_objects)) / 60 AS 'lazyfreed objects/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT (max(redis_server_total_error_replies) - min(redis_server_total_error_replies)) / 60 AS 'error replies/sec' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) FACET redis TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "Ram Allocator Usage",
+          "layout": {
+            "column": 7,
+            "row": 19,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_allocator_active) AS 'allocator active' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_allocator_allocated) AS 'allocator allocated' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_allocator_resident) AS 'allocator resident' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(namedprocess_namegroup_memory_bytes) AS 'resident process memory' WHERE memtype = 'resident' AND cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "Shard Ram Overheads",
+          "layout": {
+            "column": 1,
+            "row": 22,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_mem_clients_slaves) AS 'slave clients mem' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_mem_clients_normal) AS 'normal clients mem' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_mem_aof_buffer) AS 'aof buffer' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_mem_replication_backlog) AS 'replication backlog' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_used_memory_scripts) AS 'scripts mem' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_mem_overhead_db_hashtable_rehashing) AS 'db rehash overhead' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            },
+            "units": {
+              "unit": "BYTES"
+            }
+          }
+        },
+        {
+          "title": "Fragmentation",
+          "layout": {
+            "column": 7,
+            "row": 22,
+            "width": 6,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "chartStyles": {
+              "lineInterpolation": "linear"
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "annotations": true,
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_mem_fragmentation_ratio) AS 'fragmentation ratio' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_allocator_active) AS 'allocator active' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(redis_server_allocator_resident) AS 'allocator resident' WHERE cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              },
+              {
+                "accountIds": [
+                  0
+                ],
+                "query": "FROM Metric SELECT latest(namedprocess_namegroup_memory_bytes) AS 'resident process memory' WHERE memtype = 'resident' AND cluster IN ({{cluster}}) AND db IN ({{db}}) AND redis IN ({{redis}}) TIMESERIES 1 minute"
+              }
+            ],
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "cluster",
+      "items": null,
+      "defaultValues": [
+        {
+          "value": {
+            "string": "*"
+          }
+        }
+      ],
+      "nrqlQuery": {
+        "accountIds": [
+          0
+        ],
+        "query": "FROM Metric SELECT uniques(cluster) WHERE metricName = 'redis_server_up' SINCE 30 minutes ago"
+      },
+      "options": {
+        "hiddenOnVariablesBar": false,
+        "ignoreTimeRange": true,
+        "excluded": false,
+        "showApplyAction": true
+      },
+      "title": "Cluster",
+      "type": "NRQL",
+      "isMultiSelection": true,
+      "replacementStrategy": "STRING"
+    },
+    {
+      "name": "db",
+      "items": null,
+      "defaultValues": [
+        {
+          "value": {
+            "string": "*"
+          }
+        }
+      ],
+      "nrqlQuery": {
+        "accountIds": [
+          0
+        ],
+        "query": "FROM Metric SELECT uniques(db) WHERE metricName = 'redis_server_up' AND cluster IN ({{cluster}}) SINCE 30 minutes ago"
+      },
+      "options": {
+        "hiddenOnVariablesBar": false,
+        "ignoreTimeRange": true,
+        "excluded": false,
+        "showApplyAction": false
+      },
+      "title": "Database",
+      "type": "NRQL",
+      "isMultiSelection": true,
+      "replacementStrategy": "STRING"
+    },
+    {
+      "name": "redis",
+      "items": null,
+      "defaultValues": [
+        {
+          "value": {
+            "string": "*"
+          }
+        }
+      ],
+      "nrqlQuery": {
+        "accountIds": [
+          0
+        ],
+        "query": "FROM Metric SELECT uniques(redis) WHERE metricName = 'redis_server_up' AND cluster IN ({{cluster}}) AND db IN ({{db}}) SINCE 30 minutes ago"
+      },
+      "options": {
+        "hiddenOnVariablesBar": false,
+        "ignoreTimeRange": true,
+        "excluded": false,
+        "showApplyAction": false
+      },
+      "title": "Shard",
+      "type": "NRQL",
+      "isMultiSelection": true,
+      "replacementStrategy": "STRING"
+    }
+  ]
+}

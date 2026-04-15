@@ -1,0 +1,712 @@
+{
+  "title": "Redis Enterprise - Node Dashboard",
+  "description": "Import-safe Datadog version of Node Dashboard.",
+  "widgets": [
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Overview",
+        "widgets": [
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Status",
+              "requests": [
+                {
+                  "q": "avg:rdse2.node_metrics_up{$cluster}",
+                  "aggregator": "last"
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Enterprise Version ",
+              "requests": [
+                {
+                  "q": "avg:rdse2.node_config{$cluster}",
+                  "aggregator": "last"
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Role",
+              "requests": [
+                {
+                  "q": "max:rdse2.is_primary{$cluster,$node}",
+                  "aggregator": "last"
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "# Shards",
+              "requests": [
+                {
+                  "q": "count_nonzero(avg:rdse2.redis_server_up{$cluster,$node} by {redis})",
+                  "aggregator": "last"
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "CPU Utilization",
+              "requests": [
+                {
+                  "q": "(sum:rdse2.node_cpu_seconds_total.count{$cluster,$node,!mode:idle}.as_rate() / count:rdse2.node_cpu_seconds_total.count{$cluster,$node,mode:idle}) * 100",
+                  "aggregator": "last"
+                }
+              ],
+              "autoscale": true,
+              "precision": 2,
+              "custom_unit": "%"
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Free RAM",
+              "requests": [
+                {
+                  "q": "avg:rdse2.node_available_memory_bytes{$cluster}",
+                  "aggregator": "last"
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "CPU",
+        "widgets": [
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Node IN Quorum?",
+              "requests": [
+                {
+                  "q": "avg:rdse2.has_quorum{$cluster,$node}",
+                  "aggregator": "last"
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "OS version",
+              "requests": [
+                {
+                  "q": "avg:rdse2.node_os_info{$cluster}",
+                  "aggregator": "last"
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Instance",
+              "requests": [
+                {
+                  "q": "avg:rdse2.node_dmi_info{$cluster}",
+                  "aggregator": "last"
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "# Databases",
+              "requests": [
+                {
+                  "q": "count_nonzero(avg:rdse2.endpoint_client_connections{$cluster} by {db})",
+                  "aggregator": "last"
+                }
+              ],
+              "autoscale": true,
+              "precision": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "CPU Usage on node (100% = 1 core)",
+              "requests": [
+                {
+                  "q": "avg:rdse2.namedprocess_namegroup_cpu_seconds.count{$cluster,$node}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "DMC Proxy CPU Usage on node",
+              "requests": [
+                {
+                  "q": "avg:rdse2.namedprocess_namegroup_cpu_seconds.count{$cluster,$node}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Traffic",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "DMC Proxy Mem Usage on node",
+              "requests": [
+                {
+                  "q": "avg:rdse2.namedprocess_namegroup_memory_bytes{$cluster,$node}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "DMC Proxy Workers Thread CPU Utilization",
+              "requests": [
+                {
+                  "q": "avg:rdse2.namedprocess_namegroup_thread_cpu_seconds.count{$cluster}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Redis-CCS Memory Usage ",
+              "requests": [
+                {
+                  "q": "avg:rdse2.namedprocess_namegroup_memory_bytes{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Redis-CCS CPU Utilization",
+              "requests": [
+                {
+                  "q": "avg:rdse2.namedprocess_namegroup_cpu_seconds.count{$cluster}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Ingress/Egress Traffic",
+              "requests": [
+                {
+                  "q": "avg:rdse2.node_network_receive_bytes.count{$cluster}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Top 5 Proxy Egress/Ingress",
+              "requests": [
+                {
+                  "q": "avg:rdse2.endpoint_egress.count{$cluster}.as_count()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Shards Utlization",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Avg Proxy Latency",
+              "requests": [
+                {
+                  "q": "avg:rdse2.endpoint_other_requests_latency_histogram.count{$cluster,$node}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Top 10 Active Proxy By Requests (read/write/other)",
+              "requests": [
+                {
+                  "q": "avg:rdse2.endpoint_other_requests.count{$cluster}.as_count()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Top 10 Shards By Used Ram ",
+              "requests": [
+                {
+                  "q": "avg:rdse2.redis_server_used_memory{$cluster,$node}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "CPU Usage Per Shard",
+              "requests": [
+                {
+                  "q": "avg:rdse2.namedprocess_namegroup_cpu_seconds.count{$cluster,$node}.as_rate()",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Shards Size (Sort By Size)",
+              "requests": [
+                {
+                  "q": "avg:rdse2.redis_server_used_memory{$cluster,$node}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "layout_type": "ordered",
+        "title": "Memory",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Total Shards Memory Usage",
+              "requests": [
+                {
+                  "q": "avg:rdse2.redis_server_used_memory{$cluster,$node}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Available Memory ",
+              "requests": [
+                {
+                  "q": "avg:rdse2.node_available_memory_bytes{$cluster,$node}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Fork Memory",
+              "requests": [
+                {
+                  "q": "avg:rdse2.redis_server_aof_last_cow_size{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Fragmentation",
+              "requests": [
+                {
+                  "q": "avg:rdse2.namedprocess_namegroup_memory_bytes{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Forks",
+              "requests": [
+                {
+                  "q": "avg:rdse2.redis_server_aof_rewrite_in_progress{$cluster}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "show_legend": true,
+              "legend_layout": "auto",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value"
+              ],
+              "yaxis": {
+                "include_zero": true
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "cluster",
+      "prefix": "cluster",
+      "available_values": [],
+      "default": "*"
+    },
+    {
+      "name": "node",
+      "prefix": "node",
+      "available_values": [],
+      "default": "*"
+    }
+  ],
+  "layout_type": "ordered",
+  "notify_list": []
+}

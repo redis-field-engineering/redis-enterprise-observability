@@ -128,7 +128,7 @@
       "definition": {
         "type": "group",
         "layout_type": "ordered",
-        "title": "CPU",
+        "title": "Versions and Counts",
         "widgets": [
           {
             "definition": {
@@ -242,7 +242,7 @@
       "definition": {
         "type": "group",
         "layout_type": "ordered",
-        "title": "Storage",
+        "title": "Database Memory",
         "widgets": [
           {
             "definition": {
@@ -469,7 +469,7 @@
       "definition": {
         "type": "group",
         "layout_type": "ordered",
-        "title": "Databases traffic",
+        "title": "Node Resources",
         "widgets": [
           {
             "definition": {
@@ -699,7 +699,7 @@
       "definition": {
         "type": "group",
         "layout_type": "ordered",
-        "title": "Memory",
+        "title": "Traffic and Latency",
         "widgets": [
           {
             "definition": {
@@ -923,7 +923,7 @@
       "definition": {
         "type": "group",
         "layout_type": "ordered",
-        "title": "Certificate Expiration",
+        "title": "Certificates and Per-Redis Memory",
         "widgets": [
           {
             "definition": {

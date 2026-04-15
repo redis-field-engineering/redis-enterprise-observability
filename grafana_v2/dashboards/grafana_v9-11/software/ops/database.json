@@ -3017,7 +3017,7 @@
         "gridPos": {
           "h": 11,
           "w": 8,
-          "x": 0,
+          "x": 16,
           "y": 65
         },
         "id": 78,
@@ -3175,7 +3175,7 @@
               "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
-            "expr": "histogram_quantile(0.90, sum(rate(endpoint_write_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
+            "expr": "histogram_quantile(0.99, sum(rate(endpoint_write_requests_latency_histogram_bucket{cluster=\"$cluster\", db=\"$db\"}[$__rate_interval]) ) by (le, db))",
             "hide": false,
             "legendFormat": "Write",
             "range": true,
@@ -3259,7 +3259,7 @@
         "gridPos": {
           "h": 11,
           "w": 8,
-          "x": 16,
+          "x": 0,
           "y": 65
         },
         "id": 79,

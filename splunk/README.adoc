@@ -4,7 +4,7 @@
 
 = Observe Redis Enterprise with Splunk
 
-To collect metrics in Splunk from Redis Enterprise Software or Redis Cloud, use the https://docs.splunk.com/observability/en/gdi/opentelemetry/opentelemetry.html[Splunk OpenTelemetry Collector].
+To collect metrics in Splunk from Redis Enterprise Software or Redis Cloud, use the https://help.splunk.com/en/splunk-observability-cloud/manage-data/splunk-distribution-of-the-opentelemetry-collector/get-started-with-the-splunk-distribution-of-the-opentelemetry-collector[Splunk OpenTelemetry Collector].
 
 You can run the Splunk Collector in any environment that can connect with your Redis cluster. For Redis Cloud deployments, your Splunk environment must be https://docs.redis.com/latest/rc/security/vpc-peering/[VPC-peered] with your Redis Cloud subscription.
 
@@ -22,7 +22,7 @@ To collect Redis Enterprise metrics from Splunk, you will need:
 
 * A Redis Enterprise deployment or a Redis Cloud account with a https://docs.redis.com/latest/rc/subscriptions/create-flexible-subscription/[Flexible or Annual subscription]
 * A https://www.splunk.com/en_us/products/infrastructure-monitoring.html[Splunk account]
-* An installation of the https://docs.splunk.com/observability/en/gdi/opentelemetry/install-the-collector.html[Splunk Distrubtion of the OpenTelemetry Collector]
+* An installation of the https://help.splunk.com/en/splunk-observability-cloud/manage-data/splunk-distribution-of-the-opentelemetry-collector/get-started-with-the-splunk-distribution-of-the-opentelemetry-collector/collector-for-linux[Splunk Distribution of the OpenTelemetry Collector]
 
 If you're using Redis Enterprise Software, you will need the fully-qualified domain name for your cluster.
 
@@ -33,7 +33,7 @@ If you're using Redis Cloud, you will need:
 
 == Installation
 
-To get started, first follow the https://docs.splunk.com/observability/en/gdi/opentelemetry/install-linux.html#otel-install-linux[instructions for installing and deploying the Splunk Distrubtion of the OpenTelemetry Collector].
+To get started, first follow the https://help.splunk.com/en/splunk-observability-cloud/manage-data/splunk-distribution-of-the-opentelemetry-collector/get-started-with-the-splunk-distribution-of-the-opentelemetry-collector/collector-for-linux/install-the-collector-for-linux-script[instructions for installing and deploying the Splunk Distribution of the OpenTelemetry Collector].
 
 Next, edit the Splunk agent's configuration file: `/etc/otel/collector/agent_config.yaml`
 

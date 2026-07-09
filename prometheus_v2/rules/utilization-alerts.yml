@@ -22,3 +22,22 @@ groups:
           summary: Unexpected Object Eviction
           description: "Evictions Occurring: {{$labels.cluster}} DB: {{$labels.db}} EvictionsPerSecond: {{$value}}"
           runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#cache-hit-ratio-and-eviction
+      - alert: High Replica Output Buffer Utilization
+        expr: |
+          (
+            100 *
+            max by (cluster, db, redis) (
+              redis_server_mem_clients_slaves{role="master"}
+            )
+            /
+            max by (cluster, db, redis) (
+              redis_server_slave_buffer{role="master"}
+            )
+          ) > 80
+        for: 5m
+        labels:
+          severity: notification
+          type: utilization
+        annotations:
+          summary: High Replica Output Buffer Utilization
+          description: "Replica output buffer utilization is above 80%: {{$labels.cluster}} DB: {{$labels.db}} Shard: {{$labels.redis}} Utilization: {{$value}}%"

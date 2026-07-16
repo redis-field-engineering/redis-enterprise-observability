@@ -29,6 +29,7 @@ redis_server_maxmemory: Current memory limit configured by redis_mgr according t
 redis_server_mem_aof_buffer: Current size of AOF buffer
 redis_server_mem_clients_normal: Current memory used for input and output buffers of non-replica clients
 redis_server_mem_clients_slaves: Current memory used for input and output buffers of replica clients
+redis_server_slave_buffer: Effective replica output buffer hard limit for the shard, in bytes
 redis_server_mem_fragmentation_ratio: Memory fragmentation ratio (1.3 means 30% overhead)
 redis_server_mem_not_counted_for_evict: Portion of used_memory (in bytes) that's not counted for eviction and OOM error
 redis_server_mem_replication_backlog: Size of replication backlog

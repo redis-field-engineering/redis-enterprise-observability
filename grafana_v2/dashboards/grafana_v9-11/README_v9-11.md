@@ -4,6 +4,7 @@ For Redis Enterprise, we provide the following dashboards:
 * [Database status](software/basic/redis-software-database-dashboard_v9-11.json)
 * [Node metrics](software/basic/redis-software-node-dashboard_v9-11.json)
 * [Shard metrics](software/basic/redis-software-shard-dashboard_v9-11.json)
+* [Database tags](software/ops/database-tags.json)
 
 For Redis Cloud, which is fully managed, we provide two dashboards:
 * [Subscription status](cloud/basic/redis-cloud-subscription-dashboard_v9-11.json)
@@ -99,6 +100,7 @@ For Redis Enterprise, we provide the following dashboards:
 * [Database status](software/basic/redis-software-database-dashboard_v9-11.json)
 * [Node metrics](software/basic/redis-software-node-dashboard_v9-11.json)
 * [Shard metrics](software/basic/redis-software-shard-dashboard_v9-11.json)
+* [Database tags](software/ops/database-tags.json)
 
 You can upload these dashboards directly though the Grafana UI. For additional installation instructions, see the [Redis Enterprise dashboards 
 README](software/README-SOFTWARE.md).

@@ -1,0 +1,82 @@
+# Unit tests for the tag-scoped production memory alert.
+# Only this file is passed to `promtool test rules`.
+
+rule_files:
+  - ../rules/database-tag-alerts.yml
+
+evaluation_interval: 1m
+
+tests:
+  # Test 1: a production database sustained above 90% fires after 5m and
+  # preserves cluster, db, env, and team.
+  - interval: 1m
+    input_series:
+      - series: 'redis_server_used_memory{job="redis", cluster="c1", db="1", role="master"}'
+        values: "95 95 95 95 95 95"
+      - series: 'redis_server_used_memory{job="redis", cluster="c1", db="1", role="slave"}'
+        values: "500 500 500 500 500 500"
+      - series: 'db_memory_limit_bytes{job="redis", cluster="c1", db="1"}'
+        values: "100 100 100 100 100 100"
+      - series: 'db_tags{job="redis", cluster="c1", db="1", env="prod", team="payments"}'
+        values: "1 1 1 1 1 1"
+    alert_rule_test:
+      # Before the 5m pending period completes, the alert is not yet firing.
+      - eval_time: 4m
+        alertname: High Production Database Memory Utilization
+        exp_alerts: []
+      # Once the condition has held for 5m, the alert fires.
+      - eval_time: 5m
+        alertname: High Production Database Memory Utilization
+        exp_alerts:
+          - exp_labels:
+              severity: notification
+              type: database-tags
+              cluster: c1
+              db: "1"
+              env: prod
+              team: payments
+            exp_annotations:
+              summary: High Production Database Memory Utilization
+              description: "Production database memory utilization is above 90%: Cluster: c1 DB: 1 Environment: prod Team: payments Utilization: 95%"
+              runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory
+
+  # Test 2: a production database at exactly the threshold (90%) does not fire.
+  - interval: 1m
+    input_series:
+      - series: 'redis_server_used_memory{job="redis", cluster="c1", db="2", role="master"}'
+        values: "90 90 90 90 90 90"
+      - series: 'db_memory_limit_bytes{job="redis", cluster="c1", db="2"}'
+        values: "100 100 100 100 100 100"
+      - series: 'db_tags{job="redis", cluster="c1", db="2", env="prod", team="payments"}'
+        values: "1 1 1 1 1 1"
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: High Production Database Memory Utilization
+        exp_alerts: []
+
+  # Test 3: a non-production database above 90% does not fire, because the rule
+  # matches only db_tags with env="prod".
+  - interval: 1m
+    input_series:
+      - series: 'redis_server_used_memory{job="redis", cluster="c1", db="3", role="master"}'
+        values: "99 99 99 99 99 99"
+      - series: 'db_memory_limit_bytes{job="redis", cluster="c1", db="3"}'
+        values: "100 100 100 100 100 100"
+      - series: 'db_tags{job="redis", cluster="c1", db="3", env="staging", team="payments"}'
+        values: "1 1 1 1 1 1"
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: High Production Database Memory Utilization
+        exp_alerts: []
+
+  # Test 4: a high-utilization database with no db_tags series at all does not fire.
+  - interval: 1m
+    input_series:
+      - series: 'redis_server_used_memory{job="redis", cluster="c1", db="4", role="master"}'
+        values: "99 99 99 99 99 99"
+      - series: 'db_memory_limit_bytes{job="redis", cluster="c1", db="4"}'
+        values: "100 100 100 100 100 100"
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: High Production Database Memory Utilization
+        exp_alerts: []

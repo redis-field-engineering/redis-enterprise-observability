@@ -30,6 +30,7 @@ Optimized for Grafana versions 9-11:
 * *Shard*: `grafana_v2/dashboards/grafana_v9-11/software/basic/redis-software-shard-dashboard_v9-11.json`
 * *Active-Active*: `grafana_v2/dashboards/grafana_v9-11/software/basic/redis-software-active-active-dashboard_v9-11.json`
 * *Synchronization*: `grafana_v2/dashboards/grafana_v9-11/software/basic/redis-software-synchronization-overview_v9-11.json`
+* *Database Tags*: `grafana_v2/dashboards/grafana_v9-11/software/ops/database-tags.json` - Database metrics organized by customer-defined tags
 
 ==== Extended Dashboards
 * *Database Extended*: `grafana_v2/dashboards/grafana_v9-11/software/extended/redis-software-database-extended-dashboard_v9-11.json` - Comprehensive database analysis
@@ -109,6 +110,7 @@ Production-ready alert definitions:
 * *Synchronization Alerts*: `prometheus_v2/rules/synchronization-alerts.yml` - Replication monitoring
 * *Throughput Alerts*: `prometheus_v2/rules/throughput-alerts.yml` - Throughput thresholds
 * *Utilization Alerts*: `prometheus_v2/rules/utilization-alerts.yml` - Resource utilization
+* *Database Tag Alerts*: `prometheus_v2/rules/database-tag-alerts.yml` - Tag-scoped production memory alert
 
 == Splunk Dashboards
 

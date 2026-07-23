@@ -1,0 +1,32 @@
+# Example alert scoped by customer-defined database tags (`db_tags`). Produces
+# no alerts when tag export is disabled or the selected labels are absent.
+#
+# `env`, `team`, `prod`, and the `90` threshold are EXAMPLES, not standard Redis
+# labels. Adjust them to match your own tag taxonomy and capacity policy.
+groups:
+  - name: database-tags
+    rules:
+      # Fires per database when a production database's memory use exceeds 90%.
+      - alert: High Production Database Memory Utilization
+        expr: |
+          (
+            100 *
+            sum by (cluster, db) (
+              redis_server_used_memory{role="master"}
+            )
+            /
+            max by (cluster, db) (
+              db_memory_limit_bytes
+            )
+          )
+          * on (cluster, db) group_left(env, team)
+          db_tags{env="prod", team=~".+"}
+          > 90
+        for: 5m
+        labels:
+          severity: notification
+          type: database-tags
+        annotations:
+          summary: High Production Database Memory Utilization
+          description: "Production database memory utilization is above 90%: Cluster: {{$labels.cluster}} DB: {{$labels.db}} Environment: {{$labels.env}} Team: {{$labels.team}} Utilization: {{$value}}%"
+          runbook: https://redis.io/docs/latest/integrate/prometheus-with-redis-enterprise/observability/#memory

@@ -938,7 +938,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(db_tags, env)",
+        "definition": "label_values(db_tags{cluster=~\"$cluster\"}, env)",
         "hide": 0,
         "includeAll": true,
         "label": "Environment",
@@ -946,7 +946,7 @@
         "name": "env",
         "options": [],
         "query": {
-          "query": "label_values(db_tags, env)",
+          "query": "label_values(db_tags{cluster=~\"$cluster\"}, env)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -962,7 +962,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(db_tags, team)",
+        "definition": "label_values(db_tags{cluster=~\"$cluster\"}, team)",
         "hide": 0,
         "includeAll": true,
         "label": "Team",
@@ -970,7 +970,7 @@
         "name": "team",
         "options": [],
         "query": {
-          "query": "label_values(db_tags, team)",
+          "query": "label_values(db_tags{cluster=~\"$cluster\"}, team)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,

@@ -28,6 +28,7 @@ The following alert categories are available:
  - synchronization
  - nodes
  - shards
+ - database-tags
 
 An example is given below with the latency file
 added to the base Prometheus error_rules file.

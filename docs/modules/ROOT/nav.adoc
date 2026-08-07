@@ -13,6 +13,7 @@
 * xref:dashboards/catalog.adoc[Dashboard Catalog]
 
 .Guides
+* xref:guides/openshift-native-observe-dashboards.adoc[OpenShift: Native Observe Dashboards]
 * xref:guides/monitoring-redis-cloud.adoc[Monitoring Redis Cloud]
 * xref:guides/alerting.adoc[Alerting]
 * xref:guides/troubleshooting.adoc[Troubleshooting]

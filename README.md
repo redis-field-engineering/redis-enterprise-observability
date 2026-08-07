@@ -14,6 +14,7 @@ This repository provides pre-built dashboards, metrics configurations, and integ
 - **New Relic** - Application performance monitoring
 - **Splunk** - Log analytics and SIEM
 - **Kibana** - Elasticsearch visualization
+- **[OpenShift](openshift/native-observe/README.md)** - Native Observe dashboards and alerting
 
 ## Documentation
 

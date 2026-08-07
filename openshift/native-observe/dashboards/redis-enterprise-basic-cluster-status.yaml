@@ -1,0 +1,781 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-enterprise-basic-cluster-status
+  namespace: openshift-config-managed
+  labels:
+    console.openshift.io/dashboard: "true"
+    app.kubernetes.io/name: redis-enterprise-observe
+    app.kubernetes.io/part-of: redis-enterprise-observability
+data:
+  redis-enterprise-basic-cluster-status.json: |-
+    {
+      "annotations": {
+        "list": []
+      },
+      "editable": true,
+      "gnetId": null,
+      "graphTooltip": 0,
+      "hideControls": false,
+      "links": [],
+      "refresh": "30s",
+      "rows": [
+        {
+          "collapse": false,
+          "height": "250px",
+          "panels": [
+            {
+              "colorBackground": false,
+              "colorValue": false,
+              "colors": [
+                "#299c46",
+                "rgba(237, 129, 40, 0.89)",
+                "#d44a3a"
+              ],
+              "datasource": null,
+              "decimals": null,
+              "format": "short",
+              "gauge": {
+                "maxValue": 100,
+                "minValue": 0,
+                "show": false,
+                "thresholdLabels": false,
+                "thresholdMarkers": true
+              },
+              "id": 1,
+              "links": [],
+              "mappingType": 1,
+              "mappingTypes": [
+                {
+                  "name": "value to text",
+                  "value": 1
+                },
+                {
+                  "name": "range to text",
+                  "value": 2
+                }
+              ],
+              "nullPointMode": "connected",
+              "nullText": null,
+              "postfix": "",
+              "postfixFontSize": "50%",
+              "prefix": "",
+              "prefixFontSize": "50%",
+              "rangeMaps": [
+                {
+                  "from": "null",
+                  "text": "N/A",
+                  "to": "null"
+                }
+              ],
+              "sparkline": {
+                "fillColor": "rgba(31, 118, 189, 0.18)",
+                "full": false,
+                "lineColor": "rgb(31, 120, 193)",
+                "show": false
+              },
+              "span": 4,
+              "tableColumn": "",
+              "targets": [
+                {
+                  "expr": "scalar(count(count by (db) (endpoint_client_connections{namespace=\"$namespace\", cluster=\"$cluster\"})))",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "count",
+                  "refId": "A",
+                  "step": 10
+                }
+              ],
+              "thresholds": "",
+              "title": "Database Count",
+              "type": "singlestat",
+              "valueFontSize": "80%",
+              "valueMaps": [
+                {
+                  "op": "=",
+                  "text": "N/A",
+                  "value": "null"
+                }
+              ],
+              "valueName": "current"
+            },
+            {
+              "colorBackground": false,
+              "colorValue": false,
+              "colors": [
+                "#299c46",
+                "rgba(237, 129, 40, 0.89)",
+                "#d44a3a"
+              ],
+              "datasource": null,
+              "decimals": null,
+              "format": "bytes",
+              "gauge": {
+                "maxValue": 100,
+                "minValue": 0,
+                "show": false,
+                "thresholdLabels": false,
+                "thresholdMarkers": true
+              },
+              "id": 2,
+              "links": [],
+              "mappingType": 1,
+              "mappingTypes": [
+                {
+                  "name": "value to text",
+                  "value": 1
+                },
+                {
+                  "name": "range to text",
+                  "value": 2
+                }
+              ],
+              "nullPointMode": "connected",
+              "nullText": null,
+              "postfix": "",
+              "postfixFontSize": "50%",
+              "prefix": "",
+              "prefixFontSize": "50%",
+              "rangeMaps": [
+                {
+                  "from": "null",
+                  "text": "N/A",
+                  "to": "null"
+                }
+              ],
+              "sparkline": {
+                "fillColor": "rgba(31, 118, 189, 0.18)",
+                "full": false,
+                "lineColor": "rgb(31, 120, 193)",
+                "show": false
+              },
+              "span": 4,
+              "tableColumn": "",
+              "targets": [
+                {
+                  "expr": "sum(redis_server_used_memory{namespace=\"$namespace\", cluster=\"$cluster\"})",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "__auto",
+                  "refId": "A",
+                  "step": 10
+                }
+              ],
+              "thresholds": "",
+              "title": "Used Memory",
+              "type": "singlestat",
+              "valueFontSize": "80%",
+              "valueMaps": [
+                {
+                  "op": "=",
+                  "text": "N/A",
+                  "value": "null"
+                }
+              ],
+              "valueName": "current"
+            },
+            {
+              "colorBackground": false,
+              "colorValue": false,
+              "colors": [
+                "#299c46",
+                "rgba(237, 129, 40, 0.89)",
+                "#d44a3a"
+              ],
+              "datasource": null,
+              "decimals": null,
+              "format": "ops",
+              "gauge": {
+                "maxValue": 100,
+                "minValue": 0,
+                "show": false,
+                "thresholdLabels": false,
+                "thresholdMarkers": true
+              },
+              "id": 3,
+              "links": [],
+              "mappingType": 1,
+              "mappingTypes": [
+                {
+                  "name": "value to text",
+                  "value": 1
+                },
+                {
+                  "name": "range to text",
+                  "value": 2
+                }
+              ],
+              "nullPointMode": "connected",
+              "nullText": null,
+              "postfix": "",
+              "postfixFontSize": "50%",
+              "prefix": "",
+              "prefixFontSize": "50%",
+              "rangeMaps": [
+                {
+                  "from": "null",
+                  "text": "N/A",
+                  "to": "null"
+                }
+              ],
+              "sparkline": {
+                "fillColor": "rgba(31, 118, 189, 0.18)",
+                "full": false,
+                "lineColor": "rgb(31, 120, 193)",
+                "show": false
+              },
+              "span": 4,
+              "tableColumn": "",
+              "targets": [
+                {
+                  "expr": "(sum by (cluster) (irate (endpoint_read_requests{namespace=\"$namespace\", cluster=\"$cluster\"}[$aggregation]))) + (sum by (cluster) (irate(endpoint_write_requests{namespace=\"$namespace\", cluster=\"$cluster\"}[$aggregation]))) + (sum by(cluster) (irate (endpoint_other_requests{namespace=\"$namespace\", cluster=\"$cluster\"}[$aggregation])))",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "__auto",
+                  "refId": "A",
+                  "step": 10
+                }
+              ],
+              "thresholds": "",
+              "title": "Throughput",
+              "type": "singlestat",
+              "valueFontSize": "80%",
+              "valueMaps": [
+                {
+                  "op": "=",
+                  "text": "N/A",
+                  "value": "null"
+                }
+              ],
+              "valueName": "current"
+            }
+          ],
+          "repeat": null,
+          "repeatIteration": null,
+          "repeatRowId": null,
+          "showTitle": true,
+          "title": "Summary",
+          "titleSize": "h6"
+        },
+        {
+          "collapse": false,
+          "height": "250px",
+          "panels": [
+            {
+              "colorBackground": false,
+              "colorValue": false,
+              "colors": [
+                "#299c46",
+                "rgba(237, 129, 40, 0.89)",
+                "#d44a3a"
+              ],
+              "datasource": null,
+              "decimals": null,
+              "format": "ms",
+              "gauge": {
+                "maxValue": 100,
+                "minValue": 0,
+                "show": false,
+                "thresholdLabels": false,
+                "thresholdMarkers": true
+              },
+              "id": 4,
+              "links": [],
+              "mappingType": 1,
+              "mappingTypes": [
+                {
+                  "name": "value to text",
+                  "value": 1
+                },
+                {
+                  "name": "range to text",
+                  "value": 2
+                }
+              ],
+              "nullPointMode": "connected",
+              "nullText": null,
+              "postfix": "",
+              "postfixFontSize": "50%",
+              "prefix": "",
+              "prefixFontSize": "50%",
+              "rangeMaps": [
+                {
+                  "from": "null",
+                  "text": "N/A",
+                  "to": "null"
+                }
+              ],
+              "sparkline": {
+                "fillColor": "rgba(31, 118, 189, 0.18)",
+                "full": false,
+                "lineColor": "rgb(31, 120, 193)",
+                "show": false
+              },
+              "span": 3,
+              "tableColumn": "",
+              "targets": [
+                {
+                  "expr": "(sum by (cluster, db)(irate(endpoint_read_requests_latency_histogram_sum{namespace=\"$namespace\", cluster=\"$cluster\", db=\"$db\"}[$aggregation]))  + sum by(cluster, db) (irate(endpoint_write_requests_latency_histogram_sum{namespace=\"$namespace\", cluster=\"$cluster\", db=\"$db\"}[$aggregation]) ) + sum by (cluster, db) (irate(endpoint_other_requests_latency_histogram_sum{namespace=\"$namespace\", cluster=\"$cluster\", db=\"$db\"}[$aggregation]))) / ((sum by (cluster, db) (irate(endpoint_read_requests{namespace=\"$namespace\", cluster=\"$cluster\", db=\"$db\"}[$aggregation]))) + (sum by(cluster, db)(irate(endpoint_write_requests{namespace=\"$namespace\", cluster=\"$cluster\", db=\"$db\"}[$aggregation]))) + (sum by(cluster, db)(irate(endpoint_other_requests{namespace=\"$namespace\", cluster=\"$cluster\", db=\"$db\"}[$aggregation])))) / 1000",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "__auto",
+                  "refId": "A",
+                  "step": 10
+                }
+              ],
+              "thresholds": "",
+              "title": "Latency",
+              "type": "singlestat",
+              "valueFontSize": "80%",
+              "valueMaps": [
+                {
+                  "op": "=",
+                  "text": "N/A",
+                  "value": "null"
+                }
+              ],
+              "valueName": "current"
+            },
+            {
+              "colorBackground": false,
+              "colorValue": false,
+              "colors": [
+                "#299c46",
+                "rgba(237, 129, 40, 0.89)",
+                "#d44a3a"
+              ],
+              "datasource": null,
+              "decimals": null,
+              "format": "ops",
+              "gauge": {
+                "maxValue": 100,
+                "minValue": 0,
+                "show": false,
+                "thresholdLabels": false,
+                "thresholdMarkers": true
+              },
+              "id": 5,
+              "links": [],
+              "mappingType": 1,
+              "mappingTypes": [
+                {
+                  "name": "value to text",
+                  "value": 1
+                },
+                {
+                  "name": "range to text",
+                  "value": 2
+                }
+              ],
+              "nullPointMode": "connected",
+              "nullText": null,
+              "postfix": "",
+              "postfixFontSize": "50%",
+              "prefix": "",
+              "prefixFontSize": "50%",
+              "rangeMaps": [
+                {
+                  "from": "null",
+                  "text": "N/A",
+                  "to": "null"
+                }
+              ],
+              "sparkline": {
+                "fillColor": "rgba(31, 118, 189, 0.18)",
+                "full": false,
+                "lineColor": "rgb(31, 120, 193)",
+                "show": false
+              },
+              "span": 3,
+              "tableColumn": "",
+              "targets": [
+                {
+                  "expr": "sum by(cluster, db)(irate(endpoint_read_requests{namespace=\"$namespace\", cluster=\"$cluster\", db=\"$db\"}[$aggregation]) + irate(endpoint_write_requests{namespace=\"$namespace\", cluster=\"$cluster\", db=\"$db\"}[$aggregation]) + irate(endpoint_other_requests{namespace=\"$namespace\", cluster=\"$cluster\", db=\"$db\"}[$aggregation]))",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "A",
+                  "refId": "A",
+                  "step": 14400
+                }
+              ],
+              "thresholds": "",
+              "title": "Total Operations",
+              "type": "singlestat",
+              "valueFontSize": "80%",
+              "valueMaps": [
+                {
+                  "op": "=",
+                  "text": "N/A",
+                  "value": "null"
+                }
+              ],
+              "valueName": "current"
+            },
+            {
+              "colorBackground": false,
+              "colorValue": false,
+              "colors": [
+                "#299c46",
+                "rgba(237, 129, 40, 0.89)",
+                "#d44a3a"
+              ],
+              "datasource": null,
+              "decimals": null,
+              "format": "ops",
+              "gauge": {
+                "maxValue": 100,
+                "minValue": 0,
+                "show": false,
+                "thresholdLabels": false,
+                "thresholdMarkers": true
+              },
+              "id": 6,
+              "links": [],
+              "mappingType": 1,
+              "mappingTypes": [
+                {
+                  "name": "value to text",
+                  "value": 1
+                },
+                {
+                  "name": "range to text",
+                  "value": 2
+                }
+              ],
+              "nullPointMode": "connected",
+              "nullText": null,
+              "postfix": "",
+              "postfixFontSize": "50%",
+              "prefix": "",
+              "prefixFontSize": "50%",
+              "rangeMaps": [
+                {
+                  "from": "null",
+                  "text": "N/A",
+                  "to": "null"
+                }
+              ],
+              "sparkline": {
+                "fillColor": "rgba(31, 118, 189, 0.18)",
+                "full": false,
+                "lineColor": "rgb(31, 120, 193)",
+                "show": false
+              },
+              "span": 3,
+              "tableColumn": "",
+              "targets": [
+                {
+                  "expr": "sum by(cluster) (irate(redis_server_expired_keys{namespace=\"$namespace\", role=\"master\", cluster=\"$cluster\"}[$aggregation]))",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "A",
+                  "refId": "A",
+                  "step": 14400
+                }
+              ],
+              "thresholds": "",
+              "title": "Expiration",
+              "type": "singlestat",
+              "valueFontSize": "80%",
+              "valueMaps": [
+                {
+                  "op": "=",
+                  "text": "N/A",
+                  "value": "null"
+                }
+              ],
+              "valueName": "current"
+            },
+            {
+              "colorBackground": false,
+              "colorValue": false,
+              "colors": [
+                "#299c46",
+                "rgba(237, 129, 40, 0.89)",
+                "#d44a3a"
+              ],
+              "datasource": null,
+              "decimals": null,
+              "format": "short",
+              "gauge": {
+                "maxValue": 100,
+                "minValue": 0,
+                "show": false,
+                "thresholdLabels": false,
+                "thresholdMarkers": true
+              },
+              "id": 7,
+              "links": [],
+              "mappingType": 1,
+              "mappingTypes": [
+                {
+                  "name": "value to text",
+                  "value": 1
+                },
+                {
+                  "name": "range to text",
+                  "value": 2
+                }
+              ],
+              "nullPointMode": "connected",
+              "nullText": null,
+              "postfix": "",
+              "postfixFontSize": "50%",
+              "prefix": "",
+              "prefixFontSize": "50%",
+              "rangeMaps": [
+                {
+                  "from": "null",
+                  "text": "N/A",
+                  "to": "null"
+                }
+              ],
+              "sparkline": {
+                "fillColor": "rgba(31, 118, 189, 0.18)",
+                "full": false,
+                "lineColor": "rgb(31, 120, 193)",
+                "show": false
+              },
+              "span": 3,
+              "tableColumn": "",
+              "targets": [
+                {
+                  "expr": "scalar(sum by(cluster, db)(redis_server_db_keys{namespace=\"$namespace\", role=\"master\", cluster=\"$cluster\", db=\"$db\"}))",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "A",
+                  "refId": "A",
+                  "step": 14400
+                }
+              ],
+              "thresholds": "",
+              "title": "Key Count",
+              "type": "singlestat",
+              "valueFontSize": "80%",
+              "valueMaps": [
+                {
+                  "op": "=",
+                  "text": "N/A",
+                  "value": "null"
+                }
+              ],
+              "valueName": "current"
+            },
+            {
+              "colorBackground": false,
+              "colorValue": false,
+              "colors": [
+                "#299c46",
+                "rgba(237, 129, 40, 0.89)",
+                "#d44a3a"
+              ],
+              "datasource": null,
+              "decimals": null,
+              "format": "short",
+              "gauge": {
+                "maxValue": 100,
+                "minValue": 0,
+                "show": false,
+                "thresholdLabels": false,
+                "thresholdMarkers": true
+              },
+              "id": 8,
+              "links": [],
+              "mappingType": 1,
+              "mappingTypes": [
+                {
+                  "name": "value to text",
+                  "value": 1
+                },
+                {
+                  "name": "range to text",
+                  "value": 2
+                }
+              ],
+              "nullPointMode": "connected",
+              "nullText": null,
+              "postfix": "",
+              "postfixFontSize": "50%",
+              "prefix": "",
+              "prefixFontSize": "50%",
+              "rangeMaps": [
+                {
+                  "from": "null",
+                  "text": "N/A",
+                  "to": "null"
+                }
+              ],
+              "sparkline": {
+                "fillColor": "rgba(31, 118, 189, 0.18)",
+                "full": false,
+                "lineColor": "rgb(31, 120, 193)",
+                "show": false
+              },
+              "span": 3,
+              "tableColumn": "",
+              "targets": [
+                {
+                  "expr": "scalar(sum by(cluster, db)(endpoint_client_connections{namespace=\"$namespace\", cluster=\"$cluster\", db=\"$db\"} - endpoint_client_disconnections{namespace=\"$namespace\", cluster=\"$cluster\", db=\"$db\"}))",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "A",
+                  "refId": "A",
+                  "step": 14400
+                }
+              ],
+              "thresholds": "",
+              "title": "Connection Count",
+              "type": "singlestat",
+              "valueFontSize": "80%",
+              "valueMaps": [
+                {
+                  "op": "=",
+                  "text": "N/A",
+                  "value": "null"
+                }
+              ],
+              "valueName": "current"
+            }
+          ],
+          "repeat": null,
+          "repeatIteration": null,
+          "repeatRowId": null,
+          "showTitle": true,
+          "title": "$db",
+          "titleSize": "h6"
+        }
+      ],
+      "schemaVersion": 14,
+      "style": "light",
+      "tags": [
+        "redis-enterprise",
+        "openshift-observe",
+        "basic"
+      ],
+      "templating": {
+        "list": [
+          {
+            "allValue": null,
+            "current": {
+              "text": "",
+              "value": ""
+            },
+            "datasource": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "namespace",
+            "options": [],
+            "query": "label_values(redis_server_up, namespace)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": null,
+            "current": {
+              "text": "",
+              "value": ""
+            },
+            "datasource": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "cluster",
+            "options": [],
+            "query": "label_values(redis_server_up{namespace=\"$namespace\"}, cluster)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "auto": false,
+            "auto_count": 30,
+            "auto_min": "1m",
+            "current": {
+              "selected": false,
+              "text": "1m",
+              "value": "1m"
+            },
+            "hide": 0,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "aggregation",
+            "options": [],
+            "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+            "refresh": 2,
+            "skipUrlSync": false,
+            "type": "interval"
+          },
+          {
+            "allValue": null,
+            "current": {
+              "text": "",
+              "value": ""
+            },
+            "datasource": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "db",
+            "options": [],
+            "query": "label_values(endpoint_client_connections{namespace=\"$namespace\", cluster=\"$cluster\"},db)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          }
+        ]
+      },
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "timepicker": {
+        "refresh_intervals": [
+          "10s",
+          "30s",
+          "1m",
+          "5m",
+          "15m",
+          "30m",
+          "1h"
+        ],
+        "time_options": [
+          "5m",
+          "15m",
+          "1h",
+          "6h",
+          "12h",
+          "24h",
+          "2d",
+          "7d",
+          "30d"
+        ]
+      },
+      "timezone": "utc",
+      "title": "Redis Enterprise / Basic / Cluster Status Dashboard",
+      "uid": "re-observe-basic-cluster-status",
+      "version": 1
+    }

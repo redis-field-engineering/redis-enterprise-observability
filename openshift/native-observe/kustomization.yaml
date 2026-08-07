@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - redis-enterprise-servicemonitor.yaml
+  - redis-enterprise-prometheusrule.yaml
+  - dashboards/redis-enterprise-basic-cluster-status.yaml
+  - dashboards/redis-enterprise-basic-database-status.yaml
+  - dashboards/redis-enterprise-basic-node.yaml
+  - dashboards/redis-enterprise-basic-shard.yaml
+  - dashboards/redis-enterprise-basic-active-active.yaml
+  - dashboards/redis-enterprise-basic-synchronization.yaml
+  - dashboards/redis-enterprise-ops-cluster.yaml
+  - dashboards/redis-enterprise-ops-database.yaml
+  - dashboards/redis-enterprise-ops-node.yaml
+  - dashboards/redis-enterprise-ops-shard.yaml
+  - dashboards/redis-enterprise-ops-latency.yaml
+  - dashboards/redis-enterprise-ops-active-active-lag.yaml
+  - dashboards/redis-enterprise-ops-redisearch-qps.yaml

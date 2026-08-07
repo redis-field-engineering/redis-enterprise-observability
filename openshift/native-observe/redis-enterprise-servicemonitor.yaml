@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: redis-enterprise-observe
+  namespace: redis-enterprise
+  labels:
+    app.kubernetes.io/name: redis-enterprise-observe
+    app.kubernetes.io/part-of: redis-enterprise-observability
+spec:
+  selector:
+    matchLabels:
+      redis.io/service: prom-metrics
+  endpoints:
+    - port: prometheus
+      scheme: https
+      path: /v2
+      interval: 30s
+      scrapeTimeout: 30s
+      tlsConfig:
+        insecureSkipVerify: true

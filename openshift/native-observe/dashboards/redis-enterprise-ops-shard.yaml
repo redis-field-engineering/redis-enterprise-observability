@@ -1,0 +1,1924 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-enterprise-ops-shard
+  namespace: openshift-config-managed
+  labels:
+    console.openshift.io/dashboard: "true"
+    app.kubernetes.io/name: redis-enterprise-observe
+    app.kubernetes.io/part-of: redis-enterprise-observability
+data:
+  redis-enterprise-ops-shard.json: |-
+    {
+      "annotations": {
+        "list": []
+      },
+      "editable": true,
+      "gnetId": null,
+      "graphTooltip": 0,
+      "hideControls": false,
+      "links": [],
+      "refresh": "30s",
+      "rows": [
+        {
+          "collapse": false,
+          "height": "250px",
+          "panels": [
+            {
+              "colorBackground": false,
+              "colorValue": false,
+              "colors": [
+                "#299c46",
+                "rgba(237, 129, 40, 0.89)",
+                "#d44a3a"
+              ],
+              "datasource": null,
+              "decimals": null,
+              "format": "bytes",
+              "gauge": {
+                "maxValue": 100,
+                "minValue": 0,
+                "show": false,
+                "thresholdLabels": false,
+                "thresholdMarkers": true
+              },
+              "id": 1,
+              "links": [],
+              "mappingType": 1,
+              "mappingTypes": [
+                {
+                  "name": "value to text",
+                  "value": 1
+                },
+                {
+                  "name": "range to text",
+                  "value": 2
+                }
+              ],
+              "nullPointMode": "connected",
+              "nullText": null,
+              "postfix": "",
+              "postfixFontSize": "50%",
+              "prefix": "",
+              "prefixFontSize": "50%",
+              "rangeMaps": [
+                {
+                  "from": "null",
+                  "text": "N/A",
+                  "to": "null"
+                }
+              ],
+              "sparkline": {
+                "fillColor": "rgba(31, 118, 189, 0.18)",
+                "full": false,
+                "lineColor": "rgb(31, 120, 193)",
+                "show": false
+              },
+              "span": 4,
+              "tableColumn": "",
+              "targets": [
+                {
+                  "expr": "scalar(redis_server_used_memory{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"})",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "A",
+                  "refId": "A",
+                  "step": 10
+                }
+              ],
+              "thresholds": "",
+              "title": "Used Memory",
+              "type": "singlestat",
+              "valueFontSize": "80%",
+              "valueMaps": [
+                {
+                  "op": "=",
+                  "text": "N/A",
+                  "value": "null"
+                }
+              ],
+              "valueName": "current"
+            },
+            {
+              "colorBackground": false,
+              "colorValue": false,
+              "colors": [
+                "#299c46",
+                "rgba(237, 129, 40, 0.89)",
+                "#d44a3a"
+              ],
+              "datasource": null,
+              "decimals": null,
+              "format": "short",
+              "gauge": {
+                "maxValue": 100,
+                "minValue": 0,
+                "show": false,
+                "thresholdLabels": false,
+                "thresholdMarkers": true
+              },
+              "id": 2,
+              "links": [],
+              "mappingType": 1,
+              "mappingTypes": [
+                {
+                  "name": "value to text",
+                  "value": 1
+                },
+                {
+                  "name": "range to text",
+                  "value": 2
+                }
+              ],
+              "nullPointMode": "connected",
+              "nullText": null,
+              "postfix": "",
+              "postfixFontSize": "50%",
+              "prefix": "",
+              "prefixFontSize": "50%",
+              "rangeMaps": [
+                {
+                  "from": "null",
+                  "text": "N/A",
+                  "to": "null"
+                }
+              ],
+              "sparkline": {
+                "fillColor": "rgba(31, 118, 189, 0.18)",
+                "full": false,
+                "lineColor": "rgb(31, 120, 193)",
+                "show": false
+              },
+              "span": 3,
+              "tableColumn": "",
+              "targets": [
+                {
+                  "expr": "sum by (db) (redis_server_db_keys{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"})",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "A",
+                  "refId": "A",
+                  "step": 10
+                }
+              ],
+              "thresholds": "",
+              "title": "#Keys",
+              "type": "singlestat",
+              "valueFontSize": "80%",
+              "valueMaps": [
+                {
+                  "op": "=",
+                  "text": "N/A",
+                  "value": "null"
+                }
+              ],
+              "valueName": "current"
+            },
+            {
+              "colorBackground": false,
+              "colorValue": false,
+              "colors": [
+                "#299c46",
+                "rgba(237, 129, 40, 0.89)",
+                "#d44a3a"
+              ],
+              "datasource": null,
+              "decimals": null,
+              "format": "short",
+              "gauge": {
+                "maxValue": 100,
+                "minValue": 0,
+                "show": false,
+                "thresholdLabels": false,
+                "thresholdMarkers": true
+              },
+              "id": 3,
+              "links": [],
+              "mappingType": 1,
+              "mappingTypes": [
+                {
+                  "name": "value to text",
+                  "value": 1
+                },
+                {
+                  "name": "range to text",
+                  "value": 2
+                }
+              ],
+              "nullPointMode": "connected",
+              "nullText": null,
+              "postfix": "",
+              "postfixFontSize": "50%",
+              "prefix": "",
+              "prefixFontSize": "50%",
+              "rangeMaps": [
+                {
+                  "from": "null",
+                  "text": "N/A",
+                  "to": "null"
+                }
+              ],
+              "sparkline": {
+                "fillColor": "rgba(31, 118, 189, 0.18)",
+                "full": false,
+                "lineColor": "rgb(31, 120, 193)",
+                "show": false
+              },
+              "span": 3,
+              "tableColumn": "",
+              "targets": [
+                {
+                  "expr": "scalar(redis_server_connected_clients{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"})",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "A",
+                  "refId": "A",
+                  "step": 10
+                }
+              ],
+              "thresholds": "",
+              "title": "#Connections",
+              "type": "singlestat",
+              "valueFontSize": "80%",
+              "valueMaps": [
+                {
+                  "op": "=",
+                  "text": "N/A",
+                  "value": "null"
+                }
+              ],
+              "valueName": "current"
+            }
+          ],
+          "repeat": null,
+          "repeatIteration": null,
+          "repeatRowId": null,
+          "showTitle": true,
+          "title": "Overview",
+          "titleSize": "h6"
+        },
+        {
+          "collapse": false,
+          "height": "250px",
+          "panels": [
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": null,
+              "fill": 1,
+              "id": 4,
+              "interval": "1m",
+              "legend": {
+                "alignAsTable": true,
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "rightSide": true,
+                "show": true,
+                "total": false,
+                "values": false
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "null as zero",
+              "percentage": false,
+              "pointradius": 5,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "span": 4,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "redis_server_used_memory{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "used_mem - role:{{role}}, node:{{node}}, slots:{{slots}}",
+                  "refId": "A",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_used_ram{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "used_ram - role:{{role}}, node:{{node}}, slots:{{slots}}",
+                  "refId": "B",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_max_ram{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} < redis_server_used_ram{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} *.5",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "max_ram (when low, near used_ram)",
+                  "refId": "C",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_max_process_mem{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} < redis_server_max_ram{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} * 1.5",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "max_process_mem (when low, near max_ram)",
+                  "refId": "D",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_used_ram{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} - redis_server_mem_aof_buffer{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"}  - redis_server_mem_clients_slaves{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "used ram - slave/aof bufs",
+                  "refId": "E",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_used_memory{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} - redis_server_mem_aof_buffer{namespace=\"$namespace\", cluster=\"$cluster\", db=\"$db\", redis=\"$redis\"} - redis_server_mem_clients_slaves{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "used memory - slave/aof bufs",
+                  "refId": "J",
+                  "step": 10
+                },
+                {
+                  "expr": "namedprocess_namegroup_memory_bytes{namespace=\"$namespace\", cluster=\"$cluster\", groupname=\"redis-${redis}\", memtype=\"resident\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "Process RSS",
+                  "refId": "G",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_maxmemory{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} < redis_server_used_memory{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} * 1.5 and redis_server_maxmemory{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} > 0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "maxmemory (when low, near maxmemory)",
+                  "refId": "H",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_max_process_mem{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} < redis_server_used_memory{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} * 1.5",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "max_process_mem (when low. near maxmemory)",
+                  "refId": "I",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_current_cow_size{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} > 0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "Child CoW",
+                  "refId": "F",
+                  "step": 10
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeShift": null,
+              "title": "Used Memory",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "format": "bytes",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": false
+                }
+              ]
+            },
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": null,
+              "fill": 1,
+              "id": 5,
+              "interval": "1m",
+              "legend": {
+                "alignAsTable": true,
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "rightSide": true,
+                "show": true,
+                "total": false,
+                "values": false
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "null as zero",
+              "percentage": false,
+              "pointradius": 5,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "span": 4,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "rate(redis_server_total_commands_processed{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "commands / s",
+                  "refId": "A",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_keyspace_read_hits{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "read hits /s",
+                  "refId": "B",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_keyspace_read_misses{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "read misses /s",
+                  "refId": "C",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_keyspace_write_hits{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "write hits /s",
+                  "refId": "D",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_keyspace_write_misses{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "write misses / s",
+                  "refId": "E",
+                  "step": 10
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeShift": null,
+              "title": "Ops Per Second",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": false
+                }
+              ]
+            },
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": null,
+              "fill": 1,
+              "id": 6,
+              "interval": "1m",
+              "legend": {
+                "alignAsTable": true,
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "rightSide": true,
+                "show": true,
+                "total": false,
+                "values": false
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "null as zero",
+              "percentage": false,
+              "pointradius": 5,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "span": 4,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "rate(redis_server_total_net_input_bytes{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "ingress",
+                  "refId": "A",
+                  "step": 10
+                },
+                {
+                  "expr": "- (rate(redis_server_total_net_output_bytes{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m]) - rate(redis_server_master_repl_offset{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m]))",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "egress",
+                  "refId": "B",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_master_repl_offset{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "replication (offset)",
+                  "refId": "C",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_repl_touch_bytes{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "repl touch",
+                  "refId": "D",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_total_net_input_bytes{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "repl input",
+                  "refId": "E",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_repl_touch_bytes{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "repl output",
+                  "refId": "F",
+                  "step": 10
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeShift": null,
+              "title": "Bandwidth",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": false
+                }
+              ]
+            }
+          ],
+          "repeat": null,
+          "repeatIteration": null,
+          "repeatRowId": null,
+          "showTitle": true,
+          "title": "Memory",
+          "titleSize": "h6"
+        },
+        {
+          "collapse": false,
+          "height": "250px",
+          "panels": [
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": null,
+              "fill": 1,
+              "id": 7,
+              "interval": "1m",
+              "legend": {
+                "alignAsTable": true,
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "rightSide": true,
+                "show": true,
+                "total": false,
+                "values": false
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "null as zero",
+              "percentage": false,
+              "pointradius": 5,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "span": 4,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "redis_server_db_keys{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "keys",
+                  "refId": "A",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_db_expires{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "volatile",
+                  "refId": "B",
+                  "step": 10
+                },
+                {
+                  "expr": "max(redis_server_bigdb_ram{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}) by (redis,db,cluster)",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "ram",
+                  "refId": "C",
+                  "step": 10
+                },
+                {
+                  "expr": "max(redis_server_bigdb_disk{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}) by (redis,db,cluster)",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "disk",
+                  "refId": "D",
+                  "step": 10
+                },
+                {
+                  "expr": "sum(((max(redis_server_bigdb_ram{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}) by (redis,db,cluster)) + (max(redis_server_bigdb_disk{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} or redis_server_bigdb_disk{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}) by (redis,db,cluster)))) - sum(redis_server_db_keys{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"})",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "overlapping",
+                  "refId": "E",
+                  "step": 10
+                },
+                {
+                  "expr": "max(redis_server_bigdb_clean{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}) by (redis,db,cluster)",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "clean",
+                  "refId": "F",
+                  "step": 10
+                },
+                {
+                  "expr": "max( redis_server_bigdb_dirty{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}) by (redis,db,cluster)",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "dirty",
+                  "refId": "G",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_total_blocking_keys{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "total_blocking_keys",
+                  "refId": "H",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_total_blocking_keys_on_nokey{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "total_blocking_keys_on_nokey",
+                  "refId": "I",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_tracking_total_keys{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "tracking_total_keys",
+                  "refId": "J",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_tracking_total_prefixes{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "total_blocking_keys",
+                  "refId": "L",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_pubsub_patterns{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "pubsub_patterns",
+                  "refId": "K",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_pubsub_channels{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "pubsub_channels",
+                  "refId": "M",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_pubsubshard_channels{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "pubsubshard_channels",
+                  "refId": "N",
+                  "step": 10
+                },
+                {
+                  "expr": "max( redis_server_bigdb_meta{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}) by (redis,db,cluster)",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "meta",
+                  "refId": "O",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_total_watched_keys{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "total_watched_keys",
+                  "refId": "P",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_db_subexpiry{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "subexpiry",
+                  "refId": "Q",
+                  "step": 10
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeShift": null,
+              "title": "#Keys",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": false
+                }
+              ]
+            },
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": null,
+              "fill": 1,
+              "id": 8,
+              "interval": "1m",
+              "legend": {
+                "alignAsTable": true,
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "rightSide": true,
+                "show": true,
+                "total": false,
+                "values": false
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "null as zero",
+              "percentage": false,
+              "pointradius": 5,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "span": 4,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "rate(redis_server_expired_keys{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "shard:$redis - expired",
+                  "refId": "A",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_evicted_keys{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "shard:$redis - evicted",
+                  "refId": "B",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_expired_subkeys{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "shard:$redis - expired_subkeys",
+                  "refId": "C",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_big_disk_expired_subkeys_loaded{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "shard:$redis - big_disk_expired_subkeys_loaded",
+                  "refId": "D",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_big_disk_expired_keys{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "shard:$redis - big_disk_expired_keys",
+                  "refId": "E",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_big_disk_evicted_keys{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "shard:$redis - big_disk_evicted_keys",
+                  "refId": "F",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_big_ttl_histogram_expired{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "shard:$redis - big_ttl_histogram_expired",
+                  "refId": "G",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_keys_trimmed{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "shard:$redis - trimmed",
+                  "refId": "I",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_db0_avg_ttl{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "shard:$redis - avg_ttl",
+                  "refId": "J",
+                  "step": 10
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeShift": null,
+              "title": "Expired / Evicted Objects Per Second",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": false
+                }
+              ]
+            },
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": null,
+              "fill": 1,
+              "id": 9,
+              "interval": "1m",
+              "legend": {
+                "alignAsTable": true,
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "rightSide": true,
+                "show": true,
+                "total": false,
+                "values": false
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "null as zero",
+              "percentage": false,
+              "pointradius": 5,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "span": 4,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "redis_server_connected_clients{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "Total",
+                  "refId": "A",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_maxclients{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} < redis_server_connected_clients{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"} * 1.5",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "max-clients (when low)",
+                  "refId": "B",
+                  "step": 10
+                },
+                {
+                  "expr": "delta(redis_server_total_connections_received{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}[1m])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "conections / minute",
+                  "refId": "C",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_blocked_clients{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "blocked_clients",
+                  "refId": "D",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_tracking_clients{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "tracking_clients",
+                  "refId": "E",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_pubsub_clients{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "pubsub_clients",
+                  "refId": "F",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_watching_clients{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "watching_clients",
+                  "refId": "G",
+                  "step": 10
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeShift": null,
+              "title": "Shard Connections",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": false
+                }
+              ]
+            }
+          ],
+          "repeat": null,
+          "repeatIteration": null,
+          "repeatRowId": null,
+          "showTitle": true,
+          "title": "Keyspace",
+          "titleSize": "h6"
+        },
+        {
+          "collapse": false,
+          "height": "250px",
+          "panels": [
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": null,
+              "fill": 1,
+              "id": 10,
+              "interval": "1m",
+              "legend": {
+                "alignAsTable": true,
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "rightSide": true,
+                "show": true,
+                "total": false,
+                "values": false
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "null as zero",
+              "percentage": false,
+              "pointradius": 5,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "span": 6,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "rate(redis_server_keyspace_read_hits{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}[60s])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "read hits",
+                  "refId": "A",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_keyspace_write_hits{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}[60s])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "write hits",
+                  "refId": "B",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_keyspace_read_misses{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}[60s])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "read misses",
+                  "refId": "C",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_keyspace_write_misses{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}[60s])",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "write misses",
+                  "refId": "D",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_lazyfreed_objects{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}[60s])!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "lazyfreed objects",
+                  "refId": "E",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_total_error_replies{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}[60s])!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "total error replies",
+                  "refId": "F",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_prefetch_expired{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}[60s])!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "prefetch_expired",
+                  "refId": "G",
+                  "step": 10
+                },
+                {
+                  "expr": "rate(redis_server_prefetch_missing{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}[60s])!=0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "prefetch_missing",
+                  "refId": "H",
+                  "step": 10
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeShift": null,
+              "title": "Read/Write Hits/Misses + Lazyfree + Errors",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "format": "ops",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": false
+                }
+              ]
+            },
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": null,
+              "fill": 1,
+              "id": 11,
+              "interval": "1m",
+              "legend": {
+                "alignAsTable": true,
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "rightSide": true,
+                "show": true,
+                "total": false,
+                "values": false
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "null as zero",
+              "percentage": false,
+              "pointradius": 5,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "span": 6,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "redis_server_allocator_active{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "active",
+                  "refId": "A",
+                  "step": 10
+                },
+                {
+                  "expr": " redis_server_allocator_allocated{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "allocated",
+                  "refId": "B",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_allocator_resident{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "resident",
+                  "refId": "C",
+                  "step": 10
+                },
+                {
+                  "expr": "namedprocess_namegroup_memory_bytes{namespace=\"$namespace\", cluster=\"$cluster\", groupname=\"redis-${redis}\", memtype=\"resident\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "process RSS",
+                  "refId": "D",
+                  "step": 10
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeShift": null,
+              "title": "Ram Allocator Usage",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "format": "bytes",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": false
+                }
+              ]
+            },
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": null,
+              "fill": 1,
+              "id": 12,
+              "interval": "1m",
+              "legend": {
+                "alignAsTable": true,
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "rightSide": true,
+                "show": true,
+                "total": false,
+                "values": false
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "null as zero",
+              "percentage": false,
+              "pointradius": 5,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "span": 6,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "(redis_server_ram_overhead{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} - redis_server_mem_clients_slaves{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} )/ redis_server_max_ram{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "% ram overhead",
+                  "refId": "A",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_ram_overhead{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} ",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "total overhead",
+                  "refId": "B",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_mem_clients_slaves{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} ",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "slave buffers",
+                  "refId": "C",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_mem_clients_normal{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} ",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "client buffers",
+                  "refId": "D",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_mem_aof_buffer{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} > 0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "aof buffer",
+                  "refId": "E",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_mem_replication_backlog{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} ",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "replication backlog",
+                  "refId": "F",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_ram_keys_size{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} > 0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "ram_keys_size",
+                  "refId": "G",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_keys_ram_overhead{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} > 0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "dictionaries",
+                  "refId": "H",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_used_memory_scripts{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} > 0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "scripts",
+                  "refId": "I",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_rocks_ram_used_total{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} > 0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "rocks_ram_used_total",
+                  "refId": "J",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_rocks_ram_used_for_mem_tables{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} > 0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "rocks_ram_used_for_mem_tables",
+                  "refId": "K",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_used_memory_vm_total{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} > 0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "Lua VM",
+                  "refId": "L",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_mem_overhead_db_hashtable_rehashing{namespace=\"$namespace\", cluster=\"$cluster\",db=\"$db\", redis=\"$redis\"} > 0",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "dictionary rehashing",
+                  "refId": "M",
+                  "step": 10
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeShift": null,
+              "title": "Shard Ram Overheads",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "format": "bytes",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": false
+                }
+              ]
+            },
+            {
+              "aliasColors": {},
+              "bars": false,
+              "dashLength": 10,
+              "dashes": false,
+              "datasource": null,
+              "fill": 1,
+              "id": 13,
+              "interval": "1m",
+              "legend": {
+                "alignAsTable": true,
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "rightSide": true,
+                "show": true,
+                "total": false,
+                "values": false
+              },
+              "lines": true,
+              "linewidth": 1,
+              "links": [],
+              "nullPointMode": "null as zero",
+              "percentage": false,
+              "pointradius": 5,
+              "points": false,
+              "renderer": "flot",
+              "seriesOverrides": [],
+              "spaceLength": 10,
+              "span": 6,
+              "stack": false,
+              "steppedLine": false,
+              "targets": [
+                {
+                  "expr": "redis_server_mem_fragmentation_ratio{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "shard rss fragmentation (total)",
+                  "refId": "A",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_allocator_active{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"} / redis_server_allocator_allocated{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "Shard allocator fragmentation (defraggable?)",
+                  "refId": "B",
+                  "step": 10
+                },
+                {
+                  "expr": "redis_server_allocator_resident{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"} / redis_server_allocator_active{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"}",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "allocator RSS / active (purgable?)",
+                  "refId": "C",
+                  "step": 10
+                },
+                {
+                  "expr": "sum(namedprocess_namegroup_memory_bytes{namespace=\"$namespace\", cluster=\"$cluster\", groupname=\"redis-${redis}\", memtype=\"resident\"}) / sum(redis_server_allocator_resident{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\",cluster=\"$cluster\"})",
+                  "format": "time_series",
+                  "intervalFactor": 2,
+                  "legendFormat": "process RSS / allocator resident (process overheads)",
+                  "refId": "D",
+                  "step": 10
+                }
+              ],
+              "thresholds": [],
+              "timeFrom": null,
+              "timeShift": null,
+              "title": "Fragmentation",
+              "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+              },
+              "type": "graph",
+              "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+              },
+              "yaxes": [
+                {
+                  "format": "percent",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": true
+                },
+                {
+                  "format": "short",
+                  "label": null,
+                  "logBase": 1,
+                  "max": null,
+                  "min": null,
+                  "show": false
+                }
+              ]
+            }
+          ],
+          "repeat": null,
+          "repeatIteration": null,
+          "repeatRowId": null,
+          "showTitle": true,
+          "title": "Memory breakdown",
+          "titleSize": "h6"
+        }
+      ],
+      "schemaVersion": 14,
+      "style": "light",
+      "tags": [
+        "redis-enterprise",
+        "openshift-observe",
+        "ops"
+      ],
+      "templating": {
+        "list": [
+          {
+            "allValue": null,
+            "current": {
+              "text": "",
+              "value": ""
+            },
+            "datasource": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "namespace",
+            "options": [],
+            "query": "label_values(redis_server_up, namespace)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": null,
+            "current": {
+              "text": "",
+              "value": ""
+            },
+            "datasource": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "cluster",
+            "options": [],
+            "query": "label_values(redis_server_up{namespace=\"$namespace\"}, cluster)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": null,
+            "current": {
+              "text": "",
+              "value": ""
+            },
+            "datasource": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "db",
+            "options": [],
+            "query": "label_values(db_status{namespace=\"$namespace\", cluster=\"$cluster\"}, db)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": null,
+            "current": {
+              "text": "",
+              "value": ""
+            },
+            "datasource": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "redis",
+            "options": [],
+            "query": "label_values(redis_server_up{namespace=\"$namespace\", cluster=\"$cluster\", db=\"$db\"}, redis)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": null,
+            "current": {
+              "text": "",
+              "value": ""
+            },
+            "datasource": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "node",
+            "options": [],
+            "query": "label_values(redis_server_up{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"},node)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": null,
+            "current": {
+              "text": "",
+              "value": ""
+            },
+            "datasource": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "role",
+            "options": [],
+            "query": "label_values(redis_server_up{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"},role)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": null,
+            "current": {
+              "text": "",
+              "value": ""
+            },
+            "datasource": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "slots",
+            "options": [],
+            "query": "label_values(redis_server_up{namespace=\"$namespace\", db=\"$db\", redis=\"$redis\", cluster=\"$cluster\"}, slots)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "auto": false,
+            "auto_count": 30,
+            "auto_min": "1m",
+            "current": {
+              "selected": false,
+              "text": "1m",
+              "value": "1m"
+            },
+            "hide": 0,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "aggregation",
+            "options": [],
+            "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+            "refresh": 2,
+            "skipUrlSync": false,
+            "type": "interval"
+          },
+          {
+            "allValue": null,
+            "current": {
+              "text": "",
+              "value": ""
+            },
+            "datasource": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": null,
+            "multi": false,
+            "name": "status",
+            "options": [],
+            "query": "label_values(db_status{namespace=\"$namespace\", db=\"$db\", cluster=\"$cluster\"}, status)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          }
+        ]
+      },
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "timepicker": {
+        "refresh_intervals": [
+          "10s",
+          "30s",
+          "1m",
+          "5m",
+          "15m",
+          "30m",
+          "1h"
+        ],
+        "time_options": [
+          "5m",
+          "15m",
+          "1h",
+          "6h",
+          "12h",
+          "24h",
+          "2d",
+          "7d",
+          "30d"
+        ]
+      },
+      "timezone": "utc",
+      "title": "Redis Enterprise / Ops / Shard dashboard",
+      "uid": "re-observe-ops-shard",
+      "version": 1
+    }

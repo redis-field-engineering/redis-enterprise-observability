@@ -1,0 +1,301 @@
+= OpenShift Native Observe Dashboards
+
+Use OpenShift's native Observe UI to view Redis Enterprise dashboards without deploying a separate Grafana instance.
+
+This guide installs:
+
+* A `ServiceMonitor` that scrapes an in-cluster Redis Enterprise metrics service on `https://<service>:8070/v2`
+* A `PrometheusRule` that exposes Redis Enterprise alerts in OpenShift Observe
+* Redis Enterprise dashboard `ConfigMap` resources for OpenShift Observe -> Dashboards
+
+The dashboards are legacy OpenShift dashboard `ConfigMap` resources. They are curated from the Grafana v2 software basic and ops dashboards in this repository, but they intentionally omit Grafana-only panel types and transformations that do not render reliably in the OpenShift legacy dashboard UI.
+
+For a customer-facing active-active deployment runbook using Redis Enterprise clusters in `ns-a` and `ns-b`, see `openshift/native-observe/RUNBOOK.md`.
+
+== Prerequisites
+
+* OpenShift CLI (`oc`) installed and logged in
+* User workload monitoring enabled in OpenShift
+* Permission to create `ServiceMonitor` and `PrometheusRule` resources in the Redis Enterprise namespace
+* Permission to create `ConfigMap` resources in `openshift-config-managed`
+* Redis Enterprise deployed in OpenShift with a metrics service such as `rec-prom`, `rec-a-prom`, or `rec-b-prom`
+* This repository cloned locally
+
+Run commands from the repository root:
+
+[source,bash]
+----
+cd /path/to/redis-enterprise-observability
+----
+
+== Step 1: Enable User Workload Monitoring
+
+OpenShift must collect metrics from user namespaces before the dashboards can show Redis Enterprise data.
+
+Cluster administrators enable user workload monitoring with `enableUserWorkload: true` in the `cluster-monitoring-config` `ConfigMap`:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+data:
+  config.yaml: |
+    enableUserWorkload: true
+----
+
+After the setting is applied, confirm that the user workload monitoring stack is running:
+
+[source,bash]
+----
+oc -n openshift-user-workload-monitoring get pods
+----
+
+You should see `prometheus-user-workload` and `thanos-ruler-user-workload` pods.
+
+== Step 2: Prepare the Redis Enterprise Metrics Service
+
+Set the namespace and service name for your Redis Enterprise metrics service:
+
+[source,bash]
+----
+export REDIS_NS=redis-enterprise
+export REDIS_METRICS_SERVICE=rec-prom
+----
+
+For active-active examples, the service names might be `rec-a-prom` and `rec-b-prom` in their respective namespaces.
+
+Check that the service exists and has endpoints:
+
+[source,bash]
+----
+oc -n "${REDIS_NS}" get svc "${REDIS_METRICS_SERVICE}"
+oc -n "${REDIS_NS}" get endpoints "${REDIS_METRICS_SERVICE}" -o wide
+----
+
+Confirm that the service has the Redis Enterprise metrics label and the expected service port name:
+
+[source,bash]
+----
+oc -n "${REDIS_NS}" get svc "${REDIS_METRICS_SERVICE}" \
+  -o jsonpath='{.metadata.labels.redis\.io/service}{"\n"}{.spec.ports[?(@.port==8070)].name}{"\n"}'
+----
+
+Expected output:
+
+[source,text]
+----
+prom-metrics
+prometheus
+----
+
+The provided `ServiceMonitor` selects `redis.io/service=prom-metrics` and service port `prometheus`, which matches Redis Enterprise operator-created metrics services.
+
+== Step 3: Apply the ServiceMonitor and Alerts
+
+The manifests default to the namespace `redis-enterprise`. To apply them to a different namespace without editing the files, use `yq`:
+
+[source,bash]
+----
+REDIS_NS="${REDIS_NS}" yq eval '.metadata.namespace = env(REDIS_NS)' \
+  openshift/native-observe/redis-enterprise-servicemonitor.yaml | oc apply -f -
+
+REDIS_NS="${REDIS_NS}" yq eval '.metadata.namespace = env(REDIS_NS)' \
+  openshift/native-observe/redis-enterprise-prometheusrule.yaml | oc apply -f -
+----
+
+The `ServiceMonitor` uses:
+
+* `scheme: https`
+* `path: /v2`
+* `port: prometheus`
+* `interval: 30s`
+* `tlsConfig.insecureSkipVerify: true`
+
+For production, replace `insecureSkipVerify: true` with the correct trust configuration whenever your Redis Enterprise metrics endpoint presents a certificate signed by a known CA.
+
+=== Optional Metrics Authentication
+
+The provided manifest assumes the Redis Enterprise metrics endpoint does not require authentication.
+
+If your endpoint requires basic authentication, create a secret in the same namespace as the `ServiceMonitor`:
+
+[source,bash]
+----
+oc -n "${REDIS_NS}" create secret generic redis-metrics-auth \
+  --from-literal=username='prometheus' \
+  --from-literal=password='replace-with-your-password'
+----
+
+Then add this block under the first item in `spec.endpoints` in `redis-enterprise-servicemonitor.yaml`:
+
+[source,yaml]
+----
+      basicAuth:
+        username:
+          name: redis-metrics-auth
+          key: username
+        password:
+          name: redis-metrics-auth
+          key: password
+----
+
+== Step 4: Confirm Metrics Are Available
+
+In the OpenShift web console, go to Observe -> Metrics and run:
+
+[source,promql]
+----
+redis_server_up{namespace="redis-enterprise"}
+----
+
+Also check representative metrics used by the dashboards:
+
+[source,promql]
+----
+node_metrics_up{namespace="redis-enterprise"}
+endpoint_client_connections{namespace="redis-enterprise"}
+----
+
+From the CLI, you can check whether the scrape target is up:
+
+[source,bash]
+----
+oc -n "${REDIS_NS}" get servicemonitor redis-enterprise-observe
+----
+
+If metrics do not appear, check the user workload Prometheus logs:
+
+[source,bash]
+----
+oc -n openshift-user-workload-monitoring logs statefulset/prometheus-user-workload -c prometheus --tail=100
+----
+
+== Step 5: Install the Observe Dashboards
+
+Install the dashboard `ConfigMap` resources:
+
+[source,bash]
+----
+oc apply -f openshift/native-observe/dashboards/
+----
+
+Then open the OpenShift web console and go to Observe -> Dashboards.
+
+The following dashboards should appear:
+
+* Redis Enterprise / Basic / Cluster Status Dashboard
+* Redis Enterprise / Basic / Database Status Dashboard
+* Redis Enterprise / Basic / Node Dashboard
+* Redis Enterprise / Basic / Shard Dashboard
+* Redis Enterprise / Basic / Active-Active
+* Redis Enterprise / Basic / Synchronization (Classic)
+* Redis Enterprise / Ops / Cluster Dashboard
+* Redis Enterprise / Ops / Database Dashboard
+* Redis Enterprise / Ops / Node Dashboard
+* Redis Enterprise / Ops / Shard dashboard
+* Redis Enterprise / Ops / Latency Dashboard
+* Redis Enterprise / Ops / Active-Active Lag
+* Redis Enterprise / Ops / RediSearch QPS dashboard
+
+Each dashboard includes a `namespace` variable. Select the Redis Enterprise namespace first, then select the relevant cluster, database, node, shard, or CRDT filters.
+
+== What Is Included and Omitted
+
+Included panel mappings:
+
+* Grafana `timeseries` panels are converted to legacy OpenShift `graph` panels
+* Grafana `stat` panels are converted to legacy `singlestat` panels when they do not depend on value mappings or advanced transformations
+* Grafana `table` panels are included only when they do not depend on transformations
+
+Omitted panel features:
+
+* Grafana `gauge`, `bargauge`, `piechart`, `link`, and `text` panels
+* Panels that require Grafana transformations
+* Panels that rely on Grafana value mappings
+* Dashboard links and workflow navigation links
+* Plugin-specific features
+
+These omissions are intentional. The goal is to keep the native OpenShift dashboards renderable and supportable in the legacy dashboard UI rather than carrying over Grafana features that the console does not reliably support.
+
+== Static Validation
+
+Validate the dashboard JSON embedded in each `ConfigMap`:
+
+[source,bash]
+----
+for file in openshift/native-observe/dashboards/*.yaml; do
+  key="$(yq -r '.data | keys | .[0]' "${file}")"
+  yq -r ".data[\"${key}\"]" "${file}" | jq empty
+done
+----
+
+Validate the manifest bundle:
+
+[source,bash]
+----
+oc kustomize openshift/native-observe >/tmp/redis-enterprise-native-observe.yaml
+yq eval 'true' /tmp/redis-enterprise-native-observe.yaml >/dev/null
+----
+
+If `promtool` is installed, validate the original alert rule source:
+
+[source,bash]
+----
+promtool check rules prometheus_v2/rules/alerts.yml
+----
+
+On a connected OpenShift cluster, run a server-side dry run:
+
+[source,bash]
+----
+oc apply --dry-run=server -f openshift/native-observe/dashboards/
+
+REDIS_NS="${REDIS_NS}" yq eval '.metadata.namespace = env(REDIS_NS)' \
+  openshift/native-observe/redis-enterprise-servicemonitor.yaml | oc apply --dry-run=server -f -
+
+REDIS_NS="${REDIS_NS}" yq eval '.metadata.namespace = env(REDIS_NS)' \
+  openshift/native-observe/redis-enterprise-prometheusrule.yaml | oc apply --dry-run=server -f -
+----
+
+== Troubleshooting
+
+=== Dashboards Do Not Appear
+
+Check that the dashboard `ConfigMap` resources are in `openshift-config-managed` and have the required label:
+
+[source,bash]
+----
+oc -n openshift-config-managed get cm -l console.openshift.io/dashboard=true
+----
+
+Refresh the web console after applying the `ConfigMap` resources.
+
+=== Dashboards Appear but Show No Data
+
+Check these first:
+
+* The Redis Enterprise metrics service has the `redis.io/service=prom-metrics` label
+* The service port selected by the `ServiceMonitor` is named `prometheus`
+* User workload monitoring is enabled
+* `redis_server_up{namespace="<redis-namespace>"}` returns data in Observe -> Metrics
+* The dashboard `namespace` variable is set to the Redis Enterprise namespace
+
+=== Alerts Do Not Appear
+
+Check that the `PrometheusRule` was created in the Redis Enterprise namespace:
+
+[source,bash]
+----
+oc -n "${REDIS_NS}" get prometheusrule redis-enterprise-observe-alerts
+----
+
+Then check Observe -> Alerting -> Alerting rules for the Redis Enterprise rule groups.
+
+== Next Steps
+
+* Use xref:platforms/prometheus.adoc[Prometheus Integration] for additional scrape examples
+* Use xref:platforms/grafana.adoc[Grafana Integration] if you need full Grafana dashboard fidelity
+* Use xref:guides/openshift-prometheus-grafana.adoc[OpenShift Deployment: Prometheus and Grafana] if you prefer a standalone observability stack in OpenShift

@@ -3136,7 +3136,7 @@
               "uid": "${DS_PROMETHEUS}"
             },
             "editorMode": "code",
-            "expr": "max(redis_server_search_fields_tag_NoIndex{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
+            "expr": "max(redis_server_search_fields_tag_CaseSensitive{cluster=\"$cluster\", db=\"$db\"}) or vector(0)",
             "hide": false,
             "legendFormat": "TAG",
             "range": true,

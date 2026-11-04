@@ -1943,9 +1943,9 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "rate(namedprocess_namegroup_cpu_seconds_total{redis=\"$shard\", mode=\"system\", cluster=\"$cluster\", db=\"$db\"}[1m])",
+          "expr": "sum(rate(namedprocess_namegroup_thread_cpu_seconds_total{cluster=\"$cluster\", redis=\"$shard\", mode=~\"system|user\"}[1m])) by (threadname)",
           "hide": false,
-          "legendFormat": "Main Thread - System",
+          "legendFormat": "{{threadname}}",
           "range": true,
           "refId": "A"
         },
@@ -1955,14 +1955,14 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "builder",
-          "expr": "rate(namedprocess_namegroup_cpu_seconds_total{redis=\"$shard\", mode=\"user\", cluster=\"$cluster\", db=\"$db\"}[1m])",
+          "expr": "sum(rate(namedprocess_namegroup_cpu_seconds_total{cluster=\"$cluster\", redis=\"$shard\", mode=~\"system|user\"}[1m])) by (redis)",
           "hide": false,
-          "legendFormat": "Main Thread - User",
+          "legendFormat": "all threads (process total)",
           "range": true,
           "refId": "B"
         }
       ],
-      "title": "Main Thread",
+      "title": "Thread CPU Utilization",
       "type": "timeseries"
     },
     {

@@ -1,0 +1,1740 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.6.5"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 0,
+        "y": 0
+      },
+      "id": 43,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "node",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": " database_syncer_config{\r\n        cluster=\"$cluster\",\r\n        target_db_id=\"$target_db_id\",\r\n        syncer_type=\"$syncer_type\"\r\n      }",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "{{node}}",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Main Syncer Node",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false,
+            "minWidth": 10
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #A (last)"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "green",
+                        "index": 0,
+                        "text": "in-sync"
+                      },
+                      "1": {
+                        "color": "red",
+                        "index": 1,
+                        "text": "out-of-sync"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #B (last)"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "red",
+                        "index": 0,
+                        "text": "Disconnected"
+                      },
+                      "1": {
+                        "color": "green",
+                        "index": 1,
+                        "text": "Connected"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #D (last)"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "red",
+                        "index": 0,
+                        "text": "Disconnected"
+                      },
+                      "1": {
+                        "color": "green",
+                        "index": 1,
+                        "text": "Connected"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "source_id"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "": {
+                        "color": "dark-blue",
+                        "index": 0,
+                        "text": "Main"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "state"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0,
+                        "text": "st_clean"
+                      },
+                      "1": {
+                        "index": 1,
+                        "text": "st_connected"
+                      },
+                      "2": {
+                        "index": 2,
+                        "text": "st_try_full_sync"
+                      },
+                      "3": {
+                        "index": 3,
+                        "text": "st_try_psync"
+                      },
+                      "4": {
+                        "index": 4,
+                        "text": "st_partial_sync_failed"
+                      },
+                      "5": {
+                        "index": 5,
+                        "text": "st_rdb_ready"
+                      },
+                      "6": {
+                        "index": 6,
+                        "text": "st_feed_ready"
+                      },
+                      "7": {
+                        "index": 7,
+                        "text": "st_in_rdb"
+                      },
+                      "8": {
+                        "index": 8,
+                        "text": "st_gradual_fullsync"
+                      },
+                      "9": {
+                        "index": 9,
+                        "text": "st_gradual_src"
+                      },
+                      "10": {
+                        "color": "green",
+                        "index": 10,
+                        "text": "st_in_sync"
+                      },
+                      "11": {
+                        "index": 11,
+                        "text": "st_draining"
+                      },
+                      "12": {
+                        "index": 12,
+                        "text": "st_dst_drain_done"
+                      },
+                      "13": {
+                        "index": 13,
+                        "text": "st_dst_disconnected"
+                      },
+                      "14": {
+                        "index": 14,
+                        "text": "st_src_disconnected"
+                      },
+                      "15": {
+                        "index": 15,
+                        "text": "st_fatal"
+                      },
+                      "16": {
+                        "index": 16,
+                        "text": "st_cleaning"
+                      },
+                      "17": {
+                        "index": 17,
+                        "text": "st_destructing"
+                      },
+                      "18": {
+                        "index": 18,
+                        "text": "st_ready_for_destrcruction"
+                      },
+                      "19": {
+                        "index": 19,
+                        "text": "st_timer_wait"
+                      },
+                      "20": {
+                        "index": 20,
+                        "text": "st_oom"
+                      },
+                      "21": {
+                        "index": 21,
+                        "text": "st_shutdown"
+                      },
+                      "22": {
+                        "index": 22,
+                        "text": "st_established"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Since"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Lag "
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 3
+      },
+      "id": 34,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "MainMngr/SourceIndex"
+          }
+        ]
+      },
+      "pluginVersion": "11.6.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "database_syncer_current_status{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\"}",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "database_syncer_dst_connectivity_state{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\"}",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "database_syncer_dst_connectivity_state_ms{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\"}",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "database_syncer_src_connectivity_state{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\"}",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "database_syncer_src_connectivity_state_ms{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\"}",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "database_syncer_lag_ms{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\"}",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "F"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "database_syncer_internal_state{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\"}",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "range": false,
+          "refId": "G"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "database_syncer_config{\r\n    cluster=\"$cluster\",\r\n    target_db_id=\"$target_db_id\",\r\n    syncer_type=\"$syncer_type\",\r\n    domain!=\"\"\r\n  }",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "H"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Value #A": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #B": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #C": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #D": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #E": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #F": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #G": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "domain": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "source_id": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "seriesToColumns",
+          "options": {
+            "byField": "source_id"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "Value #A (last)": 2,
+              "Value #B (last)": 4,
+              "Value #C (last)": 5,
+              "Value #D (last)": 6,
+              "Value #E (last)": 7,
+              "Value #F (last)": 3,
+              "Value #G (last)": 8,
+              "domain (last)": 1,
+              "source_id": 0
+            },
+            "renameByName": {
+              "Value #A (last)": "Syncer Status",
+              "Value #B (last)": "Destination Connectivity",
+              "Value #C (last)": "Since",
+              "Value #D (last)": "Source connectivity",
+              "Value #E (last)": "Since",
+              "Value #F (last)": "Lag ",
+              "Value #G (last)": "state",
+              "domain (last)": "Source DB",
+              "source_id": "MainMngr/SourceIndex"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "1. For Syncer Node \"Main\", check the \"Main Syncer Node\" value on the upper left corner\n\n2. Note that in all the metrics, the number is \"syncer shard_idx\"\nThis is NOT a shard id as we see on rladmin status, but internal syncer mapping ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false,
+            "minWidth": 10
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #D (last)"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "index": 0,
+                        "text": "st_clean"
+                      },
+                      "1": {
+                        "index": 1,
+                        "text": "st_connected"
+                      },
+                      "2": {
+                        "index": 2,
+                        "text": "st_try_full_sync"
+                      },
+                      "3": {
+                        "index": 3,
+                        "text": "st_try_psync"
+                      },
+                      "4": {
+                        "index": 4,
+                        "text": "st_partial_sync_failed"
+                      },
+                      "5": {
+                        "index": 5,
+                        "text": "st_rdb_ready"
+                      },
+                      "6": {
+                        "index": 6,
+                        "text": "st_feed_ready"
+                      },
+                      "7": {
+                        "index": 7,
+                        "text": "st_in_rdb"
+                      },
+                      "8": {
+                        "index": 8,
+                        "text": "st_gradual_fullsync"
+                      },
+                      "9": {
+                        "index": 9,
+                        "text": "st_gradual_src"
+                      },
+                      "10": {
+                        "color": "green",
+                        "index": 10,
+                        "text": "st_in_sync"
+                      },
+                      "11": {
+                        "index": 11,
+                        "text": "st_draining"
+                      },
+                      "12": {
+                        "index": 12,
+                        "text": "st_dst_drain_done"
+                      },
+                      "13": {
+                        "index": 13,
+                        "text": "st_dst_disconnected"
+                      },
+                      "14": {
+                        "index": 14,
+                        "text": "st_src_disconnected"
+                      },
+                      "15": {
+                        "index": 15,
+                        "text": "st_fatal"
+                      },
+                      "16": {
+                        "index": 16,
+                        "text": "st_cleaning"
+                      },
+                      "17": {
+                        "index": 17,
+                        "text": "st_destructing"
+                      },
+                      "18": {
+                        "index": 18,
+                        "text": "st_ready_for_destrcruction"
+                      },
+                      "19": {
+                        "index": 19,
+                        "text": "st_timer_wait"
+                      },
+                      "20": {
+                        "index": 20,
+                        "text": "st_oom"
+                      },
+                      "21": {
+                        "index": 21,
+                        "text": "st_shutdown"
+                      },
+                      "22": {
+                        "index": 22,
+                        "text": "st_established"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Ingress Bytes"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Lag ms"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 37,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "shard id"
+          }
+        ]
+      },
+      "pluginVersion": "11.6.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "database_syncer_ingress_bytes{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\", shard_index!=\"\"}",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "database_syncer_dst_lag{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\"}",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "database_syncer_rdb_transferred{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\", shard_index!=\"\"} / (database_syncer_rdb_size{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\", shard_index!=\"\"} * .01)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "range": false,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "database_syncer_state{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\"}",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "database_syncer_config{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\", shard_index!=\"\"}",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "redis: {{shard_index}}",
+          "range": false,
+          "refId": "E"
+        }
+      ],
+      "title": "Source $source_id Shards Status",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Source_shard_id": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #A": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #B": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #C": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #D": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #E": {
+                "aggregations": [
+                  "last"
+                ]
+              },
+              "Value #F": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "hash_slots": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "groupby"
+              },
+              "shard_index": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "groupby"
+              },
+              "shard_uid": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              },
+              "source_id": {
+                "aggregations": []
+              },
+              "target_node": {
+                "aggregations": [
+                  "last"
+                ],
+                "operation": "aggregate"
+              }
+            }
+          }
+        },
+        {
+          "id": "seriesToColumns",
+          "options": {
+            "byField": "shard_index"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "hash_slots 2": true,
+              "hash_slots 3": true,
+              "hash_slots 4": true,
+              "hash_slots 5": true,
+              "shard_index": false,
+              "shard_index 2": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "Value #A (last)": 3,
+              "Value #B (last)": 5,
+              "Value #C (last)": 7,
+              "Value #D (last)": 9,
+              "hash_slots 1": 1,
+              "hash_slots 2": 4,
+              "hash_slots 3": 6,
+              "hash_slots 4": 8,
+              "hash_slots 5": 10,
+              "shard_index": 0,
+              "target_node (last)": 2
+            },
+            "renameByName": {
+              "Source_shard_id (last)": "Source shard ID",
+              "Value #A (last)": "Ingress Bytes",
+              "Value #B (last)": "Lag ms",
+              "Value #C (last)": "RDB/CRDT.MERGE%",
+              "Value #D (last)": "State",
+              "hash_slots 1": "Hash slots",
+              "hash_slots 4": "",
+              "hash_slots 5": "",
+              "shard_index": "syncer shard index",
+              "shard_uid (last)": "src shard id",
+              "target_node (last)": "Syncer Node"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      },
+      "id": 36,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "11.6.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "database_syncer_ingress_bytes{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\"}",
+          "interval": "",
+          "legendFormat": "shard_idx: {{shard_index}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Ingress Bytes",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 12,
+        "y": 13
+      },
+      "id": 38,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "11.6.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "builder",
+          "expr": "database_syncer_dst_lag{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\"}",
+          "interval": "",
+          "legendFormat": "shard_idx: {{shard_index}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Lag",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 18
+      },
+      "id": 39,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "asc"
+        }
+      },
+      "pluginVersion": "11.6.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "database_syncer_rdb_transferred{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\", shard_index!=\"\"} / (database_syncer_rdb_size{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\", shard_index!=\"\"} * .01)",
+          "interval": "",
+          "legendFormat": "shard_idx: {{shard_index}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "RDB/CRDT.MERGE %",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Total requests sent to master shards minus Total responses received from the master shards.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 12,
+        "y": 18
+      },
+      "id": 40,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "11.6.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "database_syncer_total_requests{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\"} - database_syncer_total_responses{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\"}",
+          "interval": "",
+          "legendFormat": "shard_idx: {{shard_index}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Syncer Pipeline",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 23
+      },
+      "id": 42,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "11.6.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "database_syncer_total_requests{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\"}",
+          "interval": "",
+          "legendFormat": "shard_idx: {{shard_index}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total Requests",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "id": 41,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "11.6.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "database_syncer_total_responses{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\", source_id=\"$source_id\"}",
+          "interval": "",
+          "legendFormat": "shard_idx: {{shard_index}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total Responses",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 41,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(node_metrics_up, cluster)",
+        "includeAll": false,
+        "name": "cluster",
+        "options": [],
+        "query": {
+          "query": "label_values(node_metrics_up, cluster)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(database_syncer_current_status{cluster=\"$cluster\"}, target_db_id)",
+        "includeAll": false,
+        "label": "target database id",
+        "name": "target_db_id",
+        "options": [],
+        "query": {
+          "query": "label_values(database_syncer_current_status{cluster=\"$cluster\"}, target_db_id)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(database_syncer_current_status{cluster=\"$cluster\", target_db_id=\"$target_db_id\"}, syncer_type)",
+        "includeAll": false,
+        "label": "syncer type",
+        "name": "syncer_type",
+        "options": [],
+        "query": {
+          "query": "label_values(database_syncer_current_status{cluster=\"$cluster\", target_db_id=\"$target_db_id\"}, syncer_type)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(database_syncer_current_status{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\"}, source_id)",
+        "includeAll": false,
+        "label": "source index",
+        "name": "source_id",
+        "options": [],
+        "query": {
+          "query": "label_values(database_syncer_current_status{cluster=\"$cluster\", target_db_id=\"$target_db_id\", syncer_type=\"$syncer_type\"}, source_id)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Syncer Monitor",
+  "uid": "000000001117",
+  "version": 1
+}
